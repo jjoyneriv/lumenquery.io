@@ -22,6 +22,17 @@ http:
         - security-headers
         - api-rate-limit
 
+    monitoring:
+      rule: "Host(`monitoring.lumenquery.io`)"
+      service: grafana
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - security-headers
+        - auth-basic
+
   services:
     portal:
       loadBalancer:
@@ -32,6 +43,11 @@ http:
       loadBalancer:
         servers:
           - url: "http://172.17.0.1:8080"
+
+    grafana:
+      loadBalancer:
+        servers:
+          - url: "http://lumenquery-grafana:3000"
 
   middlewares:
     security-headers:
@@ -59,3 +75,10 @@ http:
         average: 200
         burst: 100
         period: 1m
+
+    # Basic auth for monitoring (generate with: htpasswd -nb admin password)
+    # Default: admin:changeme
+    auth-basic:
+      basicAuth:
+        users:
+          - "admin:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/"

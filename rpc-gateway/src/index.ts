@@ -32,6 +32,14 @@ async function initRedis() {
 const keyCache = new Map<string, { organizationId: string; tier: string; apiKeyId: string; expiresAt: number }>();
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
+// Metrics tracking
+const metrics = {
+  requests: { total: 0, success: 0, error: 0 },
+  latency: [] as number[],
+  methods: {} as Record<string, number>,
+  startTime: Date.now(),
+};
+
 // Register CORS with allowed origins
 const ALLOWED_ORIGINS = [
   'https://lumenquery.io',
@@ -67,6 +75,58 @@ app.get('/health', async () => ({
   timestamp: new Date().toISOString(),
   redis: redisClient?.isReady ? 'connected' : 'disconnected',
 }));
+
+// Metrics endpoint - Prometheus format
+app.get('/metrics', async (req, reply) => {
+  const uptimeSeconds = Math.floor((Date.now() - metrics.startTime) / 1000);
+
+  // Calculate latency percentiles
+  const sortedLatency = [...metrics.latency].sort((a, b) => a - b);
+  const p50 = sortedLatency[Math.floor(sortedLatency.length * 0.5)] || 0;
+  const p95 = sortedLatency[Math.floor(sortedLatency.length * 0.95)] || 0;
+  const p99 = sortedLatency[Math.floor(sortedLatency.length * 0.99)] || 0;
+
+  const memUsage = process.memoryUsage();
+
+  const lines = [
+    '# HELP rpc_gateway_info RPC Gateway service info',
+    '# TYPE rpc_gateway_info gauge',
+    'rpc_gateway_info{service="rpc-gateway",version="1.0.0"} 1',
+    '',
+    '# HELP http_requests_total Total HTTP requests',
+    '# TYPE http_requests_total counter',
+    `http_requests_total{job="rpc-gateway",status="success"} ${metrics.requests.success}`,
+    `http_requests_total{job="rpc-gateway",status="error"} ${metrics.requests.error}`,
+    '',
+    '# HELP http_request_duration_seconds HTTP request latency',
+    '# TYPE http_request_duration_seconds summary',
+    `http_request_duration_seconds{job="rpc-gateway",quantile="0.5"} ${(p50 / 1000).toFixed(6)}`,
+    `http_request_duration_seconds{job="rpc-gateway",quantile="0.95"} ${(p95 / 1000).toFixed(6)}`,
+    `http_request_duration_seconds{job="rpc-gateway",quantile="0.99"} ${(p99 / 1000).toFixed(6)}`,
+    '',
+    '# HELP rpc_methods_total RPC method calls',
+    '# TYPE rpc_methods_total counter',
+    ...Object.entries(metrics.methods).map(([method, count]) =>
+      `rpc_methods_total{job="rpc-gateway",method="${method}"} ${count}`
+    ),
+    '',
+    '# HELP process_uptime_seconds Process uptime',
+    '# TYPE process_uptime_seconds gauge',
+    `process_uptime_seconds{job="rpc-gateway"} ${uptimeSeconds}`,
+    '',
+    '# HELP process_memory_bytes Process memory usage',
+    '# TYPE process_memory_bytes gauge',
+    `process_memory_bytes{job="rpc-gateway",type="heapUsed"} ${memUsage.heapUsed}`,
+    `process_memory_bytes{job="rpc-gateway",type="heapTotal"} ${memUsage.heapTotal}`,
+    `process_memory_bytes{job="rpc-gateway",type="rss"} ${memUsage.rss}`,
+    '',
+    '# HELP redis_connected Redis connection status',
+    '# TYPE redis_connected gauge',
+    `redis_connected{job="rpc-gateway"} ${redisClient?.isReady ? 1 : 0}`,
+  ];
+
+  reply.header('Content-Type', 'text/plain; charset=utf-8').send(lines.join('\n'));
+});
 
 // Validate API key
 async function validateApiKey(apiKey: string): Promise<{ valid: boolean; organizationId?: string; tier?: string; apiKeyId?: string; error?: string }> {
@@ -328,6 +388,17 @@ app.post('/', async (req, reply) => {
       data.length
     );
 
+    // Track metrics
+    metrics.requests.total++;
+    if (res.status >= 200 && res.status < 400) {
+      metrics.requests.success++;
+    } else {
+      metrics.requests.error++;
+    }
+    metrics.latency.push(responseTime);
+    if (metrics.latency.length > 1000) metrics.latency.shift(); // Keep last 1000
+    metrics.methods[methodName] = (metrics.methods[methodName] || 0) + 1;
+
     reply
       .status(res.status)
       .header('Content-Type', 'application/json')
@@ -336,6 +407,9 @@ app.post('/', async (req, reply) => {
       .send(data);
   } catch (error) {
     console.error('Proxy error:', error);
+    metrics.requests.total++;
+    metrics.requests.error++;
+
     const rpcError = jsonRpcError(
       Array.isArray(body) ? null : body.id,
       -32603,
