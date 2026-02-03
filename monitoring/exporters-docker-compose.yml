@@ -50,7 +50,7 @@ services:
     container_name: postgres-exporter
     restart: unless-stopped
     environment:
-      - DATA_SOURCE_URI=lumenquery-postgres:5432/lumenquery?sslmode=disable
+      - DATA_SOURCE_URI=lumenquery-postgres:5432/${POSTGRES_DB:-lumenquery}?sslmode=disable
       - DATA_SOURCE_USER=${POSTGRES_USER:-postgres}
       - DATA_SOURCE_PASS=${POSTGRES_PASSWORD:-postgres}
     ports:
@@ -72,4 +72,5 @@ services:
 
 networks:
   lumenquery-network:
+    name: lumenquery-portal_lumenquery-network
     external: true
