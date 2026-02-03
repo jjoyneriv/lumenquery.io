@@ -1,0 +1,28 @@
+http:
+  routers:
+    portal:
+      rule: "Host(`lumenquery.io`) || Host(`www.lumenquery.io`)"
+      service: portal
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+    
+    api:
+      rule: "Host(`api.lumenquery.io`)"
+      service: api-gateway
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    portal:
+      loadBalancer:
+        servers:
+          - url: "http://lumenquery-portal:3000"
+    
+    api-gateway:
+      loadBalancer:
+        servers:
+          - url: "http://172.17.0.1:8080"

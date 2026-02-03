@@ -1,0 +1,22 @@
+{
+  "name": "lumenquery-rpc-gateway",
+  "version": "1.0.0",
+  "description": "LumenQuery RPC Gateway for Soroban smart contracts",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts"
+  },
+  "dependencies": {
+    "@fastify/cors": "^8.5.0",
+    "fastify": "^4.27.0",
+    "pg": "^8.11.5",
+    "redis": "^4.6.13"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "@types/pg": "^8.11.5",
+    "typescript": "^5.4.5"
+  }
+}

@@ -1,0 +1,15 @@
+http:
+  routers:
+    rpc:
+      rule: "Host(`rpc.lumenquery.io`)"
+      entryPoints:
+        - websecure
+      service: rpc-gateway
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    rpc-gateway:
+      loadBalancer:
+        servers:
+          - url: "http://172.17.0.1:8082"

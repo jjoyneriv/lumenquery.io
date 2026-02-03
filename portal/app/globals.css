@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Core Colors */
+  --color-bg-primary: #FFFFFF;
+  --color-text-primary: #000000;
+  --color-text-secondary: #6A6A6A;
+  --color-border: #E6E7E9;
+  --color-bg-light: #F5F6F7;
+  
+  /* Accent Colors */
+  --color-accent: #2855FF;
+  --color-accent-hover: #1E44CC;
+  --color-accent-light: rgba(40, 85, 255, 0.1);
+}
+
+body {
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
