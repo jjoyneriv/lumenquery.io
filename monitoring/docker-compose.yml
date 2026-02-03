@@ -1,9 +1,15 @@
+# ===========================================
+# Monitoring Stack for mon1.lumenquery.io
+# ===========================================
+# Deploy this on the dedicated monitoring server
+# Scrapes metrics from api1.lumenquery.io remotely
+
 version: '3.8'
 
 services:
   prometheus:
     image: prom/prometheus:v2.48.0
-    container_name: lumenquery-prometheus
+    container_name: prometheus
     restart: unless-stopped
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
@@ -19,11 +25,11 @@ services:
     ports:
       - "127.0.0.1:9090:9090"
     networks:
-      - lumenquery-network
+      - monitoring
 
   grafana:
     image: grafana/grafana:10.2.2
-    container_name: lumenquery-grafana
+    container_name: grafana
     restart: unless-stopped
     environment:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
@@ -35,16 +41,16 @@ services:
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
       - grafana-data:/var/lib/grafana
     ports:
-      - "127.0.0.1:3001:3000"
+      - "3000:3000"
     networks:
-      - lumenquery-network
+      - monitoring
     depends_on:
       - prometheus
 
-  # Node exporter for host metrics
+  # Node exporter for monitoring server itself
   node-exporter:
     image: prom/node-exporter:v1.7.0
-    container_name: lumenquery-node-exporter
+    container_name: node-exporter
     restart: unless-stopped
     volumes:
       - /proc:/host/proc:ro
@@ -56,49 +62,66 @@ services:
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
     networks:
-      - lumenquery-network
+      - monitoring
 
-  # cAdvisor for container metrics
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.47.2
-    container_name: lumenquery-cadvisor
+  # Traefik for SSL termination
+  traefik:
+    image: traefik:v2.10
+    container_name: traefik
     restart: unless-stopped
-    privileged: true
+    command:
+      - "--api.dashboard=true"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL:-admin@lumenquery.io}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
     volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:ro
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-      - /dev/disk/:/dev/disk:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-certs:/letsencrypt
     networks:
-      - lumenquery-network
+      - monitoring
+    labels:
+      - "traefik.enable=true"
 
-  # PostgreSQL exporter
-  postgres-exporter:
-    image: prometheuscommunity/postgres-exporter:v0.15.0
-    container_name: lumenquery-postgres-exporter
+  # Grafana with Traefik labels
+  grafana-proxy:
+    image: grafana/grafana:10.2.2
+    container_name: grafana
     restart: unless-stopped
     environment:
-      - DATA_SOURCE_URI=lumenquery-postgres:5432/lumenquery?sslmode=disable
-      - DATA_SOURCE_USER=${POSTGRES_USER:-postgres}
-      - DATA_SOURCE_PASS=${POSTGRES_PASSWORD:-postgres}
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-changeme}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_ROOT_URL=https://monitoring.lumenquery.io
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - grafana-data:/var/lib/grafana
     networks:
-      - lumenquery-network
-
-  # Redis exporter
-  redis-exporter:
-    image: oliver006/redis_exporter:v1.55.0
-    container_name: lumenquery-redis-exporter
-    restart: unless-stopped
-    environment:
-      - REDIS_ADDR=redis://lumenquery-redis:6379
-    networks:
-      - lumenquery-network
+      - monitoring
+    depends_on:
+      - prometheus
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=Host(`monitoring.lumenquery.io`)"
+      - "traefik.http.routers.grafana.entrypoints=websecure"
+      - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
 
 networks:
-  lumenquery-network:
-    external: true
+  monitoring:
+    driver: bridge
 
 volumes:
   prometheus-data:
   grafana-data:
+  traefik-certs:

@@ -16,57 +16,82 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
-  # Portal health endpoint
+  # ===========================================
+  # Remote targets on api1.lumenquery.io
+  # ===========================================
+
+  # Portal metrics endpoint
   - job_name: 'portal'
     metrics_path: /api/metrics
+    scheme: https
     static_configs:
-      - targets: ['lumenquery-portal:3000']
+      - targets: ['lumenquery.io']
+        labels:
+          server: 'api1'
     relabel_configs:
       - source_labels: [__address__]
         target_label: instance
         replacement: 'portal'
 
-  # RPC Gateway
+  # RPC Gateway (internal - requires SSH tunnel or VPN)
   - job_name: 'rpc-gateway'
     metrics_path: /metrics
     static_configs:
-      - targets: ['lumenquery-rpc-gateway:8082']
+      - targets: ['api1.lumenquery.io:8082']
+        labels:
+          server: 'api1'
     relabel_configs:
       - source_labels: [__address__]
         target_label: instance
         replacement: 'rpc-gateway'
 
-  # API Gateway
-  - job_name: 'api-gateway'
-    metrics_path: /metrics
-    static_configs:
-      - targets: ['lumenquery-api-gateway:8080']
-    relabel_configs:
-      - source_labels: [__address__]
-        target_label: instance
-        replacement: 'api-gateway'
-
   # Traefik metrics
   - job_name: 'traefik'
     static_configs:
-      - targets: ['lumenquery-traefik:8080']
+      - targets: ['api1.lumenquery.io:8081']
+        labels:
+          server: 'api1'
 
-  # PostgreSQL (via postgres_exporter if added)
-  - job_name: 'postgres'
-    static_configs:
-      - targets: ['postgres-exporter:9187']
+  # ===========================================
+  # Local monitoring server (mon1.lumenquery.io)
+  # ===========================================
 
-  # Redis (via redis_exporter if added)
-  - job_name: 'redis'
-    static_configs:
-      - targets: ['redis-exporter:9121']
-
-  # Node exporter for host metrics
+  # Node exporter for monitoring host metrics
   - job_name: 'node'
     static_configs:
       - targets: ['node-exporter:9100']
+        labels:
+          server: 'mon1'
 
-  # Docker container metrics
+  # ===========================================
+  # Remote exporters on api1 (via node-exporter-proxy)
+  # Configure these after setting up remote access
+  # ===========================================
+
+  # Remote node exporter (api1)
+  - job_name: 'node-api1'
+    static_configs:
+      - targets: ['api1.lumenquery.io:9100']
+        labels:
+          server: 'api1'
+
+  # Remote PostgreSQL exporter
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['api1.lumenquery.io:9187']
+        labels:
+          server: 'api1'
+
+  # Remote Redis exporter
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['api1.lumenquery.io:9121']
+        labels:
+          server: 'api1'
+
+  # Remote cAdvisor
   - job_name: 'cadvisor'
     static_configs:
-      - targets: ['cadvisor:8080']
+      - targets: ['api1.lumenquery.io:9080']
+        labels:
+          server: 'api1'
