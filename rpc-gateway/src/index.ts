@@ -32,8 +32,33 @@ async function initRedis() {
 const keyCache = new Map<string, { organizationId: string; tier: string; apiKeyId: string; expiresAt: number }>();
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
-// Register CORS
-app.register(cors, { origin: true });
+// Register CORS with allowed origins
+const ALLOWED_ORIGINS = [
+  'https://lumenquery.io',
+  'https://www.lumenquery.io',
+  'https://api.lumenquery.io',
+  ...(process.env.NODE_ENV !== 'production' ? ['http://localhost:3000', 'http://localhost:8080'] : []),
+];
+
+app.register(cors, {
+  origin: (origin, cb) => {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) {
+      cb(null, true);
+      return;
+    }
+    if (ALLOWED_ORIGINS.includes(origin)) {
+      cb(null, true);
+      return;
+    }
+    cb(new Error('CORS not allowed'), false);
+  },
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'X-API-Key', 'Authorization'],
+  exposedHeaders: ['X-RateLimit-Limit', 'X-RateLimit-Remaining', 'X-RateLimit-Reset', 'X-Response-Time'],
+  credentials: true,
+  maxAge: 86400, // 24 hours
+});
 
 // Health check - no auth required
 app.get('/health', async () => ({

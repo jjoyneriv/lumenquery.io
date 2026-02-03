@@ -7,7 +7,10 @@ http:
         - websecure
       tls:
         certResolver: letsencrypt
-    
+      middlewares:
+        - security-headers
+        - rate-limit
+
     api:
       rule: "Host(`api.lumenquery.io`)"
       service: api-gateway
@@ -15,14 +18,44 @@ http:
         - websecure
       tls:
         certResolver: letsencrypt
+      middlewares:
+        - security-headers
+        - api-rate-limit
 
   services:
     portal:
       loadBalancer:
         servers:
           - url: "http://lumenquery-portal:3000"
-    
+
     api-gateway:
       loadBalancer:
         servers:
           - url: "http://172.17.0.1:8080"
+
+  middlewares:
+    security-headers:
+      headers:
+        browserXssFilter: true
+        contentTypeNosniff: true
+        frameDeny: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 31536000
+        customResponseHeaders:
+          X-Powered-By: ""
+          Server: ""
+        referrerPolicy: "strict-origin-when-cross-origin"
+        permissionsPolicy: "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+
+    rate-limit:
+      rateLimit:
+        average: 100
+        burst: 50
+        period: 1m
+
+    api-rate-limit:
+      rateLimit:
+        average: 200
+        burst: 100
+        period: 1m
