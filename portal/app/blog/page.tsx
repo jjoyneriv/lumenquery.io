@@ -9,6 +9,22 @@ export const metadata = {
 
 const posts = [
   {
+    slug: 'using-claude-code-with-json-rpc-api',
+    title: 'Using Claude Code to Interface with JSON-RPC APIs',
+    excerpt: 'Learn how to leverage Claude Code, Anthropic\'s AI-powered CLI tool, to interact with JSON-RPC APIs like Stellar\'s Soroban RPC. Build, test, and debug blockchain applications faster with AI assistance.',
+    date: '2026-02-07',
+    readTime: '10 min read',
+    category: 'Developer Guide',
+  },
+  {
+    slug: 'getting-started-with-claude-code',
+    title: 'Getting Started with Claude Code: The AI-Powered Development Tool',
+    excerpt: 'Discover how Claude Code can transform your development workflow. From installation to advanced features, learn everything you need to start building software with AI assistance.',
+    date: '2026-02-07',
+    readTime: '8 min read',
+    category: 'Tutorial',
+  },
+  {
     slug: 'stellar-lumen-future-decentralized-applications',
     title: 'Stellar Lumen and the Future of Decentralized Applications',
     excerpt: 'Explore how Stellar\'s unique architecture, Soroban smart contracts, and focus on real-world utility position XLM as a foundation for the next generation of decentralized applications.',

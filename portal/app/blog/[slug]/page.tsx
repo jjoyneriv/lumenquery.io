@@ -10,6 +10,671 @@ const posts: Record<string, {
   category: string;
   content: string;
 }> = {
+  'using-claude-code-with-json-rpc-api': {
+    title: 'Using Claude Code to Interface with JSON-RPC APIs',
+    date: '2026-02-07',
+    readTime: '10 min read',
+    category: 'Developer Guide',
+    content: `
+Claude Code is revolutionizing how developers interact with APIs, and JSON-RPC endpoints are no exception. In this guide, we'll explore how to use Claude Code to work with Stellar's Soroban RPC and other JSON-RPC APIs, making blockchain development faster and more intuitive.
+
+## What is Claude Code?
+
+Claude Code is Anthropic's official CLI tool that brings AI assistance directly to your terminal. It can read files, execute commands, make API calls, and help you understand complex codebases—all through natural language conversation.
+
+For blockchain developers working with JSON-RPC APIs like Soroban RPC, Claude Code offers a powerful way to:
+
+- Explore and understand API endpoints
+- Generate and test RPC requests
+- Debug responses and errors
+- Build integration code
+
+## Setting Up for Soroban RPC Development
+
+Before diving in, ensure you have Claude Code installed and your LumenQuery API key ready.
+
+\`\`\`bash
+# Install Claude Code
+npm install -g @anthropic-ai/claude-code
+
+# Set your API key
+export LUMENQUERY_API_KEY="lq_your_api_key"
+\`\`\`
+
+## Exploring JSON-RPC Methods with Claude Code
+
+One of Claude Code's strengths is helping you understand unfamiliar APIs. Simply ask it about available methods:
+
+\`\`\`
+You: What JSON-RPC methods are available on Soroban RPC?
+
+Claude Code: Soroban RPC provides these core methods:
+
+Network & Health:
+- getHealth - Check RPC server status
+- getNetwork - Get network configuration
+- getLatestLedger - Current ledger sequence
+
+Transactions:
+- simulateTransaction - Test transaction before submitting
+- sendTransaction - Submit signed transaction
+- getTransaction - Get transaction by hash
+- getTransactions - Query multiple transactions
+
+Contract Data:
+- getLedgerEntries - Read contract state
+- getEvents - Query contract events
+- getFeeStats - Current fee statistics
+\`\`\`
+
+## Making RPC Calls with Claude Code
+
+Claude Code can help you construct and execute JSON-RPC requests. Here's how to check the health of your Soroban RPC endpoint:
+
+\`\`\`
+You: Make a getHealth request to the Soroban RPC at rpc.lumenquery.io
+
+Claude Code: I'll make that request for you.
+\`\`\`
+
+\`\`\`bash
+curl -X POST https://rpc.lumenquery.io \\
+  -H "Content-Type: application/json" \\
+  -H "X-API-Key: $LUMENQUERY_API_KEY" \\
+  -d '{"jsonrpc":"2.0","id":1,"method":"getHealth"}'
+\`\`\`
+
+Response:
+\`\`\`json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "status": "healthy"
+  }
+}
+\`\`\`
+
+## Building a Transaction Flow
+
+Claude Code excels at helping you build complex multi-step workflows. Here's an example of simulating and submitting a transaction:
+
+### Step 1: Get the Latest Ledger
+
+\`\`\`
+You: Get the latest ledger sequence from Soroban RPC
+\`\`\`
+
+\`\`\`bash
+curl -X POST https://rpc.lumenquery.io \\
+  -H "Content-Type: application/json" \\
+  -H "X-API-Key: $LUMENQUERY_API_KEY" \\
+  -d '{"jsonrpc":"2.0","id":1,"method":"getLatestLedger"}'
+\`\`\`
+
+### Step 2: Simulate Your Transaction
+
+\`\`\`
+You: Help me simulate a transaction. I have this XDR: AAAAAgAAAA...
+\`\`\`
+
+Claude Code can help you construct the proper request:
+
+\`\`\`bash
+curl -X POST https://rpc.lumenquery.io \\
+  -H "Content-Type: application/json" \\
+  -H "X-API-Key: $LUMENQUERY_API_KEY" \\
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "simulateTransaction",
+    "params": {
+      "transaction": "AAAAAgAAAA..."
+    }
+  }'
+\`\`\`
+
+### Step 3: Analyze the Response
+
+When you receive a complex response, ask Claude Code to explain it:
+
+\`\`\`
+You: What does this simulation response mean? [paste response]
+
+Claude Code: This simulation shows:
+- Estimated resource usage (CPU, memory, ledger entries)
+- Required fees based on current network conditions
+- Any errors that would occur if submitted
+- The expected result of contract invocation
+\`\`\`
+
+## Debugging RPC Errors
+
+JSON-RPC errors can be cryptic. Claude Code helps decode them:
+
+\`\`\`
+You: I got this error: {"code":-32602,"message":"invalid params"}
+
+Claude Code: This error indicates your request parameters
+are malformed. Common causes:
+
+1. Missing required fields in params object
+2. Incorrect data types (string vs number)
+3. Malformed XDR encoding for transactions
+4. Invalid account addresses or contract IDs
+
+Let me see your request to identify the specific issue.
+\`\`\`
+
+## Generating Integration Code
+
+Claude Code can generate production-ready code for your JSON-RPC integrations:
+
+\`\`\`
+You: Generate a TypeScript function to call getLatestLedger
+with proper error handling
+\`\`\`
+
+\`\`\`typescript
+interface RpcResponse<T> {
+  jsonrpc: string;
+  id: number;
+  result?: T;
+  error?: { code: number; message: string };
+}
+
+interface LatestLedger {
+  id: string;
+  sequence: number;
+  protocolVersion: number;
+}
+
+async function getLatestLedger(): Promise<LatestLedger> {
+  const response = await fetch('https://rpc.lumenquery.io', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-API-Key': process.env.LUMENQUERY_API_KEY!,
+    },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'getLatestLedger',
+    }),
+  });
+
+  const data: RpcResponse<LatestLedger> = await response.json();
+
+  if (data.error) {
+    throw new Error(\`RPC Error \${data.error.code}: \${data.error.message}\`);
+  }
+
+  return data.result!;
+}
+\`\`\`
+
+## Real-World Workflow: Contract Event Monitoring
+
+Here's a practical example of using Claude Code to build an event monitoring system:
+
+\`\`\`
+You: Help me build a script that monitors events from a
+Soroban contract and logs them
+\`\`\`
+
+Claude Code can generate a complete solution:
+
+\`\`\`javascript
+const CONTRACT_ID = 'CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC';
+
+async function pollEvents(startLedger) {
+  let cursor = startLedger;
+
+  while (true) {
+    const response = await fetch('https://rpc.lumenquery.io', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': process.env.LUMENQUERY_API_KEY,
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'getEvents',
+        params: {
+          startLedger: cursor,
+          filters: [{
+            type: 'contract',
+            contractIds: [CONTRACT_ID],
+          }],
+          pagination: { limit: 100 },
+        },
+      }),
+    });
+
+    const { result } = await response.json();
+
+    for (const event of result.events) {
+      console.log('Event:', event.type, event.topic, event.value);
+    }
+
+    cursor = result.latestLedger;
+    await new Promise(r => setTimeout(r, 5000)); // Poll every 5s
+  }
+}
+\`\`\`
+
+## Best Practices
+
+### 1. Use Environment Variables
+
+Never hardcode API keys. Claude Code can help you set up proper configuration:
+
+\`\`\`
+You: Help me set up a config file for my RPC endpoints
+\`\`\`
+
+### 2. Implement Retry Logic
+
+Ask Claude Code to add resilience to your code:
+
+\`\`\`
+You: Add exponential backoff retry logic to this RPC call
+\`\`\`
+
+### 3. Validate Before Submitting
+
+Always simulate transactions before sending:
+
+\`\`\`
+You: Create a wrapper that simulates then submits transactions
+\`\`\`
+
+### 4. Monitor Rate Limits
+
+Claude Code can help you implement rate limiting:
+
+\`\`\`
+You: Add rate limiting to stay within 60 requests per minute
+\`\`\`
+
+## Combining with LumenQuery
+
+LumenQuery provides both Horizon REST API and Soroban RPC through a unified authentication layer. Claude Code makes it easy to work with both:
+
+\`\`\`
+You: Get an account's XLM balance from Horizon, then check
+their contract interactions via Soroban RPC
+\`\`\`
+
+This kind of cross-API workflow becomes trivial with AI assistance.
+
+## Conclusion
+
+Claude Code transforms how developers work with JSON-RPC APIs. Instead of memorizing method signatures and parameter formats, you can focus on what you're building while Claude Code handles the details.
+
+For Stellar developers using LumenQuery's Soroban RPC, this means faster development cycles, fewer errors, and more time spent on application logic rather than API mechanics.
+
+---
+
+*Ready to supercharge your Soroban development? [Sign up for LumenQuery](/auth/signup) and get 10,000 free API requests per month.*
+    `,
+  },
+  'getting-started-with-claude-code': {
+    title: 'Getting Started with Claude Code: The AI-Powered Development Tool',
+    date: '2026-02-07',
+    readTime: '8 min read',
+    category: 'Tutorial',
+    content: `
+Claude Code is changing how developers build software. Anthropic's official CLI tool brings the power of Claude directly to your terminal, enabling you to write code, debug issues, explore codebases, and automate tasks through natural language conversation.
+
+## What is Claude Code?
+
+Claude Code is a command-line interface that connects you to Claude, Anthropic's AI assistant. Unlike web-based chat interfaces, Claude Code operates directly in your development environment, with access to:
+
+- Your file system (read and write files)
+- Terminal commands (execute shell scripts)
+- Web content (fetch documentation and APIs)
+- Your full project context
+
+This deep integration means Claude Code can do more than answer questions—it can actively help you build software.
+
+## Installation
+
+Getting started with Claude Code takes just a few commands:
+
+\`\`\`bash
+# Install via npm
+npm install -g @anthropic-ai/claude-code
+
+# Or via Homebrew on macOS
+brew install claude-code
+
+# Verify installation
+claude --version
+\`\`\`
+
+## Authentication
+
+Claude Code uses your Anthropic API key for authentication:
+
+\`\`\`bash
+# Set your API key
+export ANTHROPIC_API_KEY="sk-ant-..."
+
+# Or configure it permanently
+claude config set api_key sk-ant-...
+\`\`\`
+
+## Your First Session
+
+Start Claude Code by running \`claude\` in your terminal:
+
+\`\`\`bash
+cd my-project
+claude
+\`\`\`
+
+You'll enter an interactive session where you can chat with Claude about your project:
+
+\`\`\`
+You: What does this project do?
+
+Claude Code: Looking at your project structure...
+
+This is a Next.js web application for LumenQuery, a Stellar
+blockchain API service. Key components include:
+
+- Portal: User dashboard for API key management
+- API Gateway: Proxies requests to Stellar Horizon
+- RPC Gateway: Proxies requests to Soroban RPC
+- Monitoring: Prometheus + Grafana stack
+
+The main technologies are TypeScript, React, Prisma, and Docker.
+\`\`\`
+
+## Core Capabilities
+
+### 1. Reading and Understanding Code
+
+Ask Claude Code to explain any part of your codebase:
+
+\`\`\`
+You: How does the authentication middleware work?
+
+Claude Code: Let me look at the middleware...
+
+The authentication flow works like this:
+
+1. middleware.ts intercepts all /api/* requests
+2. It checks for an X-API-Key header
+3. Keys are validated against the database via Prisma
+4. Valid requests proceed; invalid ones return 401
+
+Here's the key code in lib/auth.ts:
+[Shows relevant code snippet]
+\`\`\`
+
+### 2. Writing Code
+
+Claude Code can create new files and modify existing ones:
+
+\`\`\`
+You: Create a new API endpoint that returns server health
+
+Claude Code: I'll create a health check endpoint for you.
+
+Creating app/api/health/route.ts...
+
+This endpoint returns:
+- Server status
+- Timestamp
+- Service version
+- Database connectivity
+\`\`\`
+
+### 3. Running Commands
+
+Execute shell commands directly through Claude Code:
+
+\`\`\`
+You: Run the tests and tell me if anything fails
+
+Claude Code: Running npm test...
+
+All 47 tests passed:
+- 12 unit tests
+- 23 integration tests
+- 12 e2e tests
+
+Test coverage: 84%
+\`\`\`
+
+### 4. Debugging
+
+When something breaks, Claude Code helps you fix it:
+
+\`\`\`
+You: The API is returning 500 errors. Help me debug.
+
+Claude Code: Let me check the logs and trace the issue...
+
+Found the problem in api-gateway/src/index.ts:142
+
+The Redis connection is timing out because the REDIS_URL
+environment variable isn't set in production.
+
+Fix: Add REDIS_URL to your .env file:
+REDIS_URL=redis://lumenquery-redis:6379
+
+Want me to add this for you?
+\`\`\`
+
+### 5. Git Operations
+
+Manage version control through natural language:
+
+\`\`\`
+You: Commit these changes with a good message
+
+Claude Code: Analyzing your changes...
+
+You've modified 3 files:
+- Added rate limiting to API gateway
+- Updated the dashboard UI
+- Fixed a typo in documentation
+
+Creating commit:
+"Add rate limiting to API gateway and update dashboard UI"
+\`\`\`
+
+## Practical Examples
+
+### Example 1: Adding a New Feature
+
+\`\`\`
+You: Add a dark mode toggle to the dashboard
+
+Claude Code: I'll implement dark mode for you. Here's my plan:
+
+1. Add a ThemeProvider using next-themes
+2. Create a toggle component in the header
+3. Update Tailwind config for dark variants
+4. Apply dark styles to existing components
+
+Starting implementation...
+[Creates/modifies files]
+
+Done! The toggle is in the dashboard header.
+User preferences persist in localStorage.
+\`\`\`
+
+### Example 2: Exploring an API
+
+\`\`\`
+You: Show me how to use the LumenQuery Soroban RPC
+
+Claude Code: Here's how to interact with Soroban RPC:
+
+Endpoint: https://rpc.lumenquery.io
+
+Example - Get latest ledger:
+[Shows curl command and response]
+
+Example - Simulate transaction:
+[Shows curl command and response]
+
+Want me to create a helper library for these calls?
+\`\`\`
+
+### Example 3: Code Review
+
+\`\`\`
+You: Review the changes in my current branch
+
+Claude Code: Reviewing your changes...
+
+Looks good overall! A few suggestions:
+
+1. Line 45 in api/keys/route.ts: Consider adding input
+   validation for the key name parameter
+
+2. Line 112 in dashboard/page.tsx: This useEffect has
+   a missing dependency - add 'apiKeys' to the array
+
+3. Good job on the error handling in the new endpoint!
+
+Want me to apply these fixes?
+\`\`\`
+
+## Tips for Effective Use
+
+### Be Specific
+
+The more context you provide, the better Claude Code can help:
+
+\`\`\`
+# Less effective
+You: Fix the bug
+
+# More effective
+You: The signup form isn't validating email addresses.
+     Users can submit invalid emails.
+\`\`\`
+
+### Use Project Context
+
+Claude Code understands your entire project. Reference files and concepts:
+
+\`\`\`
+You: Update the Header component to match the Footer styling
+\`\`\`
+
+### Iterate Collaboratively
+
+Claude Code works best as a collaborative partner:
+
+\`\`\`
+You: Create a user profile page
+
+Claude Code: [Creates basic page]
+
+You: Add the user's API usage stats
+
+Claude Code: [Adds stats component]
+
+You: Make it match our existing dashboard style
+
+Claude Code: [Updates styling]
+\`\`\`
+
+### Review Generated Code
+
+Always review what Claude Code creates:
+
+\`\`\`
+You: Show me what you changed before committing
+\`\`\`
+
+## Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| Ctrl+C | Cancel current operation |
+| Ctrl+D | Exit Claude Code |
+| Up/Down | Navigate command history |
+| Tab | Autocomplete file paths |
+
+## Configuration Options
+
+Customize Claude Code behavior:
+
+\`\`\`bash
+# Set preferred model
+claude config set model claude-sonnet-4
+
+# Set working directory
+claude config set workdir ~/projects
+
+# Enable verbose output
+claude config set verbose true
+\`\`\`
+
+## Security Best Practices
+
+Claude Code has powerful capabilities. Use them responsibly:
+
+1. **Review before executing**: Check commands before running them
+2. **Use environment variables**: Never hardcode secrets
+3. **Limit scope**: Run in project directories, not system-wide
+4. **Audit changes**: Review git diffs before committing
+
+## Integrating with Your Workflow
+
+### VS Code Extension
+
+Claude Code integrates with VS Code for a seamless experience:
+
+\`\`\`bash
+# Install the extension
+code --install-extension anthropic.claude-code
+\`\`\`
+
+### CI/CD Pipelines
+
+Use Claude Code in automation:
+
+\`\`\`yaml
+# GitHub Actions example
+- name: Generate changelog
+  run: claude "Generate a changelog from recent commits" > CHANGELOG.md
+\`\`\`
+
+### Team Collaboration
+
+Share Claude Code configurations across your team:
+
+\`\`\`bash
+# Export settings
+claude config export > .claude-config.json
+
+# Team members import
+claude config import .claude-config.json
+\`\`\`
+
+## Conclusion
+
+Claude Code represents a new paradigm in software development. By bringing AI assistance directly into your terminal, it reduces friction between thinking about code and writing it.
+
+Whether you're exploring a new codebase, debugging a tricky issue, or building new features, Claude Code accelerates your workflow while keeping you in control.
+
+The best way to learn Claude Code is to use it. Start with small tasks, build confidence, and gradually tackle more complex challenges. You'll quickly discover how AI assistance can transform your development process.
+
+---
+
+*Building on Stellar with Claude Code? [Sign up for LumenQuery](/auth/signup) to get reliable API infrastructure for your blockchain applications.*
+    `,
+  },
   'stellar-lumen-future-decentralized-applications': {
     title: 'Stellar Lumen and the Future of Decentralized Applications',
     date: '2026-02-03',
