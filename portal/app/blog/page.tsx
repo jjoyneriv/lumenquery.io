@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 export const metadata = {
   title: 'Blog - LumenQuery',
@@ -59,53 +61,35 @@ const posts = [
 export default function BlogPage() {
   return (
     <div className="min-h-screen bg-white text-black">
-      {/* Header */}
-      <header className="border-b border-[#E6E7E9]">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-[#2855FF] flex items-center justify-center">
-              <span className="text-white font-bold">LQ</span>
-            </div>
-            <span className="text-xl font-bold">LumenQuery</span>
-          </Link>
-          <nav className="flex items-center gap-6">
-            <Link href="/docs" className="text-[#6A6A6A] hover:text-black font-medium">Docs</Link>
-            <Link href="/blog" className="text-[#2855FF] font-medium">Blog</Link>
-            <Link href="/auth/signin" className="text-[#6A6A6A] hover:text-black font-medium">Sign In</Link>
-            <Link href="/auth/signup" className="px-4 py-2 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white text-sm font-medium transition-colors">
-              Get Started
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <Header activePage="blog" />
 
-      <div className="max-w-4xl mx-auto px-6 py-16">
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold mb-4">Blog</h1>
-          <p className="text-xl text-[#6A6A6A]">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
+        <div className="text-center mb-8 sm:mb-12 md:mb-16">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4">Blog</h1>
+          <p className="text-base sm:text-lg md:text-xl text-[#6A6A6A]">
             Insights, tutorials, and updates from the LumenQuery team
           </p>
         </div>
 
-        <div className="space-y-8">
+        <div className="space-y-4 sm:space-y-6 md:space-y-8">
           {posts.map((post) => (
-            <article key={post.slug} className="p-6 rounded-2xl border border-[#E6E7E9] hover:border-[#2855FF] hover:shadow-lg transition-all">
+            <article key={post.slug} className="p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-[#E6E7E9] hover:border-[#2855FF] hover:shadow-lg transition-all">
               <Link href={`/blog/${post.slug}`}>
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="px-3 py-1 rounded-full bg-[rgba(40,85,255,0.1)] text-[#2855FF] text-xs font-medium">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                  <span className="px-2 sm:px-3 py-1 rounded-full bg-[rgba(40,85,255,0.1)] text-[#2855FF] text-xs font-medium">
                     {post.category}
                   </span>
-                  <span className="text-[#6A6A6A] text-sm">{post.date}</span>
-                  <span className="text-[#6A6A6A] text-sm">•</span>
-                  <span className="text-[#6A6A6A] text-sm">{post.readTime}</span>
+                  <span className="text-[#6A6A6A] text-xs sm:text-sm">{post.date}</span>
+                  <span className="text-[#6A6A6A] text-xs sm:text-sm hidden sm:inline">•</span>
+                  <span className="text-[#6A6A6A] text-xs sm:text-sm hidden sm:inline">{post.readTime}</span>
                 </div>
-                <h2 className="text-2xl font-bold mb-3 hover:text-[#2855FF] transition-colors">
+                <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-2 sm:mb-3 hover:text-[#2855FF] transition-colors">
                   {post.title}
                 </h2>
-                <p className="text-[#6A6A6A] leading-relaxed">
+                <p className="text-[#6A6A6A] leading-relaxed text-sm sm:text-base line-clamp-3">
                   {post.excerpt}
                 </p>
-                <div className="mt-4 text-[#2855FF] text-sm font-medium">
+                <div className="mt-3 sm:mt-4 text-[#2855FF] text-sm font-medium">
                   Read more →
                 </div>
               </Link>
@@ -114,22 +98,7 @@ export default function BlogPage() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="border-t border-[#E6E7E9] py-8 px-6 mt-16">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#2855FF] flex items-center justify-center">
-              <span className="text-white font-bold text-sm">LQ</span>
-            </div>
-            <span className="text-[#6A6A6A]">© 2026 LumenQuery</span>
-          </div>
-          <div className="flex gap-6 text-sm text-[#6A6A6A]">
-            <Link href="/docs" className="hover:text-[#2855FF]">Docs</Link>
-            <Link href="/blog" className="hover:text-[#2855FF]">Blog</Link>
-            <Link href="/dashboard" className="hover:text-[#2855FF]">Dashboard</Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

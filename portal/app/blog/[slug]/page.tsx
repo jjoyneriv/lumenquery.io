@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 const posts: Record<string, {
   title: string;
@@ -1259,8 +1261,8 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
       if (line.startsWith('```')) {
         if (inCodeBlock) {
           elements.push(
-            <div key={index} className="bg-[#0D0D0D] rounded-lg p-4 my-4 overflow-x-auto">
-              <pre className="text-sm text-gray-300">
+            <div key={index} className="bg-[#0D0D0D] rounded-lg p-3 sm:p-4 my-4 overflow-x-auto">
+              <pre className="text-xs sm:text-sm text-gray-300">
                 <code>{codeContent.trim()}</code>
               </pre>
             </div>
@@ -1290,24 +1292,26 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
         return;
       } else if (inTable) {
         elements.push(
-          <table key={index} className="w-full my-4 border-collapse">
-            <thead>
-              <tr className="border-b border-[#E6E7E9] bg-[#F5F6F7]">
-                {tableRows[0]?.map((cell, i) => (
-                  <th key={i} className="text-left py-3 px-4 font-medium">{cell}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {tableRows.slice(1).map((row, rowIndex) => (
-                <tr key={rowIndex} className="border-b border-[#E6E7E9]">
-                  {row.map((cell, cellIndex) => (
-                    <td key={cellIndex} className="py-3 px-4 text-[#6A6A6A]">{cell}</td>
+          <div key={index} className="overflow-x-auto my-4">
+            <table className="w-full min-w-[400px] border-collapse text-sm">
+              <thead>
+                <tr className="border-b border-[#E6E7E9] bg-[#F5F6F7]">
+                  {tableRows[0]?.map((cell, i) => (
+                    <th key={i} className="text-left py-2 sm:py-3 px-2 sm:px-4 font-medium">{cell}</th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {tableRows.slice(1).map((row, rowIndex) => (
+                  <tr key={rowIndex} className="border-b border-[#E6E7E9]">
+                    {row.map((cell, cellIndex) => (
+                      <td key={cellIndex} className="py-2 sm:py-3 px-2 sm:px-4 text-[#6A6A6A]">{cell}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         );
         inTable = false;
         tableRows = [];
@@ -1315,7 +1319,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
 
       if (line.startsWith('## ')) {
         elements.push(
-          <h2 key={index} className="text-2xl font-bold mt-10 mb-4 pb-2 border-b border-[#E6E7E9]">
+          <h2 key={index} className="text-xl sm:text-2xl font-bold mt-8 sm:mt-10 mb-3 sm:mb-4 pb-2 border-b border-[#E6E7E9]">
             {line.slice(3)}
           </h2>
         );
@@ -1324,7 +1328,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
 
       if (line.startsWith('### ')) {
         elements.push(
-          <h3 key={index} className="text-xl font-semibold mt-8 mb-3">
+          <h3 key={index} className="text-lg sm:text-xl font-semibold mt-6 sm:mt-8 mb-2 sm:mb-3">
             {line.slice(4)}
           </h3>
         );
@@ -1338,7 +1342,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
 
       if (line.startsWith('- ')) {
         elements.push(
-          <li key={index} className="text-[#6A6A6A] ml-4 mb-2 list-disc">
+          <li key={index} className="text-[#6A6A6A] ml-4 mb-2 list-disc text-sm sm:text-base">
             {renderInlineFormatting(line.slice(2))}
           </li>
         );
@@ -1347,7 +1351,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
 
       if (/^\d+\.\s/.test(line)) {
         elements.push(
-          <li key={index} className="text-[#6A6A6A] ml-4 mb-2 list-decimal">
+          <li key={index} className="text-[#6A6A6A] ml-4 mb-2 list-decimal text-sm sm:text-base">
             {renderInlineFormatting(line.replace(/^\d+\.\s/, ''))}
           </li>
         );
@@ -1359,7 +1363,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
       }
 
       elements.push(
-        <p key={index} className="text-[#6A6A6A] leading-relaxed mb-4">
+        <p key={index} className="text-[#6A6A6A] leading-relaxed mb-4 text-sm sm:text-base">
           {renderInlineFormatting(line)}
         </p>
       );
@@ -1406,43 +1410,25 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
 
   return (
     <div className="min-h-screen bg-white text-black">
-      {/* Header */}
-      <header className="border-b border-[#E6E7E9]">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-[#2855FF] flex items-center justify-center">
-              <span className="text-white font-bold">LQ</span>
-            </div>
-            <span className="text-xl font-bold">LumenQuery</span>
-          </Link>
-          <nav className="flex items-center gap-6">
-            <Link href="/docs" className="text-[#6A6A6A] hover:text-black font-medium">Docs</Link>
-            <Link href="/blog" className="text-[#2855FF] font-medium">Blog</Link>
-            <Link href="/auth/signin" className="text-[#6A6A6A] hover:text-black font-medium">Sign In</Link>
-            <Link href="/auth/signup" className="px-4 py-2 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white text-sm font-medium transition-colors">
-              Get Started
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <Header activePage="blog" />
 
-      <article className="max-w-3xl mx-auto px-6 py-16">
-        <div className="mb-8">
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
+        <div className="mb-6 sm:mb-8">
           <Link href="/blog" className="text-[#6A6A6A] hover:text-[#2855FF] text-sm">
             ← Back to Blog
           </Link>
         </div>
 
-        <header className="mb-12">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="px-3 py-1 rounded-full bg-[rgba(40,85,255,0.1)] text-[#2855FF] text-xs font-medium">
+        <header className="mb-8 sm:mb-12">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+            <span className="px-2 sm:px-3 py-1 rounded-full bg-[rgba(40,85,255,0.1)] text-[#2855FF] text-xs font-medium">
               {post.category}
             </span>
-            <span className="text-[#6A6A6A] text-sm">{post.date}</span>
-            <span className="text-[#6A6A6A] text-sm">•</span>
-            <span className="text-[#6A6A6A] text-sm">{post.readTime}</span>
+            <span className="text-[#6A6A6A] text-xs sm:text-sm">{post.date}</span>
+            <span className="text-[#6A6A6A] text-xs sm:text-sm hidden sm:inline">•</span>
+            <span className="text-[#6A6A6A] text-xs sm:text-sm hidden sm:inline">{post.readTime}</span>
           </div>
-          <h1 className="text-4xl font-bold leading-tight">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight">
             {post.title}
           </h1>
         </header>
@@ -1451,33 +1437,18 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
           {renderContent(post.content)}
         </div>
 
-        <div className="mt-16 p-8 rounded-2xl bg-[#2855FF] text-white text-center">
-          <h2 className="text-2xl font-bold mb-3">Ready to Get Started?</h2>
-          <p className="text-white/80 mb-6">
+        <div className="mt-10 sm:mt-16 p-5 sm:p-8 rounded-xl sm:rounded-2xl bg-[#2855FF] text-white text-center">
+          <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3">Ready to Get Started?</h2>
+          <p className="text-white/80 mb-4 sm:mb-6 text-sm sm:text-base">
             Sign up for free and start building on Stellar with LumenQuery today.
           </p>
-          <Link href="/auth/signup" className="inline-block px-6 py-3 rounded-lg bg-white text-[#2855FF] font-medium hover:bg-gray-100 transition-colors">
+          <Link href="/auth/signup" className="inline-block px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg bg-white text-[#2855FF] font-medium hover:bg-gray-100 transition-colors text-sm sm:text-base">
             Create Free Account
           </Link>
         </div>
       </article>
 
-      {/* Footer */}
-      <footer className="border-t border-[#E6E7E9] mt-16 py-8 px-6">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#2855FF] flex items-center justify-center">
-              <span className="text-white font-bold text-sm">LQ</span>
-            </div>
-            <span className="text-[#6A6A6A]">© 2026 LumenQuery</span>
-          </div>
-          <div className="flex gap-6 text-sm text-[#6A6A6A]">
-            <Link href="/docs" className="hover:text-[#2855FF]">Docs</Link>
-            <Link href="/blog" className="hover:text-[#2855FF]">Blog</Link>
-            <Link href="/dashboard" className="hover:text-[#2855FF]">Dashboard</Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

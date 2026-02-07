@@ -22,7 +22,7 @@ interface UsageStats {
 export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  
+
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
   const [usage, setUsage] = useState<UsageStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -130,76 +130,78 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-[#F5F6F7] text-black">
       {/* Header */}
       <header className="bg-white border-b border-[#E6E7E9]">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3 sm:gap-4">
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-xl bg-[#2855FF] flex items-center justify-center">
-                <span className="text-white font-bold">LQ</span>
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-[#2855FF] flex items-center justify-center">
+                <span className="text-white font-bold text-sm sm:text-base">LQ</span>
               </div>
             </Link>
-            <div>
-              <h1 className="text-2xl font-bold">Dashboard</h1>
-              <p className="text-[#6A6A6A] text-sm">Welcome, {session.user?.name || session.user?.email}</p>
+            <div className="min-w-0">
+              <h1 className="text-lg sm:text-2xl font-bold">Dashboard</h1>
+              <p className="text-[#6A6A6A] text-xs sm:text-sm truncate max-w-[150px] sm:max-w-none">
+                Welcome, {session.user?.name || session.user?.email}
+              </p>
             </div>
           </div>
           <button
             onClick={() => signOut({ callbackUrl: '/' })}
-            className="px-4 py-2 rounded-lg border border-[#E6E7E9] hover:border-[#2855FF] hover:text-[#2855FF] text-sm font-medium transition-colors"
+            className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-[#E6E7E9] hover:border-[#2855FF] hover:text-[#2855FF] text-xs sm:text-sm font-medium transition-colors"
           >
             Sign Out
           </button>
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-6 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-6 md:py-8">
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="p-6 rounded-2xl bg-white border border-[#E6E7E9]">
-            <p className="text-[#6A6A6A] text-sm mb-1">Requests Today</p>
-            <p className="text-3xl font-bold">{formatNumber(usage?.today.requests || 0)}</p>
-            <p className="text-[#6A6A6A] text-sm mt-1">{usage?.today.avgResponseTime || 0}ms avg</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-6 sm:mb-8">
+          <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
+            <p className="text-[#6A6A6A] text-xs sm:text-sm mb-1">Requests Today</p>
+            <p className="text-xl sm:text-2xl md:text-3xl font-bold">{formatNumber(usage?.today.requests || 0)}</p>
+            <p className="text-[#6A6A6A] text-xs sm:text-sm mt-1">{usage?.today.avgResponseTime || 0}ms avg</p>
           </div>
-          <div className="p-6 rounded-2xl bg-white border border-[#E6E7E9]">
-            <p className="text-[#6A6A6A] text-sm mb-1">Monthly Usage</p>
-            <p className="text-3xl font-bold">{formatNumber(usage?.month.requests || 0)}</p>
+          <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
+            <p className="text-[#6A6A6A] text-xs sm:text-sm mb-1">Monthly Usage</p>
+            <p className="text-xl sm:text-2xl md:text-3xl font-bold">{formatNumber(usage?.month.requests || 0)}</p>
             <div className="mt-2">
-              <div className="w-full h-2 bg-[#E6E7E9] rounded-full overflow-hidden">
-                <div 
+              <div className="w-full h-1.5 sm:h-2 bg-[#E6E7E9] rounded-full overflow-hidden">
+                <div
                   className={`h-full rounded-full ${(usage?.month.percentUsed || 0) > 80 ? 'bg-red-500' : 'bg-[#2855FF]'}`}
                   style={{ width: `${Math.min(usage?.month.percentUsed || 0, 100)}%` }}
                 />
               </div>
-              <p className="text-[#6A6A6A] text-xs mt-1">{usage?.month.percentUsed || 0}% of {formatNumber(usage?.month.limit || 10000)}</p>
+              <p className="text-[#6A6A6A] text-[10px] sm:text-xs mt-1">{usage?.month.percentUsed || 0}% of {formatNumber(usage?.month.limit || 10000)}</p>
             </div>
           </div>
-          <div className="p-6 rounded-2xl bg-white border border-[#E6E7E9]">
-            <p className="text-[#6A6A6A] text-sm mb-1">Active API Keys</p>
-            <p className="text-3xl font-bold">{apiKeys.length}</p>
+          <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
+            <p className="text-[#6A6A6A] text-xs sm:text-sm mb-1">API Keys</p>
+            <p className="text-xl sm:text-2xl md:text-3xl font-bold">{apiKeys.length}</p>
           </div>
-          <div className="p-6 rounded-2xl bg-[#2855FF] text-white">
-            <p className="text-white/70 text-sm mb-1">Current Plan</p>
-            <p className="text-3xl font-bold">{usage?.tier || 'FREE'}</p>
-            <p className="text-white/60 text-sm mt-1">{formatNumber(usage?.month.limit || 10000)} req/mo</p>
+          <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#2855FF] text-white">
+            <p className="text-white/70 text-xs sm:text-sm mb-1">Current Plan</p>
+            <p className="text-xl sm:text-2xl md:text-3xl font-bold">{usage?.tier || 'FREE'}</p>
+            <p className="text-white/60 text-xs sm:text-sm mt-1">{formatNumber(usage?.month.limit || 10000)} req/mo</p>
           </div>
         </div>
 
         {/* Quick Start */}
-        <div className="p-6 rounded-2xl bg-white border border-[#E6E7E9] mb-8">
-          <h2 className="text-xl font-bold mb-4">Quick Start</h2>
+        <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9] mb-6 sm:mb-8">
+          <h2 className="text-lg sm:text-xl font-bold mb-4">Quick Start</h2>
 
           {/* Horizon API */}
           <div className="mb-6">
-            <h3 className="text-md font-semibold mb-3 flex items-center gap-2">
+            <h3 className="text-sm sm:text-md font-semibold mb-2 sm:mb-3 flex items-center gap-2">
               <span className="px-2 py-0.5 rounded bg-blue-100 text-blue-700 text-xs">REST</span>
               Horizon API
             </h3>
-            <div className="bg-[#0D0D0D] rounded-lg p-4 mb-3">
-              <p className="text-[#6A6A6A] text-sm mb-2">Endpoint:</p>
-              <code className="text-[#2855FF]">https://api.lumenquery.io</code>
+            <div className="bg-[#0D0D0D] rounded-lg p-3 sm:p-4 mb-3 overflow-x-auto">
+              <p className="text-[#6A6A6A] text-xs sm:text-sm mb-2">Endpoint:</p>
+              <code className="text-[#2855FF] text-sm sm:text-base">https://api.lumenquery.io</code>
             </div>
-            <div className="bg-[#0D0D0D] rounded-lg p-4">
-              <p className="text-[#6A6A6A] text-sm mb-2">Example Request:</p>
-              <pre className="text-sm text-gray-300 overflow-x-auto whitespace-pre-wrap">
+            <div className="bg-[#0D0D0D] rounded-lg p-3 sm:p-4 overflow-x-auto">
+              <p className="text-[#6A6A6A] text-xs sm:text-sm mb-2">Example Request:</p>
+              <pre className="text-xs sm:text-sm text-gray-300 whitespace-pre-wrap">
 {`curl -H "X-API-Key: YOUR_API_KEY" \\
   https://api.lumenquery.io/ledgers?limit=1`}
               </pre>
@@ -208,17 +210,17 @@ export default function DashboardPage() {
 
           {/* Soroban RPC */}
           <div>
-            <h3 className="text-md font-semibold mb-3 flex items-center gap-2">
+            <h3 className="text-sm sm:text-md font-semibold mb-2 sm:mb-3 flex items-center gap-2">
               <span className="px-2 py-0.5 rounded bg-purple-100 text-purple-700 text-xs">JSON-RPC</span>
               Soroban RPC
             </h3>
-            <div className="bg-[#0D0D0D] rounded-lg p-4 mb-3">
-              <p className="text-[#6A6A6A] text-sm mb-2">Endpoint:</p>
-              <code className="text-[#2855FF]">https://rpc.lumenquery.io</code>
+            <div className="bg-[#0D0D0D] rounded-lg p-3 sm:p-4 mb-3 overflow-x-auto">
+              <p className="text-[#6A6A6A] text-xs sm:text-sm mb-2">Endpoint:</p>
+              <code className="text-[#2855FF] text-sm sm:text-base">https://rpc.lumenquery.io</code>
             </div>
-            <div className="bg-[#0D0D0D] rounded-lg p-4">
-              <p className="text-[#6A6A6A] text-sm mb-2">Example Request:</p>
-              <pre className="text-sm text-gray-300 overflow-x-auto whitespace-pre-wrap">
+            <div className="bg-[#0D0D0D] rounded-lg p-3 sm:p-4 overflow-x-auto">
+              <p className="text-[#6A6A6A] text-xs sm:text-sm mb-2">Example Request:</p>
+              <pre className="text-xs sm:text-sm text-gray-300 whitespace-pre-wrap">
 {`curl -X POST -H "X-API-Key: YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{"jsonrpc":"2.0","id":1,"method":"getHealth"}' \\
@@ -229,9 +231,9 @@ export default function DashboardPage() {
         </div>
 
         {/* API Keys Section */}
-        <div className="p-6 rounded-2xl bg-white border border-[#E6E7E9]">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold">API Keys</h2>
+        <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+            <h2 className="text-lg sm:text-xl font-bold">API Keys</h2>
             <button
               onClick={() => setShowCreateModal(true)}
               className="px-4 py-2 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white text-sm font-medium transition-colors"
@@ -241,22 +243,22 @@ export default function DashboardPage() {
           </div>
 
           {apiKeys.length === 0 ? (
-            <p className="text-[#6A6A6A]">You haven&apos;t created any API keys yet.</p>
+            <p className="text-[#6A6A6A] text-sm sm:text-base">You haven&apos;t created any API keys yet.</p>
           ) : (
             <div className="space-y-3">
               {apiKeys.map((key) => (
-                <div key={key.id} className="flex items-center justify-between p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
-                  <div>
-                    <p className="font-medium">{key.name}</p>
-                    <p className="text-sm text-[#6A6A6A]">
-                      <code className="bg-[#E6E7E9] px-2 py-0.5 rounded">{key.keyPrefix}••••••••</code>
-                      <span className="mx-2">•</span>
-                      Created {new Date(key.createdAt).toLocaleDateString()}
+                <div key={key.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 sm:p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
+                  <div className="min-w-0">
+                    <p className="font-medium text-sm sm:text-base">{key.name}</p>
+                    <p className="text-xs sm:text-sm text-[#6A6A6A] flex flex-wrap items-center gap-1 sm:gap-2">
+                      <code className="bg-[#E6E7E9] px-1.5 sm:px-2 py-0.5 rounded text-xs">{key.keyPrefix}••••••••</code>
+                      <span className="hidden sm:inline">•</span>
+                      <span>Created {new Date(key.createdAt).toLocaleDateString()}</span>
                     </p>
                   </div>
                   <button
                     onClick={() => revokeApiKey(key.id)}
-                    className="px-3 py-1 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 text-sm transition-colors"
+                    className="self-end sm:self-auto px-3 py-1 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 text-xs sm:text-sm transition-colors whitespace-nowrap"
                   >
                     Revoke
                   </button>
@@ -270,10 +272,10 @@ export default function DashboardPage() {
       {/* Create API Key Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl border border-[#E6E7E9]">
+          <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 w-full max-w-md shadow-xl border border-[#E6E7E9]">
             {!newSecretKey ? (
               <>
-                <h3 className="text-xl font-bold mb-4">Create API Key</h3>
+                <h3 className="text-lg sm:text-xl font-bold mb-4">Create API Key</h3>
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-black mb-2">Key Name</label>
                   <input
@@ -281,17 +283,17 @@ export default function DashboardPage() {
                     value={newKeyName}
                     onChange={(e) => setNewKeyName(e.target.value)}
                     placeholder="e.g., Production, Development"
-                    className="w-full px-4 py-3 rounded-lg border border-[#E6E7E9] focus:outline-none focus:ring-2 focus:ring-[#2855FF]"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] focus:outline-none focus:ring-2 focus:ring-[#2855FF] text-sm sm:text-base"
                   />
                 </div>
                 <div className="flex gap-3">
-                  <button onClick={closeModal} className="flex-1 px-4 py-2 rounded-lg border border-[#E6E7E9] hover:bg-[#F5F6F7] transition-colors">
+                  <button onClick={closeModal} className="flex-1 px-4 py-2 rounded-lg border border-[#E6E7E9] hover:bg-[#F5F6F7] transition-colors text-sm sm:text-base">
                     Cancel
                   </button>
                   <button
                     onClick={createApiKey}
                     disabled={creating || !newKeyName.trim()}
-                    className="flex-1 px-4 py-2 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white disabled:opacity-50 transition-colors"
+                    className="flex-1 px-4 py-2 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white disabled:opacity-50 transition-colors text-sm sm:text-base"
                   >
                     {creating ? 'Creating...' : 'Create'}
                   </button>
@@ -299,19 +301,19 @@ export default function DashboardPage() {
               </>
             ) : (
               <>
-                <h3 className="text-xl font-bold mb-2">API Key Created!</h3>
-                <p className="text-[#6A6A6A] text-sm mb-4">Copy your API key now. You won&apos;t be able to see it again.</p>
+                <h3 className="text-lg sm:text-xl font-bold mb-2">API Key Created!</h3>
+                <p className="text-[#6A6A6A] text-xs sm:text-sm mb-4">Copy your API key now. You won&apos;t be able to see it again.</p>
                 <div className="mb-4">
                   <div className="flex items-center gap-2">
-                    <code className="flex-1 p-3 rounded-lg bg-[#F5F6F7] text-[#2855FF] text-sm break-all border border-[#E6E7E9]">
+                    <code className="flex-1 p-2 sm:p-3 rounded-lg bg-[#F5F6F7] text-[#2855FF] text-xs sm:text-sm break-all border border-[#E6E7E9]">
                       {newSecretKey}
                     </code>
-                    <button onClick={() => copyToClipboard(newSecretKey)} className="px-3 py-3 rounded-lg bg-[#F5F6F7] hover:bg-[#E6E7E9] border border-[#E6E7E9] transition-colors">
+                    <button onClick={() => copyToClipboard(newSecretKey)} className="px-2 sm:px-3 py-2 sm:py-3 rounded-lg bg-[#F5F6F7] hover:bg-[#E6E7E9] border border-[#E6E7E9] transition-colors flex-shrink-0">
                       {copied ? '✓' : '📋'}
                     </button>
                   </div>
                 </div>
-                <button onClick={closeModal} className="w-full px-4 py-2 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white transition-colors">
+                <button onClick={closeModal} className="w-full px-4 py-2 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white transition-colors text-sm sm:text-base">
                   Done
                 </button>
               </>
