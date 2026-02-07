@@ -22,6 +22,17 @@ http:
         - security-headers
         - api-rate-limit
 
+    rpc:
+      rule: "Host(`rpc.lumenquery.io`)"
+      service: rpc-gateway
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - security-headers
+        - rpc-rate-limit
+
     # Note: monitoring.lumenquery.io is hosted on mon1.lumenquery.io
 
   services:
@@ -33,7 +44,12 @@ http:
     api-gateway:
       loadBalancer:
         servers:
-          - url: "http://172.17.0.1:8080"
+          - url: "http://host.docker.internal:8080"
+
+    rpc-gateway:
+      loadBalancer:
+        servers:
+          - url: "http://host.docker.internal:8082"
 
   middlewares:
     security-headers:
@@ -57,6 +73,12 @@ http:
         period: 1m
 
     api-rate-limit:
+      rateLimit:
+        average: 200
+        burst: 100
+        period: 1m
+
+    rpc-rate-limit:
       rateLimit:
         average: 200
         burst: 100

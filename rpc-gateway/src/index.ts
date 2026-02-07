@@ -301,7 +301,8 @@ function jsonRpcError(id: string | number | null, code: number, message: string,
 
 // Auth hook for all non-health routes
 app.addHook('preHandler', async (req, reply) => {
-  if (req.url === '/health') {
+  // Skip auth for health and metrics endpoints
+  if (req.url === '/health' || req.url === '/metrics') {
     return;
   }
 

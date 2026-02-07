@@ -3,6 +3,8 @@ services:
     image: traefik:v2.10
     container_name: lumenquery-traefik
     restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     command:
       - "--api.dashboard=true"
       - "--api.insecure=true"
