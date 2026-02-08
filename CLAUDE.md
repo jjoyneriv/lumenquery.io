@@ -2,8 +2,8 @@
 
 ## Current Status
 - Working on: Production deployment
-- Last session: 2026-02-07
-- Last validated: 2026-02-07
+- Last session: 2026-02-08
+- Last validated: 2026-02-08
 
 ## Service Status (api1.lumenquery.io)
 
@@ -150,6 +150,8 @@
 8. Add blog articles about Claude Code
 9. Add CLAUDE.md project documentation
 10. Add Traefik route for rpc.lumenquery.io
+11. Update CLAUDE.md with session progress
+12. Fix BigInt serialization error in usage API
 
 ## CI/CD Pipelines
 
@@ -355,6 +357,14 @@ docker compose up -d
    - Added rule: 172.16.0.0/12 → port 8080 (API gateway)
    - Added rule: 172.16.0.0/12 → port 8082 (RPC gateway)
 10. Committed and pushed Traefik routing changes to GitHub
+
+### 2026-02-08
+1. Fixed dashboard usage display not reporting:
+   - Issue: BigInt fields from PostgreSQL (totalResponseTimeMs, totalDataTransferBytes) couldn't be serialized to JSON
+   - Error: "TypeError: Do not know how to serialize a BigInt"
+   - Fix: Convert BigInt values to Number before JSON response in /api/usage endpoint
+2. Rebuilt and deployed portal with the fix
+3. Committed and pushed fix to GitHub
 
 ## Notes
 - Before ending a session, ask Claude to update this file with current progress
