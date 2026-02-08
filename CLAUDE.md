@@ -46,14 +46,16 @@
 | 80 | Anywhere | HTTP |
 | 443 | Anywhere | HTTPS |
 | 3000 | Anywhere | Portal |
+| 8080 | Docker + mon1 | API Gateway |
 | 8081 | mon1 only | Traefik metrics |
-| 8082 | mon1 only | RPC Gateway metrics |
+| 8082 | Docker + mon1 | RPC Gateway |
 | 9080 | mon1 only | cAdvisor |
 | 9100 | mon1 only | node-exporter |
 | 9121 | mon1 only | redis-exporter |
 | 9187 | mon1 only | postgres-exporter |
 
 **mon1 IP**: 184.105.230.245
+**Docker networks**: 172.16.0.0/12
 
 ## Project Structure
 
@@ -146,6 +148,8 @@
 6. Fix exporters configuration
 7. Add mobile-friendly responsive design to portal
 8. Add blog articles about Claude Code
+9. Add CLAUDE.md project documentation
+10. Add Traefik route for rpc.lumenquery.io
 
 ## CI/CD Pipelines
 
@@ -185,6 +189,7 @@ DEPLOY_SSH_KEY   - Private SSH key for deployment
 |----------|-------|
 | Portal (general) | 100/min (Traefik) |
 | API Gateway | 200/min (Traefik) |
+| RPC Gateway | 200/min (Traefik) |
 | /api/auth/signup | 5/hour |
 | /api/auth/signin | 10/min |
 | /api/* | 60/min |
@@ -284,6 +289,7 @@ docker compose up -d
 - [x] Blog posts (8 articles)
 - [x] Health check endpoints
 - [x] Mobile-friendly responsive design
+- [x] RPC Gateway routing (rpc.lumenquery.io)
 
 ### Pending
 - [ ] Configure GitHub Secrets for CI/CD deployment
@@ -335,6 +341,20 @@ docker compose up -d
    - "Getting Started with Claude Code"
 5. Rebuilt and deployed portal with new blog posts
 6. Committed and pushed blog articles to GitHub
+7. Validated dashboard functionality:
+   - All services running and healthy
+   - Database tables correct (User, ApiKey, UsageLog)
+   - Signup endpoint working
+   - Protected endpoints requiring authentication
+8. Added Traefik route for rpc.lumenquery.io:
+   - RPC router with TLS (Let's Encrypt)
+   - Rate limiting: 200/min with burst of 100
+   - Configured host.docker.internal for Traefik
+   - Added extra_hosts to docker-compose.yml
+9. Fixed UFW firewall for Docker network connectivity:
+   - Added rule: 172.16.0.0/12 → port 8080 (API gateway)
+   - Added rule: 172.16.0.0/12 → port 8082 (RPC gateway)
+10. Committed and pushed Traefik routing changes to GitHub
 
 ## Notes
 - Before ending a session, ask Claude to update this file with current progress
