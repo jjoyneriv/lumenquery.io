@@ -103,13 +103,17 @@ function calculateMetrics(ledgers: HorizonLedger[], feeStats: HorizonFeeStats) {
 
   const latestLedger = ledgers[0];
 
+  // Helper to get total transactions (transaction_count can be null in some Horizon versions)
+  const getTxCount = (ledger: HorizonLedger) =>
+    ledger.transaction_count ?? (ledger.successful_transaction_count + ledger.failed_transaction_count);
+
   // Calculate TPS from recent ledgers (last 10)
   const recentLedgers = ledgers.slice(0, 10);
   let totalTxs = 0;
   let totalTime = 0;
 
   for (let i = 0; i < recentLedgers.length - 1; i++) {
-    totalTxs += recentLedgers[i].transaction_count;
+    totalTxs += getTxCount(recentLedgers[i]);
     const time1 = new Date(recentLedgers[i].closed_at).getTime();
     const time2 = new Date(recentLedgers[i + 1].closed_at).getTime();
     totalTime += (time1 - time2) / 1000;
@@ -118,7 +122,7 @@ function calculateMetrics(ledgers: HorizonLedger[], feeStats: HorizonFeeStats) {
   const tps = totalTime > 0 ? totalTxs / totalTime : 0;
 
   // Calculate 24h transaction count (estimate from available data)
-  const totalTransactions = ledgers.reduce((sum, l) => sum + l.transaction_count, 0);
+  const totalTransactions = ledgers.reduce((sum, l) => sum + getTxCount(l), 0);
   const successfulTxs = ledgers.reduce((sum, l) => sum + l.successful_transaction_count, 0);
   const failedTxs = ledgers.reduce((sum, l) => sum + l.failed_transaction_count, 0);
 
@@ -164,6 +168,10 @@ function aggregateHistory(ledgers: HorizonLedger[]): Array<{
 }> {
   if (ledgers.length === 0) return [];
 
+  // Helper to get total transactions (transaction_count can be null in some Horizon versions)
+  const getTxCount = (ledger: HorizonLedger) =>
+    ledger.transaction_count ?? (ledger.successful_transaction_count + ledger.failed_transaction_count);
+
   // Group ledgers by hour for cleaner visualization
   const hourlyData = new Map<string, { txs: number; success: number; total: number }>();
 
@@ -172,10 +180,11 @@ function aggregateHistory(ledgers: HorizonLedger[]): Array<{
     date.setMinutes(0, 0, 0);
     const hourKey = date.toISOString();
 
+    const txCount = getTxCount(ledger);
     const existing = hourlyData.get(hourKey) || { txs: 0, success: 0, total: 0 };
-    existing.txs += ledger.transaction_count;
+    existing.txs += txCount;
     existing.success += ledger.successful_transaction_count;
-    existing.total += ledger.transaction_count;
+    existing.total += txCount;
     hourlyData.set(hourKey, existing);
   }
 
