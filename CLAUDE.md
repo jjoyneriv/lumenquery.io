@@ -394,6 +394,10 @@ docker compose up -d
 7. Added canonical URLs to all pages:
    - Home, Blog, Docs, Analytics pages with static canonical URLs
    - Blog posts with dynamic canonical URLs based on slug
+8. Fixed analytics dashboard not showing transaction data:
+   - Issue: Horizon API returns `transaction_count` as null
+   - Fix: Calculate total from `successful_transaction_count + failed_transaction_count`
+   - Applied fix to both `calculateMetrics` and `aggregateHistory` functions
 
 ## SEO Optimization
 
