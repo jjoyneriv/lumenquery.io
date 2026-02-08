@@ -391,19 +391,31 @@ docker compose up -d
    - JSON-LD structured data for blog posts (Article schema)
    - ARIA attributes for accessibility (aria-labelledby, aria-label, aria-current)
    - Proper heading hierarchy (H1-H6) with sr-only headings where needed
+7. Added canonical URLs to all pages:
+   - Home, Blog, Docs, Analytics pages with static canonical URLs
+   - Blog posts with dynamic canonical URLs based on slug
 
 ## SEO Optimization
 
 ### Metadata Implementation
-| Page | Title | robots |
-|------|-------|--------|
-| Home | LumenQuery - Enterprise Stellar Horizon API & Soroban RPC Infrastructure | index, follow |
-| Blog | Blog - LumenQuery \| Stellar Blockchain Insights & Tutorials | index, follow |
-| Blog Posts | [Post Title] - LumenQuery Blog + JSON-LD Article schema | index, follow |
-| Docs | API Documentation - LumenQuery \| Stellar Horizon API & Soroban RPC | index, follow |
-| Analytics | Stellar Network Analytics - LumenQuery \| Real-Time Blockchain Metrics | index, follow |
-| Dashboard | Dashboard - LumenQuery | noindex, nofollow |
-| Auth Pages | Authentication - LumenQuery | noindex, nofollow |
+| Page | Title | robots | canonical |
+|------|-------|--------|-----------|
+| Home | LumenQuery - Enterprise Stellar Horizon API & Soroban RPC Infrastructure | index, follow | https://lumenquery.io |
+| Blog | Blog - LumenQuery \| Stellar Blockchain Insights & Tutorials | index, follow | https://lumenquery.io/blog |
+| Blog Posts | [Post Title] - LumenQuery Blog + JSON-LD Article schema | index, follow | https://lumenquery.io/blog/{slug} |
+| Docs | API Documentation - LumenQuery \| Stellar Horizon API & Soroban RPC | index, follow | https://lumenquery.io/docs |
+| Analytics | Stellar Network Analytics - LumenQuery \| Real-Time Blockchain Metrics | index, follow | https://lumenquery.io/analytics |
+| Dashboard | Dashboard - LumenQuery | noindex, nofollow | - |
+| Auth Pages | Authentication - LumenQuery | noindex, nofollow | - |
+
+### Required Meta Tags (All Pages)
+- `<title>` - Page-specific title
+- `<meta charset="utf-8">` - Character encoding (auto by Next.js)
+- `<meta name="viewport">` - Responsive viewport (auto by Next.js)
+- `<meta name="robots">` - Search engine directives
+- `<meta name="description">` - Page description
+- `<link rel="canonical">` - Canonical URL
+- `<h1>` - Primary heading
 
 ### Semantic Elements Added
 - `<main>` wrapper on all pages
