@@ -1,14 +1,33 @@
 import Link from 'next/link';
+import { Metadata } from 'next';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+
+export const metadata: Metadata = {
+  title: 'LumenQuery - Enterprise Stellar Horizon API & Soroban RPC Infrastructure',
+  description: 'Build blockchain applications on the Stellar network with reliable, scalable infrastructure. Enterprise-grade Horizon API and Soroban RPC with sub-100ms response times. Free tier available.',
+  keywords: ['Stellar', 'Horizon API', 'Soroban RPC', 'blockchain', 'XLM', 'cryptocurrency', 'smart contracts', 'Web3'],
+  openGraph: {
+    title: 'LumenQuery - Enterprise Stellar Horizon API & Soroban RPC',
+    description: 'Build blockchain applications on the Stellar network with reliable, scalable infrastructure. Enterprise-grade Horizon API and Soroban RPC.',
+    type: 'website',
+    url: 'https://lumenquery.io',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'LumenQuery - Enterprise Stellar Infrastructure',
+    description: 'Build on Stellar with reliable Horizon API and Soroban RPC. Start free.',
+  },
+};
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-white text-black">
       <Header activePage="home" />
 
-      {/* Hero */}
-      <section className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 bg-[#F5F6F7]">
+      <main>
+        {/* Hero */}
+        <header className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 bg-[#F5F6F7]">
         <div className="max-w-4xl mx-auto text-center">
           <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-4 sm:mb-6">
             <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs sm:text-sm font-medium">Horizon API</span>
@@ -35,10 +54,11 @@ export default function Home() {
             Free tier includes 10,000 requests/month • No credit card required
           </p>
         </div>
-      </section>
+      </header>
 
-      {/* Code Example */}
-      <section className="py-10 sm:py-16 px-4 sm:px-6 bg-white">
+        {/* Code Example */}
+        <section className="py-10 sm:py-16 px-4 sm:px-6 bg-white" aria-labelledby="code-examples-heading">
+          <h2 id="code-examples-heading" className="sr-only">API Code Examples</h2>
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             {/* Horizon API Example */}
@@ -90,10 +110,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features */}
-      <section className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 bg-[#F5F6F7]">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-3 sm:mb-4">Why LumenQuery?</h2>
+        {/* Features */}
+        <section className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 bg-[#F5F6F7]" aria-labelledby="features-heading">
+          <div className="max-w-6xl mx-auto">
+            <h2 id="features-heading" className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-3 sm:mb-4">Why LumenQuery?</h2>
           <p className="text-center text-[#6A6A6A] mb-8 sm:mb-12 md:mb-16 max-w-2xl mx-auto text-sm sm:text-base">
             Skip the infrastructure headaches. We handle the complexity so you can focus on building.
           </p>
@@ -129,10 +149,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Pricing */}
-      <section className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 bg-white">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-3 sm:mb-4">Simple, Transparent Pricing</h2>
+        {/* Pricing */}
+        <section className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 bg-white" aria-labelledby="pricing-heading">
+          <div className="max-w-6xl mx-auto">
+            <h2 id="pricing-heading" className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-3 sm:mb-4">Simple, Transparent Pricing</h2>
           <p className="text-center text-[#6A6A6A] mb-8 sm:mb-12 md:mb-16 text-sm sm:text-base">
             Start free, scale as you grow
           </p>
@@ -233,18 +253,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 bg-[#0D0D0D]">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-white">Ready to Build on Stellar?</h2>
-          <p className="text-base sm:text-lg md:text-xl text-[#6A6A6A] mb-6 sm:mb-10">
-            Join developers building the future of finance with LumenQuery.
-          </p>
-          <Link href="/auth/signup" className="inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white font-semibold text-base sm:text-lg transition-colors">
-            Start Building for Free
-          </Link>
-        </div>
-      </section>
+        {/* CTA */}
+        <section className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 bg-[#0D0D0D]" aria-labelledby="cta-heading">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 id="cta-heading" className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-white">Ready to Build on Stellar?</h2>
+            <p className="text-base sm:text-lg md:text-xl text-[#6A6A6A] mb-6 sm:mb-10">
+              Join developers building the future of finance with LumenQuery.
+            </p>
+            <Link href="/auth/signup" className="inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white font-semibold text-base sm:text-lg transition-colors">
+              Start Building for Free
+            </Link>
+          </div>
+        </section>
+      </main>
 
       <Footer variant="full" />
     </div>

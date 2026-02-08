@@ -1,10 +1,22 @@
 import Link from 'next/link';
+import { Metadata } from 'next';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-export const metadata = {
-  title: 'Blog - LumenQuery',
-  description: 'Insights, tutorials, and updates from the LumenQuery team.',
+export const metadata: Metadata = {
+  title: 'Blog - LumenQuery | Stellar Blockchain Insights & Tutorials',
+  description: 'Explore tutorials, developer guides, and insights about Stellar blockchain, Soroban smart contracts, XLM cryptocurrency, and Web3 development from the LumenQuery team.',
+  keywords: ['Stellar blog', 'blockchain tutorials', 'Soroban development', 'XLM guides', 'Web3 tutorials', 'cryptocurrency development'],
+  openGraph: {
+    title: 'LumenQuery Blog - Stellar Blockchain Insights',
+    description: 'Tutorials, developer guides, and insights about Stellar blockchain and Soroban smart contracts.',
+    type: 'website',
+    url: 'https://lumenquery.io/blog',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 const posts = [
@@ -79,40 +91,42 @@ export default function BlogPage() {
     <div className="min-h-screen bg-white text-black">
       <Header activePage="blog" />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
-        <div className="text-center mb-8 sm:mb-12 md:mb-16">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
+        <header className="text-center mb-8 sm:mb-12 md:mb-16">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4">Blog</h1>
           <p className="text-base sm:text-lg md:text-xl text-[#6A6A6A]">
             Insights, tutorials, and updates from the LumenQuery team
           </p>
-        </div>
+        </header>
 
-        <div className="space-y-4 sm:space-y-6 md:space-y-8">
-          {posts.map((post) => (
-            <article key={post.slug} className="p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-[#E6E7E9] hover:border-[#2855FF] hover:shadow-lg transition-all">
-              <Link href={`/blog/${post.slug}`}>
-                <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-                  <span className="px-2 sm:px-3 py-1 rounded-full bg-[rgba(40,85,255,0.1)] text-[#2855FF] text-xs font-medium">
-                    {post.category}
-                  </span>
-                  <span className="text-[#6A6A6A] text-xs sm:text-sm">{post.date}</span>
-                  <span className="text-[#6A6A6A] text-xs sm:text-sm hidden sm:inline">•</span>
-                  <span className="text-[#6A6A6A] text-xs sm:text-sm hidden sm:inline">{post.readTime}</span>
-                </div>
-                <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-2 sm:mb-3 hover:text-[#2855FF] transition-colors">
-                  {post.title}
-                </h2>
-                <p className="text-[#6A6A6A] leading-relaxed text-sm sm:text-base line-clamp-3">
-                  {post.excerpt}
-                </p>
-                <div className="mt-3 sm:mt-4 text-[#2855FF] text-sm font-medium">
-                  Read more →
-                </div>
-              </Link>
-            </article>
-          ))}
-        </div>
-      </div>
+        <section aria-label="Blog posts">
+          <div className="space-y-4 sm:space-y-6 md:space-y-8">
+            {posts.map((post) => (
+              <article key={post.slug} className="p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-[#E6E7E9] hover:border-[#2855FF] hover:shadow-lg transition-all">
+                <Link href={`/blog/${post.slug}`}>
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                    <span className="px-2 sm:px-3 py-1 rounded-full bg-[rgba(40,85,255,0.1)] text-[#2855FF] text-xs font-medium">
+                      {post.category}
+                    </span>
+                    <time dateTime={post.date} className="text-[#6A6A6A] text-xs sm:text-sm">{post.date}</time>
+                    <span className="text-[#6A6A6A] text-xs sm:text-sm hidden sm:inline">•</span>
+                    <span className="text-[#6A6A6A] text-xs sm:text-sm hidden sm:inline">{post.readTime}</span>
+                  </div>
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-2 sm:mb-3 hover:text-[#2855FF] transition-colors">
+                    {post.title}
+                  </h2>
+                  <p className="text-[#6A6A6A] leading-relaxed text-sm sm:text-base line-clamp-3">
+                    {post.excerpt}
+                  </p>
+                  <div className="mt-3 sm:mt-4 text-[#2855FF] text-sm font-medium">
+                    Read more →
+                  </div>
+                </Link>
+              </article>
+            ))}
+          </div>
+        </section>
+      </main>
 
       <Footer />
     </div>

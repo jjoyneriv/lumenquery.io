@@ -83,18 +83,20 @@ export default function DocsPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Desktop Sidebar */}
-          <nav className="hidden lg:block lg:col-span-1">
-            <div className="sticky top-8">
+          <aside className="hidden lg:block lg:col-span-1" aria-label="Documentation navigation">
+            <nav className="sticky top-8">
               {sidebarContent}
-            </div>
-          </nav>
+            </nav>
+          </aside>
 
           {/* Main Content */}
           <main className="lg:col-span-3">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">LumenQuery API Documentation</h1>
-            <p className="text-base sm:text-lg md:text-xl text-[#6A6A6A] mb-8 sm:mb-12">
-              Enterprise-grade Stellar infrastructure. Horizon API for blockchain data, Soroban RPC for smart contracts.
-            </p>
+            <header className="mb-8 sm:mb-12">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">LumenQuery API Documentation</h1>
+              <p className="text-base sm:text-lg md:text-xl text-[#6A6A6A]">
+                Enterprise-grade Stellar infrastructure. Horizon API for blockchain data, Soroban RPC for smart contracts.
+              </p>
+            </header>
 
             {/* Introduction */}
             <section id="introduction" className="mb-10 sm:mb-16">

@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { Metadata } from 'next';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Script from 'next/script';
 
 const posts: Record<string, {
   title: string;
@@ -1897,22 +1899,67 @@ export async function generateStaticParams() {
   return Object.keys(posts).map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const post = posts[params.slug];
   if (!post) return { title: 'Post Not Found' };
-  
+
+  const description = post.content.trim().split('\n').find(line => line.trim() && !line.startsWith('#'))?.slice(0, 160) || post.title;
+
   return {
     title: `${post.title} - LumenQuery Blog`,
-    description: post.content.slice(0, 160),
+    description,
+    keywords: [post.category, 'Stellar', 'blockchain', 'LumenQuery', 'Web3'],
+    authors: [{ name: 'LumenQuery Team' }],
+    openGraph: {
+      title: post.title,
+      description,
+      type: 'article',
+      url: `https://lumenquery.io/blog/${params.slug}`,
+      publishedTime: post.date,
+      authors: ['LumenQuery Team'],
+      siteName: 'LumenQuery',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description,
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
   };
 }
 
 export default function BlogPost({ params }: { params: { slug: string } }) {
   const post = posts[params.slug];
-  
+
   if (!post) {
     notFound();
   }
+
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    datePublished: post.date,
+    dateModified: post.date,
+    author: {
+      '@type': 'Organization',
+      name: 'LumenQuery',
+      url: 'https://lumenquery.io',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'LumenQuery',
+      url: 'https://lumenquery.io',
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://lumenquery.io/blog/${params.slug}`,
+    },
+    articleSection: post.category,
+  };
 
   const renderContent = (content: string) => {
     const lines = content.trim().split('\n');
@@ -2075,43 +2122,50 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
 
   return (
     <div className="min-h-screen bg-white text-black">
+      <Script
+        id="article-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
       <Header activePage="blog" />
 
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
-        <div className="mb-6 sm:mb-8">
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
+        <nav className="mb-6 sm:mb-8" aria-label="Breadcrumb">
           <Link href="/blog" className="text-[#6A6A6A] hover:text-[#2855FF] text-sm">
             ← Back to Blog
           </Link>
-        </div>
+        </nav>
 
-        <header className="mb-8 sm:mb-12">
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-            <span className="px-2 sm:px-3 py-1 rounded-full bg-[rgba(40,85,255,0.1)] text-[#2855FF] text-xs font-medium">
-              {post.category}
-            </span>
-            <span className="text-[#6A6A6A] text-xs sm:text-sm">{post.date}</span>
-            <span className="text-[#6A6A6A] text-xs sm:text-sm hidden sm:inline">•</span>
-            <span className="text-[#6A6A6A] text-xs sm:text-sm hidden sm:inline">{post.readTime}</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight">
-            {post.title}
-          </h1>
-        </header>
+        <article>
+          <header className="mb-8 sm:mb-12">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+              <span className="px-2 sm:px-3 py-1 rounded-full bg-[rgba(40,85,255,0.1)] text-[#2855FF] text-xs font-medium">
+                {post.category}
+              </span>
+              <time dateTime={post.date} className="text-[#6A6A6A] text-xs sm:text-sm">{post.date}</time>
+              <span className="text-[#6A6A6A] text-xs sm:text-sm hidden sm:inline">•</span>
+              <span className="text-[#6A6A6A] text-xs sm:text-sm hidden sm:inline">{post.readTime}</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight">
+              {post.title}
+            </h1>
+          </header>
 
-        <div className="prose prose-gray max-w-none">
-          {renderContent(post.content)}
-        </div>
+          <section className="prose prose-gray max-w-none" aria-label="Article content">
+            {renderContent(post.content)}
+          </section>
 
-        <div className="mt-10 sm:mt-16 p-5 sm:p-8 rounded-xl sm:rounded-2xl bg-[#2855FF] text-white text-center">
-          <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3">Ready to Get Started?</h2>
-          <p className="text-white/80 mb-4 sm:mb-6 text-sm sm:text-base">
-            Sign up for free and start building on Stellar with LumenQuery today.
-          </p>
-          <Link href="/auth/signup" className="inline-block px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg bg-white text-[#2855FF] font-medium hover:bg-gray-100 transition-colors text-sm sm:text-base">
-            Create Free Account
-          </Link>
-        </div>
-      </article>
+          <aside className="mt-10 sm:mt-16 p-5 sm:p-8 rounded-xl sm:rounded-2xl bg-[#2855FF] text-white text-center">
+            <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3">Ready to Get Started?</h2>
+            <p className="text-white/80 mb-4 sm:mb-6 text-sm sm:text-base">
+              Sign up for free and start building on Stellar with LumenQuery today.
+            </p>
+            <Link href="/auth/signup" className="inline-block px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg bg-white text-[#2855FF] font-medium hover:bg-gray-100 transition-colors text-sm sm:text-base">
+              Create Free Account
+            </Link>
+          </aside>
+        </article>
+      </main>
 
       <Footer />
     </div>

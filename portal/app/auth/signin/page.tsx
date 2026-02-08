@@ -35,19 +35,20 @@ function SignInForm() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F6F7] flex items-center justify-center px-4 py-8 sm:py-12">
+    <main className="min-h-screen bg-[#F5F6F7] flex items-center justify-center px-4 py-8 sm:py-12">
       <div className="w-full max-w-md">
-        <div className="text-center mb-6 sm:mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 mb-4 sm:mb-6">
+        <header className="text-center mb-6 sm:mb-8">
+          <Link href="/" className="inline-flex items-center gap-2 mb-4 sm:mb-6" aria-label="LumenQuery home">
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-[#2855FF] flex items-center justify-center">
               <span className="text-white font-bold text-lg sm:text-xl">LQ</span>
             </div>
           </Link>
           <h1 className="text-2xl sm:text-3xl font-bold text-black">Welcome back</h1>
           <p className="text-[#6A6A6A] mt-2 text-sm sm:text-base">Sign in to your LumenQuery account</p>
-        </div>
+        </header>
 
-        <div className="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-8 shadow-sm border border-[#E6E7E9]">
+        <section className="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-8 shadow-sm border border-[#E6E7E9]" aria-labelledby="signin-heading">
+          <h2 id="signin-heading" className="sr-only">Sign in form</h2>
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             {error && (
               <div className="p-4 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
@@ -94,9 +95,9 @@ function SignInForm() {
               Sign up
             </Link>
           </p>
-        </div>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }
 

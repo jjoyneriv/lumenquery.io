@@ -130,9 +130,9 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-[#F5F6F7] text-black">
       {/* Header */}
       <header className="bg-white border-b border-[#E6E7E9]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+        <nav className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
           <div className="flex items-center gap-3 sm:gap-4">
-            <Link href="/" className="flex items-center gap-2">
+            <Link href="/" className="flex items-center gap-2" aria-label="LumenQuery home">
               <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-[#2855FF] flex items-center justify-center">
                 <span className="text-white font-bold text-sm sm:text-base">LQ</span>
               </div>
@@ -150,12 +150,14 @@ export default function DashboardPage() {
           >
             Sign Out
           </button>
-        </div>
+        </nav>
       </header>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-6 md:py-8">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-6 md:py-8">
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-6 sm:mb-8">
+        <section aria-labelledby="stats-heading" className="mb-6 sm:mb-8">
+          <h2 id="stats-heading" className="sr-only">Usage Statistics</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
           <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
             <p className="text-[#6A6A6A] text-xs sm:text-sm mb-1">Requests Today</p>
             <p className="text-xl sm:text-2xl md:text-3xl font-bold">{formatNumber(usage?.today.requests || 0)}</p>
@@ -183,11 +185,12 @@ export default function DashboardPage() {
             <p className="text-xl sm:text-2xl md:text-3xl font-bold">{usage?.tier || 'FREE'}</p>
             <p className="text-white/60 text-xs sm:text-sm mt-1">{formatNumber(usage?.month.limit || 10000)} req/mo</p>
           </div>
-        </div>
+          </div>
+        </section>
 
         {/* Quick Start */}
-        <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9] mb-6 sm:mb-8">
-          <h2 className="text-lg sm:text-xl font-bold mb-4">Quick Start</h2>
+        <section className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9] mb-6 sm:mb-8" aria-labelledby="quickstart-heading">
+          <h2 id="quickstart-heading" className="text-lg sm:text-xl font-bold mb-4">Quick Start</h2>
 
           {/* Horizon API */}
           <div className="mb-6">
@@ -228,12 +231,12 @@ export default function DashboardPage() {
               </pre>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* API Keys Section */}
-        <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
+        <section className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]" aria-labelledby="apikeys-heading">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
-            <h2 className="text-lg sm:text-xl font-bold">API Keys</h2>
+            <h2 id="apikeys-heading" className="text-lg sm:text-xl font-bold">API Keys</h2>
             <button
               onClick={() => setShowCreateModal(true)}
               className="px-4 py-2 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white text-sm font-medium transition-colors"
@@ -266,8 +269,8 @@ export default function DashboardPage() {
               ))}
             </div>
           )}
-        </div>
-      </div>
+        </section>
+      </main>
 
       {/* Create API Key Modal */}
       {showCreateModal && (
