@@ -5,6 +5,7 @@
 - Last session: 2026-02-08
 - Last validated: 2026-02-08
 - SEO optimization: Completed
+- Token Analytics: Completed (Phase 2)
 
 ## Service Status (api1.lumenquery.io)
 
@@ -398,6 +399,15 @@ docker compose up -d
    - Issue: Horizon API returns `transaction_count` as null
    - Fix: Calculate total from `successful_transaction_count + failed_transaction_count`
    - Applied fix to both `calculateMetrics` and `aggregateHistory` functions
+9. Implemented Token Analytics (Phase 2):
+   - Created API endpoint: /api/analytics/tokens
+   - Token Velocity: Payment frequency, volume, avg payment size
+   - Top Tokens by Volume: Ranked list with payment counts
+   - Whale Tracking: Large XLM holders (>1M XLM) and movements (>100K XLM)
+   - Issuer Risk Analysis: Authorization flags assessment with risk scoring
+   - Components: WhaleTable, RiskBadge with tooltips
+   - Redis caching: 60s for velocity, 120s for whales, 300s for risk
+   - Full dashboard UI with charts and tables
 
 ## SEO Optimization
 
@@ -456,22 +466,25 @@ Public analytics dashboard for Stellar network insights. No authentication requi
 |-------|-------------|--------|
 | /analytics | Overview with key metrics and charts | ✅ Live |
 | /analytics/network | Detailed ledger and transaction metrics | ✅ Live |
-| /analytics/tokens | Token velocity, whale tracking (100K+ XLM) | Coming Soon |
+| /analytics/tokens | Token velocity, whale tracking, issuer risk | ✅ Live |
 | /analytics/contracts | Soroban contract analytics, gas usage | Coming Soon |
 
 ### Components
 - `MetricCard` - Display single metric with icon, trend indicator
 - `AreaChart` - Time series visualization using Recharts
 - `TimeRangeSelector` - Toggle between 24h, 7d, 30d views
+- `WhaleTable` - Display top XLM holders and large movements
+- `RiskBadge` - Color-coded risk indicator with tooltip
 
 ### API Endpoints
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | /api/analytics/network | GET | Network overview metrics |
+| /api/analytics/tokens | GET | Token velocity, whales, issuer risk |
 
 ### Data Sources
-- Stellar Horizon API (ledgers, fee_stats)
-- Redis cache (30 second TTL)
+- Stellar Horizon API (ledgers, fee_stats, payments, assets, accounts)
+- Redis cache (60-300 second TTL depending on data type)
 
 ### Metrics Validation (2026-02-08)
 All analytics metrics validated against Horizon API:
@@ -490,8 +503,16 @@ All analytics metrics validated against Horizon API:
 - 24h estimate uses 100 ledgers (~10 min) for better daily average
 - `transaction_count` field is null in Horizon; calculated from `successful + failed`
 
+### Token Analytics Features (Phase 2 - Completed)
+| Feature | Description | Threshold |
+|---------|-------------|-----------|
+| Token Velocity | Payment frequency and volume tracking | 200 payments sample |
+| Top Tokens | Ranked by 24h volume | Top 5 tokens |
+| Whale Detection | Large XLM holders | > 1,000,000 XLM |
+| Large Movements | Recent significant transfers | > 100,000 XLM |
+| Issuer Risk | Authorization flags assessment | auth_required/revocable/clawback |
+
 ### Future Phases
-- Phase 2: Token analytics (velocity, whale movements >100K XLM, issuer risk)
 - Phase 3: Soroban contract analytics (call frequency, gas usage, events)
 
 ## Notes
