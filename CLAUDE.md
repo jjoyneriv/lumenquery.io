@@ -473,6 +473,23 @@ Public analytics dashboard for Stellar network insights. No authentication requi
 - Stellar Horizon API (ledgers, fee_stats)
 - Redis cache (30 second TTL)
 
+### Metrics Validation (2026-02-08)
+All analytics metrics validated against Horizon API:
+
+| Metric | Source | Calculation | Status |
+|--------|--------|-------------|--------|
+| Current Ledger | `/ledgers?limit=1` | Latest ledger sequence | ✅ Validated |
+| Avg Fee | `fee_stats.last_ledger_base_fee` | Direct from Horizon | ✅ Validated |
+| P95 Fee | `fee_stats.fee_charged.p95` | Direct from Horizon | ✅ Validated |
+| Success Rate | 100 ledgers sample | `successful_txs / total_txs × 100` | ✅ Validated |
+| TPS | 10 ledgers sample | `total_txs / time_span_seconds` | ✅ Validated |
+| Transactions (24h) | 100 ledgers sample | `total_txs × (86400 / sample_time_span)` | ✅ Validated |
+
+**Notes:**
+- TPS uses 10 ledgers (~1 min) for current rate display
+- 24h estimate uses 100 ledgers (~10 min) for better daily average
+- `transaction_count` field is null in Horizon; calculated from `successful + failed`
+
 ### Future Phases
 - Phase 2: Token analytics (velocity, whale movements >100K XLM, issuer risk)
 - Phase 3: Soroban contract analytics (call frequency, gas usage, events)
