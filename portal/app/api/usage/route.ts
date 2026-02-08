@@ -80,20 +80,25 @@ export async function GET(req: Request) {
     const monthlyLimit = org?.monthlyRequestLimit || 10000;
     const monthlyTotal = monthlyUsage._sum.totalRequests || 0;
 
+    // Convert BigInt values to Number for JSON serialization
+    const totalResponseTimeMs = Number(monthlyUsage._sum.totalResponseTimeMs ?? 0);
+    const totalDataTransferBytes = Number(monthlyUsage._sum.totalDataTransferBytes ?? 0);
+    const todayResponseTimeMs = Number(todayUsage?.totalResponseTimeMs ?? 0);
+
     return NextResponse.json({
       today: {
         requests: todayUsage?.totalRequests || 0,
         successful: todayUsage?.successfulRequests || 0,
         failed: todayUsage?.failedRequests || 0,
-        avgResponseTime: todayUsage?.totalRequests 
-          ? Math.round(Number(todayUsage.totalResponseTimeMs) / todayUsage.totalRequests)
+        avgResponseTime: todayUsage?.totalRequests
+          ? Math.round(todayResponseTimeMs / todayUsage.totalRequests)
           : 0,
       },
       month: {
         requests: monthlyTotal,
         successful: monthlyUsage._sum.successfulRequests || 0,
         failed: monthlyUsage._sum.failedRequests || 0,
-        dataTransfer: monthlyUsage._sum.totalDataTransferBytes || 0,
+        dataTransfer: totalDataTransferBytes,
         limit: monthlyLimit,
         percentUsed: Math.round((monthlyTotal / monthlyLimit) * 100),
       },
