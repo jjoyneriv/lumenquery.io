@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   title: 'LumenQuery - Enterprise Stellar Horizon API & Soroban RPC Infrastructure',
   description: 'Build blockchain applications on the Stellar network with reliable, scalable infrastructure. Enterprise-grade Horizon API and Soroban RPC with sub-100ms response times. Free tier available.',
   keywords: ['Stellar', 'Horizon API', 'Soroban RPC', 'blockchain', 'XLM', 'cryptocurrency', 'smart contracts', 'Web3'],
+  alternates: {
+    canonical: 'https://lumenquery.io',
+  },
   openGraph: {
     title: 'LumenQuery - Enterprise Stellar Horizon API & Soroban RPC',
     description: 'Build blockchain applications on the Stellar network with reliable, scalable infrastructure. Enterprise-grade Horizon API and Soroban RPC.',

@@ -1910,6 +1910,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     description,
     keywords: [post.category, 'Stellar', 'blockchain', 'LumenQuery', 'Web3'],
     authors: [{ name: 'LumenQuery Team' }],
+    alternates: {
+      canonical: `https://lumenquery.io/blog/${params.slug}`,
+    },
     openGraph: {
       title: post.title,
       description,
