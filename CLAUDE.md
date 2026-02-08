@@ -108,6 +108,9 @@
 |-----------|------|-------------|
 | Portal App | `/opt/lumenquery-portal/portal/app/` | Next.js pages and API routes |
 | Portal Components | `/opt/lumenquery-portal/portal/components/` | React components (Header, Footer) |
+| Analytics Components | `/opt/lumenquery-portal/portal/components/analytics/` | MetricCard, AreaChart, TimeRangeSelector |
+| Analytics Pages | `/opt/lumenquery-portal/portal/app/analytics/` | Public analytics dashboard |
+| Analytics API | `/opt/lumenquery-portal/portal/app/api/analytics/` | Network metrics API endpoint |
 | Portal Lib | `/opt/lumenquery-portal/portal/lib/` | Auth, Prisma, rate-limit utilities |
 | Portal Middleware | `/opt/lumenquery-portal/portal/middleware.ts` | Rate limiting middleware |
 | RPC Gateway | `/opt/lumenquery-portal/rpc-gateway/src/` | Fastify RPC proxy |
@@ -152,6 +155,8 @@
 10. Add Traefik route for rpc.lumenquery.io
 11. Update CLAUDE.md with session progress
 12. Fix BigInt serialization error in usage API
+13. Update CLAUDE.md with BigInt fix documentation
+14. Add Advanced Stellar Analytics Dashboard
 
 ## CI/CD Pipelines
 
@@ -292,6 +297,7 @@ docker compose up -d
 - [x] Health check endpoints
 - [x] Mobile-friendly responsive design
 - [x] RPC Gateway routing (rpc.lumenquery.io)
+- [x] Advanced Stellar Analytics Dashboard (public, no auth)
 
 ### Pending
 - [ ] Configure GitHub Secrets for CI/CD deployment
@@ -365,6 +371,48 @@ docker compose up -d
    - Fix: Convert BigInt values to Number before JSON response in /api/usage endpoint
 2. Rebuilt and deployed portal with the fix
 3. Committed and pushed fix to GitHub
+4. Built Advanced Stellar Analytics Dashboard:
+   - Target audience: Traders, validators, funds
+   - Public access (no authentication required)
+   - Real-time network metrics with 30s refresh
+   - Pages: /analytics (overview), /analytics/network, /analytics/tokens, /analytics/contracts
+   - Components: MetricCard, AreaChart, TimeRangeSelector
+   - API endpoint: /api/analytics/network with Redis caching (30s TTL)
+   - Metrics displayed: ledger sequence, TPS, success rate, fees, protocol version
+   - Connected stellar-horizon to lumenquery-network for data access
+   - Time range selector: 24h, 7d, 30d
+5. Committed and pushed analytics dashboard to GitHub
+
+## Analytics Dashboard
+
+### Overview
+Public analytics dashboard for Stellar network insights. No authentication required.
+
+### Pages
+| Route | Description | Status |
+|-------|-------------|--------|
+| /analytics | Overview with key metrics and charts | ✅ Live |
+| /analytics/network | Detailed ledger and transaction metrics | ✅ Live |
+| /analytics/tokens | Token velocity, whale tracking (100K+ XLM) | Coming Soon |
+| /analytics/contracts | Soroban contract analytics, gas usage | Coming Soon |
+
+### Components
+- `MetricCard` - Display single metric with icon, trend indicator
+- `AreaChart` - Time series visualization using Recharts
+- `TimeRangeSelector` - Toggle between 24h, 7d, 30d views
+
+### API Endpoints
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| /api/analytics/network | GET | Network overview metrics |
+
+### Data Sources
+- Stellar Horizon API (ledgers, fee_stats)
+- Redis cache (30 second TTL)
+
+### Future Phases
+- Phase 2: Token analytics (velocity, whale movements >100K XLM, issuer risk)
+- Phase 3: Soroban contract analytics (call frequency, gas usage, events)
 
 ## Notes
 - Before ending a session, ask Claude to update this file with current progress
