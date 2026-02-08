@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 interface HeaderProps {
-  activePage?: 'home' | 'docs' | 'blog' | 'dashboard';
+  activePage?: 'home' | 'docs' | 'blog' | 'dashboard' | 'analytics';
 }
 
 export default function Header({ activePage = 'home' }: HeaderProps) {
@@ -27,6 +27,7 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
+          <Link href="/analytics" className={navLinkClass('analytics')}>Analytics</Link>
           <Link href="/docs" className={navLinkClass('docs')}>Docs</Link>
           <Link href="/blog" className={navLinkClass('blog')}>Blog</Link>
           <Link href="/auth/signin" className="text-[#6A6A6A] hover:text-black font-medium">Sign In</Link>
@@ -57,6 +58,13 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-[#E6E7E9] bg-white">
           <nav className="flex flex-col px-4 py-4 space-y-3">
+            <Link
+              href="/analytics"
+              className={`py-2 ${navLinkClass('analytics')}`}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Analytics
+            </Link>
             <Link
               href="/docs"
               className={`py-2 ${navLinkClass('docs')}`}

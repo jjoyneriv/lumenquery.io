@@ -35,6 +35,8 @@ services:
       dockerfile: Dockerfile
     container_name: lumenquery-portal
     restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "3000:3000"
     environment:
@@ -45,7 +47,7 @@ services:
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
       - STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}
       - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
-      - HORIZON_API_URL=${HORIZON_API_URL}
+      - HORIZON_API_URL=http://stellar-horizon:8000
     depends_on:
       - postgres
       - redis
