@@ -92,8 +92,6 @@ model Organization {
   sorobanProEnabled       Boolean  @default(false)
   contractsMonthlyLimit   Int      @default(10)
   callHistoryDays         Int      @default(7)
-  aiExplanationsMonthly   Int      @default(0)
-  aiExplanationsUsed      Int      @default(0)
   contractsExploredThisMonth Int   @default(0)
   exportEnabled           Boolean  @default(false)
   realtimeStreamEnabled   Boolean  @default(false)
@@ -229,9 +227,6 @@ model ContractCall {
   errorCode       String?
   gasUsed         BigInt?
 
-  // AI explanation (cached per call)
-  aiExplanation   String?  @db.Text
-
   @@index([contractId, timestamp])
   @@index([txHash])
   @@index([ledger])
@@ -288,15 +283,4 @@ model StorageSnapshot {
 
   @@unique([contractId, ledger])
   @@index([contractId, timestamp])
-}
-
-// AI explanation cache (global, shared across users)
-model AIExplanationCache {
-  id              String   @id @default(cuid())
-  callHash        String   @unique  // Hash of function+inputs for dedup
-  explanation     String   @db.Text
-  createdAt       DateTime @default(now())
-  expiresAt       DateTime
-
-  @@index([callHash])
 }

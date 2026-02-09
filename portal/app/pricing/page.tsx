@@ -18,7 +18,6 @@ const tiers = [
       'Community support',
     ],
     notIncluded: [
-      'AI explanations',
       'Export (CSV/JSON)',
       'Real-time streaming',
       'Version comparison',
@@ -36,7 +35,6 @@ const tiers = [
     features: [
       '50 contracts/month',
       '30 days call history',
-      '50 AI explanations/month',
       'Export (CSV/JSON)',
       'Version comparison',
       'API access',
@@ -58,7 +56,6 @@ const tiers = [
     features: [
       'Unlimited contracts',
       '90 days call history',
-      '500 AI explanations/month',
       'Real-time event streaming',
       'Export (CSV/JSON)',
       'Version comparison',
@@ -78,7 +75,6 @@ const tiers = [
     features: [
       'Unlimited contracts',
       'Full call history',
-      'Unlimited AI explanations',
       'Real-time streaming',
       'PDF audit reports',
       'Version comparison',
@@ -211,15 +207,6 @@ export default function PricingPage() {
                 <p className="text-[#6A6A6A]">
                   Each unique contract you view counts towards your monthly limit. Viewing the
                   same contract multiple times only counts once per month.
-                </p>
-              </div>
-
-              <div>
-                <h3 className="font-semibold mb-2">How do AI explanations work?</h3>
-                <p className="text-[#6A6A6A]">
-                  AI explanations use Claude to analyze contract calls and provide human-readable
-                  explanations of what the function does and what the parameters mean.
-                  Explanations are cached and shared across users.
                 </p>
               </div>
 

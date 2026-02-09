@@ -16,7 +16,6 @@ interface Call {
   status: string;
   errorCode: string | null;
   gasUsed: number | null;
-  aiExplanation: string | null;
 }
 
 interface FunctionCount {
@@ -64,25 +63,6 @@ export default function ContractCallsPage() {
 
     fetchCalls();
   }, [contractId, pagination.page, selectedFunction, selectedStatus]);
-
-  const handleExplain = async (callId: string) => {
-    try {
-      const res = await fetch(`/api/contracts/${contractId}/calls/${callId}/explain`, {
-        method: 'POST',
-      });
-      const data = await res.json();
-
-      if (data.explanation) {
-        setCalls(prev =>
-          prev.map(call =>
-            call.id === callId ? { ...call, aiExplanation: data.explanation } : call
-          )
-        );
-      }
-    } catch (error) {
-      console.error('Failed to generate explanation:', error);
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -142,11 +122,7 @@ export default function ContractCallsPage() {
           </div>
         </div>
       ) : (
-        <CallHistoryTable
-          calls={calls}
-          onExplain={handleExplain}
-          canExplain={!!session}
-        />
+        <CallHistoryTable calls={calls} />
       )}
 
       {/* Pagination */}

@@ -10,7 +10,6 @@ export type SorobanFeature =
   | 'history'
   | 'storage'
   | 'events'
-  | 'ai'
   | 'export'
   | 'stream'
   | 'versions'
@@ -82,35 +81,6 @@ export async function checkSorobanProAccess(
         return { allowed: true };
       }
 
-      case 'ai': {
-        const limit = tierConfig.aiExplanationsMonthly;
-        const used = org.aiExplanationsUsed;
-
-        if (limit === 0) {
-          return {
-            allowed: false,
-            reason: 'AI explanations require Developer tier or higher',
-            limit,
-            used,
-          };
-        }
-
-        if (limit === -1) {
-          return { allowed: true };
-        }
-
-        if (used >= limit) {
-          return {
-            allowed: false,
-            reason: `Monthly AI explanation limit reached (${used}/${limit})`,
-            limit,
-            used,
-          };
-        }
-
-        return { allowed: true, limit, used };
-      }
-
       case 'export': {
         if (!tierConfig.exportEnabled) {
           return {
@@ -176,27 +146,12 @@ export async function incrementContractsExplored(
   }
 }
 
-// Increment AI explanation usage
-export async function incrementAIUsage(organizationId: string): Promise<void> {
-  try {
-    await prisma.organization.update({
-      where: { id: organizationId },
-      data: {
-        aiExplanationsUsed: { increment: 1 },
-      },
-    });
-  } catch (error) {
-    console.error('Error incrementing AI usage:', error);
-  }
-}
-
 // Reset monthly usage counters (call this in a cron job on the 1st of each month)
 export async function resetMonthlyUsage(): Promise<void> {
   try {
     await prisma.organization.updateMany({
       data: {
         contractsExploredThisMonth: 0,
-        aiExplanationsUsed: 0,
       },
     });
   } catch (error) {
@@ -207,7 +162,7 @@ export async function resetMonthlyUsage(): Promise<void> {
 // Get remaining usage for a feature
 export async function getRemainingUsage(
   organizationId: string,
-  feature: 'explore' | 'ai'
+  feature: 'explore'
 ): Promise<{ used: number; limit: number; remaining: number } | null> {
   try {
     const org = await prisma.organization.findUnique({
@@ -221,16 +176,6 @@ export async function getRemainingUsage(
     if (feature === 'explore') {
       const limit = tierConfig.contractsMonthlyLimit;
       const used = org.contractsExploredThisMonth;
-      return {
-        used,
-        limit: limit === -1 ? Infinity : limit,
-        remaining: limit === -1 ? Infinity : Math.max(0, limit - used),
-      };
-    }
-
-    if (feature === 'ai') {
-      const limit = tierConfig.aiExplanationsMonthly;
-      const used = org.aiExplanationsUsed;
       return {
         used,
         limit: limit === -1 ? Infinity : limit,
@@ -272,7 +217,6 @@ export function getFeatureAvailability(tier: string): Record<SorobanFeature, boo
     history: true,
     storage: true,
     events: true,
-    ai: config.aiExplanationsMonthly > 0 || config.aiExplanationsMonthly === -1,
     export: config.exportEnabled,
     stream: config.realtimeStreamEnabled,
     versions: config.versionComparisonEnabled,

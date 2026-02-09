@@ -92,7 +92,6 @@ export interface ContractCallDecoded {
   status: 'success' | 'failed';
   errorCode: string | null;
   gasUsed: bigint | null;
-  aiExplanation: string | null;
 }
 
 // Decoded Soroban value
@@ -193,7 +192,6 @@ export interface FeatureAccessResult {
 export interface TierConfig {
   contractsMonthlyLimit: number;
   callHistoryDays: number;
-  aiExplanationsMonthly: number;
   exportEnabled: boolean;
   realtimeStreamEnabled: boolean;
   versionComparisonEnabled: boolean;
@@ -204,7 +202,6 @@ export const TIER_CONFIGS: Record<string, TierConfig> = {
   FREE: {
     contractsMonthlyLimit: 10,
     callHistoryDays: 7,
-    aiExplanationsMonthly: 0,
     exportEnabled: false,
     realtimeStreamEnabled: false,
     versionComparisonEnabled: false,
@@ -213,7 +210,6 @@ export const TIER_CONFIGS: Record<string, TierConfig> = {
   DEVELOPER: {
     contractsMonthlyLimit: 50,
     callHistoryDays: 30,
-    aiExplanationsMonthly: 50,
     exportEnabled: true,
     realtimeStreamEnabled: false,
     versionComparisonEnabled: true,
@@ -222,7 +218,6 @@ export const TIER_CONFIGS: Record<string, TierConfig> = {
   TEAM: {
     contractsMonthlyLimit: -1, // unlimited
     callHistoryDays: 90,
-    aiExplanationsMonthly: 500,
     exportEnabled: true,
     realtimeStreamEnabled: true,
     versionComparisonEnabled: true,
@@ -231,7 +226,6 @@ export const TIER_CONFIGS: Record<string, TierConfig> = {
   AUDITOR: {
     contractsMonthlyLimit: -1,
     callHistoryDays: -1, // full history
-    aiExplanationsMonthly: -1,
     exportEnabled: true,
     realtimeStreamEnabled: true,
     versionComparisonEnabled: true,
@@ -240,7 +234,6 @@ export const TIER_CONFIGS: Record<string, TierConfig> = {
   ENTERPRISE: {
     contractsMonthlyLimit: -1,
     callHistoryDays: -1,
-    aiExplanationsMonthly: -1,
     exportEnabled: true,
     realtimeStreamEnabled: true,
     versionComparisonEnabled: true,

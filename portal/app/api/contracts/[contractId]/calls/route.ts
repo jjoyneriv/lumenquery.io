@@ -110,7 +110,6 @@ export async function GET(
           status: true,
           errorCode: true,
           gasUsed: true,
-          aiExplanation: true,
         },
       }),
       prisma.contractCall.count({ where }),
