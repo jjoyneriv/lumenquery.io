@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 interface HeaderProps {
-  activePage?: 'home' | 'docs' | 'blog' | 'dashboard' | 'analytics';
+  activePage?: 'home' | 'docs' | 'blog' | 'dashboard' | 'analytics' | 'contracts' | 'pricing';
 }
 
 export default function Header({ activePage = 'home' }: HeaderProps) {
@@ -27,9 +27,10 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
+          <Link href="/contracts" className={navLinkClass('contracts')}>Contracts</Link>
           <Link href="/analytics" className={navLinkClass('analytics')}>Analytics</Link>
           <Link href="/docs" className={navLinkClass('docs')}>Docs</Link>
-          <Link href="/blog" className={navLinkClass('blog')}>Blog</Link>
+          <Link href="/pricing" className={navLinkClass('pricing')}>Pricing</Link>
           <Link href="/auth/signin" className="text-[#6A6A6A] hover:text-black font-medium">Sign In</Link>
           <Link href="/auth/signup" className="px-4 py-2 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white text-sm font-medium transition-colors">
             Get Started
@@ -59,6 +60,13 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
         <div className="md:hidden border-t border-[#E6E7E9] bg-white">
           <nav className="flex flex-col px-4 py-4 space-y-3">
             <Link
+              href="/contracts"
+              className={`py-2 ${navLinkClass('contracts')}`}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Contracts
+            </Link>
+            <Link
               href="/analytics"
               className={`py-2 ${navLinkClass('analytics')}`}
               onClick={() => setMobileMenuOpen(false)}
@@ -73,11 +81,11 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
               Docs
             </Link>
             <Link
-              href="/blog"
-              className={`py-2 ${navLinkClass('blog')}`}
+              href="/pricing"
+              className={`py-2 ${navLinkClass('pricing')}`}
               onClick={() => setMobileMenuOpen(false)}
             >
-              Blog
+              Pricing
             </Link>
             <Link
               href="/auth/signin"

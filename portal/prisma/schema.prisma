@@ -88,6 +88,16 @@ model Organization {
   tier             SubscriptionTier @default(FREE)
   monthlyRequestLimit Int           @default(10000)
 
+  // Soroban Pro limits
+  sorobanProEnabled       Boolean  @default(false)
+  contractsMonthlyLimit   Int      @default(10)
+  callHistoryDays         Int      @default(7)
+  aiExplanationsMonthly   Int      @default(0)
+  aiExplanationsUsed      Int      @default(0)
+  contractsExploredThisMonth Int   @default(0)
+  exportEnabled           Boolean  @default(false)
+  realtimeStreamEnabled   Boolean  @default(false)
+
   // Relations
   users            User[]
   apiKeys          ApiKey[]
@@ -96,9 +106,10 @@ model Organization {
 
 enum SubscriptionTier {
   FREE
-  STARTER
-  PROFESSIONAL
+  DEVELOPER    // was STARTER - $25/mo
+  TEAM         // was PROFESSIONAL - $99/mo
   ENTERPRISE
+  AUDITOR      // per-engagement license
 }
 
 // ===========================================
@@ -165,4 +176,127 @@ model DailyUsage {
 
   @@unique([organizationId, date])
   @@index([organizationId, date])
+}
+
+// ===========================================
+// Soroban Pro - Smart Contract Explorer
+// ===========================================
+
+// Contract metadata and indexed data
+model Contract {
+  id              String   @id @default(cuid())
+  contractId      String   @unique  // C... Stellar contract address
+  wasmHash        String?
+  createdAt       DateTime @default(now())
+  createdLedger   Int
+  lastSeenLedger  Int
+  totalCalls      Int      @default(0)
+
+  // Metadata (fetched/decoded)
+  name            String?
+  version         String?
+  sourceUrl       String?
+
+  // Relations
+  calls           ContractCall[]
+  storageEntries  ContractStorage[]
+  events          ContractEvent[]
+  storageSnapshots StorageSnapshot[]
+
+  @@index([contractId])
+  @@index([createdAt])
+}
+
+// Contract function invocations
+model ContractCall {
+  id              String   @id @default(cuid())
+  contractId      String
+  contract        Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+
+  txHash          String
+  ledger          Int
+  timestamp       DateTime
+
+  // Decoded data
+  functionName    String
+  inputsRaw       String   @db.Text  // XDR base64
+  inputsDecoded   Json?              // Decoded parameters
+  outputsRaw      String?  @db.Text
+  outputsDecoded  Json?
+
+  // Execution details
+  status          String   // success, failed
+  errorCode       String?
+  gasUsed         BigInt?
+
+  // AI explanation (cached per call)
+  aiExplanation   String?  @db.Text
+
+  @@index([contractId, timestamp])
+  @@index([txHash])
+  @@index([ledger])
+  @@index([functionName])
+}
+
+// Contract storage entries
+model ContractStorage {
+  id                  String   @id @default(cuid())
+  contractId          String
+  contract            Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+
+  storageKey          String   // XDR key
+  storageKeyDecoded   String?
+  storageValue        String   @db.Text  // XDR value
+  storageValueDecoded Json?
+
+  ledger              Int
+  timestamp           DateTime @default(now())
+
+  @@unique([contractId, storageKey, ledger])
+  @@index([contractId])
+}
+
+// Contract events
+model ContractEvent {
+  id              String   @id @default(cuid())
+  contractId      String
+  contract        Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+
+  eventId         String   @unique
+  txHash          String
+  ledger          Int
+  timestamp       DateTime
+
+  eventType       String   // system, contract, diagnostic
+  topics          Json     // Decoded topics array
+  data            Json?    // Decoded event data
+
+  @@index([contractId, timestamp])
+  @@index([txHash])
+}
+
+// Storage size snapshots for growth tracking
+model StorageSnapshot {
+  id              String   @id @default(cuid())
+  contractId      String
+  contract        Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+
+  ledger          Int
+  timestamp       DateTime @default(now())
+  totalEntries    Int
+  totalSizeBytes  BigInt
+
+  @@unique([contractId, ledger])
+  @@index([contractId, timestamp])
+}
+
+// AI explanation cache (global, shared across users)
+model AIExplanationCache {
+  id              String   @id @default(cuid())
+  callHash        String   @unique  // Hash of function+inputs for dedup
+  explanation     String   @db.Text
+  createdAt       DateTime @default(now())
+  expiresAt       DateTime
+
+  @@index([callHash])
 }
