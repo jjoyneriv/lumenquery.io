@@ -1,11 +1,11 @@
 # Project Context
 
 ## Current Status
-- Working on: Production deployment
-- Last session: 2026-02-08
-- Last validated: 2026-02-08
-- SEO optimization: Completed
-- Token Analytics: Completed (Phase 2)
+- Working on: Compliance & AML Alerting Service
+- Last session: 2026-02-12
+- Last validated: 2026-02-12
+- Soroban Pro: Implementation complete, deployed
+- Compliance & AML: Implementation complete, deployed
 
 ## Service Status (api1.lumenquery.io)
 
@@ -113,7 +113,16 @@
 | Analytics Components | `/opt/lumenquery-portal/portal/components/analytics/` | MetricCard, AreaChart, TimeRangeSelector |
 | Analytics Pages | `/opt/lumenquery-portal/portal/app/analytics/` | Public analytics dashboard |
 | Analytics API | `/opt/lumenquery-portal/portal/app/api/analytics/` | Network metrics API endpoint |
-| Portal Lib | `/opt/lumenquery-portal/portal/lib/` | Auth, Prisma, rate-limit utilities |
+| Compliance Components | `/opt/lumenquery-portal/portal/components/compliance/` | ViolationTable, RuleCard, StatusCard |
+| Compliance Pages | `/opt/lumenquery-portal/portal/app/compliance/` | Compliance dashboard |
+| Compliance API | `/opt/lumenquery-portal/portal/app/api/compliance/` | Rules, violations, reports API |
+| Compliance Lib | `/opt/lumenquery-portal/portal/lib/compliance/` | Rules engine, evaluators, audit |
+| Intelligence Components | `/opt/lumenquery-portal/portal/components/intelligence/` | WatchlistTable, AlertTable, TrustlineMonitor |
+| Intelligence Pages | `/opt/lumenquery-portal/portal/app/intelligence/` | Intelligence dashboard |
+| Intelligence API | `/opt/lumenquery-portal/portal/app/api/intelligence/` | Watchlists, alerts, stream API |
+| Jobs System | `/opt/lumenquery-portal/portal/lib/jobs/` | Background job queue and workers |
+| Notifications | `/opt/lumenquery-portal/portal/lib/notifications/` | Email, Slack, webhook channels |
+| Portal Lib | `/opt/lumenquery-portal/portal/lib/` | Auth, Prisma, rate-limit, Redis utilities |
 | Portal Middleware | `/opt/lumenquery-portal/portal/middleware.ts` | Rate limiting middleware |
 | RPC Gateway | `/opt/lumenquery-portal/rpc-gateway/src/` | Fastify RPC proxy |
 | API Gateway | `/opt/lumenquery-portal/api-gateway/src/` | API service |
@@ -155,12 +164,12 @@
 8. Add blog articles about Claude Code
 9. Add CLAUDE.md project documentation
 10. Add Traefik route for rpc.lumenquery.io
-11. Fix BigInt serialization error in usage API
-12. Add Advanced Stellar Analytics Dashboard
-13. Add SEO optimization and HTML5 semantic elements
-14. Add canonical URLs to all pages
-15. Fix null transaction_count in analytics API
-16. Add Token Analytics dashboard (Phase 2)
+11. Update CLAUDE.md with session progress
+12. Fix BigInt serialization error in usage API
+13. Update CLAUDE.md with BigInt fix documentation
+14. Add Advanced Stellar Analytics Dashboard
+15. Add Soroban Pro - Smart Contract Explorer
+16. Add Stellar Compliance & AML Alerting Service
 
 ## CI/CD Pipelines
 
@@ -302,7 +311,8 @@ docker compose up -d
 - [x] Mobile-friendly responsive design
 - [x] RPC Gateway routing (rpc.lumenquery.io)
 - [x] Advanced Stellar Analytics Dashboard (public, no auth)
-- [x] SEO optimization (meta tags, semantic HTML, JSON-LD)
+- [x] Soroban Pro - Smart Contract Explorer
+- [x] Compliance & AML Alerting Service
 
 ### Pending
 - [ ] Configure GitHub Secrets for CI/CD deployment
@@ -387,77 +397,378 @@ docker compose up -d
    - Connected stellar-horizon to lumenquery-network for data access
    - Time range selector: 24h, 7d, 30d
 5. Committed and pushed analytics dashboard to GitHub
-6. Added SEO optimization and HTML5 semantic elements:
-   - Page-specific metadata exports (title, description, keywords, openGraph)
-   - robots meta tags (noindex for dashboard/auth pages)
-   - HTML5 semantic elements: main, header, article, section, nav, aside, time
-   - JSON-LD structured data for blog posts (Article schema)
-   - ARIA attributes for accessibility (aria-labelledby, aria-label, aria-current)
-   - Proper heading hierarchy (H1-H6) with sr-only headings where needed
-7. Added canonical URLs to all pages:
-   - Home, Blog, Docs, Analytics pages with static canonical URLs
-   - Blog posts with dynamic canonical URLs based on slug
-8. Fixed analytics dashboard not showing transaction data:
-   - Issue: Horizon API returns `transaction_count` as null
-   - Fix: Calculate total from `successful_transaction_count + failed_transaction_count`
-   - Applied fix to both `calculateMetrics` and `aggregateHistory` functions
-9. Implemented Token Analytics (Phase 2):
-   - Created API endpoint: /api/analytics/tokens
-   - Token Velocity: Payment frequency, volume, avg payment size
-   - Top Tokens by Volume: Ranked list with payment counts
-   - Whale Tracking: Large XLM holders (>1M XLM) and movements (>100K XLM)
-   - Issuer Risk Analysis: Authorization flags assessment with risk scoring
-   - Components: WhaleTable, RiskBadge with tooltips
-   - Redis caching: 60s for velocity, 120s for whales, 300s for risk
-   - Full dashboard UI with charts and tables
-10. Committed and pushed Token Analytics to GitHub
 
-## SEO Optimization
+### 2026-02-09
+1. Built Soroban Pro - Smart Contract Explorer:
+   - Target customers: Web3 developers, startups, auditors
+   - Premium Soroban-focused explorer with decoded contract data
+2. Database Schema Updates:
+   - Added 6 new Prisma models: Contract, ContractCall, ContractStorage, ContractEvent, StorageSnapshot, AIExplanationCache
+   - Renamed subscription tiers: STARTER→DEVELOPER ($25/mo), PROFESSIONAL→TEAM ($99/mo)
+   - Added Soroban Pro limits to Organization model
+3. Created Soroban utility library (`/lib/soroban/`):
+   - types.ts - TypeScript interfaces for Soroban data
+   - decoder.ts - XDR decoding utilities
+   - formatter.ts - Human-readable formatting
+   - gates.ts - Feature gating by tier
+   - rpc-client.ts - Soroban RPC client
+4. Built Contract API endpoints:
+   - GET /api/contracts/search - Search contracts
+   - GET /api/contracts/[contractId] - Contract details
+   - GET /api/contracts/[contractId]/calls - Call history
+   - GET /api/contracts/[contractId]/storage - Storage state
+   - GET /api/contracts/[contractId]/events - Events list
+   - GET /api/contracts/[contractId]/analytics - Gas/error stats
+   - POST /api/contracts/[contractId]/calls/[callId]/explain - AI explanation
+   - GET /api/contracts/[contractId]/events/stream - SSE real-time events
+   - GET /api/contracts/[contractId]/export - CSV/JSON export
+5. Created UI components (`/components/contracts/`):
+   - ContractSearch - Search with autocomplete
+   - ContractCard - Contract summary card
+   - ContractNav - Navigation sidebar
+   - CallHistoryTable - Paginated call list
+   - StorageTable - Storage key-value display
+   - EventStream - Event display
+   - AIExplanation - AI explanation component
+   - ExportButton - Export dropdown
+6. Built contract explorer pages:
+   - /contracts - Explorer home with search
+   - /contracts/[contractId] - Contract overview
+   - /contracts/[contractId]/calls - Call history
+   - /contracts/[contractId]/storage - Storage viewer
+   - /contracts/[contractId]/events - Events
+   - /contracts/[contractId]/analytics - Analytics
+7. Integrated AI explanations with Anthropic Claude:
+   - Uses claude-3-haiku for fast explanations
+   - 7-day cache for explanations
+   - Tier-based limits (50/mo Developer, 500/mo Team)
+8. Created pricing page with tier comparison
+9. Updated Header navigation (added Contracts, Pricing links)
+10. Successfully built portal with all new features
 
-### Metadata Implementation
-| Page | Title | robots | canonical |
-|------|-------|--------|-----------|
-| Home | LumenQuery - Enterprise Stellar Horizon API & Soroban RPC Infrastructure | index, follow | https://lumenquery.io |
-| Blog | Blog - LumenQuery \| Stellar Blockchain Insights & Tutorials | index, follow | https://lumenquery.io/blog |
-| Blog Posts | [Post Title] - LumenQuery Blog + JSON-LD Article schema | index, follow | https://lumenquery.io/blog/{slug} |
-| Docs | API Documentation - LumenQuery \| Stellar Horizon API & Soroban RPC | index, follow | https://lumenquery.io/docs |
-| Analytics | Stellar Network Analytics - LumenQuery \| Real-Time Blockchain Metrics | index, follow | https://lumenquery.io/analytics |
-| Dashboard | Dashboard - LumenQuery | noindex, nofollow | - |
-| Auth Pages | Authentication - LumenQuery | noindex, nofollow | - |
+### 2026-02-12
+1. Built Stellar Compliance & AML Alerting Service:
+   - Target customers: Exchanges, custodians, financial institutions
+   - Comprehensive compliance monitoring for Stellar network
+2. Database Schema Updates:
+   - Added 10+ new Prisma models: MonitoredAccount, ComplianceRule, ComplianceViolation, ComplianceReport, AuditLogEntry, SanctionedAccount, PaymentGraphEdge, PaymentCycle, AccountProfile, BackgroundJob
+   - Added compliance tier to Organization model
+3. Created Rules Engine (`/lib/compliance/`):
+   - rules-engine.ts - Core evaluation engine
+   - 10 evaluator types: SANCTIONS_SCREENING, VELOCITY_LIMIT, VOLUME_LIMIT, CIRCULAR_PAYMENT, MIXER_DETECTION, UNUSUAL_PATTERN, COUNTERPARTY_RISK, CONTRACT_ABUSE, STRUCTURING, DORMANT_ACTIVATION
+   - audit.ts - Immutable audit log with hash chain verification
+   - gates.ts - Feature gating by tier
+   - tiers.ts - Tier configuration (Basic, Standard, Enterprise)
+4. Built Compliance API endpoints:
+   - GET/POST /api/compliance/accounts - Monitored accounts management
+   - GET/PUT/DELETE /api/compliance/accounts/[accountId] - Account operations
+   - GET/POST /api/compliance/rules - Rule management
+   - GET/PUT/DELETE /api/compliance/rules/[ruleId] - Rule operations
+   - GET /api/compliance/violations - List violations with filters
+   - GET/PUT /api/compliance/violations/[violationId] - Violation detail/review
+   - GET/POST /api/compliance/reports - Generate compliance reports
+   - GET/DELETE /api/compliance/reports/[reportId] - Report operations
+   - GET /api/compliance/reports/[reportId]/export - CSV/JSON export
+   - GET /api/compliance/audit - Audit log viewer
+   - GET /api/compliance/status - Compliance status overview
+5. Created UI components (`/components/compliance/`):
+   - ComplianceNav - Navigation sidebar
+   - ViolationTable - Violation display with expandable details
+   - AccountTable - Sortable monitored accounts table
+   - RuleCard - Rule display with enable/disable toggle
+   - RuleForm - Dynamic form for rule creation/editing
+   - AuditLogTable - Expandable audit log display
+   - StatusCard - Compliance status overview cards
+6. Built compliance pages:
+   - /compliance - Overview dashboard with status cards
+   - /compliance/accounts - Account management
+   - /compliance/violations - Violations list with filters
+   - /compliance/violations/[violationId] - Violation detail/review
+   - /compliance/rules - Rules management
+   - /compliance/reports - Report generation
+   - /compliance/audit - Audit log viewer
+7. Created Background Jobs System (`/lib/jobs/`):
+   - queue.ts - Redis-based job queue with priority and retry
+   - workers/account-scan-worker.ts - Account scanning
+   - workers/risk-assessment-worker.ts - Risk scoring
+   - workers/sanctions-sync-worker.ts - OFAC/community list sync
+   - scheduler.ts - Cron-based job scheduling
+8. Created Notification System (`/lib/notifications/`):
+   - channels/email.ts - Email notifications via Nodemailer
+   - channels/slack.ts - Slack webhook integration
+   - channels/webhook.ts - Custom webhook delivery
+   - templates/violation-alert.ts - Alert templates
+9. Updated pricing page with Compliance & AML tiers
+10. Updated Header navigation with Compliance link
+11. Created centralized Redis module (`/lib/redis.ts`)
+12. Successfully built and deployed portal
+13. Committed and pushed to GitHub
 
-### Required Meta Tags (All Pages)
-- `<title>` - Page-specific title
-- `<meta charset="utf-8">` - Character encoding (auto by Next.js)
-- `<meta name="viewport">` - Responsive viewport (auto by Next.js)
-- `<meta name="robots">` - Search engine directives
-- `<meta name="description">` - Page description
-- `<link rel="canonical">` - Canonical URL
-- `<h1>` - Primary heading
+## Compliance & AML Alerting Service
 
-### Semantic Elements Added
-- `<main>` wrapper on all pages
-- `<header>` for page hero sections
-- `<section>` with aria-labelledby for content sections
-- `<article>` for blog posts
-- `<aside>` for sidebars (docs, analytics)
-- `<nav>` for navigation elements
-- `<time datetime="">` for dates in blog posts
-- Screen reader only headings (sr-only) for form sections
+### Overview
+Enterprise compliance monitoring and AML alerting for Stellar network. Designed for exchanges, custodians, and financial institutions requiring regulatory compliance.
 
-### Files Modified
-- portal/app/page.tsx (home)
-- portal/app/blog/page.tsx (listing)
-- portal/app/blog/[slug]/page.tsx (posts + JSON-LD)
-- portal/app/docs/page.tsx + layout.tsx
-- portal/app/analytics/layout.tsx (refactored)
-- portal/app/analytics/network/layout.tsx
-- portal/app/analytics/tokens/layout.tsx
-- portal/app/analytics/contracts/layout.tsx
-- portal/app/dashboard/page.tsx + layout.tsx
-- portal/app/auth/signin/page.tsx
-- portal/app/auth/signup/page.tsx
-- portal/app/auth/layout.tsx
-- portal/components/analytics/AnalyticsNav.tsx (new)
+### Pages
+| Route | Description | Status |
+|-------|-------------|--------|
+| /compliance | Overview dashboard | ✅ Deployed |
+| /compliance/accounts | Monitored accounts management | ✅ Deployed |
+| /compliance/violations | Violations list with filters | ✅ Deployed |
+| /compliance/violations/[id] | Violation detail and review | ✅ Deployed |
+| /compliance/rules | Rules management | ✅ Deployed |
+| /compliance/reports | Report generation | ✅ Deployed |
+| /compliance/audit | Audit log viewer | ✅ Deployed |
+
+### API Endpoints
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| /api/compliance/status | GET | Compliance status overview |
+| /api/compliance/accounts | GET, POST | List/add monitored accounts |
+| /api/compliance/accounts/[id] | GET, PUT, DELETE | Account operations |
+| /api/compliance/rules | GET, POST | List/create rules |
+| /api/compliance/rules/[id] | GET, PUT, DELETE | Rule operations |
+| /api/compliance/violations | GET | List violations with filters |
+| /api/compliance/violations/[id] | GET, PUT | View/update violation |
+| /api/compliance/reports | GET, POST | List/generate reports |
+| /api/compliance/reports/[id] | GET, DELETE | Report operations |
+| /api/compliance/reports/[id]/export | GET | Export CSV/JSON |
+| /api/compliance/audit | GET | Audit log entries |
+
+### Rule Types
+| Type | Description | Tier |
+|------|-------------|------|
+| SANCTIONS_SCREENING | OFAC/UN sanctions list matching | Basic |
+| VELOCITY_LIMIT | Transaction frequency limits | Basic |
+| VOLUME_LIMIT | Transaction volume limits | Basic |
+| CIRCULAR_PAYMENT | Detect circular payment patterns | Standard |
+| MIXER_DETECTION | Known mixer service detection | Standard |
+| UNUSUAL_PATTERN | Anomaly detection | Standard |
+| COUNTERPARTY_RISK | Counterparty risk assessment | Standard |
+| CONTRACT_ABUSE | Soroban contract abuse detection | Enterprise |
+| STRUCTURING | Transaction structuring detection | Enterprise |
+| DORMANT_ACTIVATION | Dormant account activation alerts | Enterprise |
+
+### Violation Status Workflow
+```
+PENDING → UNDER_REVIEW → CLEARED
+                      → CONFIRMED → ESCALATED → REPORTED
+```
+
+### Tier Feature Matrix
+| Feature | BASIC ($49) | STANDARD ($149) | ENTERPRISE (Custom) |
+|---------|-------------|-----------------|---------------------|
+| Monitored Accounts | 100 | 1,000 | Unlimited |
+| Rule Types | 3 (basic) | 7 (+ advanced) | 10 (all) |
+| Report Retention | 30 days | 90 days | Unlimited |
+| Audit Log | 30 days | 1 year | Unlimited |
+| Real-time Alerts | Email only | Email + Slack | All channels |
+| API Access | Limited | Full | Full + Webhooks |
+| Custom Rules | No | No | Yes |
+| Dedicated Support | No | Email | 24/7 Phone |
+
+### Files Created
+```
+portal/lib/compliance/
+├── types.ts
+├── tiers.ts
+├── gates.ts
+├── audit.ts
+├── rules-engine.ts
+├── index.ts
+└── evaluators/
+    ├── index.ts
+    ├── sanctions-evaluator.ts
+    ├── velocity-evaluator.ts
+    ├── volume-evaluator.ts
+    ├── circular-payment-evaluator.ts
+    ├── mixer-evaluator.ts
+    ├── pattern-evaluator.ts
+    ├── counterparty-evaluator.ts
+    ├── contract-abuse-evaluator.ts
+    └── structuring-evaluator.ts
+
+portal/lib/jobs/
+├── types.ts
+├── queue.ts
+├── scheduler.ts
+├── index.ts
+└── workers/
+    ├── index.ts
+    ├── account-scan-worker.ts
+    ├── risk-assessment-worker.ts
+    └── sanctions-sync-worker.ts
+
+portal/lib/notifications/
+├── index.ts
+├── manager.ts
+├── channels/
+│   ├── email.ts
+│   ├── slack.ts
+│   └── webhook.ts
+└── templates/
+    └── violation-alert.ts
+
+portal/app/api/compliance/
+├── status/route.ts
+├── accounts/route.ts
+├── accounts/[accountId]/route.ts
+├── rules/route.ts
+├── rules/[ruleId]/route.ts
+├── violations/route.ts
+├── violations/[violationId]/route.ts
+├── reports/route.ts
+├── reports/[reportId]/route.ts
+├── reports/[reportId]/export/route.ts
+└── audit/route.ts
+
+portal/app/compliance/
+├── layout.tsx
+├── page.tsx
+├── accounts/page.tsx
+├── violations/page.tsx
+├── violations/[violationId]/page.tsx
+├── rules/page.tsx
+├── reports/page.tsx
+└── audit/page.tsx
+
+portal/components/compliance/
+├── index.ts
+├── ComplianceNav.tsx
+├── ViolationTable.tsx
+├── AccountTable.tsx
+├── RuleCard.tsx
+├── RuleForm.tsx
+├── AuditLogTable.tsx
+└── StatusCard.tsx
+
+portal/lib/redis.ts
+```
+
+### Environment Variables
+```
+SMTP_HOST=smtp.example.com          # Email notifications
+SMTP_PORT=587
+SMTP_USER=user
+SMTP_PASSWORD=password
+SMTP_FROM=compliance@lumenquery.io
+SLACK_WEBHOOK_URL=https://hooks.slack.com/...  # Slack notifications
+```
+
+### Deployment
+The service is deployed and running. Access at:
+- Dashboard: https://lumenquery.io/compliance
+- API: https://lumenquery.io/api/compliance/*
+
+## Soroban Pro
+
+### Overview
+Premium Soroban smart contract explorer for Web3 developers, startups, and auditors.
+
+### Pages
+| Route | Description | Status |
+|-------|-------------|--------|
+| /contracts | Explorer home with search | ✅ Built |
+| /contracts/[id] | Contract overview | ✅ Built |
+| /contracts/[id]/calls | Call history with filters | ✅ Built |
+| /contracts/[id]/storage | Storage viewer | ✅ Built |
+| /contracts/[id]/events | Event stream | ✅ Built |
+| /contracts/[id]/analytics | Gas/error analytics | ✅ Built |
+| /pricing | Pricing tiers | ✅ Built |
+
+### API Endpoints
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| /api/contracts/search | GET | Search by ID/name |
+| /api/contracts/[id] | GET | Contract details |
+| /api/contracts/[id]/calls | GET | Paginated call history |
+| /api/contracts/[id]/storage | GET | Storage entries |
+| /api/contracts/[id]/events | GET | Events list |
+| /api/contracts/[id]/analytics | GET | Gas/error stats |
+| /api/contracts/[id]/calls/[callId]/explain | POST | AI explanation |
+| /api/contracts/[id]/events/stream | GET | SSE stream |
+| /api/contracts/[id]/export | GET | CSV/JSON export |
+
+### Tier Feature Matrix
+| Feature | FREE | DEVELOPER ($25) | TEAM ($99) | AUDITOR | ENTERPRISE |
+|---------|------|-----------------|------------|---------|------------|
+| Contracts/month | 10 | 50 | Unlimited | Unlimited | Unlimited |
+| Call history | 7 days | 30 days | 90 days | Full | Full |
+| AI explanations | 0 | 50/mo | 500/mo | Unlimited | Unlimited |
+| Export (CSV/JSON) | No | Yes | Yes | Yes | Yes |
+| Real-time streaming | No | No | Yes | Yes | Yes |
+| Version comparison | No | Yes | Yes | Yes | Yes |
+| API access | No | Yes | Yes | Yes | Yes |
+
+### Files Created
+```
+portal/lib/soroban/
+├── types.ts
+├── decoder.ts
+├── formatter.ts
+├── gates.ts
+├── rpc-client.ts
+└── index.ts
+
+portal/app/api/contracts/
+├── search/route.ts
+└── [contractId]/
+    ├── route.ts
+    ├── calls/route.ts
+    ├── calls/[callId]/explain/route.ts
+    ├── storage/route.ts
+    ├── events/route.ts
+    ├── events/stream/route.ts
+    ├── analytics/route.ts
+    └── export/route.ts
+
+portal/app/contracts/
+├── page.tsx
+├── layout.tsx
+└── [contractId]/
+    ├── page.tsx
+    ├── layout.tsx
+    ├── calls/page.tsx
+    ├── storage/page.tsx
+    ├── events/page.tsx
+    └── analytics/page.tsx
+
+portal/components/contracts/
+├── ContractSearch.tsx
+├── ContractCard.tsx
+├── ContractNav.tsx
+├── CallHistoryTable.tsx
+├── StorageTable.tsx
+├── EventStream.tsx
+├── AIExplanation.tsx
+├── ExportButton.tsx
+└── index.ts
+
+portal/app/pricing/
+├── page.tsx
+└── layout.tsx
+```
+
+### Environment Variables Required
+```
+ANTHROPIC_API_KEY=sk-ant-...    # For AI explanations
+SOROBAN_RPC_URL=http://127.0.0.1:8001  # Already configured
+```
+
+### Deployment Steps
+```bash
+# 1. Add Anthropic API key to .env
+echo "ANTHROPIC_API_KEY=sk-ant-..." >> /opt/lumenquery-portal/.env
+
+# 2. Run database migration
+cd /opt/lumenquery-portal/portal
+npx prisma migrate dev --name add_soroban_pro
+
+# 3. Rebuild and deploy
+cd /opt/lumenquery-portal
+docker compose build portal
+docker compose up -d portal
+```
 
 ## Analytics Dashboard
 
@@ -469,53 +780,25 @@ Public analytics dashboard for Stellar network insights. No authentication requi
 |-------|-------------|--------|
 | /analytics | Overview with key metrics and charts | ✅ Live |
 | /analytics/network | Detailed ledger and transaction metrics | ✅ Live |
-| /analytics/tokens | Token velocity, whale tracking, issuer risk | ✅ Live |
+| /analytics/tokens | Token velocity, whale tracking (100K+ XLM) | Coming Soon |
 | /analytics/contracts | Soroban contract analytics, gas usage | Coming Soon |
 
 ### Components
 - `MetricCard` - Display single metric with icon, trend indicator
 - `AreaChart` - Time series visualization using Recharts
 - `TimeRangeSelector` - Toggle between 24h, 7d, 30d views
-- `WhaleTable` - Display top XLM holders and large movements
-- `RiskBadge` - Color-coded risk indicator with tooltip
 
 ### API Endpoints
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | /api/analytics/network | GET | Network overview metrics |
-| /api/analytics/tokens | GET | Token velocity, whales, issuer risk |
 
 ### Data Sources
-- Stellar Horizon API (ledgers, fee_stats, payments, assets, accounts)
-- Redis cache (60-300 second TTL depending on data type)
-
-### Metrics Validation (2026-02-08)
-All analytics metrics validated against Horizon API:
-
-| Metric | Source | Calculation | Status |
-|--------|--------|-------------|--------|
-| Current Ledger | `/ledgers?limit=1` | Latest ledger sequence | ✅ Validated |
-| Avg Fee | `fee_stats.last_ledger_base_fee` | Direct from Horizon | ✅ Validated |
-| P95 Fee | `fee_stats.fee_charged.p95` | Direct from Horizon | ✅ Validated |
-| Success Rate | 100 ledgers sample | `successful_txs / total_txs × 100` | ✅ Validated |
-| TPS | 10 ledgers sample | `total_txs / time_span_seconds` | ✅ Validated |
-| Transactions (24h) | 100 ledgers sample | `total_txs × (86400 / sample_time_span)` | ✅ Validated |
-
-**Notes:**
-- TPS uses 10 ledgers (~1 min) for current rate display
-- 24h estimate uses 100 ledgers (~10 min) for better daily average
-- `transaction_count` field is null in Horizon; calculated from `successful + failed`
-
-### Token Analytics Features (Phase 2 - Completed)
-| Feature | Description | Threshold |
-|---------|-------------|-----------|
-| Token Velocity | Payment frequency and volume tracking | 200 payments sample |
-| Top Tokens | Ranked by 24h volume | Top 5 tokens |
-| Whale Detection | Large XLM holders | > 1,000,000 XLM |
-| Large Movements | Recent significant transfers | > 100,000 XLM |
-| Issuer Risk | Authorization flags assessment | auth_required/revocable/clawback |
+- Stellar Horizon API (ledgers, fee_stats)
+- Redis cache (30 second TTL)
 
 ### Future Phases
+- Phase 2: Token analytics (velocity, whale movements >100K XLM, issuer risk)
 - Phase 3: Soroban contract analytics (call frequency, gas usage, events)
 
 ## Notes
