@@ -96,10 +96,36 @@ model Organization {
   exportEnabled           Boolean  @default(false)
   realtimeStreamEnabled   Boolean  @default(false)
 
+  // Intelligence tier limits
+  intelligenceEnabled       Boolean          @default(false)
+  intelligenceTier          IntelligenceTier @default(NONE)
+  maxConcurrentStreams      Int              @default(0)
+  maxWatchlistAccounts      Int              @default(0)
+  maxAlertConfigurations    Int              @default(0)
+  alertRetentionDays        Int              @default(30)
+
+  // Compliance tier limits
+  complianceEnabled         Boolean          @default(false)
+  complianceTier            ComplianceTier   @default(NONE)
+  maxMonitoredAccounts      Int              @default(0)
+  maxComplianceRules        Int              @default(0)
+  auditRetentionDays        Int              @default(365)
+  notifySlack               Boolean          @default(false)
+  slackWebhookUrl           String?
+  complianceEmail           String?
+
   // Relations
-  users            User[]
-  apiKeys          ApiKey[]
-  usageRecords     UsageRecord[]
+  users               User[]
+  apiKeys             ApiKey[]
+  usageRecords        UsageRecord[]
+  watchlists          Watchlist[]
+  alertConfigurations AlertConfiguration[]
+  alerts              Alert[]
+  complianceRules     ComplianceRule[]
+  complianceViolations ComplianceViolation[]
+  monitoredAccounts   MonitoredAccount[]
+  auditLogEntries     AuditLogEntry[]
+  complianceReports   ComplianceReport[]
 }
 
 enum SubscriptionTier {
@@ -108,6 +134,49 @@ enum SubscriptionTier {
   TEAM         // was PROFESSIONAL - $99/mo
   ENTERPRISE
   AUDITOR      // per-engagement license
+}
+
+enum IntelligenceTier {
+  NONE
+  SOLO        // $49/mo - individual traders/analysts
+  TEAMS       // $199/mo - funds, compliance teams
+  ENTERPRISE  // Custom - alerts + extended retention
+}
+
+enum ComplianceTier {
+  NONE
+  BASIC       // $49/mo - 100 accounts, basic rules
+  STANDARD    // $149/mo - 500 accounts, sanctions, reports
+  ENTERPRISE  // Custom - unlimited, full features
+}
+
+enum ComplianceRuleType {
+  SANCTIONS_SCREENING
+  VELOCITY_LIMIT
+  VOLUME_LIMIT
+  CIRCULAR_PAYMENT
+  MIXER_DETECTION
+  UNUSUAL_PATTERN
+  COUNTERPARTY_RISK
+  CONTRACT_ABUSE
+  STRUCTURING
+  DORMANT_ACTIVATION
+}
+
+enum ViolationStatus {
+  PENDING
+  UNDER_REVIEW
+  CLEARED
+  CONFIRMED
+  ESCALATED
+  REPORTED
+}
+
+enum MonitoringLevel {
+  BASIC
+  STANDARD
+  ENHANCED
+  RESTRICTED
 }
 
 // ===========================================
@@ -283,4 +352,387 @@ model StorageSnapshot {
 
   @@unique([contractId, ledger])
   @@index([contractId, timestamp])
+}
+
+// ===========================================
+// Transaction Intelligence Dashboard
+// ===========================================
+
+// Watchlist for monitoring Stellar accounts
+model Watchlist {
+  id              String   @id @default(cuid())
+  name            String
+  description     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  accounts        WatchlistAccount[]
+
+  @@index([organizationId])
+}
+
+model WatchlistAccount {
+  id          String   @id @default(cuid())
+  accountId   String   // Stellar G... address
+  label       String?  // User-defined label
+  addedAt     DateTime @default(now())
+
+  // Relations
+  watchlistId String
+  watchlist   Watchlist @relation(fields: [watchlistId], references: [id], onDelete: Cascade)
+
+  @@unique([watchlistId, accountId])
+  @@index([accountId])
+}
+
+// Account behavior profiling
+model AccountProfile {
+  id                    String   @id @default(cuid())
+  accountId             String   @unique  // Stellar G... address
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  // Behavior metrics
+  totalTransactions     Int      @default(0)
+  totalVolume           Decimal  @default(0) @db.Decimal(38, 7)
+  avgTransactionSize    Decimal  @default(0) @db.Decimal(38, 7)
+  maxTransactionSize    Decimal  @default(0) @db.Decimal(38, 7)
+
+  // Activity patterns
+  firstSeen             DateTime?
+  lastSeen              DateTime?
+  avgTxPerDay           Float    @default(0)
+  peakHour              Int?     // 0-23 hour of most activity
+  preferredAssets       Json?    // Array of asset codes
+
+  // Counterparty analysis
+  uniqueCounterparties  Int      @default(0)
+  topCounterparties     Json?    // Top 10 counterparties with tx counts
+
+  // Classification
+  accountType           AccountType @default(UNKNOWN)
+  riskScore             Int         @default(0) // 0-100
+  tags                  String[]
+
+  // Trustline metrics
+  trustlineCount        Int      @default(0)
+  trustlineChanges30d   Int      @default(0)
+
+  @@index([accountType])
+  @@index([riskScore])
+  @@index([lastSeen])
+}
+
+enum AccountType {
+  UNKNOWN
+  RETAIL
+  EXCHANGE
+  MARKET_MAKER
+  WHALE
+  ISSUER
+  ANCHOR
+  CONTRACT
+}
+
+// Alert configurations
+model AlertConfiguration {
+  id              String    @id @default(cuid())
+  name            String
+  description     String?
+  enabled         Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Alert type and conditions
+  alertType       AlertType
+  conditions      Json      // Type-specific conditions
+
+  // Notification settings
+  notifyEmail     Boolean   @default(true)
+  notifyWebhook   Boolean   @default(false)
+  webhookUrl      String?
+
+  // Cooldown to prevent alert spam
+  cooldownMinutes Int       @default(5)
+  lastTriggered   DateTime?
+
+  // Relations
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  alerts          Alert[]
+
+  @@index([organizationId])
+  @@index([alertType, enabled])
+}
+
+enum AlertType {
+  WHALE_MOVEMENT      // Large XLM transfers
+  TRUSTLINE_CHANGE    // Trustline creation/removal
+  ACCOUNT_ACTIVITY    // Activity on watched accounts
+  CONTRACT_CALL       // Specific contract function calls
+  ANOMALY_DETECTED    // Unusual behavior patterns
+}
+
+model Alert {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  readAt          DateTime?
+
+  // Alert details
+  severity        AlertSeverity
+  title           String
+  message         String   @db.Text
+  data            Json     // Additional context (tx hash, account, etc.)
+
+  // Source information
+  sourceType      String   // transaction, account, contract, etc.
+  sourceId        String   // Transaction hash, account ID, etc.
+
+  // Relations
+  configId        String
+  config          AlertConfiguration @relation(fields: [configId], references: [id], onDelete: Cascade)
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, createdAt])
+  @@index([organizationId, readAt])
+  @@index([configId])
+}
+
+enum AlertSeverity {
+  INFO
+  WARNING
+  CRITICAL
+}
+
+// ===========================================
+// Compliance & AML Monitoring
+// ===========================================
+
+// Compliance rule configuration
+model ComplianceRule {
+  id              String              @id @default(cuid())
+  name            String
+  description     String?
+  ruleType        ComplianceRuleType
+  enabled         Boolean             @default(true)
+  priority        Int                 @default(50)
+  conditions      Json
+  thresholds      Json?
+  severity        AlertSeverity       @default(WARNING)
+  autoBlock       Boolean             @default(false)
+  requireReview   Boolean             @default(true)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  // Relations
+  organizationId  String
+  organization    Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  violations      ComplianceViolation[]
+
+  @@index([organizationId, enabled])
+}
+
+// Compliance violations (triggered alerts)
+model ComplianceViolation {
+  id              String          @id @default(cuid())
+  createdAt       DateTime        @default(now())
+  severity        AlertSeverity
+  status          ViolationStatus @default(PENDING)
+  score           Int             @default(0)
+
+  // Involved entities
+  accountId       String
+  counterpartyId  String?
+  transactionHash String?
+  contractId      String?
+
+  // Rule reference
+  ruleId          String
+  rule            ComplianceRule  @relation(fields: [ruleId], references: [id])
+
+  // Evidence
+  matchDetails    Json
+  evidenceData    Json
+
+  // Review workflow
+  reviewedBy      String?
+  reviewedAt      DateTime?
+  resolution      String?
+  notes           String?         @db.Text
+
+  // Relations
+  organizationId  String
+  organization    Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  auditTrail      AuditLogEntry[]
+
+  @@index([organizationId, status])
+  @@index([accountId])
+}
+
+// Monitored accounts for compliance
+model MonitoredAccount {
+  id               String          @id @default(cuid())
+  accountId        String          // Stellar G... address
+  label            String?
+  addedAt          DateTime        @default(now())
+  monitoringLevel  MonitoringLevel @default(STANDARD)
+  customThresholds Json?
+
+  // Risk assessment
+  riskScore        Int             @default(0)
+  riskFactors      Json?
+  lastAssessed     DateTime?
+  lastActivity     DateTime?
+
+  // Activity metrics
+  totalVolume30d   Decimal         @default(0) @db.Decimal(38, 7)
+  txCount30d       Int             @default(0)
+
+  // Relations
+  organizationId   String
+  organization     Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, accountId])
+  @@index([accountId])
+}
+
+// Sanctioned accounts database (OFAC/SDN/etc.)
+model SanctionedAccount {
+  id              String    @id @default(cuid())
+  accountId       String    @unique  // Stellar G... address
+  source          String    // OFAC, SDN, EU, UN, COMMUNITY
+  listType        String    // SDN, CONSOLIDATED, etc.
+  name            String?
+  aliases         String[]
+  country         String?
+  addedAt         DateTime
+  lastVerified    DateTime
+  metadata        Json?
+
+  @@index([accountId])
+}
+
+// Immutable audit log with hash chain
+model AuditLogEntry {
+  id              String    @id @default(cuid())
+  timestamp       DateTime  @default(now())
+  action          String    // CREATE, UPDATE, DELETE, REVIEW, ESCALATE, etc.
+  entityType      String    // violation, rule, account, etc.
+  entityId        String
+
+  // Actor information
+  actorType       String    // USER, SYSTEM, WORKER
+  actorId         String?
+  actorEmail      String?
+
+  // State change
+  previousState   Json?
+  newState        Json?
+  metadata        Json?
+
+  // Hash chain for integrity
+  contentHash     String
+  previousHash    String?
+
+  // Relations
+  organizationId  String
+  organization    Organization         @relation(fields: [organizationId], references: [id])
+  violationId     String?
+  violation       ComplianceViolation? @relation(fields: [violationId], references: [id])
+
+  @@index([organizationId, timestamp])
+}
+
+// Payment graph edges for cycle detection
+model PaymentGraphEdge {
+  id              String    @id @default(cuid())
+  fromAccount     String
+  toAccount       String
+  amount          Decimal   @db.Decimal(38, 7)
+  assetCode       String    @default("XLM")
+  timestamp       DateTime
+  transactionHash String
+  hopNumber       Int?
+  cycleId         String?
+
+  @@index([fromAccount, timestamp])
+  @@index([toAccount, timestamp])
+}
+
+// Detected payment cycles
+model PaymentCycle {
+  id              String          @id @default(cuid())
+  detectedAt      DateTime        @default(now())
+  accounts        String[]        // Accounts in the cycle
+  hopCount        Int
+  totalValue      Decimal         @db.Decimal(38, 7)
+  timeSpan        Int             // Time span in seconds
+  riskScore       Int
+  patternType     String          // CIRCULAR, MIXER, LAYERING, etc.
+  status          ViolationStatus @default(PENDING)
+  organizationId  String
+
+  @@index([organizationId, status])
+}
+
+// Compliance reports
+model ComplianceReport {
+  id              String    @id @default(cuid())
+  createdAt       DateTime  @default(now())
+  reportType      String    // DAILY_SUMMARY, WEEKLY, MONTHLY, SAR, AUDIT
+  title           String
+  period          String    // "2026-02-01 to 2026-02-28"
+  summary         Json
+  violations      Json
+  accounts        Json
+  metrics         Json
+  generatedBy     String?
+  format          String    @default("json") // json, csv, pdf
+  fileUrl         String?
+
+  // Relations
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, createdAt])
+}
+
+// Notification delivery tracking
+model NotificationDelivery {
+  id              String    @id @default(cuid())
+  createdAt       DateTime  @default(now())
+  channel         String    // EMAIL, SLACK, WEBHOOK
+  recipient       String
+  subject         String?
+  body            String    @db.Text
+  status          String    @default("PENDING") // PENDING, SENT, FAILED
+  sentAt          DateTime?
+  failureReason   String?
+  retryCount      Int       @default(0)
+  violationId     String?
+  organizationId  String
+
+  @@index([organizationId, status])
+}
+
+// Background job tracking
+model BackgroundJob {
+  id              String    @id @default(cuid())
+  createdAt       DateTime  @default(now())
+  startedAt       DateTime?
+  completedAt     DateTime?
+  jobType         String    // SANCTIONS_SYNC, ACCOUNT_SCAN, CYCLE_DETECTION, REPORT, NOTIFICATION, RISK_ASSESSMENT
+  priority        Int       @default(50)
+  payload         Json
+  status          String    @default("PENDING") // PENDING, RUNNING, COMPLETED, FAILED
+  progress        Int       @default(0) // 0-100
+  result          Json?
+  error           String?
+  retryCount      Int       @default(0)
+
+  @@index([status, priority])
 }

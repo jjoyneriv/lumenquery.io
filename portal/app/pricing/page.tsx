@@ -194,6 +194,446 @@ export default function PricingPage() {
           </div>
         </section>
 
+        {/* Intelligence Tiers */}
+        <section className="py-16 px-4 bg-white">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+                Transaction Intelligence
+              </h2>
+              <p className="text-[#6A6A6A] max-w-2xl mx-auto">
+                Real-time monitoring, whale alerts, and account behavior analytics.
+                Built for funds, exchanges, DAOs, and compliance teams.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Solo */}
+              <div className="bg-[#F5F6F7] rounded-xl border border-[#E6E7E9] p-6 flex flex-col">
+                <h3 className="text-xl font-bold mb-2">Solo</h3>
+                <div className="mb-4">
+                  <span className="text-3xl font-bold">$49</span>
+                  <span className="text-[#6A6A6A]">/month</span>
+                </div>
+                <p className="text-sm text-[#6A6A6A] mb-6">
+                  For individual traders and analysts
+                </p>
+
+                <ul className="space-y-3 mb-6 flex-1">
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    2 concurrent streams
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    50 watchlist accounts
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    10 alert configurations
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    100K XLM whale threshold
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Email notifications
+                  </li>
+                  <li className="flex items-start gap-2 text-sm text-[#6A6A6A]">
+                    <svg className="w-5 h-5 text-gray-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    Webhook notifications
+                  </li>
+                </ul>
+
+                <Link
+                  href="/intelligence/upgrade"
+                  className="w-full py-3 rounded-lg text-center font-medium bg-[#E6E7E9] text-black hover:bg-[#D4D5D7] transition-colors"
+                >
+                  Get Solo
+                </Link>
+              </div>
+
+              {/* Teams */}
+              <div className="bg-white rounded-xl border-2 border-[#2855FF] shadow-lg shadow-[#2855FF]/10 p-6 flex flex-col">
+                <div className="text-center mb-4">
+                  <span className="inline-block px-3 py-1 bg-[#2855FF] text-white text-xs font-medium rounded-full">
+                    Recommended
+                  </span>
+                </div>
+
+                <h3 className="text-xl font-bold mb-2">Teams</h3>
+                <div className="mb-4">
+                  <span className="text-3xl font-bold">$199</span>
+                  <span className="text-[#6A6A6A]">/month</span>
+                </div>
+                <p className="text-sm text-[#6A6A6A] mb-6">
+                  For funds, compliance teams, and DAOs
+                </p>
+
+                <ul className="space-y-3 mb-6 flex-1">
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    10 concurrent streams
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    500 watchlist accounts
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    50 alert configurations
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    50K XLM whale threshold
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Email + Webhook notifications
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Anomaly detection
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Priority support
+                  </li>
+                </ul>
+
+                <Link
+                  href="/intelligence/upgrade"
+                  className="w-full py-3 rounded-lg text-center font-medium bg-[#2855FF] text-white hover:bg-[#1E44CC] transition-colors"
+                >
+                  Get Teams
+                </Link>
+              </div>
+
+              {/* Enterprise */}
+              <div className="bg-[#F5F6F7] rounded-xl border border-[#E6E7E9] p-6 flex flex-col">
+                <h3 className="text-xl font-bold mb-2">Enterprise</h3>
+                <div className="mb-4">
+                  <span className="text-3xl font-bold">Custom</span>
+                </div>
+                <p className="text-sm text-[#6A6A6A] mb-6">
+                  For exchanges and large organizations
+                </p>
+
+                <ul className="space-y-3 mb-6 flex-1">
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Unlimited streams
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Unlimited watchlist accounts
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Unlimited alert configurations
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Custom whale thresholds
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    All notification channels
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Dedicated support + SLA
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Custom integrations
+                  </li>
+                </ul>
+
+                <Link
+                  href="mailto:sales@lumenquery.io"
+                  className="w-full py-3 rounded-lg text-center font-medium bg-[#E6E7E9] text-black hover:bg-[#D4D5D7] transition-colors"
+                >
+                  Contact Sales
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Compliance & AML */}
+        <section className="py-16 px-4 bg-[#F5F6F7]">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+                Compliance & AML Monitoring
+              </h2>
+              <p className="text-[#6A6A6A] max-w-2xl mx-auto">
+                Enterprise-grade compliance monitoring with sanctions screening,
+                circular payment detection, and audit-ready reporting.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Basic */}
+              <div className="bg-white rounded-xl border border-[#E6E7E9] p-6 flex flex-col">
+                <h3 className="text-xl font-bold mb-2">Basic</h3>
+                <div className="mb-4">
+                  <span className="text-3xl font-bold">$49</span>
+                  <span className="text-[#6A6A6A]">/month</span>
+                </div>
+                <p className="text-sm text-[#6A6A6A] mb-6">
+                  For small teams starting with compliance
+                </p>
+
+                <ul className="space-y-3 mb-6 flex-1">
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    100 monitored accounts
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    10 custom rules
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Velocity & volume monitoring
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Monthly compliance reports
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    90-day audit retention
+                  </li>
+                  <li className="flex items-start gap-2 text-sm text-[#6A6A6A]">
+                    <svg className="w-5 h-5 text-gray-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    Sanctions screening
+                  </li>
+                  <li className="flex items-start gap-2 text-sm text-[#6A6A6A]">
+                    <svg className="w-5 h-5 text-gray-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    Cycle detection
+                  </li>
+                </ul>
+
+                <Link
+                  href="/compliance/upgrade"
+                  className="w-full py-3 rounded-lg text-center font-medium bg-[#F5F6F7] text-black hover:bg-[#E6E7E9] transition-colors"
+                >
+                  Get Basic
+                </Link>
+              </div>
+
+              {/* Standard */}
+              <div className="bg-white rounded-xl border-2 border-[#2855FF] shadow-lg shadow-[#2855FF]/10 p-6 flex flex-col">
+                <div className="text-center mb-4">
+                  <span className="inline-block px-3 py-1 bg-[#2855FF] text-white text-xs font-medium rounded-full">
+                    Recommended
+                  </span>
+                </div>
+
+                <h3 className="text-xl font-bold mb-2">Standard</h3>
+                <div className="mb-4">
+                  <span className="text-3xl font-bold">$149</span>
+                  <span className="text-[#6A6A6A]">/month</span>
+                </div>
+                <p className="text-sm text-[#6A6A6A] mb-6">
+                  For growing compliance teams
+                </p>
+
+                <ul className="space-y-3 mb-6 flex-1">
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    500 monitored accounts
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    50 custom rules
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    OFAC/SDN sanctions screening
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Circular payment detection
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Mixer pattern detection
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    All compliance reports
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Webhook notifications
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    1-year audit retention
+                  </li>
+                </ul>
+
+                <Link
+                  href="/compliance/upgrade"
+                  className="w-full py-3 rounded-lg text-center font-medium bg-[#2855FF] text-white hover:bg-[#1E44CC] transition-colors"
+                >
+                  Get Standard
+                </Link>
+              </div>
+
+              {/* Enterprise */}
+              <div className="bg-white rounded-xl border border-[#E6E7E9] p-6 flex flex-col">
+                <h3 className="text-xl font-bold mb-2">Enterprise</h3>
+                <div className="mb-4">
+                  <span className="text-3xl font-bold">Custom</span>
+                </div>
+                <p className="text-sm text-[#6A6A6A] mb-6">
+                  For large organizations with advanced needs
+                </p>
+
+                <ul className="space-y-3 mb-6 flex-1">
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Unlimited monitored accounts
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Unlimited custom rules
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Full sanctions screening
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Advanced cycle detection
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Contract abuse monitoring
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Anomaly detection
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Slack integration
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Unlimited audit retention
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Dedicated support + SLA
+                  </li>
+                </ul>
+
+                <Link
+                  href="mailto:sales@lumenquery.io"
+                  className="w-full py-3 rounded-lg text-center font-medium bg-[#F5F6F7] text-black hover:bg-[#E6E7E9] transition-colors"
+                >
+                  Contact Sales
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* FAQ */}
         <section className="py-12 px-4 bg-white">
           <div className="max-w-3xl mx-auto">
