@@ -21,6 +21,10 @@ export const metadata: Metadata = {
     title: 'LumenQuery - Enterprise Stellar Infrastructure',
     description: 'Build on Stellar with reliable Horizon API and Soroban RPC. Start free.',
   },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function Home() {
