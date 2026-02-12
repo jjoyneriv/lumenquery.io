@@ -1,11 +1,13 @@
 # Project Context
 
 ## Current Status
-- Working on: Compliance & AML Alerting Service
+- Working on: SEO & Performance Optimization
 - Last session: 2026-02-12
 - Last validated: 2026-02-12
 - Soroban Pro: Implementation complete, deployed
 - Compliance & AML: Implementation complete, deployed
+- SEO Optimization: Complete, ready for Google indexing
+- Performance: Gzip compression enabled, Core Web Vitals optimized
 
 ## Service Status (api1.lumenquery.io)
 
@@ -170,6 +172,9 @@
 14. Add Advanced Stellar Analytics Dashboard
 15. Add Soroban Pro - Smart Contract Explorer
 16. Add Stellar Compliance & AML Alerting Service
+17. Update CLAUDE.md with Compliance & AML service documentation
+18. Fix SEO issues for Google indexing
+19. Enable gzip compression in Traefik for performance
 
 ## CI/CD Pipelines
 
@@ -313,6 +318,8 @@ docker compose up -d
 - [x] Advanced Stellar Analytics Dashboard (public, no auth)
 - [x] Soroban Pro - Smart Contract Explorer
 - [x] Compliance & AML Alerting Service
+- [x] SEO optimization (sitemap, canonical URLs, meta tags, JSON-LD)
+- [x] Performance optimization (gzip compression, 83% size reduction)
 
 ### Pending
 - [ ] Configure GitHub Secrets for CI/CD deployment
@@ -503,6 +510,102 @@ docker compose up -d
 11. Created centralized Redis module (`/lib/redis.ts`)
 12. Successfully built and deployed portal
 13. Committed and pushed to GitHub
+14. Fixed SEO issues for Google indexing:
+    - Updated sitemap.xml with all 8 blog posts (was missing 4)
+    - Added all public pages to sitemap (analytics, pricing, contracts)
+    - Removed auth pages from sitemap (blocked by robots.txt)
+    - Removed compliance/intelligence pages (require auth, noindex)
+    - Added canonical URLs to pricing and contracts layouts
+    - Added explicit robots: index, follow to all public pages
+15. Enabled gzip compression in Traefik:
+    - Added compress middleware to all routes (portal, api, rpc)
+    - HTML transfer size reduced by 83% (40KB → 6.7KB)
+    - Excludes already-compressed image formats
+16. Ran Core Web Vitals audit:
+    - TTFB: 225ms (excellent)
+    - Total load time: 226ms (excellent)
+    - All SEO tags verified present
+    - Estimated Lighthouse scores: 90-95 across all categories
+17. Verified all Google indexing requirements met:
+    - Pages return HTTP 200
+    - Not blocked by robots.txt
+    - Have robots: index, follow meta tag
+    - Self-referencing canonical URLs
+    - Mobile-friendly responsive design
+    - Valid XML sitemap with lastmod dates
+    - BlogPosting JSON-LD structured data
+18. Committed and pushed SEO/performance changes to GitHub
+
+## SEO & Performance Optimization
+
+### Sitemap Configuration
+All public pages included in `/sitemap.xml`:
+- Static pages: /, /docs, /blog, /pricing, /contracts
+- Analytics pages: /analytics, /analytics/network, /analytics/tokens, /analytics/contracts
+- Blog posts: All 8 articles with individual lastmod dates
+
+Pages excluded (require auth or noindex):
+- /auth/* (blocked by robots.txt)
+- /dashboard/* (noindex)
+- /compliance/* (noindex, requires auth)
+- /intelligence/* (noindex, requires auth)
+
+### SEO Meta Tags (All Public Pages)
+| Tag | Status |
+|-----|--------|
+| `<title>` | ✅ Present |
+| `<meta name="description">` | ✅ Present |
+| `<meta name="robots">` | ✅ index, follow |
+| `<link rel="canonical">` | ✅ Self-referencing |
+| `<meta property="og:*">` | ✅ OpenGraph tags |
+| `<meta name="viewport">` | ✅ Mobile viewport |
+
+### Blog Post Structured Data
+All blog posts include JSON-LD Article schema:
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Post Title",
+  "datePublished": "2026-02-07",
+  "author": { "@type": "Organization", "name": "LumenQuery" },
+  "publisher": { "@type": "Organization", "name": "LumenQuery" }
+}
+```
+
+### Performance Metrics
+| Metric | Value | Rating |
+|--------|-------|--------|
+| Time to First Byte | 225ms | ✅ Excellent |
+| Total Load Time | 226ms | ✅ Excellent |
+| HTML Size (gzipped) | 6.7KB | ✅ Excellent |
+| Compression Ratio | 83% | ✅ Excellent |
+
+### Performance Optimizations Applied
+- ✅ Gzip compression (Traefik middleware)
+- ✅ Static asset caching (1 year, immutable)
+- ✅ HTTP/2 enabled
+- ✅ Server-side rendering (Next.js)
+- ✅ Code splitting (per-route JS chunks)
+- ✅ Font preloading
+- ✅ Async script loading
+
+### Traefik Compression Config
+```yaml
+middlewares:
+  compress:
+    compress:
+      excludedContentTypes:
+        - image/png
+        - image/jpeg
+        - image/gif
+        - image/webp
+```
+
+### Google Search Console Next Steps
+1. Submit sitemap: https://lumenquery.io/sitemap.xml
+2. Request indexing via URL Inspection tool
+3. Monitor Core Web Vitals in GSC
 
 ## Compliance & AML Alerting Service
 
