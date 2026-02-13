@@ -48,6 +48,7 @@ export default function DocsPage() {
           <li><Link href="/docs/analytics" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Stellar Network Analytics</Link></li>
           <li><Link href="/docs/intelligence" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Transaction Intelligence</Link></li>
           <li><Link href="/docs/compliance" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Compliance & AML</Link></li>
+          <li><Link href="/docs/contracts" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Smart Contracts Explorer</Link></li>
         </ul>
       </div>
     </div>
