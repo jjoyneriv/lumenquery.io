@@ -81,19 +81,48 @@ async function fetchFeeStats(): Promise<HorizonFeeStats> {
 }
 
 async function fetchLedgerHistory(hours: number): Promise<HorizonLedger[]> {
-  // Fetch more ledgers for historical data
-  // Stellar closes ~1 ledger every 5 seconds, so:
-  // 24h = ~17,280 ledgers, 7d = ~120,960 ledgers
-  // We'll sample to get reasonable data points
-  const samplesNeeded = hours <= 24 ? 24 : hours <= 168 ? 168 : 720;
-  const limit = Math.min(200, samplesNeeded); // Horizon max is 200
+  // Fetch ledgers with sequential pagination using HAL links
+  const targetTime = Date.now() - (hours * 60 * 60 * 1000);
 
-  const res = await fetch(`${HORIZON_URL}/ledgers?order=desc&limit=${limit}`, {
-    next: { revalidate: 30 },
-  });
-  if (!res.ok) throw new Error('Failed to fetch ledger history');
-  const data = await res.json();
-  return data._embedded?.records || [];
+  // Limit pages based on time range
+  // Each page = 200 ledgers = ~17 minutes of data
+  // 24h needs ~84 pages, 7d needs ~605 pages
+  // 30d: Our Horizon history only goes back ~19 days, so cap at 1600 pages
+  // These requests are cached (5min for 7d, 10min for 30d) to avoid slow responses
+  const maxPages = hours <= 24 ? 100 : hours <= 168 ? 700 : 1600;
+
+  const allLedgers: HorizonLedger[] = [];
+  let nextUrl: string | null = `${HORIZON_URL}/ledgers?order=desc&limit=200`;
+
+  for (let page = 0; page < maxPages && nextUrl; page++) {
+    try {
+      const res: Response = await fetch(nextUrl, { next: { revalidate: 60 } });
+      if (!res.ok) break;
+
+      const data = await res.json();
+      const records: HorizonLedger[] = data._embedded?.records || [];
+
+      if (records.length === 0) break;
+
+      allLedgers.push(...records);
+
+      // Check if we've gone back far enough in time
+      const oldestLedger = records[records.length - 1];
+      const oldestTime = new Date(oldestLedger.closed_at).getTime();
+      if (oldestTime <= targetTime) break;
+
+      // Get next page URL from HAL links
+      nextUrl = data._links?.next?.href || null;
+      if (nextUrl && !nextUrl.startsWith('http')) {
+        nextUrl = `${HORIZON_URL}${nextUrl}`;
+      }
+    } catch (error) {
+      console.error('Error fetching ledger page:', error);
+      break;
+    }
+  }
+
+  return allLedgers;
 }
 
 function calculateMetrics(ledgers: HorizonLedger[], feeStats: HorizonFeeStats) {
@@ -161,7 +190,7 @@ function calculateMetrics(ledgers: HorizonLedger[], feeStats: HorizonFeeStats) {
   };
 }
 
-function aggregateHistory(ledgers: HorizonLedger[]): Array<{
+function aggregateHistory(ledgers: HorizonLedger[], hours: number): Array<{
   timestamp: string;
   transactions: number;
   successRate: number;
@@ -172,23 +201,38 @@ function aggregateHistory(ledgers: HorizonLedger[]): Array<{
   const getTxCount = (ledger: HorizonLedger) =>
     ledger.transaction_count ?? (ledger.successful_transaction_count + ledger.failed_transaction_count);
 
-  // Group ledgers by hour for cleaner visualization
-  const hourlyData = new Map<string, { txs: number; success: number; total: number }>();
+  // Determine bucket size based on time range
+  // 24h: hourly buckets (24 data points)
+  // 7d: 4-hour buckets (42 data points)
+  // 30d: daily buckets (30 data points)
+  const bucketHours = hours <= 24 ? 1 : hours <= 168 ? 4 : 24;
+
+  const bucketData = new Map<string, { txs: number; success: number; total: number }>();
 
   for (const ledger of ledgers) {
     const date = new Date(ledger.closed_at);
-    date.setMinutes(0, 0, 0);
-    const hourKey = date.toISOString();
+
+    // Round to bucket boundary
+    if (bucketHours === 1) {
+      date.setMinutes(0, 0, 0);
+    } else if (bucketHours === 4) {
+      const bucketHour = Math.floor(date.getHours() / 4) * 4;
+      date.setHours(bucketHour, 0, 0, 0);
+    } else {
+      date.setHours(0, 0, 0, 0);
+    }
+
+    const bucketKey = date.toISOString();
 
     const txCount = getTxCount(ledger);
-    const existing = hourlyData.get(hourKey) || { txs: 0, success: 0, total: 0 };
+    const existing = bucketData.get(bucketKey) || { txs: 0, success: 0, total: 0 };
     existing.txs += txCount;
     existing.success += ledger.successful_transaction_count;
     existing.total += txCount;
-    hourlyData.set(hourKey, existing);
+    bucketData.set(bucketKey, existing);
   }
 
-  return Array.from(hourlyData.entries())
+  return Array.from(bucketData.entries())
     .map(([timestamp, data]) => ({
       timestamp,
       transactions: data.txs,
@@ -210,7 +254,10 @@ export async function GET(req: Request) {
     const hours = hoursMap[range] || 24;
     const cacheKey = `analytics:network:${range}`;
 
-    const data = await getCachedOrFetch(cacheKey, CACHE_TTL, async () => {
+    // Longer cache TTL for longer time ranges
+    const cacheTtl = hours <= 24 ? CACHE_TTL : hours <= 168 ? 300 : 600;
+
+    const data = await getCachedOrFetch(cacheKey, cacheTtl, async () => {
       const [ledgers, feeStats, historyLedgers] = await Promise.all([
         fetchLedgers(100),
         fetchFeeStats(),
@@ -218,7 +265,7 @@ export async function GET(req: Request) {
       ]);
 
       const metrics = calculateMetrics(ledgers, feeStats);
-      const history = aggregateHistory(historyLedgers);
+      const history = aggregateHistory(historyLedgers, hours);
 
       return {
         ...metrics,
