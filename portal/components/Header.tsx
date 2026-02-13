@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 interface HeaderProps {
-  activePage?: 'home' | 'docs' | 'blog' | 'dashboard' | 'analytics' | 'contracts' | 'pricing' | 'intelligence' | 'compliance';
+  activePage?: 'home' | 'docs' | 'blog' | 'dashboard' | 'analytics' | 'contracts' | 'pricing' | 'intelligence' | 'compliance' | 'portfolio';
 }
 
 export default function Header({ activePage = 'home' }: HeaderProps) {
@@ -31,6 +31,7 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
           <Link href="/analytics" className={navLinkClass('analytics')}>Analytics</Link>
           <Link href="/intelligence" className={navLinkClass('intelligence')}>Intelligence</Link>
           <Link href="/compliance" className={navLinkClass('compliance')}>Compliance</Link>
+          <Link href="/portfolio" className={navLinkClass('portfolio')}>Portfolio</Link>
           <Link href="/docs" className={navLinkClass('docs')}>Docs</Link>
           <Link href="/pricing" className={navLinkClass('pricing')}>Pricing</Link>
           <Link href="/auth/signin" className="text-[#6A6A6A] hover:text-black font-medium">Sign In</Link>
@@ -88,6 +89,13 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
               onClick={() => setMobileMenuOpen(false)}
             >
               Compliance
+            </Link>
+            <Link
+              href="/portfolio"
+              className={`py-2 ${navLinkClass('portfolio')}`}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Portfolio
             </Link>
             <Link
               href="/docs"

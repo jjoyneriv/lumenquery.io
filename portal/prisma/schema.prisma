@@ -126,6 +126,16 @@ model Organization {
   slackWebhookUrl           String?
   complianceEmail           String?
 
+  // Portfolio tier limits
+  portfolioEnabled          Boolean          @default(false)
+  portfolioTier             PortfolioTier    @default(NONE)
+  maxPortfolioAccounts      Int              @default(1)
+  maxPortfolios             Int              @default(1)
+  yieldTrackingEnabled      Boolean          @default(false)
+  pnlTrackingEnabled        Boolean          @default(false)
+  contractPositionsEnabled  Boolean          @default(false)
+  snapshotRetentionDays     Int              @default(30)
+
   // Relations
   users               User[]
   apiKeys             ApiKey[]
@@ -138,6 +148,7 @@ model Organization {
   monitoredAccounts   MonitoredAccount[]
   auditLogEntries     AuditLogEntry[]
   complianceReports   ComplianceReport[]
+  portfolios          Portfolio[]
 }
 
 enum SubscriptionTier {
@@ -160,6 +171,13 @@ enum ComplianceTier {
   BASIC       // $49/mo - 100 accounts, basic rules
   STANDARD    // $149/mo - 500 accounts, sanctions, reports
   ENTERPRISE  // Custom - unlimited, full features
+}
+
+enum PortfolioTier {
+  NONE
+  FREE        // 1 account, basic tracking
+  PRO         // $10/mo - 10 accounts, full P&L, yield
+  DAO         // $50/mo - unlimited, team access, custom dashboards
 }
 
 enum ComplianceRuleType {
@@ -747,4 +765,371 @@ model BackgroundJob {
   retryCount      Int       @default(0)
 
   @@index([status, priority])
+}
+
+// ===========================================
+// Portfolio + Yield Intelligence
+// ===========================================
+
+// Portfolio - aggregates multiple Stellar accounts
+model Portfolio {
+  id              String    @id @default(cuid())
+  name            String
+  description     String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  isDefault       Boolean   @default(false)
+  currency        String    @default("USD")  // Display currency
+
+  // Total portfolio metrics (cached, updated periodically)
+  totalValueUsd   Decimal   @default(0) @db.Decimal(38, 2)
+  totalValueXlm   Decimal   @default(0) @db.Decimal(38, 7)
+  totalPnlUsd     Decimal   @default(0) @db.Decimal(38, 2)
+  totalPnlPercent Float     @default(0)
+  lastSyncedAt    DateTime?
+
+  // Relations
+  organizationId  String
+  organization    Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  accounts        PortfolioAccount[]
+  positions       AssetPosition[]
+  trades          TradeRecord[]
+  yieldSources    YieldSource[]
+  snapshots       PerformanceSnapshot[]
+
+  @@index([organizationId])
+}
+
+// Stellar accounts linked to a portfolio
+model PortfolioAccount {
+  id              String    @id @default(cuid())
+  accountId       String    // Stellar G... address
+  label           String?   // User-defined label (e.g., "Trading", "Savings")
+  addedAt         DateTime  @default(now())
+
+  // Account metadata (cached from Horizon)
+  sequence        BigInt?
+  lastActivity    DateTime?
+  numSubentries   Int       @default(0)
+
+  // Balance summary (cached)
+  xlmBalance      Decimal   @default(0) @db.Decimal(38, 7)
+  totalValueUsd   Decimal   @default(0) @db.Decimal(38, 2)
+
+  // Relations
+  portfolioId     String
+  portfolio       Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  positions       AssetPosition[]
+  trades          TradeRecord[]
+  contractPositions ContractPosition[]
+  yieldRewards    YieldReward[]
+
+  @@unique([portfolioId, accountId])
+  @@index([accountId])
+}
+
+// Asset positions with cost basis for P&L tracking
+model AssetPosition {
+  id              String    @id @default(cuid())
+  assetCode       String    // "XLM", "USDC", etc.
+  assetIssuer     String?   // Null for native XLM
+  assetType       AssetType @default(CREDIT_ALPHANUM4)
+
+  // Current position
+  balance         Decimal   @db.Decimal(38, 7)
+  limit           Decimal?  @db.Decimal(38, 7)  // Trustline limit
+
+  // Cost basis tracking
+  avgCostBasis    Decimal   @default(0) @db.Decimal(38, 8)  // Avg price paid
+  totalCostUsd    Decimal   @default(0) @db.Decimal(38, 2)
+
+  // Current value
+  currentPrice    Decimal   @default(0) @db.Decimal(38, 8)
+  currentValueUsd Decimal   @default(0) @db.Decimal(38, 2)
+
+  // P&L
+  unrealizedPnl   Decimal   @default(0) @db.Decimal(38, 2)
+  realizedPnl     Decimal   @default(0) @db.Decimal(38, 2)
+  pnlPercent      Float     @default(0)
+
+  // Risk metrics
+  riskLevel       RiskLevel @default(LOW)
+  issuerTrustScore Int?     // 0-100 for issued assets
+  liquidityScore  Int?      // 0-100 based on trading volume
+
+  // Timestamps
+  firstAcquired   DateTime?
+  lastUpdated     DateTime  @default(now())
+
+  // Relations
+  portfolioId     String
+  portfolio       Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  accountId       String
+  account         PortfolioAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@unique([portfolioId, accountId, assetCode, assetIssuer])
+  @@index([assetCode])
+}
+
+enum AssetType {
+  NATIVE
+  CREDIT_ALPHANUM4
+  CREDIT_ALPHANUM12
+  LIQUIDITY_POOL_SHARES
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+// Trade records for P&L calculation
+model TradeRecord {
+  id              String    @id @default(cuid())
+  txHash          String
+  ledger          Int
+  timestamp       DateTime
+  tradeType       TradeType
+
+  // Base asset (what was sold/exchanged from)
+  baseAssetCode   String
+  baseAssetIssuer String?
+  baseAmount      Decimal   @db.Decimal(38, 7)
+
+  // Counter asset (what was bought/exchanged to)
+  counterAssetCode   String
+  counterAssetIssuer String?
+  counterAmount      Decimal   @db.Decimal(38, 7)
+
+  // Price information
+  price           Decimal   @db.Decimal(38, 8)  // Counter per base
+  priceUsd        Decimal?  @db.Decimal(38, 8)  // USD price at time of trade
+  feeXlm          Decimal   @default(0) @db.Decimal(38, 7)
+  feeUsd          Decimal   @default(0) @db.Decimal(38, 4)
+
+  // P&L impact
+  realizedPnlUsd  Decimal   @default(0) @db.Decimal(38, 2)
+  costBasisUsed   Decimal   @default(0) @db.Decimal(38, 2)
+
+  // Source
+  source          String    @default("DEX")  // DEX, AMM, PATHFIND
+
+  // Relations
+  portfolioId     String
+  portfolio       Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  accountId       String
+  account         PortfolioAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([portfolioId, timestamp])
+  @@index([txHash])
+}
+
+enum TradeType {
+  BUY
+  SELL
+  SWAP
+  LIQUIDITY_ADD
+  LIQUIDITY_REMOVE
+}
+
+// Soroban contract positions (DeFi, staking, etc.)
+model ContractPosition {
+  id              String    @id @default(cuid())
+  contractId      String    // Soroban contract address
+  contractName    String?   // Human-readable name
+  positionType    PositionType
+
+  // Position details
+  depositedAmount Decimal   @db.Decimal(38, 7)
+  depositedAsset  String
+  currentValue    Decimal   @default(0) @db.Decimal(38, 7)
+  currentValueUsd Decimal   @default(0) @db.Decimal(38, 2)
+
+  // Staking/LP specific
+  shareBalance    Decimal?  @db.Decimal(38, 7)  // LP tokens or staked shares
+  rewardsEarned   Decimal   @default(0) @db.Decimal(38, 7)
+  rewardsAsset    String?
+
+  // Status
+  status          PositionStatus @default(ACTIVE)
+  lockedUntil     DateTime?  // For locked staking
+  apy             Float?     // Current APY
+
+  // Timestamps
+  enteredAt       DateTime
+  exitedAt        DateTime?
+  lastUpdated     DateTime  @default(now())
+
+  // Relations
+  accountId       String
+  account         PortfolioAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  yieldRewards    YieldReward[]
+
+  @@index([accountId])
+  @@index([contractId])
+}
+
+enum PositionType {
+  STAKING
+  LIQUIDITY_POOL
+  LENDING
+  BORROWING
+  VAULT
+  OTHER
+}
+
+enum PositionStatus {
+  ACTIVE
+  LOCKED
+  WITHDRAWING
+  CLOSED
+}
+
+// Yield sources configuration
+model YieldSource {
+  id              String    @id @default(cuid())
+  name            String
+  sourceType      YieldSourceType
+  contractId      String?   // For contract-based yield
+  assetCode       String    // Asset that earns yield
+  assetIssuer     String?
+
+  // Yield details
+  currentApy      Float     @default(0)
+  apyHistory      Json?     // Historical APY data
+  compoundingFreq String?   // "daily", "weekly", "epoch"
+  minDeposit      Decimal?  @db.Decimal(38, 7)
+
+  // Status
+  isActive        Boolean   @default(true)
+  riskLevel       RiskLevel @default(MEDIUM)
+  lastUpdated     DateTime  @default(now())
+
+  // Relations
+  portfolioId     String
+  portfolio       Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  rewards         YieldReward[]
+
+  @@index([portfolioId])
+}
+
+enum YieldSourceType {
+  STAKING_NATIVE      // Native XLM staking (when available)
+  STAKING_CONTRACT    // Soroban contract staking
+  LIQUIDITY_POOL      // AMM LP rewards
+  LENDING             // Lending protocol interest
+  REWARDS             // Airdrops, grants, etc.
+  OTHER
+}
+
+// Individual yield rewards earned
+model YieldReward {
+  id              String    @id @default(cuid())
+  timestamp       DateTime
+  txHash          String?
+
+  // Reward details
+  rewardAsset     String
+  rewardIssuer    String?
+  amount          Decimal   @db.Decimal(38, 7)
+  valueUsd        Decimal?  @db.Decimal(38, 4)
+
+  // Context
+  epochNumber     Int?      // For epoch-based rewards
+  periodStart     DateTime?
+  periodEnd       DateTime?
+
+  // Relations
+  yieldSourceId   String?
+  yieldSource     YieldSource? @relation(fields: [yieldSourceId], references: [id], onDelete: SetNull)
+  accountId       String
+  account         PortfolioAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  contractPositionId String?
+  contractPosition ContractPosition? @relation(fields: [contractPositionId], references: [id], onDelete: SetNull)
+
+  @@index([accountId, timestamp])
+  @@index([yieldSourceId])
+}
+
+// Historical performance snapshots
+model PerformanceSnapshot {
+  id              String    @id @default(cuid())
+  timestamp       DateTime  @default(now())
+  snapshotType    SnapshotType @default(DAILY)
+
+  // Portfolio value
+  totalValueUsd   Decimal   @db.Decimal(38, 2)
+  totalValueXlm   Decimal   @db.Decimal(38, 7)
+
+  // P&L since inception
+  totalPnlUsd     Decimal   @db.Decimal(38, 2)
+  totalPnlPercent Float
+
+  // Period changes (since last snapshot)
+  periodChangeUsd    Decimal  @default(0) @db.Decimal(38, 2)
+  periodChangePercent Float   @default(0)
+
+  // Asset breakdown
+  assetAllocation Json      // { "XLM": 50.5, "USDC": 30.2, ... }
+  topPositions    Json      // Top 5 positions with values
+
+  // Yield metrics
+  yieldEarnedPeriod  Decimal  @default(0) @db.Decimal(38, 4)
+  totalYieldEarned   Decimal  @default(0) @db.Decimal(38, 4)
+
+  // Risk metrics
+  diversificationScore Int?   // 0-100
+  avgTrustlineRisk     Float?
+
+  // Relations
+  portfolioId     String
+  portfolio       Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+
+  @@unique([portfolioId, timestamp, snapshotType])
+  @@index([portfolioId, timestamp])
+}
+
+enum SnapshotType {
+  HOURLY
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+// Trustline risk assessment
+model TrustlineRisk {
+  id              String    @id @default(cuid())
+  accountId       String    // Portfolio account
+  assetCode       String
+  assetIssuer     String
+
+  // Issuer assessment
+  issuerName      String?
+  issuerDomain    String?
+  issuerVerified  Boolean   @default(false)
+
+  // Risk factors
+  riskScore       Int       @default(50)  // 0-100, higher = more risk
+  riskFactors     Json      // Array of risk factors
+
+  // Metrics
+  totalSupply     Decimal?  @db.Decimal(38, 7)
+  holderCount     Int?
+  tradingVolume24h Decimal? @db.Decimal(38, 7)
+  priceVolatility Float?    // 30-day volatility %
+
+  // Authorization flags
+  authRequired    Boolean   @default(false)
+  authRevocable   Boolean   @default(false)
+  authImmutable   Boolean   @default(false)
+  authClawback    Boolean   @default(false)
+
+  // Timestamps
+  assessedAt      DateTime  @default(now())
+  lastUpdated     DateTime  @default(now())
+
+  @@unique([accountId, assetCode, assetIssuer])
+  @@index([riskScore])
 }
