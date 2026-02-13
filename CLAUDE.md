@@ -1,9 +1,10 @@
 # Project Context
 
 ## Current Status
-- Working on: Portfolio + Yield Intelligence
+- Working on: SEO Blog Content
 - Last session: 2026-02-13
 - Last validated: 2026-02-13
+- Blog Posts: 12 articles (4 new SEO-optimized posts added)
 - Portfolio Intelligence: Implementation complete, deployed, documentation complete
 - Soroban Pro: Implementation complete, deployed, documentation complete
 - Compliance & AML: Implementation complete, deployed, documentation complete
@@ -149,6 +150,10 @@
 
 | Slug | Title | Date |
 |------|-------|------|
+| build-stellar-blockchain-explorer-horizon-api | How to Build a Stellar Blockchain Explorer Using Horizon API | 2026-02-13 |
+| soroban-json-rpc-explained | Soroban JSON RPC Explained: How to Query Smart Contracts on Stellar | 2026-02-13 |
+| best-stellar-api-providers-2026 | Best Stellar API Providers in 2026 (Comparison Guide) | 2026-02-13 |
+| monitor-stellar-validator-horizon-node | How to Monitor a Stellar Validator or Horizon Node in Production | 2026-02-13 |
 | using-claude-code-with-json-rpc-api | Using Claude Code to Interface with JSON-RPC APIs | 2026-02-07 |
 | getting-started-with-claude-code | Getting Started with Claude Code | 2026-02-07 |
 | stellar-lumen-future-decentralized-applications | Stellar Lumen and the Future of Decentralized Applications | 2026-02-03 |
@@ -725,6 +730,25 @@ docker compose up -d
     - Complete API reference
     - Added Portfolio link to docs sidebar
 28. Committed and pushed documentation to GitHub
+29. Created 4 new SEO-optimized blog posts:
+    - "How to Build a Stellar Blockchain Explorer Using Horizon API"
+      - Step-by-step guide with React/Next.js code examples
+      - Fetching transactions, querying accounts, parsing operations
+      - Uses LumenQuery Horizon API endpoints throughout
+    - "Soroban JSON RPC Explained: How to Query Smart Contracts"
+      - JSON-RPC basics and core methods
+      - Contract invocation, state queries, event monitoring
+      - Horizon vs Soroban RPC comparison table
+    - "Best Stellar API Providers in 2026 (Comparison Guide)"
+      - Self-hosted vs public vs managed comparison
+      - Performance benchmarks and pricing tables
+      - Feature matrix and total cost of ownership analysis
+    - "How to Monitor a Stellar Validator or Horizon Node"
+      - Prometheus + Grafana setup with Docker Compose
+      - Alert rules for Core, Horizon, and system metrics
+      - Ledger lag detection and runbook examples
+30. Updated sitemap.xml with new blog posts (priority 0.8)
+31. Committed and pushed blog posts to GitHub
 
 ## SEO & Performance Optimization
 
@@ -732,7 +756,7 @@ docker compose up -d
 All public pages included in `/sitemap.xml`:
 - Static pages: /, /docs, /blog, /pricing, /contracts
 - Analytics pages: /analytics, /analytics/network, /analytics/tokens, /analytics/contracts
-- Blog posts: All 8 articles with individual lastmod dates
+- Blog posts: All 12 articles with individual lastmod dates
 
 Pages excluded (require auth or noindex):
 - /auth/* (blocked by robots.txt)
