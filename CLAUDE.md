@@ -7,6 +7,7 @@
 - Soroban Pro: Implementation complete, deployed
 - Compliance & AML: Implementation complete, deployed
 - Transaction Intelligence: Documentation complete
+- Stellar Network Analytics: Documentation complete
 - SEO Optimization: Complete, ready for Google indexing
 - Performance: Gzip compression enabled, Core Web Vitals optimized
 - Forgot Password: Implementation complete, deployed
@@ -126,6 +127,7 @@
 | Intelligence Pages | `/opt/lumenquery-portal/portal/app/intelligence/` | Intelligence dashboard |
 | Intelligence API | `/opt/lumenquery-portal/portal/app/api/intelligence/` | Watchlists, alerts, stream API |
 | Intelligence Docs | `/opt/lumenquery-portal/portal/app/docs/intelligence/` | Transaction Intelligence documentation |
+| Analytics Docs | `/opt/lumenquery-portal/portal/app/docs/analytics/` | Stellar Network Analytics documentation |
 | Jobs System | `/opt/lumenquery-portal/portal/lib/jobs/` | Background job queue and workers |
 | Notifications | `/opt/lumenquery-portal/portal/lib/notifications/` | Email, Slack, webhook channels |
 | Portal Lib | `/opt/lumenquery-portal/portal/lib/` | Auth, Prisma, rate-limit, Redis utilities |
@@ -184,6 +186,8 @@
 22. Fix analytics charts for 7d and 30d time ranges
 23. Update CLAUDE.md with analytics fix documentation
 24. Add Transaction Intelligence documentation
+25. Update CLAUDE.md with Transaction Intelligence documentation
+26. Add Stellar Network Analytics documentation
 
 ## CI/CD Pipelines
 
@@ -614,6 +618,22 @@ docker compose up -d
    - Complete API reference for all intelligence endpoints
    - Added link to Intelligence docs in main docs sidebar
 10. Committed and pushed documentation to GitHub
+11. Created Stellar Network Analytics documentation:
+    - Created comprehensive docs page at /docs/analytics
+    - Overview section with introduction and dashboard explanation
+    - Time range selector documentation (24h, 7d, 30d)
+    - Network metrics: ledgers, TPS, success rate, fees with calculations
+    - Token analytics: velocity, whale tracking, issuer risk analysis
+    - Smart contracts (Soroban): invocations, gas usage, events
+    - Understanding Stroops section:
+      - 1 XLM = 10,000,000 stroops conversion
+      - Why stroops exist (precision, integer math, low fees)
+      - Conversion examples and formulas
+      - Display format rules
+    - Complete API reference for all analytics endpoints
+    - Data sources and refresh rates
+    - Added link to Analytics docs in main docs sidebar
+12. Committed and pushed analytics documentation to GitHub
 
 ## SEO & Performance Optimization
 
@@ -1057,6 +1077,44 @@ Comprehensive documentation for the Transaction Intelligence premium feature, av
 ```
 portal/app/docs/intelligence/page.tsx  # Main documentation page
 portal/app/docs/page.tsx               # Updated with Intelligence link
+```
+
+## Stellar Network Analytics Documentation
+
+### Overview
+Comprehensive documentation for the Stellar Network Analytics feature, available at `/docs/analytics`.
+
+### Documentation Sections
+| Section | Description |
+|---------|-------------|
+| Introduction | Feature overview with public access badge |
+| Dashboard | Key metrics and historical charts |
+| Time Ranges | 24h, 7d, 30d with data points and cache TTL |
+| Network Metrics | Ledgers, TPS, success rate, fees |
+| Token Analytics | Velocity, whales, issuer risk |
+| Smart Contracts | Soroban invocations, gas usage, events |
+| Understanding Stroops | Conversion, examples, display formats |
+| API Reference | Complete endpoint documentation |
+| Data Sources | Horizon API, Soroban RPC, Redis cache |
+
+### Stroops Documentation
+- 1 XLM = 10,000,000 stroops (10^7)
+- Conversion table with common examples
+- JavaScript conversion formulas
+- Display format rules by context:
+  - Network fees: Always in stroops
+  - Token volumes: Always in XLM
+  - Contract gas: Smart display (stroops or XLM based on magnitude)
+
+### API Endpoints Documented
+- `/api/analytics/network` - Ledgers, transactions, fees
+- `/api/analytics/tokens` - Velocity, whales, risk
+- `/api/analytics/contracts` - Soroban activity, gas, events
+
+### Files
+```
+portal/app/docs/analytics/page.tsx  # Main documentation page
+portal/app/docs/page.tsx            # Updated with Analytics link
 ```
 
 ## Analytics Dashboard
