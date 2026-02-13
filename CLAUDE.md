@@ -9,6 +9,7 @@
 - Transaction Intelligence: Documentation complete
 - Stellar Network Analytics: Documentation complete
 - Compliance & AML: Documentation complete
+- Soroban Pro: Documentation complete
 - SEO Optimization: Complete, ready for Google indexing
 - Performance: Gzip compression enabled, Core Web Vitals optimized
 - Forgot Password: Implementation complete, deployed
@@ -130,6 +131,7 @@
 | Intelligence Docs | `/opt/lumenquery-portal/portal/app/docs/intelligence/` | Transaction Intelligence documentation |
 | Analytics Docs | `/opt/lumenquery-portal/portal/app/docs/analytics/` | Stellar Network Analytics documentation |
 | Compliance Docs | `/opt/lumenquery-portal/portal/app/docs/compliance/` | Compliance & AML documentation |
+| Contracts Docs | `/opt/lumenquery-portal/portal/app/docs/contracts/` | Soroban Smart Contracts Explorer documentation |
 | Jobs System | `/opt/lumenquery-portal/portal/lib/jobs/` | Background job queue and workers |
 | Notifications | `/opt/lumenquery-portal/portal/lib/notifications/` | Email, Slack, webhook channels |
 | Portal Lib | `/opt/lumenquery-portal/portal/lib/` | Auth, Prisma, rate-limit, Redis utilities |
@@ -191,6 +193,8 @@
 25. Update CLAUDE.md with Transaction Intelligence documentation
 26. Add Stellar Network Analytics documentation
 27. Add Compliance & AML documentation
+28. Update CLAUDE.md with Compliance documentation
+29. Add Soroban Smart Contracts Explorer documentation
 
 ## CI/CD Pipelines
 
@@ -650,6 +654,16 @@ docker compose up -d
     - Complete API reference for all compliance endpoints
     - Added link to Compliance docs in main docs sidebar
 14. Committed and pushed Compliance documentation to GitHub
+15. Created Soroban Smart Contracts Explorer documentation:
+    - Created comprehensive docs page at /docs/contracts
+    - Decoded Calls section: XDR decoding, call history table, filtering options
+    - Storage Viewer section: Persistent/Temporary/Instance storage types
+    - Event Stream section: Real-time SSE streaming, event types, common patterns
+    - AI Explanations section with "Coming Soon" disclaimer
+    - Reference sections: XDR decoding process, Soroban data types
+    - Complete API reference for all contract endpoints
+    - Added link to Contracts docs in main docs sidebar
+16. Committed and pushed Contracts documentation to GitHub
 
 ## SEO & Performance Optimization
 
@@ -1191,6 +1205,63 @@ PENDING → UNDER_REVIEW → CLEARED
 ```
 portal/app/docs/compliance/page.tsx  # Main documentation page
 portal/app/docs/page.tsx             # Updated with Compliance link
+```
+
+## Soroban Pro Documentation
+
+### Overview
+Comprehensive documentation for the Soroban Smart Contracts Explorer (Soroban Pro), available at `/docs/contracts`.
+
+### Documentation Sections
+| Section | Description |
+|---------|-------------|
+| Introduction | Feature overview with Soroban Pro badge |
+| Dashboard | Contract search, recent contracts, analytics |
+| Subscription Tiers | Free, Developer, Team, Auditor, Enterprise comparison |
+| Decoded Calls | XDR decoding, call history, filtering options |
+| Storage Viewer | Persistent/Temporary/Instance storage types |
+| Event Stream | Real-time SSE streaming, event types, filtering |
+| AI Explanations | Coming soon disclaimer, usage limits, caching |
+| XDR Decoding | Supported XDR types and decoding process |
+| Soroban Data Types | Address, i128, Symbol, Vec, Map, etc. |
+| API Reference | Complete endpoint documentation |
+
+### Feature Highlights Documented
+- **Decoded Calls**: Human-readable function names, parameters, return values
+- **Storage Viewer**: Browse contract state with type badges and TTL info
+- **Event Stream**: Real-time monitoring with SSE (Team+ only)
+- **AI Explanations**: Plain-English contract call analysis (Coming Soon)
+
+### Storage Types Documented
+| Type | Description |
+|------|-------------|
+| PERSISTENT | Long-term storage, requires rent payments |
+| TEMPORARY | Short-lived, expires after set ledgers |
+| INSTANCE | Contract-level configuration |
+
+### API Endpoints Documented
+- `/api/contracts/search` - Search by ID, name, or deployer
+- `/api/contracts/[id]` - Contract details and statistics
+- `/api/contracts/[id]/calls` - Decoded call history
+- `/api/contracts/[id]/storage` - Storage entries by type
+- `/api/contracts/[id]/events` - Historical event list
+- `/api/contracts/[id]/events/stream` - Real-time SSE stream
+- `/api/contracts/[id]/calls/[callId]/explain` - AI explanation (Coming Soon)
+- `/api/contracts/[id]/export` - CSV/JSON export
+- `/api/contracts/[id]/analytics` - Gas usage and error rates
+
+### AI Explanations Status
+**Coming Soon** - AI Explanations feature is currently in development and not yet enabled.
+When available, it will provide:
+- Basic explanations: Concise summary of contract calls
+- Detailed analysis: Parameter breakdown, gas analysis, implications
+- Security review: Potential risks and unusual patterns
+- Comparison: Analyze multiple calls for patterns
+
+### Files
+```
+portal/app/docs/contracts/page.tsx  # Main documentation page
+portal/app/docs/page.tsx            # Updated with Contracts link
 ```
 
 ## Analytics Dashboard
