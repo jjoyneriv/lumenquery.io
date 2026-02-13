@@ -42,6 +42,12 @@ export default function DocsPage() {
           <li><a href="#examples" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Examples</a></li>
         </ul>
       </div>
+      <div>
+        <h3 className="text-sm font-semibold text-[#6A6A6A] uppercase tracking-wider mb-3">Premium Features</h3>
+        <ul className="space-y-2">
+          <li><Link href="/docs/intelligence" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Transaction Intelligence</Link></li>
+        </ul>
+      </div>
     </div>
   );
 
