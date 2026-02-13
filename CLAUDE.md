@@ -1,13 +1,14 @@
 # Project Context
 
 ## Current Status
-- Working on: SEO & Performance Optimization
-- Last session: 2026-02-12
-- Last validated: 2026-02-12
+- Working on: Account Recovery Feature
+- Last session: 2026-02-13
+- Last validated: 2026-02-13
 - Soroban Pro: Implementation complete, deployed
 - Compliance & AML: Implementation complete, deployed
 - SEO Optimization: Complete, ready for Google indexing
 - Performance: Gzip compression enabled, Core Web Vitals optimized
+- Forgot Password: Implementation complete, deployed
 
 ## Service Status (api1.lumenquery.io)
 
@@ -175,6 +176,7 @@
 17. Update CLAUDE.md with Compliance & AML service documentation
 18. Fix SEO issues for Google indexing
 19. Enable gzip compression in Traefik for performance
+20. Add forgot password / account recovery feature
 
 ## CI/CD Pipelines
 
@@ -217,6 +219,7 @@ DEPLOY_SSH_KEY   - Private SSH key for deployment
 | RPC Gateway | 200/min (Traefik) |
 | /api/auth/signup | 5/hour |
 | /api/auth/signin | 10/min |
+| /api/auth/forgot-password | 3/hour per email |
 | /api/* | 60/min |
 
 ### Authentication
@@ -320,6 +323,7 @@ docker compose up -d
 - [x] Compliance & AML Alerting Service
 - [x] SEO optimization (sitemap, canonical URLs, meta tags, JSON-LD)
 - [x] Performance optimization (gzip compression, 83% size reduction)
+- [x] Forgot password / account recovery
 
 ### Pending
 - [ ] Configure GitHub Secrets for CI/CD deployment
@@ -536,6 +540,41 @@ docker compose up -d
     - BlogPosting JSON-LD structured data
 18. Committed and pushed SEO/performance changes to GitHub
 
+### 2026-02-13
+1. Added Forgot Password / Account Recovery feature:
+   - Created PasswordResetToken Prisma model with email, token, expires, used fields
+   - Created POST /api/auth/forgot-password endpoint:
+     - Rate limiting: 3 requests per email per hour
+     - Email enumeration protection (always returns success)
+     - Generates secure 32-byte random token
+     - 1-hour token expiry
+     - Sends reset email via Resend API
+   - Created GET/POST /api/auth/reset-password endpoint:
+     - GET: Validates token validity (not expired, not used)
+     - POST: Resets password with validation (8+ chars, uppercase, lowercase, number)
+     - Marks token as used in database transaction
+     - Invalidates all user sessions after password change
+   - Created /auth/forgot-password page:
+     - Email input form with validation
+     - Success state showing "Check your email" message
+     - Link to retry or return to sign in
+   - Created /auth/reset-password page:
+     - Token validation on page load
+     - New password and confirm password inputs
+     - Error states for invalid/expired tokens
+     - Success state with link to sign in
+   - Updated /auth/signin page:
+     - Added "Forgot password?" link next to password label
+2. Security features implemented:
+   - Secure token generation (crypto.randomBytes)
+   - Token expiration (1 hour)
+   - Single-use tokens (marked as used after reset)
+   - Password strength validation
+   - Session invalidation on password change
+   - Rate limiting to prevent abuse
+   - No email enumeration (same response for valid/invalid emails)
+3. Rebuilt and deployed portal with forgot password feature
+
 ## SEO & Performance Optimization
 
 ### Sitemap Configuration
@@ -606,6 +645,74 @@ middlewares:
 1. Submit sitemap: https://lumenquery.io/sitemap.xml
 2. Request indexing via URL Inspection tool
 3. Monitor Core Web Vitals in GSC
+
+## Forgot Password / Account Recovery
+
+### Overview
+Secure password reset flow for account recovery. Users can request a password reset link via email and set a new password.
+
+### Pages
+| Route | Description | Status |
+|-------|-------------|--------|
+| /auth/forgot-password | Request password reset email | ✅ Deployed |
+| /auth/reset-password | Set new password with token | ✅ Deployed |
+
+### API Endpoints
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| /api/auth/forgot-password | POST | Send password reset email |
+| /api/auth/reset-password | GET | Validate reset token |
+| /api/auth/reset-password | POST | Reset password with token |
+
+### Database Model
+```prisma
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expires   DateTime
+  createdAt DateTime @default(now())
+  used      Boolean  @default(false)
+  @@index([email])
+  @@index([token])
+}
+```
+
+### Security Features
+| Feature | Implementation |
+|---------|----------------|
+| Token Generation | crypto.randomBytes(32).toString('hex') |
+| Token Expiration | 1 hour |
+| Single Use | Token marked as used after password reset |
+| Rate Limiting | 3 requests per email per hour |
+| Email Enumeration | Same response for valid/invalid emails |
+| Password Validation | 8+ chars, uppercase, lowercase, number |
+| Session Invalidation | All sessions deleted after password change |
+
+### Password Requirements
+- Minimum 8 characters
+- At least one uppercase letter (A-Z)
+- At least one lowercase letter (a-z)
+- At least one number (0-9)
+
+### Files Created
+```
+portal/prisma/schema.prisma          # Added PasswordResetToken model
+portal/app/api/auth/forgot-password/route.ts
+portal/app/api/auth/reset-password/route.ts
+portal/app/auth/forgot-password/page.tsx
+portal/app/auth/reset-password/page.tsx
+portal/app/auth/signin/page.tsx      # Updated with forgot password link
+```
+
+### Email Template
+The password reset email includes:
+- LumenQuery branding
+- Personalized greeting (if user name available)
+- Reset button with secure URL
+- 1-hour expiry notice
+- Plain-text URL fallback
+- Security reminder (ignore if not requested)
 
 ## Compliance & AML Alerting Service
 
