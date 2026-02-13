@@ -4,13 +4,11 @@
 - Working on: Portfolio + Yield Intelligence
 - Last session: 2026-02-13
 - Last validated: 2026-02-13
-- Portfolio Intelligence: Implementation complete, deployed
-- Soroban Pro: Implementation complete, deployed
-- Compliance & AML: Implementation complete, deployed
+- Portfolio Intelligence: Implementation complete, deployed, documentation complete
+- Soroban Pro: Implementation complete, deployed, documentation complete
+- Compliance & AML: Implementation complete, deployed, documentation complete
 - Transaction Intelligence: Documentation complete
 - Stellar Network Analytics: Documentation complete
-- Compliance & AML: Documentation complete
-- Soroban Pro: Documentation complete
 - SEO Optimization: Complete, ready for Google indexing
 - Performance: Gzip compression enabled, Core Web Vitals optimized
 - Forgot Password: Implementation complete, deployed
@@ -133,6 +131,7 @@
 | Analytics Docs | `/opt/lumenquery-portal/portal/app/docs/analytics/` | Stellar Network Analytics documentation |
 | Compliance Docs | `/opt/lumenquery-portal/portal/app/docs/compliance/` | Compliance & AML documentation |
 | Contracts Docs | `/opt/lumenquery-portal/portal/app/docs/contracts/` | Soroban Smart Contracts Explorer documentation |
+| Portfolio Docs | `/opt/lumenquery-portal/portal/app/docs/portfolio/` | Portfolio Intelligence documentation |
 | Portfolio Components | `/opt/lumenquery-portal/portal/components/portfolio/` | PortfolioNav, PortfolioSummary, AssetTable |
 | Portfolio Pages | `/opt/lumenquery-portal/portal/app/portfolio/` | Portfolio dashboard and management pages |
 | Portfolio API | `/opt/lumenquery-portal/portal/app/api/portfolio/` | Portfolio CRUD, accounts, sync endpoints |
@@ -708,6 +707,24 @@ docker compose up -d
 24. Successfully built and deployed portal
 25. Synced database schema (39 tables now)
 26. Committed and pushed Portfolio feature to GitHub
+27. Created Portfolio Intelligence documentation:
+    - Created comprehensive docs page at /docs/portfolio
+    - Introduction with target users (power users, DAOs, funds, DeFi)
+    - Dashboard section with key metrics and sections
+    - Subscription tiers comparison (FREE, PRO, DAO)
+    - Portfolios and Account Management
+    - Asset Positions with cost basis tracking
+    - P&L Tracking with FIFO explanation
+    - Trustline Risk assessment and scoring
+    - Contract Positions (Soroban DeFi)
+    - Yield Tracking with source types
+    - Performance Snapshots with retention periods
+    - How-to guides: Create Portfolio, Add Account, Sync Data
+    - Cost Basis (FIFO) calculation reference
+    - Risk Scoring methodology
+    - Complete API reference
+    - Added Portfolio link to docs sidebar
+28. Committed and pushed documentation to GitHub
 
 ## SEO & Performance Optimization
 
@@ -1409,6 +1426,57 @@ portal/components/portfolio/
 
 ### Differentiator
 Stellar-native + Soroban-aware. Most portfolio apps stop at balances.
+
+## Portfolio Intelligence Documentation
+
+### Overview
+Comprehensive documentation for the Portfolio Intelligence feature, available at `/docs/portfolio`.
+
+### Documentation Sections
+| Section | Description |
+|---------|-------------|
+| Introduction | Feature overview and target users |
+| Dashboard | Key metrics and dashboard sections |
+| Subscription Tiers | FREE, PRO ($10/mo), DAO ($50/mo) comparison |
+| Portfolios | Portfolio properties and management |
+| Account Management | Linking Stellar accounts with labels |
+| Asset Positions | Holdings with cost basis tracking |
+| P&L Tracking | Unrealized/realized profit and loss |
+| Trustline Risk | Risk factors and scoring methodology |
+| Contract Positions | Soroban DeFi position types |
+| Yield Tracking | Yield sources and metrics |
+| Performance Snapshots | Historical data with retention tiers |
+| How-to Guides | Create portfolio, add account, sync data |
+| Cost Basis (FIFO) | First-In-First-Out calculation example |
+| Risk Scoring | Score levels (0-100) and interpretation |
+| API Reference | Complete endpoint documentation |
+
+### Risk Factors Documented
+| Factor | Risk Level | Description |
+|--------|------------|-------------|
+| Authorization Required | HIGH | Issuer can freeze/revoke assets |
+| Clawback Enabled | HIGH | Issuer can claw back assets |
+| Authorization Revocable | MEDIUM | Issuer can revoke authorization |
+| Immutable Issuer | LOW | Safest - issuer cannot change flags |
+
+### Yield Sources Documented
+- STAKING - Validator staking rewards
+- AMM_FEES - Trading fees from liquidity provision
+- LENDING - Interest from lending protocols
+- AIRDROP - Token airdrops and distributions
+- OTHER - Other yield sources
+
+### API Endpoints Documented
+- `GET/POST /api/portfolio` - List/create portfolios
+- `GET/PUT/DELETE /api/portfolio/{id}` - Portfolio operations
+- `GET/POST /api/portfolio/{id}/accounts` - Account management
+- `POST /api/portfolio/{id}/sync` - Sync portfolio data
+
+### Files
+```
+portal/app/docs/portfolio/page.tsx  # Main documentation page
+portal/app/docs/page.tsx            # Updated with Portfolio link
+```
 
 ## Analytics Dashboard
 
