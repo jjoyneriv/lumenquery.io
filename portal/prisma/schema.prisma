@@ -65,6 +65,12 @@ model PasswordResetToken {
 // User & Organization
 // ===========================================
 
+enum UserRole {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
 model User {
   id             String    @id @default(cuid())
   email          String    @unique
@@ -72,8 +78,14 @@ model User {
   name           String?
   image          String?
   hashedPassword String?
+  role           UserRole  @default(USER)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
+
+  // Session tracking
+  lastLoginAt       DateTime?
+  lastActiveAt      DateTime?
+  currentSessionStart DateTime?
 
   // Relations
   accounts       Account[]
@@ -81,6 +93,28 @@ model User {
   organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String?
   apiKeys        ApiKey[]
+
+  // Admin audit relations
+  adminActions   AdminAuditLog[] @relation("AdminActions")
+  auditedActions AdminAuditLog[] @relation("AuditedActions")
+}
+
+// Admin audit log for tracking admin actions
+model AdminAuditLog {
+  id           String   @id @default(cuid())
+  adminId      String
+  admin        User     @relation("AdminActions", fields: [adminId], references: [id])
+  action       String   // PASSWORD_RESET, USER_DISABLED, USER_UPDATED, etc.
+  targetUserId String?
+  targetUser   User?    @relation("AuditedActions", fields: [targetUserId], references: [id])
+  details      Json?
+  ipAddress    String?
+  userAgent    String?
+  createdAt    DateTime @default(now())
+
+  @@index([adminId])
+  @@index([targetUserId])
+  @@index([createdAt])
 }
 
 model Organization {

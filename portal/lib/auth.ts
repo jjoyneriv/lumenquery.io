@@ -31,11 +31,23 @@ export const authOptions: NextAuthOptions = {
           throw new Error('Invalid email or password');
         }
 
+        // Track login activity
+        const now = new Date();
+        await prisma.user.update({
+          where: { id: user.id },
+          data: {
+            lastLoginAt: now,
+            currentSessionStart: now,
+            lastActiveAt: now,
+          },
+        });
+
         return {
           id: user.id,
           email: user.email,
           name: user.name,
           organizationId: user.organizationId,
+          role: user.role,
         };
       },
     }),
@@ -64,6 +76,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.organizationId = (user as any).organizationId;
+        token.role = (user as any).role;
       }
       return token;
     },
@@ -71,6 +84,7 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         (session.user as any).id = token.id;
         (session.user as any).organizationId = token.organizationId;
+        (session.user as any).role = token.role;
       }
       return session;
     },
