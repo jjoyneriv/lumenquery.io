@@ -1,7 +1,7 @@
 # Project Context
 
 ## Current Status
-- Working on: Account Recovery Feature
+- Working on: Analytics Dashboard Improvements
 - Last session: 2026-02-13
 - Last validated: 2026-02-13
 - Soroban Pro: Implementation complete, deployed
@@ -9,6 +9,7 @@
 - SEO Optimization: Complete, ready for Google indexing
 - Performance: Gzip compression enabled, Core Web Vitals optimized
 - Forgot Password: Implementation complete, deployed
+- Analytics Charts: Fixed for all time ranges (24h, 7d, 30d)
 
 ## Service Status (api1.lumenquery.io)
 
@@ -178,6 +179,7 @@
 19. Enable gzip compression in Traefik for performance
 20. Add forgot password / account recovery feature
 21. Add verification key file and update CLAUDE.md
+22. Fix analytics charts for 7d and 30d time ranges
 
 ## CI/CD Pipelines
 
@@ -584,6 +586,17 @@ docker compose up -d
    - Created PasswordResetToken table (29 total tables now)
    - Verified API endpoint working correctly
 6. Committed and pushed changes to GitHub
+7. Fixed Analytics charts not showing historical data for 7d and 30d:
+   - Issue: Page limits were too low to fetch enough ledger history
+   - Each Horizon page = 200 ledgers ≈ 17 minutes of data
+   - Previous limits: 100/200/300 pages for 24h/7d/30d
+   - Fixed limits: 100/700/1600 pages for 24h/7d/30d
+   - Results now show:
+     - 24h: 25 hourly data points (full coverage)
+     - 7d: 43 data points in 4-hour buckets (full 7 days)
+     - 30d: 20 daily data points (full Horizon history ~19 days)
+   - Data is cached (30s for 24h, 5min for 7d, 10min for 30d)
+8. Committed and pushed analytics fix to GitHub
 
 ## SEO & Performance Optimization
 
@@ -1013,9 +1026,18 @@ Public analytics dashboard for Stellar network insights. No authentication requi
 |----------|--------|-------------|
 | /api/analytics/network | GET | Network overview metrics |
 
+### Time Range Coverage
+| Range | Data Points | Bucket Size | Cache TTL | Page Limit |
+|-------|-------------|-------------|-----------|------------|
+| 24h | 25 | Hourly | 30s | 100 pages |
+| 7d | 43 | 4-hour | 5 min | 700 pages |
+| 30d | 20* | Daily | 10 min | 1600 pages |
+
+*30d shows ~19 days of data (limited by Horizon ledger history starting Jan 25, 2026)
+
 ### Data Sources
 - Stellar Horizon API (ledgers, fee_stats)
-- Redis cache (30 second TTL)
+- Redis cache (TTL varies by time range)
 
 ### Future Phases
 - Phase 2: Token analytics (velocity, whale movements >100K XLM, issuer risk)
