@@ -8,6 +8,7 @@
 - Compliance & AML: Implementation complete, deployed
 - Transaction Intelligence: Documentation complete
 - Stellar Network Analytics: Documentation complete
+- Compliance & AML: Documentation complete
 - SEO Optimization: Complete, ready for Google indexing
 - Performance: Gzip compression enabled, Core Web Vitals optimized
 - Forgot Password: Implementation complete, deployed
@@ -128,6 +129,7 @@
 | Intelligence API | `/opt/lumenquery-portal/portal/app/api/intelligence/` | Watchlists, alerts, stream API |
 | Intelligence Docs | `/opt/lumenquery-portal/portal/app/docs/intelligence/` | Transaction Intelligence documentation |
 | Analytics Docs | `/opt/lumenquery-portal/portal/app/docs/analytics/` | Stellar Network Analytics documentation |
+| Compliance Docs | `/opt/lumenquery-portal/portal/app/docs/compliance/` | Compliance & AML documentation |
 | Jobs System | `/opt/lumenquery-portal/portal/lib/jobs/` | Background job queue and workers |
 | Notifications | `/opt/lumenquery-portal/portal/lib/notifications/` | Email, Slack, webhook channels |
 | Portal Lib | `/opt/lumenquery-portal/portal/lib/` | Auth, Prisma, rate-limit, Redis utilities |
@@ -188,6 +190,7 @@
 24. Add Transaction Intelligence documentation
 25. Update CLAUDE.md with Transaction Intelligence documentation
 26. Add Stellar Network Analytics documentation
+27. Add Compliance & AML documentation
 
 ## CI/CD Pipelines
 
@@ -634,6 +637,19 @@ docker compose up -d
     - Data sources and refresh rates
     - Added link to Analytics docs in main docs sidebar
 12. Committed and pushed analytics documentation to GitHub
+13. Created Compliance & AML documentation:
+    - Created comprehensive docs page at /docs/compliance
+    - Overview section with introduction and dashboard explanation
+    - Subscription tiers comparison (Basic, Standard, Enterprise)
+    - Accounts management with monitoring levels (BASIC, STANDARD, ENHANCED, RESTRICTED)
+    - Rules management with 10 rule types documented
+    - Violations workflow with status progression
+    - Reports generation and compliance report types
+    - Audit Log with hash chain verification and immutability
+    - How-to guides: Add an Account, Create a Rule
+    - Complete API reference for all compliance endpoints
+    - Added link to Compliance docs in main docs sidebar
+14. Committed and pushed Compliance documentation to GitHub
 
 ## SEO & Performance Optimization
 
@@ -1115,6 +1131,66 @@ Comprehensive documentation for the Stellar Network Analytics feature, available
 ```
 portal/app/docs/analytics/page.tsx  # Main documentation page
 portal/app/docs/page.tsx            # Updated with Analytics link
+```
+
+## Compliance & AML Documentation
+
+### Overview
+Comprehensive documentation for the Compliance & AML Alerting Service, available at `/docs/compliance`.
+
+### Documentation Sections
+| Section | Description |
+|---------|-------------|
+| Introduction | Feature overview and compliance dashboard |
+| Dashboard | Key statistics, active rules, pending violations |
+| Subscription Tiers | Basic, Standard, Enterprise comparison table |
+| Accounts | Monitored accounts with monitoring levels |
+| Rules | 10 rule types with parameters and conditions |
+| Violations | Status workflow, severity levels, review process |
+| Reports | Compliance report generation and export |
+| Audit Log | Immutable audit trail with hash chain verification |
+| How-to: Add Account | Step-by-step account onboarding guide |
+| How-to: Create Rule | Rule configuration walkthrough |
+| API Reference | Complete endpoint documentation |
+
+### Monitoring Levels Documented
+- BASIC - Standard transaction monitoring
+- STANDARD - Enhanced with pattern analysis
+- ENHANCED - Full monitoring with real-time alerts
+- RESTRICTED - Maximum scrutiny for high-risk accounts
+
+### Rule Types Documented
+| Type | Description | Tier |
+|------|-------------|------|
+| SANCTIONS_SCREENING | OFAC/UN sanctions list matching | Basic |
+| VELOCITY_LIMIT | Transaction frequency limits | Basic |
+| VOLUME_LIMIT | Transaction volume limits | Basic |
+| CIRCULAR_PAYMENT | Detect circular payment patterns | Standard |
+| MIXER_DETECTION | Known mixer service detection | Standard |
+| UNUSUAL_PATTERN | Anomaly detection | Standard |
+| COUNTERPARTY_RISK | Counterparty risk assessment | Standard |
+| CONTRACT_ABUSE | Soroban contract abuse detection | Enterprise |
+| STRUCTURING | Transaction structuring detection | Enterprise |
+| DORMANT_ACTIVATION | Dormant account activation alerts | Enterprise |
+
+### Violation Status Workflow
+```
+PENDING → UNDER_REVIEW → CLEARED
+                       → CONFIRMED → ESCALATED → REPORTED
+```
+
+### API Endpoints Documented
+- `/api/compliance/status` - Compliance overview statistics
+- `/api/compliance/accounts` - Monitored accounts management
+- `/api/compliance/rules` - Rule CRUD operations
+- `/api/compliance/violations` - Violations list and review
+- `/api/compliance/reports` - Report generation and export
+- `/api/compliance/audit` - Audit log access
+
+### Files
+```
+portal/app/docs/compliance/page.tsx  # Main documentation page
+portal/app/docs/page.tsx             # Updated with Compliance link
 ```
 
 ## Analytics Dashboard
