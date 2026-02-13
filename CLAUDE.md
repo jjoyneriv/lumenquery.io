@@ -1,11 +1,12 @@
 # Project Context
 
 ## Current Status
-- Working on: Analytics Dashboard Improvements
+- Working on: Documentation
 - Last session: 2026-02-13
 - Last validated: 2026-02-13
 - Soroban Pro: Implementation complete, deployed
 - Compliance & AML: Implementation complete, deployed
+- Transaction Intelligence: Documentation complete
 - SEO Optimization: Complete, ready for Google indexing
 - Performance: Gzip compression enabled, Core Web Vitals optimized
 - Forgot Password: Implementation complete, deployed
@@ -124,6 +125,7 @@
 | Intelligence Components | `/opt/lumenquery-portal/portal/components/intelligence/` | WatchlistTable, AlertTable, TrustlineMonitor |
 | Intelligence Pages | `/opt/lumenquery-portal/portal/app/intelligence/` | Intelligence dashboard |
 | Intelligence API | `/opt/lumenquery-portal/portal/app/api/intelligence/` | Watchlists, alerts, stream API |
+| Intelligence Docs | `/opt/lumenquery-portal/portal/app/docs/intelligence/` | Transaction Intelligence documentation |
 | Jobs System | `/opt/lumenquery-portal/portal/lib/jobs/` | Background job queue and workers |
 | Notifications | `/opt/lumenquery-portal/portal/lib/notifications/` | Email, Slack, webhook channels |
 | Portal Lib | `/opt/lumenquery-portal/portal/lib/` | Auth, Prisma, rate-limit, Redis utilities |
@@ -180,6 +182,8 @@
 20. Add forgot password / account recovery feature
 21. Add verification key file and update CLAUDE.md
 22. Fix analytics charts for 7d and 30d time ranges
+23. Update CLAUDE.md with analytics fix documentation
+24. Add Transaction Intelligence documentation
 
 ## CI/CD Pipelines
 
@@ -597,6 +601,19 @@ docker compose up -d
      - 30d: 20 daily data points (full Horizon history ~19 days)
    - Data is cached (30s for 24h, 5min for 7d, 10min for 30d)
 8. Committed and pushed analytics fix to GitHub
+9. Created Transaction Intelligence documentation:
+   - Created comprehensive docs page at /docs/intelligence
+   - Overview section with introduction and dashboard explanation
+   - Subscription tiers comparison (Solo, Teams, Enterprise)
+   - Live Stream documentation with 7 filter types and controls
+   - Accounts profiling with classification types and behavior metrics
+   - Watchlists management with tier-based limits
+   - Alerts system with 5 alert types and notification channels
+   - Trustlines monitoring with change types and filters
+   - Contracts tracking for Soroban smart contracts
+   - Complete API reference for all intelligence endpoints
+   - Added link to Intelligence docs in main docs sidebar
+10. Committed and pushed documentation to GitHub
 
 ## SEO & Performance Optimization
 
@@ -1001,6 +1018,45 @@ npx prisma migrate dev --name add_soroban_pro
 cd /opt/lumenquery-portal
 docker compose build portal
 docker compose up -d portal
+```
+
+## Transaction Intelligence Documentation
+
+### Overview
+Comprehensive documentation for the Transaction Intelligence premium feature, available at `/docs/intelligence`.
+
+### Documentation Sections
+| Section | Description |
+|---------|-------------|
+| Introduction | Feature overview and key capabilities |
+| Dashboard | Statistics, quick actions, getting started |
+| Subscription Tiers | Solo, Teams, Enterprise comparison table |
+| Live Stream | Real-time transaction monitoring with 7 filter types |
+| Accounts | Account profiling, classification types, behavior metrics |
+| Watchlists | Account organization with tier-based limits |
+| Alerts | 5 alert types, severity levels, notification channels |
+| Trustlines | Trustline change monitoring and filters |
+| Contracts | Soroban smart contract tracking |
+| API Reference | Complete endpoint documentation |
+
+### Alert Types Documented
+- WHALE_MOVEMENT - Large XLM transfers
+- TRUSTLINE_CHANGE - Trustline creation/removal
+- ACCOUNT_ACTIVITY - Watchlist account operations
+- CONTRACT_CALL - Soroban contract invocations
+- ANOMALY_DETECTED - AI-powered anomaly detection (Premium)
+
+### API Endpoints Documented
+- Stream API (SSE real-time transactions)
+- Accounts API (profile and classification)
+- Watchlists API (CRUD operations)
+- Alerts API (inbox and configurations)
+- Trustlines API (change monitoring)
+
+### Files
+```
+portal/app/docs/intelligence/page.tsx  # Main documentation page
+portal/app/docs/page.tsx               # Updated with Intelligence link
 ```
 
 ## Analytics Dashboard
