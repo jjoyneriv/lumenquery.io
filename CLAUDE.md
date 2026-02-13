@@ -37,7 +37,7 @@
 | Database | Type | Location | Status |
 |----------|------|----------|--------|
 | Captive Core | SQLite | `/opt/stellar/captive-core/captive-core/stellar.db` | ✅ 375 MB |
-| LumenQuery | PostgreSQL | lumenquery-postgres:5432 | ✅ Healthy |
+| LumenQuery | PostgreSQL | lumenquery-postgres:5432 | ✅ Healthy (29 tables) |
 | LumenQuery Cache | Redis | lumenquery-redis:6379 | ✅ Healthy |
 | Horizon (remote) | PostgreSQL | 184.105.230.246:5432 | ✅ Connected |
 
@@ -177,6 +177,7 @@
 18. Fix SEO issues for Google indexing
 19. Enable gzip compression in Traefik for performance
 20. Add forgot password / account recovery feature
+21. Add verification key file and update CLAUDE.md
 
 ## CI/CD Pipelines
 
@@ -574,6 +575,15 @@ docker compose up -d
    - Rate limiting to prevent abuse
    - No email enumeration (same response for valid/invalid emails)
 3. Rebuilt and deployed portal with forgot password feature
+4. Added domain verification key file:
+   - Copied verification key to portal/public/ directory
+   - File accessible at https://lumenquery.io/4e2078aeeb0c498a82098dde8079383e.txt
+5. Fixed forgot password database issue:
+   - PasswordResetToken table was missing from database
+   - Ran `prisma db push` to sync schema with database
+   - Created PasswordResetToken table (29 total tables now)
+   - Verified API endpoint working correctly
+6. Committed and pushed changes to GitHub
 
 ## SEO & Performance Optimization
 
