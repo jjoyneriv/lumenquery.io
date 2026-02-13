@@ -1,9 +1,10 @@
 # Project Context
 
 ## Current Status
-- Working on: Documentation
+- Working on: Portfolio + Yield Intelligence
 - Last session: 2026-02-13
 - Last validated: 2026-02-13
+- Portfolio Intelligence: Implementation complete, deployed
 - Soroban Pro: Implementation complete, deployed
 - Compliance & AML: Implementation complete, deployed
 - Transaction Intelligence: Documentation complete
@@ -132,6 +133,10 @@
 | Analytics Docs | `/opt/lumenquery-portal/portal/app/docs/analytics/` | Stellar Network Analytics documentation |
 | Compliance Docs | `/opt/lumenquery-portal/portal/app/docs/compliance/` | Compliance & AML documentation |
 | Contracts Docs | `/opt/lumenquery-portal/portal/app/docs/contracts/` | Soroban Smart Contracts Explorer documentation |
+| Portfolio Components | `/opt/lumenquery-portal/portal/components/portfolio/` | PortfolioNav, PortfolioSummary, AssetTable |
+| Portfolio Pages | `/opt/lumenquery-portal/portal/app/portfolio/` | Portfolio dashboard and management pages |
+| Portfolio API | `/opt/lumenquery-portal/portal/app/api/portfolio/` | Portfolio CRUD, accounts, sync endpoints |
+| Portfolio Lib | `/opt/lumenquery-portal/portal/lib/portfolio/` | Types, gates, calculator, risk-assessor, Horizon client |
 | Jobs System | `/opt/lumenquery-portal/portal/lib/jobs/` | Background job queue and workers |
 | Notifications | `/opt/lumenquery-portal/portal/lib/notifications/` | Email, Slack, webhook channels |
 | Portal Lib | `/opt/lumenquery-portal/portal/lib/` | Auth, Prisma, rate-limit, Redis utilities |
@@ -195,6 +200,8 @@
 27. Add Compliance & AML documentation
 28. Update CLAUDE.md with Compliance documentation
 29. Add Soroban Smart Contracts Explorer documentation
+30. Update CLAUDE.md with Contracts documentation
+31. Add Stellar Portfolio + Yield Intelligence Platform
 
 ## CI/CD Pipelines
 
@@ -664,6 +671,43 @@ docker compose up -d
     - Complete API reference for all contract endpoints
     - Added link to Contracts docs in main docs sidebar
 16. Committed and pushed Contracts documentation to GitHub
+17. Built Stellar Portfolio + Yield Intelligence Platform:
+    - Target customers: Power users, DAOs, funds, DeFi participants
+    - Pain solved: Stellar portfolios are fragmented and opaque
+    - Features: Multi-account aggregation, asset-level P&L, trustline risk
+    - Soroban contract positions, yield & reward tracking
+    - Historical performance snapshots
+18. Database Schema Updates:
+    - Added Portfolio, PortfolioAccount, AssetPosition models
+    - Added TradeRecord for P&L with FIFO cost basis
+    - Added ContractPosition for Soroban DeFi positions
+    - Added YieldSource, YieldReward for yield tracking
+    - Added PerformanceSnapshot for historical data
+    - Added TrustlineRisk for risk assessment
+    - Added PortfolioTier enum (NONE, FREE, PRO, DAO)
+19. Created Portfolio utility library (`/lib/portfolio/`):
+    - types.ts - TypeScript interfaces for portfolio data
+    - gates.ts - Feature gating by tier
+    - horizon-client.ts - Horizon API client for account data
+    - calculator.ts - P&L and value calculation utilities
+    - risk-assessor.ts - Trustline risk assessment
+20. Built Portfolio API endpoints:
+    - GET/POST /api/portfolio - List/create portfolios
+    - GET/PUT/DELETE /api/portfolio/[id] - Portfolio operations
+    - GET/POST /api/portfolio/[id]/accounts - Account management
+    - POST /api/portfolio/[id]/sync - Sync from Horizon
+21. Created UI components (`/components/portfolio/`):
+    - PortfolioNav - Navigation sidebar
+    - PortfolioSummary - Overview cards with sync
+    - AssetTable - Sortable asset positions table
+22. Built portfolio pages:
+    - /portfolio - Portfolio list with tier info
+    - /portfolio/[id] - Portfolio dashboard
+    - /portfolio/[id]/accounts - Account management
+23. Updated Header navigation with Portfolio link
+24. Successfully built and deployed portal
+25. Synced database schema (39 tables now)
+26. Committed and pushed Portfolio feature to GitHub
 
 ## SEO & Performance Optimization
 
@@ -1263,6 +1307,108 @@ When available, it will provide:
 portal/app/docs/contracts/page.tsx  # Main documentation page
 portal/app/docs/page.tsx            # Updated with Contracts link
 ```
+
+## Portfolio + Yield Intelligence
+
+### Overview
+Full portfolio and yield tracking app for Stellar power users, DAOs, funds, and DeFi participants. Solves the problem of fragmented and opaque Stellar portfolios.
+
+### Target Customers
+- Power users with multiple accounts
+- DAOs managing treasury
+- Investment funds tracking positions
+- DeFi participants monitoring yield
+
+### Pages
+| Route | Description | Status |
+|-------|-------------|--------|
+| /portfolio | Portfolio list with tier info | ✅ Deployed |
+| /portfolio/[id] | Portfolio dashboard | ✅ Deployed |
+| /portfolio/[id]/accounts | Account management | ✅ Deployed |
+| /portfolio/[id]/assets | Asset positions | Coming Soon |
+| /portfolio/[id]/pnl | P&L analysis | Coming Soon |
+| /portfolio/[id]/trustlines | Trustline risk | Coming Soon |
+| /portfolio/[id]/contracts | Contract positions | Coming Soon |
+| /portfolio/[id]/yield | Yield tracking | Coming Soon |
+| /portfolio/[id]/history | Performance history | Coming Soon |
+
+### API Endpoints
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| /api/portfolio | GET, POST | List/create portfolios |
+| /api/portfolio/[id] | GET, PUT, DELETE | Portfolio operations |
+| /api/portfolio/[id]/accounts | GET, POST | Account management |
+| /api/portfolio/[id]/sync | POST | Sync from Horizon |
+
+### Tier Feature Matrix
+| Feature | FREE | PRO ($10) | DAO ($50) |
+|---------|------|-----------|-----------|
+| Accounts | 1 | 10 | Unlimited |
+| Portfolios | 1 | 5 | 100 |
+| P&L Tracking | No | Yes | Yes |
+| Yield Tracking | No | Yes | Yes |
+| Contract Positions | No | Yes | Yes |
+| Snapshot Retention | 7 days | 90 days | 365 days |
+| Team Access | No | No | Yes |
+
+### Database Models
+| Model | Description |
+|-------|-------------|
+| Portfolio | Multi-account aggregation |
+| PortfolioAccount | Linked Stellar accounts |
+| AssetPosition | Holdings with cost basis |
+| TradeRecord | For P&L calculation (FIFO) |
+| ContractPosition | Soroban DeFi positions |
+| YieldSource | Yield source configuration |
+| YieldReward | Individual rewards earned |
+| PerformanceSnapshot | Historical portfolio snapshots |
+| TrustlineRisk | Risk assessment per trustline |
+
+### Files Created
+```
+portal/lib/portfolio/
+├── types.ts
+├── gates.ts
+├── horizon-client.ts
+├── calculator.ts
+├── risk-assessor.ts
+└── index.ts
+
+portal/app/api/portfolio/
+├── route.ts
+└── [portfolioId]/
+    ├── route.ts
+    ├── accounts/route.ts
+    └── sync/route.ts
+
+portal/app/portfolio/
+├── layout.tsx
+├── page.tsx
+└── [portfolioId]/
+    ├── page.tsx
+    └── accounts/page.tsx
+
+portal/components/portfolio/
+├── PortfolioNav.tsx
+├── PortfolioSummary.tsx
+├── AssetTable.tsx
+└── index.ts
+```
+
+### Powered by LumenQuery
+**Horizon API:**
+- Account balances
+- Trade history
+- Asset information
+- Offers
+
+**Soroban RPC:**
+- Contract-based yield
+- Staked positions
+- Reward distributions
+
+### Differentiator
+Stellar-native + Soroban-aware. Most portfolio apps stop at balances.
 
 ## Analytics Dashboard
 
