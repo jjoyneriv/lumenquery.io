@@ -1,9 +1,10 @@
 # Project Context
 
 ## Current Status
-- Working on: SEO Blog Content
+- Working on: Administrative Console
 - Last session: 2026-02-13
 - Last validated: 2026-02-13
+- Admin Console: Implementation complete, deployed
 - Blog Posts: 12 articles (4 new SEO-optimized posts added)
 - Portfolio Intelligence: Implementation complete, deployed, documentation complete
 - Soroban Pro: Implementation complete, deployed, documentation complete
@@ -42,7 +43,7 @@
 | Database | Type | Location | Status |
 |----------|------|----------|--------|
 | Captive Core | SQLite | `/opt/stellar/captive-core/captive-core/stellar.db` | ✅ 375 MB |
-| LumenQuery | PostgreSQL | lumenquery-postgres:5432 | ✅ Healthy (29 tables) |
+| LumenQuery | PostgreSQL | lumenquery-postgres:5432 | ✅ Healthy (40 tables) |
 | LumenQuery Cache | Redis | lumenquery-redis:6379 | ✅ Healthy |
 | Horizon (remote) | PostgreSQL | 184.105.230.246:5432 | ✅ Connected |
 
@@ -137,6 +138,10 @@
 | Portfolio Pages | `/opt/lumenquery-portal/portal/app/portfolio/` | Portfolio dashboard and management pages |
 | Portfolio API | `/opt/lumenquery-portal/portal/app/api/portfolio/` | Portfolio CRUD, accounts, sync endpoints |
 | Portfolio Lib | `/opt/lumenquery-portal/portal/lib/portfolio/` | Types, gates, calculator, risk-assessor, Horizon client |
+| Admin Components | `/opt/lumenquery-portal/portal/components/admin/` | AdminNav, UserTable, AuditLogTable |
+| Admin Pages | `/opt/lumenquery-portal/portal/app/admin/` | Admin dashboard and management pages |
+| Admin API | `/opt/lumenquery-portal/portal/app/api/admin/` | Users, usage, audit log endpoints |
+| Admin Lib | `/opt/lumenquery-portal/portal/lib/admin/` | Admin guards, audit logging utilities |
 | Jobs System | `/opt/lumenquery-portal/portal/lib/jobs/` | Background job queue and workers |
 | Notifications | `/opt/lumenquery-portal/portal/lib/notifications/` | Email, Slack, webhook channels |
 | Portal Lib | `/opt/lumenquery-portal/portal/lib/` | Auth, Prisma, rate-limit, Redis utilities |
@@ -206,6 +211,10 @@
 29. Add Soroban Smart Contracts Explorer documentation
 30. Update CLAUDE.md with Contracts documentation
 31. Add Stellar Portfolio + Yield Intelligence Platform
+32. Add Portfolio Intelligence documentation
+33. Add 4 new SEO-optimized blog posts
+34. Update sitemap with comprehensive URL structure
+35. Add Administrative Console
 
 ## CI/CD Pipelines
 
@@ -1571,6 +1580,116 @@ Public analytics dashboard for Stellar network insights. No authentication requi
 ### Future Phases
 - Phase 2: Token analytics (velocity, whale movements >100K XLM, issuer risk)
 - Phase 3: Soroban contract analytics (call frequency, gas usage, events)
+
+## Administrative Console
+
+### Overview
+Internal admin console for managing users, monitoring feature usage, tracking login activity, and performing admin tasks. Access restricted to users with ADMIN or SUPER_ADMIN role.
+
+### Pages
+| Route | Description | Status |
+|-------|-------------|--------|
+| /admin | Dashboard with overview stats | ✅ Deployed |
+| /admin/users | User list with filtering | ✅ Deployed |
+| /admin/users/[userId] | User detail and management | ✅ Deployed |
+| /admin/usage | Usage analytics | ✅ Deployed |
+| /admin/audit | Admin audit log | ✅ Deployed |
+
+### API Endpoints
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| /api/admin/users | GET | List users with pagination/filtering |
+| /api/admin/users/[userId] | GET, PUT | User detail and update |
+| /api/admin/users/[userId]/password | POST | Send password reset email |
+| /api/admin/users/[userId]/sessions | GET, DELETE | Session info / force logout |
+| /api/admin/usage | GET | Aggregated usage statistics |
+| /api/admin/usage/[userId] | GET | Per-user feature usage |
+| /api/admin/audit | GET | Admin audit log |
+
+### User Roles
+| Role | Permissions |
+|------|-------------|
+| USER | Standard user (cannot access admin) |
+| ADMIN | View/manage users, reset passwords, view usage |
+| SUPER_ADMIN | All ADMIN permissions + manage admin roles |
+
+### Database Schema Additions
+```prisma
+enum UserRole {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
+// Added to User model:
+role              UserRole  @default(USER)
+lastLoginAt       DateTime?
+lastActiveAt      DateTime?
+currentSessionStart DateTime?
+
+model AdminAuditLog {
+  id           String   @id @default(cuid())
+  adminId      String
+  action       String   // PASSWORD_RESET, USER_UPDATED, FORCE_LOGOUT, etc.
+  targetUserId String?
+  details      Json?
+  ipAddress    String?
+  userAgent    String?
+  createdAt    DateTime @default(now())
+}
+```
+
+### Features
+- **User Management**: View all users, filter by role/tier/status, search by email/name
+- **User Detail**: View subscription info, API keys, usage stats, session info
+- **Session Tracking**: Last login, session duration, online status (active within 30 min)
+- **Password Reset**: Send reset email to user (uses existing forgot password flow)
+- **Force Logout**: Invalidate all user sessions
+- **Role Management**: Super admin can change user roles
+- **Audit Log**: All admin actions logged with IP, user agent, details
+
+### Security
+- Role-based access control on all admin endpoints
+- Super admin required to modify admin roles
+- Cannot remove the last super admin
+- All actions logged to AdminAuditLog
+- Password reset sends email (never displays password)
+
+### Files Created
+```
+portal/lib/admin/
+└── index.ts              # Admin guards, audit logging utilities
+
+portal/app/api/admin/
+├── users/route.ts        # User listing
+├── users/[userId]/route.ts    # User detail/update
+├── users/[userId]/password/route.ts  # Password reset
+├── users/[userId]/sessions/route.ts  # Session management
+├── usage/route.ts        # Usage statistics
+├── usage/[userId]/route.ts    # Per-user usage
+└── audit/route.ts        # Audit log
+
+portal/app/admin/
+├── layout.tsx            # Admin layout with role check
+├── page.tsx              # Dashboard
+├── users/page.tsx        # User list
+├── users/[userId]/page.tsx  # User detail
+├── usage/page.tsx        # Usage analytics
+└── audit/page.tsx        # Audit log
+
+portal/components/admin/
+├── AdminNav.tsx          # Sidebar navigation
+├── UserTable.tsx         # User list table
+├── PasswordResetModal.tsx  # Password reset dialog
+├── AuditLogTable.tsx     # Audit log table
+└── index.ts
+```
+
+### Creating Admin Users
+To create the first admin user:
+```sql
+UPDATE "User" SET role = 'SUPER_ADMIN' WHERE email = 'admin@example.com';
+```
 
 ## Notes
 - Before ending a session, ask Claude to update this file with current progress
