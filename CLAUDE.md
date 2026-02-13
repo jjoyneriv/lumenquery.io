@@ -749,20 +749,50 @@ docker compose up -d
       - Ledger lag detection and runbook examples
 30. Updated sitemap.xml with new blog posts (priority 0.8)
 31. Committed and pushed blog posts to GitHub
+32. Updated sitemap.xml with comprehensive URL structure:
+    - Reorganized into categories: Core, Documentation, Analytics, Services, Blog
+    - Added all 6 documentation pages (/docs/*)
+    - Added all 4 analytics pages (/analytics/*)
+    - Added contracts explorer page
+    - Total: 24 URLs indexed
+33. Committed and pushed sitemap update to GitHub
 
 ## SEO & Performance Optimization
 
 ### Sitemap Configuration
-All public pages included in `/sitemap.xml`:
-- Static pages: /, /docs, /blog, /pricing, /contracts
-- Analytics pages: /analytics, /analytics/network, /analytics/tokens, /analytics/contracts
-- Blog posts: All 12 articles with individual lastmod dates
+All public pages included in `/sitemap.xml` (24 URLs total):
+
+**Core Pages (2):**
+- / (home) - priority 1.0
+- /pricing - priority 0.9
+
+**Documentation (6):**
+- /docs (main) - priority 0.9
+- /docs/analytics - priority 0.8
+- /docs/intelligence - priority 0.8
+- /docs/compliance - priority 0.8
+- /docs/contracts - priority 0.8
+- /docs/portfolio - priority 0.8
+
+**Analytics (4):**
+- /analytics - priority 0.8
+- /analytics/network - priority 0.7
+- /analytics/tokens - priority 0.7
+- /analytics/contracts - priority 0.7
+
+**Services (1):**
+- /contracts - priority 0.8
+
+**Blog (13):**
+- /blog (listing) - priority 0.8
+- 12 individual blog posts with lastmod dates
 
 Pages excluded (require auth or noindex):
 - /auth/* (blocked by robots.txt)
 - /dashboard/* (noindex)
 - /compliance/* (noindex, requires auth)
 - /intelligence/* (noindex, requires auth)
+- /portfolio/* (noindex, requires auth)
 
 ### SEO Meta Tags (All Public Pages)
 | Tag | Status |
