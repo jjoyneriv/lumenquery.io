@@ -69,7 +69,12 @@ function SignInForm() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-black mb-1.5 sm:mb-2">Password</label>
+              <div className="flex items-center justify-between mb-1.5 sm:mb-2">
+                <label className="block text-sm font-medium text-black">Password</label>
+                <Link href="/auth/forgot-password" className="text-sm text-[#2855FF] hover:underline">
+                  Forgot password?
+                </Link>
+              </div>
               <input
                 type="password"
                 value={password}
