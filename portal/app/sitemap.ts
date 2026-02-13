@@ -19,7 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${baseUrl}/blog`,
-      lastModified: new Date('2026-02-12'),
+      lastModified: new Date('2026-02-13'),
       changeFrequency: 'daily',
       priority: 0.8,
     },
@@ -64,6 +64,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Blog posts - ALL posts with their actual publication dates
   const blogPosts: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/blog/build-stellar-blockchain-explorer-horizon-api`,
+      lastModified: new Date('2026-02-13'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/soroban-json-rpc-explained`,
+      lastModified: new Date('2026-02-13'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/best-stellar-api-providers-2026`,
+      lastModified: new Date('2026-02-13'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/monitor-stellar-validator-horizon-node`,
+      lastModified: new Date('2026-02-13'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
     {
       url: `${baseUrl}/blog/using-claude-code-with-json-rpc-api`,
       lastModified: new Date('2026-02-07'),

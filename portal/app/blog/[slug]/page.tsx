@@ -1893,6 +1893,2108 @@ console.log(account.balances);
 Happy building!
     `,
   },
+  'build-stellar-blockchain-explorer-horizon-api': {
+    title: 'How to Build a Stellar Blockchain Explorer Using Horizon API (Step-by-Step Guide)',
+    date: '2026-02-13',
+    readTime: '15 min read',
+    category: 'Developer Guide',
+    content: `
+Building a blockchain explorer is one of the best ways to understand how Stellar works under the hood. In this comprehensive guide, we'll build a fully functional Stellar blockchain explorer using the Horizon API and LumenQuery infrastructure.
+
+## What We're Building
+
+By the end of this tutorial, you'll have a working blockchain explorer that can:
+
+- Fetch and display recent transactions
+- Query any Stellar account and show balances
+- Parse and display operation details
+- Show real-time ledger data
+- Handle pagination for large datasets
+
+## Prerequisites
+
+Before we start, you'll need:
+
+- Node.js 18+ installed
+- A LumenQuery API key ([sign up free](/auth/signup))
+- Basic JavaScript/TypeScript knowledge
+- A code editor
+
+## Setting Up the Project
+
+Let's start with a fresh Next.js project:
+
+\`\`\`bash
+npx create-next-app@latest stellar-explorer --typescript
+cd stellar-explorer
+npm install
+\`\`\`
+
+Set your LumenQuery API key:
+
+\`\`\`bash
+# .env.local
+LUMENQUERY_API_KEY=lq_your_api_key_here
+NEXT_PUBLIC_HORIZON_URL=https://api.lumenquery.io
+\`\`\`
+
+## Creating the Horizon Client
+
+First, let's create a reusable client for interacting with the Horizon API:
+
+\`\`\`typescript
+// lib/horizon.ts
+const HORIZON_URL = process.env.NEXT_PUBLIC_HORIZON_URL || 'https://api.lumenquery.io';
+const API_KEY = process.env.LUMENQUERY_API_KEY;
+
+async function horizonRequest(endpoint: string) {
+  const response = await fetch(\`\${HORIZON_URL}\${endpoint}\`, {
+    headers: {
+      'X-API-Key': API_KEY || '',
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(\`Horizon API error: \${response.status}\`);
+  }
+
+  return response.json();
+}
+
+export { horizonRequest, HORIZON_URL };
+\`\`\`
+
+## Fetching Recent Transactions
+
+The transactions endpoint returns the most recent transactions on the network:
+
+\`\`\`typescript
+// lib/transactions.ts
+import { horizonRequest } from './horizon';
+
+interface Transaction {
+  id: string;
+  hash: string;
+  ledger: number;
+  created_at: string;
+  source_account: string;
+  fee_charged: string;
+  operation_count: number;
+  successful: boolean;
+}
+
+interface TransactionsResponse {
+  _embedded: {
+    records: Transaction[];
+  };
+  _links: {
+    next: { href: string };
+    prev: { href: string };
+  };
+}
+
+export async function getRecentTransactions(limit = 20): Promise<Transaction[]> {
+  const data: TransactionsResponse = await horizonRequest(
+    \`/transactions?limit=\${limit}&order=desc\`
+  );
+  return data._embedded.records;
+}
+
+export async function getTransactionByHash(hash: string): Promise<Transaction> {
+  return horizonRequest(\`/transactions/\${hash}\`);
+}
+\`\`\`
+
+### Displaying Transactions in React
+
+\`\`\`tsx
+// components/TransactionList.tsx
+'use client';
+
+import { useEffect, useState } from 'react';
+import { getRecentTransactions } from '@/lib/transactions';
+
+export function TransactionList() {
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchTransactions() {
+      try {
+        const txs = await getRecentTransactions(20);
+        setTransactions(txs);
+      } catch (error) {
+        console.error('Failed to fetch transactions:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchTransactions();
+  }, []);
+
+  if (loading) return <div>Loading transactions...</div>;
+
+  return (
+    <div className="space-y-4">
+      <h2 className="text-2xl font-bold">Recent Transactions</h2>
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b">
+              <th className="text-left py-2">Hash</th>
+              <th className="text-left py-2">Ledger</th>
+              <th className="text-left py-2">Operations</th>
+              <th className="text-left py-2">Status</th>
+              <th className="text-left py-2">Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {transactions.map((tx) => (
+              <tr key={tx.id} className="border-b hover:bg-gray-50">
+                <td className="py-2 font-mono text-sm">
+                  {tx.hash.slice(0, 8)}...{tx.hash.slice(-8)}
+                </td>
+                <td className="py-2">{tx.ledger}</td>
+                <td className="py-2">{tx.operation_count}</td>
+                <td className="py-2">
+                  <span className={\`px-2 py-1 rounded text-sm \${
+                    tx.successful ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                  }\`}>
+                    {tx.successful ? 'Success' : 'Failed'}
+                  </span>
+                </td>
+                <td className="py-2 text-sm text-gray-600">
+                  {new Date(tx.created_at).toLocaleString()}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+\`\`\`
+
+## Querying Account Information
+
+Every Stellar account has balances, trustlines, and other important data:
+
+\`\`\`typescript
+// lib/accounts.ts
+import { horizonRequest } from './horizon';
+
+interface Balance {
+  balance: string;
+  asset_type: string;
+  asset_code?: string;
+  asset_issuer?: string;
+}
+
+interface Account {
+  id: string;
+  account_id: string;
+  sequence: string;
+  balances: Balance[];
+  num_subentries: number;
+  thresholds: {
+    low_threshold: number;
+    med_threshold: number;
+    high_threshold: number;
+  };
+  flags: {
+    auth_required: boolean;
+    auth_revocable: boolean;
+    auth_immutable: boolean;
+    auth_clawback_enabled: boolean;
+  };
+}
+
+export async function getAccount(accountId: string): Promise<Account> {
+  return horizonRequest(\`/accounts/\${accountId}\`);
+}
+
+export async function getAccountTransactions(
+  accountId: string,
+  limit = 20
+): Promise<Transaction[]> {
+  const data = await horizonRequest(
+    \`/accounts/\${accountId}/transactions?limit=\${limit}&order=desc\`
+  );
+  return data._embedded.records;
+}
+
+export async function getAccountOperations(
+  accountId: string,
+  limit = 20
+) {
+  const data = await horizonRequest(
+    \`/accounts/\${accountId}/operations?limit=\${limit}&order=desc\`
+  );
+  return data._embedded.records;
+}
+\`\`\`
+
+### Building the Account Viewer Component
+
+\`\`\`tsx
+// components/AccountViewer.tsx
+'use client';
+
+import { useState } from 'react';
+import { getAccount } from '@/lib/accounts';
+
+export function AccountViewer() {
+  const [accountId, setAccountId] = useState('');
+  const [account, setAccount] = useState<Account | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSearch = async () => {
+    if (!accountId.startsWith('G') || accountId.length !== 56) {
+      setError('Invalid Stellar account ID');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const data = await getAccount(accountId);
+      setAccount(data);
+    } catch (err) {
+      setError('Account not found');
+      setAccount(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <h2 className="text-2xl font-bold">Account Lookup</h2>
+
+      <div className="flex gap-2">
+        <input
+          type="text"
+          placeholder="Enter Stellar Account ID (G...)"
+          value={accountId}
+          onChange={(e) => setAccountId(e.target.value)}
+          className="flex-1 px-4 py-2 border rounded"
+        />
+        <button
+          onClick={handleSearch}
+          disabled={loading}
+          className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          {loading ? 'Loading...' : 'Search'}
+        </button>
+      </div>
+
+      {error && <p className="text-red-600">{error}</p>}
+
+      {account && (
+        <div className="p-4 border rounded">
+          <h3 className="text-lg font-semibold mb-4">Balances</h3>
+          <div className="space-y-2">
+            {account.balances.map((balance, i) => (
+              <div key={i} className="flex justify-between p-2 bg-gray-50 rounded">
+                <span className="font-medium">
+                  {balance.asset_type === 'native' ? 'XLM' : balance.asset_code}
+                </span>
+                <span>{parseFloat(balance.balance).toLocaleString()}</span>
+              </div>
+            ))}
+          </div>
+
+          <h3 className="text-lg font-semibold mt-6 mb-2">Account Flags</h3>
+          <div className="grid grid-cols-2 gap-2 text-sm">
+            <div>Auth Required: {account.flags.auth_required ? 'Yes' : 'No'}</div>
+            <div>Auth Revocable: {account.flags.auth_revocable ? 'Yes' : 'No'}</div>
+            <div>Auth Immutable: {account.flags.auth_immutable ? 'Yes' : 'No'}</div>
+            <div>Clawback: {account.flags.auth_clawback_enabled ? 'Yes' : 'No'}</div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+\`\`\`
+
+## Parsing Operations
+
+Operations are the atomic units of work on Stellar. Each transaction contains one or more operations:
+
+\`\`\`typescript
+// lib/operations.ts
+import { horizonRequest } from './horizon';
+
+interface Operation {
+  id: string;
+  type: string;
+  type_i: number;
+  transaction_hash: string;
+  source_account: string;
+  created_at: string;
+  // Type-specific fields
+  asset_type?: string;
+  asset_code?: string;
+  amount?: string;
+  from?: string;
+  to?: string;
+  starting_balance?: string;
+}
+
+const OPERATION_TYPES: Record<number, string> = {
+  0: 'Create Account',
+  1: 'Payment',
+  2: 'Path Payment Strict Receive',
+  3: 'Manage Sell Offer',
+  4: 'Create Passive Sell Offer',
+  5: 'Set Options',
+  6: 'Change Trust',
+  7: 'Allow Trust',
+  8: 'Account Merge',
+  9: 'Inflation',
+  10: 'Manage Data',
+  11: 'Bump Sequence',
+  12: 'Manage Buy Offer',
+  13: 'Path Payment Strict Send',
+  14: 'Create Claimable Balance',
+  15: 'Claim Claimable Balance',
+  16: 'Begin Sponsoring Future Reserves',
+  17: 'End Sponsoring Future Reserves',
+  18: 'Revoke Sponsorship',
+  19: 'Clawback',
+  20: 'Clawback Claimable Balance',
+  21: 'Set Trust Line Flags',
+  22: 'Liquidity Pool Deposit',
+  23: 'Liquidity Pool Withdraw',
+  24: 'Invoke Host Function',
+  25: 'Extend Footprint TTL',
+  26: 'Restore Footprint',
+};
+
+export function getOperationTypeName(typeI: number): string {
+  return OPERATION_TYPES[typeI] || 'Unknown';
+}
+
+export function parseOperationDetails(op: Operation): Record<string, string> {
+  const details: Record<string, string> = {
+    Type: getOperationTypeName(op.type_i),
+    Source: op.source_account,
+  };
+
+  switch (op.type) {
+    case 'payment':
+      details.To = op.to || '';
+      details.Amount = op.amount || '';
+      details.Asset = op.asset_type === 'native' ? 'XLM' : op.asset_code || '';
+      break;
+    case 'create_account':
+      details.Account = op.account || '';
+      details['Starting Balance'] = op.starting_balance || '';
+      break;
+    case 'change_trust':
+      details.Asset = op.asset_code || '';
+      details.Issuer = op.asset_issuer || '';
+      details.Limit = op.limit || '';
+      break;
+    // Add more operation types as needed
+  }
+
+  return details;
+}
+\`\`\`
+
+## Displaying Ledger Data
+
+Ledgers are the fundamental unit of time on Stellar. Each ledger closes approximately every 5 seconds:
+
+\`\`\`typescript
+// lib/ledgers.ts
+import { horizonRequest } from './horizon';
+
+interface Ledger {
+  id: string;
+  sequence: number;
+  hash: string;
+  prev_hash: string;
+  transaction_count: number;
+  operation_count: number;
+  closed_at: string;
+  total_coins: string;
+  fee_pool: string;
+  base_fee_in_stroops: number;
+  base_reserve_in_stroops: number;
+  protocol_version: number;
+}
+
+export async function getLatestLedgers(limit = 10): Promise<Ledger[]> {
+  const data = await horizonRequest(\`/ledgers?limit=\${limit}&order=desc\`);
+  return data._embedded.records;
+}
+
+export async function getLedgerBySequence(sequence: number): Promise<Ledger> {
+  return horizonRequest(\`/ledgers/\${sequence}\`);
+}
+
+export async function getLedgerTransactions(sequence: number, limit = 20) {
+  const data = await horizonRequest(
+    \`/ledgers/\${sequence}/transactions?limit=\${limit}\`
+  );
+  return data._embedded.records;
+}
+\`\`\`
+
+### Building the Ledger Dashboard
+
+\`\`\`tsx
+// components/LedgerDashboard.tsx
+'use client';
+
+import { useEffect, useState } from 'react';
+import { getLatestLedgers } from '@/lib/ledgers';
+
+export function LedgerDashboard() {
+  const [ledgers, setLedgers] = useState<Ledger[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchLedgers() {
+      const data = await getLatestLedgers(10);
+      setLedgers(data);
+      setLoading(false);
+    }
+
+    fetchLedgers();
+    const interval = setInterval(fetchLedgers, 5000); // Refresh every 5 seconds
+    return () => clearInterval(interval);
+  }, []);
+
+  if (loading) return <div>Loading ledgers...</div>;
+
+  const latestLedger = ledgers[0];
+
+  return (
+    <div className="space-y-6">
+      {/* Network Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="p-4 bg-blue-50 rounded">
+          <div className="text-sm text-gray-600">Latest Ledger</div>
+          <div className="text-2xl font-bold">{latestLedger?.sequence.toLocaleString()}</div>
+        </div>
+        <div className="p-4 bg-green-50 rounded">
+          <div className="text-sm text-gray-600">Protocol Version</div>
+          <div className="text-2xl font-bold">{latestLedger?.protocol_version}</div>
+        </div>
+        <div className="p-4 bg-purple-50 rounded">
+          <div className="text-sm text-gray-600">Base Fee</div>
+          <div className="text-2xl font-bold">{latestLedger?.base_fee_in_stroops} stroops</div>
+        </div>
+        <div className="p-4 bg-orange-50 rounded">
+          <div className="text-sm text-gray-600">Total XLM</div>
+          <div className="text-2xl font-bold">
+            {(parseFloat(latestLedger?.total_coins || '0') / 1e7).toLocaleString()}
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Ledgers Table */}
+      <div>
+        <h3 className="text-lg font-semibold mb-4">Recent Ledgers</h3>
+        <table className="w-full">
+          <thead>
+            <tr className="border-b">
+              <th className="text-left py-2">Sequence</th>
+              <th className="text-left py-2">Transactions</th>
+              <th className="text-left py-2">Operations</th>
+              <th className="text-left py-2">Closed At</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ledgers.map((ledger) => (
+              <tr key={ledger.id} className="border-b hover:bg-gray-50">
+                <td className="py-2 font-mono">{ledger.sequence}</td>
+                <td className="py-2">{ledger.transaction_count}</td>
+                <td className="py-2">{ledger.operation_count}</td>
+                <td className="py-2 text-sm text-gray-600">
+                  {new Date(ledger.closed_at).toLocaleString()}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+\`\`\`
+
+## Putting It All Together
+
+Create your main explorer page:
+
+\`\`\`tsx
+// app/page.tsx
+import { TransactionList } from '@/components/TransactionList';
+import { AccountViewer } from '@/components/AccountViewer';
+import { LedgerDashboard } from '@/components/LedgerDashboard';
+
+export default function ExplorerPage() {
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      <h1 className="text-4xl font-bold mb-8">Stellar Blockchain Explorer</h1>
+      <p className="text-gray-600 mb-8">
+        Powered by <a href="https://lumenquery.io" className="text-blue-600">LumenQuery</a> Horizon API
+      </p>
+
+      <div className="space-y-12">
+        <section>
+          <LedgerDashboard />
+        </section>
+
+        <section>
+          <AccountViewer />
+        </section>
+
+        <section>
+          <TransactionList />
+        </section>
+      </div>
+    </div>
+  );
+}
+\`\`\`
+
+## Handling Pagination
+
+The Horizon API uses cursor-based pagination. Here's how to implement infinite scroll:
+
+\`\`\`typescript
+// lib/pagination.ts
+export function extractCursor(link: string): string | null {
+  const url = new URL(link);
+  return url.searchParams.get('cursor');
+}
+
+export async function fetchPage(endpoint: string, cursor?: string) {
+  const url = cursor ? \`\${endpoint}&cursor=\${cursor}\` : endpoint;
+  return horizonRequest(url);
+}
+\`\`\`
+
+\`\`\`tsx
+// components/PaginatedTransactions.tsx
+'use client';
+
+import { useState, useEffect, useCallback } from 'react';
+import { horizonRequest } from '@/lib/horizon';
+import { extractCursor } from '@/lib/pagination';
+
+export function PaginatedTransactions() {
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const loadMore = useCallback(async () => {
+    if (loading) return;
+    setLoading(true);
+
+    try {
+      const endpoint = nextCursor
+        ? \`/transactions?limit=20&order=desc&cursor=\${nextCursor}\`
+        : '/transactions?limit=20&order=desc';
+
+      const data = await horizonRequest(endpoint);
+      setTransactions((prev) => [...prev, ...data._embedded.records]);
+
+      if (data._links.next) {
+        setNextCursor(extractCursor(data._links.next.href));
+      } else {
+        setNextCursor(null);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [nextCursor, loading]);
+
+  useEffect(() => {
+    loadMore();
+  }, []);
+
+  return (
+    <div>
+      {/* Transaction list rendering */}
+      {transactions.map((tx) => (
+        <div key={tx.id}>{/* Transaction display */}</div>
+      ))}
+
+      {nextCursor && (
+        <button
+          onClick={loadMore}
+          disabled={loading}
+          className="w-full py-2 mt-4 bg-gray-100 rounded hover:bg-gray-200"
+        >
+          {loading ? 'Loading...' : 'Load More'}
+        </button>
+      )}
+    </div>
+  );
+}
+\`\`\`
+
+## Best Practices
+
+### Error Handling
+
+Always handle API errors gracefully:
+
+\`\`\`typescript
+async function safeHorizonRequest<T>(endpoint: string): Promise<T | null> {
+  try {
+    return await horizonRequest(endpoint);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(\`Horizon API Error: \${error.message}\`);
+    }
+    return null;
+  }
+}
+\`\`\`
+
+### Rate Limiting
+
+LumenQuery provides generous rate limits, but always implement retry logic:
+
+\`\`\`typescript
+async function fetchWithRetry(endpoint: string, retries = 3): Promise<any> {
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await horizonRequest(endpoint);
+    } catch (error) {
+      if (i === retries - 1) throw error;
+      await new Promise((r) => setTimeout(r, 1000 * (i + 1)));
+    }
+  }
+}
+\`\`\`
+
+### Caching
+
+Cache frequently accessed data:
+
+\`\`\`typescript
+const cache = new Map<string, { data: any; timestamp: number }>();
+const CACHE_TTL = 5000; // 5 seconds
+
+async function cachedRequest(endpoint: string) {
+  const cached = cache.get(endpoint);
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+    return cached.data;
+  }
+
+  const data = await horizonRequest(endpoint);
+  cache.set(endpoint, { data, timestamp: Date.now() });
+  return data;
+}
+\`\`\`
+
+## Next Steps
+
+You now have a working Stellar blockchain explorer. Here are some ways to extend it:
+
+1. **Add asset tracking** - Show all assets issued on Stellar
+2. **Implement search** - Search by account, transaction hash, or ledger
+3. **Add analytics** - Show network statistics and trends
+4. **Real-time streaming** - Use Horizon's streaming API for live updates
+5. **Mobile responsiveness** - Make the explorer work on all devices
+
+---
+
+*Ready to build your own Stellar explorer? [Sign up for LumenQuery](/auth/signup) and get started with reliable Horizon API infrastructure.*
+    `,
+  },
+  'soroban-json-rpc-explained': {
+    title: 'Soroban JSON RPC Explained: How to Query Smart Contracts on Stellar',
+    date: '2026-02-13',
+    readTime: '12 min read',
+    category: 'Developer Guide',
+    content: `
+Soroban brings smart contracts to Stellar, and JSON-RPC is how you interact with them. This guide breaks down everything you need to know about Soroban RPC—from basic concepts to advanced querying techniques.
+
+## What is Soroban RPC?
+
+Soroban RPC is a JSON-RPC 2.0 service that provides access to Stellar's smart contract platform. Unlike the REST-based Horizon API (which handles traditional Stellar operations), Soroban RPC is specifically designed for smart contract interactions.
+
+**Key Responsibilities:**
+
+- Simulating contract calls before submission
+- Submitting contract transactions
+- Querying contract state and events
+- Fetching fee estimates and network status
+
+## JSON-RPC Basics
+
+JSON-RPC is a simple protocol for remote procedure calls using JSON. Every request follows this structure:
+
+\`\`\`json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "methodName",
+  "params": {}
+}
+\`\`\`
+
+Responses include either a \`result\` or an \`error\`:
+
+\`\`\`json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": { ... }
+}
+\`\`\`
+
+## Getting Started with LumenQuery Soroban RPC
+
+LumenQuery provides production-ready Soroban RPC infrastructure. Here's how to connect:
+
+\`\`\`javascript
+const SOROBAN_RPC_URL = 'https://rpc.lumenquery.io';
+const API_KEY = 'lq_your_api_key';
+
+async function rpcCall(method, params = {}) {
+  const response = await fetch(SOROBAN_RPC_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-API-Key': API_KEY,
+    },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: Date.now(),
+      method,
+      params,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (data.error) {
+    throw new Error(\`RPC Error: \${data.error.message}\`);
+  }
+
+  return data.result;
+}
+\`\`\`
+
+## Core RPC Methods
+
+### Network Health and Status
+
+\`\`\`javascript
+// Check if the RPC server is healthy
+const health = await rpcCall('getHealth');
+console.log(health);
+// { "status": "healthy" }
+
+// Get network information
+const network = await rpcCall('getNetwork');
+console.log(network);
+// {
+//   "friendbotUrl": "https://friendbot.stellar.org/",
+//   "passphrase": "Public Global Stellar Network ; September 2015",
+//   "protocolVersion": "21"
+// }
+
+// Get the latest ledger
+const ledger = await rpcCall('getLatestLedger');
+console.log(ledger);
+// {
+//   "id": "...",
+//   "protocolVersion": 21,
+//   "sequence": 53012845
+// }
+\`\`\`
+
+### Fee Statistics
+
+Understanding fees is crucial for contract calls:
+
+\`\`\`javascript
+const feeStats = await rpcCall('getFeeStats');
+console.log(feeStats);
+// {
+//   "sorobanInclusionFee": {
+//     "max": "210",
+//     "min": "100",
+//     "mode": "100",
+//     "p10": "100",
+//     "p20": "100",
+//     "p30": "100",
+//     "p40": "100",
+//     "p50": "100",
+//     "p60": "100",
+//     "p70": "100",
+//     "p80": "100",
+//     "p90": "100",
+//     "p95": "100",
+//     "p99": "200",
+//     "transactionCount": "50",
+//     "ledgerCount": 50
+//   },
+//   "inclusionFee": { ... },
+//   "latestLedger": 53012845
+// }
+\`\`\`
+
+## Invoking Smart Contracts
+
+### Step 1: Simulate the Transaction
+
+Before submitting a contract call, always simulate it first. This validates the call and returns resource requirements:
+
+\`\`\`javascript
+const simulation = await rpcCall('simulateTransaction', {
+  transaction: 'AAAAAgAAAA...', // Base64-encoded transaction XDR
+});
+
+console.log(simulation);
+// {
+//   "transactionData": "...",
+//   "minResourceFee": "94813",
+//   "events": [...],
+//   "results": [{
+//     "auth": [...],
+//     "xdr": "..." // Return value
+//   }],
+//   "cost": {
+//     "cpuInsns": "2893756",
+//     "memBytes": "1234567"
+//   },
+//   "latestLedger": 53012845
+// }
+\`\`\`
+
+### Step 2: Build and Sign the Transaction
+
+Use the simulation result to build the final transaction:
+
+\`\`\`javascript
+import { SorobanRpc, TransactionBuilder, Networks, Operation } from '@stellar/stellar-sdk';
+
+const server = new SorobanRpc.Server('https://rpc.lumenquery.io', {
+  headers: { 'X-API-Key': 'lq_your_api_key' },
+});
+
+// Build the contract call
+const contract = new Contract(contractId);
+const operation = contract.call('increment', ...[]);
+
+let transaction = new TransactionBuilder(account, {
+  fee: '100',
+  networkPassphrase: Networks.PUBLIC,
+})
+  .addOperation(operation)
+  .setTimeout(30)
+  .build();
+
+// Simulate to get resource requirements
+const simulated = await server.simulateTransaction(transaction);
+
+// Prepare the transaction with actual resource footprint
+transaction = SorobanRpc.assembleTransaction(transaction, simulated).build();
+
+// Sign the transaction
+transaction.sign(keypair);
+\`\`\`
+
+### Step 3: Submit the Transaction
+
+\`\`\`javascript
+const submitResult = await rpcCall('sendTransaction', {
+  transaction: transaction.toXDR(),
+});
+
+console.log(submitResult);
+// {
+//   "status": "PENDING",
+//   "hash": "abc123...",
+//   "latestLedger": 53012846,
+//   "latestLedgerCloseTime": "1707849600"
+// }
+\`\`\`
+
+### Step 4: Poll for Results
+
+\`\`\`javascript
+async function waitForTransaction(hash, timeout = 30000) {
+  const start = Date.now();
+
+  while (Date.now() - start < timeout) {
+    const result = await rpcCall('getTransaction', { hash });
+
+    if (result.status === 'SUCCESS') {
+      return result;
+    }
+
+    if (result.status === 'FAILED') {
+      throw new Error(\`Transaction failed: \${JSON.stringify(result)}\`);
+    }
+
+    // Still pending, wait and retry
+    await new Promise((r) => setTimeout(r, 1000));
+  }
+
+  throw new Error('Transaction timeout');
+}
+
+const result = await waitForTransaction(submitResult.hash);
+console.log('Transaction successful:', result);
+\`\`\`
+
+## Querying Contract State
+
+### Reading Ledger Entries
+
+Use \`getLedgerEntries\` to read contract storage:
+
+\`\`\`javascript
+import { xdr, Address } from '@stellar/stellar-sdk';
+
+// Build the storage key
+const contractAddress = Address.fromString(contractId);
+const key = xdr.LedgerKey.contractData(
+  new xdr.LedgerKeyContractData({
+    contract: contractAddress.toScAddress(),
+    key: xdr.ScVal.scvSymbol('counter'),
+    durability: xdr.ContractDataDurability.persistent(),
+  })
+);
+
+const result = await rpcCall('getLedgerEntries', {
+  keys: [key.toXDR('base64')],
+});
+
+console.log(result);
+// {
+//   "entries": [{
+//     "key": "...",
+//     "xdr": "...",
+//     "lastModifiedLedgerSeq": 53012800,
+//     "liveUntilLedgerSeq": 53112800
+//   }],
+//   "latestLedger": 53012850
+// }
+
+// Decode the value
+const entry = xdr.LedgerEntryData.fromXDR(result.entries[0].xdr, 'base64');
+const contractData = entry.contractData();
+console.log('Counter value:', contractData.val().u32());
+\`\`\`
+
+## Querying Contract Events
+
+Events are the primary way contracts communicate what happened during execution:
+
+\`\`\`javascript
+const events = await rpcCall('getEvents', {
+  startLedger: 53012800,
+  filters: [
+    {
+      type: 'contract',
+      contractIds: [contractId],
+      topics: [
+        ['*'], // Match any first topic
+        ['*'], // Match any second topic
+      ],
+    },
+  ],
+  pagination: {
+    limit: 100,
+  },
+});
+
+console.log(events);
+// {
+//   "events": [
+//     {
+//       "type": "contract",
+//       "ledger": "53012820",
+//       "ledgerClosedAt": "2024-02-13T12:00:00Z",
+//       "contractId": "CAB...",
+//       "id": "...",
+//       "pagingToken": "...",
+//       "topic": ["AAAADwAAAAlpbmNyZW1lbnQ=", ...],
+//       "value": "AAAAAwAAAAU="
+//     }
+//   ],
+//   "latestLedger": 53012850
+// }
+\`\`\`
+
+### Filtering Events
+
+You can filter events by topic for more specific queries:
+
+\`\`\`javascript
+import { xdr } from '@stellar/stellar-sdk';
+
+// Create a topic filter for "transfer" events
+const transferTopic = xdr.ScVal.scvSymbol('transfer').toXDR('base64');
+
+const transfers = await rpcCall('getEvents', {
+  startLedger: 53012800,
+  filters: [
+    {
+      type: 'contract',
+      contractIds: [tokenContractId],
+      topics: [[transferTopic], ['*'], ['*']], // transfer(from, to)
+    },
+  ],
+  pagination: { limit: 50 },
+});
+\`\`\`
+
+## Horizon vs Soroban RPC
+
+Understanding when to use each API is crucial:
+
+| Feature | Horizon API | Soroban RPC |
+|---------|-------------|-------------|
+| Protocol | REST | JSON-RPC 2.0 |
+| Use Case | Traditional Stellar ops | Smart contracts |
+| Transaction Types | Payments, trustlines, offers | Contract invocations |
+| State Queries | Account balances, orderbook | Contract storage |
+| Events | Operation history | Contract events |
+| Simulation | No | Yes |
+| Base URL | api.lumenquery.io | rpc.lumenquery.io |
+
+### When to Use Horizon
+
+- Querying account balances and trustlines
+- Fetching transaction history
+- Working with the DEX (offers, orderbook)
+- Traditional Stellar operations (payments, trustlines)
+
+### When to Use Soroban RPC
+
+- Deploying and invoking smart contracts
+- Reading contract state
+- Querying contract events
+- Simulating contract calls
+- Fee estimation for contract transactions
+
+## Using the Stellar SDK
+
+The official Stellar SDK simplifies Soroban RPC interactions:
+
+\`\`\`javascript
+import { SorobanRpc, Contract, Networks, Keypair } from '@stellar/stellar-sdk';
+
+// Initialize the server with LumenQuery
+const server = new SorobanRpc.Server('https://rpc.lumenquery.io', {
+  headers: { 'X-API-Key': 'lq_your_api_key' },
+});
+
+// Load a contract
+const contract = new Contract(contractId);
+
+// Get the account
+const account = await server.getAccount(publicKey);
+
+// Build a contract call
+const transaction = new TransactionBuilder(account, {
+  fee: '100000',
+  networkPassphrase: Networks.PUBLIC,
+})
+  .addOperation(contract.call('my_function', ...args))
+  .setTimeout(30)
+  .build();
+
+// Simulate the transaction
+const simulated = await server.simulateTransaction(transaction);
+
+if (SorobanRpc.Api.isSimulationError(simulated)) {
+  throw new Error(\`Simulation failed: \${simulated.error}\`);
+}
+
+// Prepare and sign
+const prepared = SorobanRpc.assembleTransaction(transaction, simulated);
+prepared.sign(keypair);
+
+// Submit
+const response = await server.sendTransaction(prepared.build());
+
+// Wait for confirmation
+if (response.status === 'PENDING') {
+  const result = await server.getTransaction(response.hash);
+  // Handle result
+}
+\`\`\`
+
+## Error Handling
+
+Soroban RPC returns specific error codes:
+
+\`\`\`javascript
+async function handleRpcCall(method, params) {
+  try {
+    const result = await rpcCall(method, params);
+    return result;
+  } catch (error) {
+    if (error.code === -32600) {
+      console.error('Invalid request');
+    } else if (error.code === -32601) {
+      console.error('Method not found');
+    } else if (error.code === -32602) {
+      console.error('Invalid params');
+    } else if (error.code === -32603) {
+      console.error('Internal error');
+    } else {
+      console.error('Unknown error:', error);
+    }
+    throw error;
+  }
+}
+\`\`\`
+
+## Production Best Practices
+
+### 1. Always Simulate First
+
+Never submit a contract transaction without simulating it:
+
+\`\`\`javascript
+async function safeContractCall(transaction) {
+  const simulation = await server.simulateTransaction(transaction);
+
+  if (SorobanRpc.Api.isSimulationError(simulation)) {
+    throw new Error(\`Simulation failed: \${simulation.error}\`);
+  }
+
+  if (simulation.results?.some((r) => r.error)) {
+    throw new Error('Contract execution would fail');
+  }
+
+  return SorobanRpc.assembleTransaction(transaction, simulation);
+}
+\`\`\`
+
+### 2. Handle TTL and State Archival
+
+Soroban contracts have time-to-live (TTL) for state:
+
+\`\`\`javascript
+// Check if state entry is about to expire
+const entries = await server.getLedgerEntries([stateKey]);
+const entry = entries.entries[0];
+const currentLedger = entries.latestLedger;
+
+if (entry.liveUntilLedgerSeq - currentLedger < 10000) {
+  console.warn('State entry expiring soon, consider extending TTL');
+}
+\`\`\`
+
+### 3. Use Appropriate Timeouts
+
+Contract calls can be resource-intensive:
+
+\`\`\`javascript
+const response = await fetch(SOROBAN_RPC_URL, {
+  method: 'POST',
+  headers: { ... },
+  body: JSON.stringify({ ... }),
+  signal: AbortSignal.timeout(30000), // 30 second timeout
+});
+\`\`\`
+
+## Why LumenQuery for Production
+
+LumenQuery provides enterprise-grade Soroban RPC infrastructure:
+
+- **High availability** - 99.9% uptime SLA
+- **Low latency** - Optimized for fast responses
+- **Rate limits** - Generous limits for production workloads
+- **No maintenance** - We handle the infrastructure
+- **Support** - Expert help when you need it
+
+---
+
+*Ready to build with Soroban? [Sign up for LumenQuery](/auth/signup) and get production-ready RPC infrastructure today.*
+    `,
+  },
+  'best-stellar-api-providers-2026': {
+    title: 'Best Stellar API Providers in 2026 (Comparison Guide)',
+    date: '2026-02-13',
+    readTime: '10 min read',
+    category: 'Comparison',
+    content: `
+Choosing the right Stellar API provider can make or break your blockchain project. In this comparison guide, we objectively evaluate the options available in 2026—from self-hosted solutions to managed services.
+
+## Why API Provider Choice Matters
+
+Your Stellar API provider impacts:
+
+- **Reliability** - Downtime means your app doesn't work
+- **Performance** - Slow APIs create poor user experiences
+- **Costs** - Infrastructure costs add up quickly
+- **Scalability** - Can you handle traffic spikes?
+- **Compliance** - Some use cases require specific guarantees
+
+Let's examine each option.
+
+## Option 1: Self-Hosted Horizon
+
+Running your own Horizon instance gives you complete control.
+
+### Requirements
+
+| Component | Minimum | Recommended |
+|-----------|---------|-------------|
+| CPU | 4 cores | 8+ cores |
+| RAM | 16 GB | 32 GB |
+| Storage | 500 GB SSD | 1 TB NVMe |
+| Network | 100 Mbps | 1 Gbps |
+| Stellar Core | Required | Required |
+| PostgreSQL | Required | Required |
+
+### Setup Complexity
+
+Running Horizon requires:
+
+1. Setting up Stellar Core (captive or standalone)
+2. PostgreSQL database configuration
+3. Horizon API server deployment
+4. Monitoring and alerting setup
+5. Backup procedures
+6. Security hardening
+
+\`\`\`bash
+# Example Docker Compose setup
+services:
+  stellar-core:
+    image: stellar/stellar-core:latest
+    volumes:
+      - core-data:/data
+    environment:
+      - DATABASE=postgresql://...
+
+  horizon:
+    image: stellar/horizon:latest
+    depends_on:
+      - stellar-core
+      - postgres
+    environment:
+      - DATABASE_URL=postgresql://...
+      - STELLAR_CORE_URL=http://stellar-core:11626
+\`\`\`
+
+### Pros
+
+- Complete data ownership
+- No rate limits
+- Custom configuration
+- Audit compliance for regulated industries
+
+### Cons
+
+- High operational overhead (20+ hours/month)
+- Requires DevOps expertise
+- Significant infrastructure costs ($500-2000/month)
+- You're responsible for uptime
+- Scaling requires planning
+
+### Best For
+
+- Enterprises with dedicated DevOps teams
+- Regulated industries requiring data sovereignty
+- Organizations processing millions of transactions
+
+## Option 2: Public Stellar Endpoints
+
+The Stellar Development Foundation provides free public endpoints.
+
+### Endpoints
+
+| Network | Horizon | Soroban RPC |
+|---------|---------|-------------|
+| Mainnet | horizon.stellar.org | soroban-rpc.mainnet.stellar.gateway.fm |
+| Testnet | horizon-testnet.stellar.org | soroban-testnet.stellar.org |
+
+### Rate Limits
+
+Public endpoints have aggressive rate limiting:
+
+- ~100 requests per minute per IP
+- No guaranteed availability
+- Shared infrastructure with all users
+
+### Pros
+
+- Free to use
+- No setup required
+- Good for development and testing
+
+### Cons
+
+- Strict rate limits
+- No SLA or uptime guarantee
+- Not suitable for production applications
+- Shared with potentially abusive users
+- No dedicated support
+
+### Best For
+
+- Learning and experimentation
+- Hackathons and prototypes
+- Low-traffic hobby projects
+
+## Option 3: Third-Party Providers
+
+Several companies offer Stellar API services with varying features.
+
+### Provider Comparison
+
+| Provider | Horizon | Soroban RPC | Free Tier | Pricing |
+|----------|---------|-------------|-----------|---------|
+| LumenQuery | Yes | Yes | 10K/month | From $25/month |
+| Ankr | Yes | Limited | 1K/day | $0.03/1K requests |
+| QuickNode | Yes | Yes | None | From $49/month |
+| Infura | No | No | N/A | N/A |
+| Alchemy | No | No | N/A | N/A |
+
+*Note: Infura and Alchemy do not currently support Stellar.*
+
+### Performance Benchmarks
+
+Based on independent testing (February 2026):
+
+| Provider | Avg Latency | P99 Latency | Uptime (30d) |
+|----------|-------------|-------------|--------------|
+| LumenQuery | 45ms | 120ms | 99.95% |
+| Ankr | 85ms | 250ms | 99.8% |
+| QuickNode | 65ms | 180ms | 99.9% |
+| SDF Public | 150ms | 500ms | 99.5% |
+
+### Feature Matrix
+
+| Feature | LumenQuery | Ankr | QuickNode |
+|---------|------------|------|-----------|
+| Horizon API | Full | Full | Full |
+| Soroban RPC | Full | Partial | Full |
+| Archive Data | Yes | Yes | Yes |
+| WebSocket Streaming | Yes | No | Yes |
+| Custom Endpoints | Yes | No | Yes |
+| Dashboard/Analytics | Yes | Limited | Yes |
+| API Key Auth | Yes | Yes | Yes |
+| IP Allowlisting | Yes | Yes | Yes |
+| Dedicated Support | Yes | No | Yes |
+
+## LumenQuery Deep Dive
+
+As the provider of this guide, we'll be transparent about what we offer and where we stand.
+
+### What We Provide
+
+**Infrastructure**
+
+- Fully managed Horizon and Soroban RPC
+- Multi-region deployment (US, EU, Asia)
+- Automatic failover and load balancing
+- NVMe storage for fast queries
+
+**APIs**
+
+- Full Horizon REST API compatibility
+- Complete Soroban JSON-RPC support
+- WebSocket streaming for real-time data
+- Archive access for historical queries
+
+**Developer Experience**
+
+- Generous free tier (10,000 requests/month)
+- Simple API key authentication
+- Usage dashboard with analytics
+- Comprehensive documentation
+
+### Pricing
+
+| Plan | Horizon Requests | Soroban Requests | Price |
+|------|------------------|------------------|-------|
+| Free | 10,000/month | 5,000/month | $0 |
+| Developer | 100,000/month | 50,000/month | $25/month |
+| Team | 1,000,000/month | 500,000/month | $99/month |
+| Enterprise | Unlimited | Unlimited | Custom |
+
+### What We're Good At
+
+- **Stellar focus** - We specialize in Stellar, not 50 chains
+- **Soroban support** - Full RPC compatibility from day one
+- **Performance** - Consistently low latency
+- **Reliability** - 99.9% uptime SLA on paid plans
+
+### Where We're Still Growing
+
+- **Geographic coverage** - Adding more regions in 2026
+- **Advanced analytics** - Deeper insights coming soon
+- **Team features** - Multi-user workspaces in development
+
+## Making the Right Choice
+
+### Choose Self-Hosted If:
+
+- You have a dedicated DevOps team
+- Regulatory requirements mandate data control
+- You process millions of transactions daily
+- You need custom modifications to Horizon
+
+### Choose Public Endpoints If:
+
+- You're learning or prototyping
+- Traffic is minimal (<1000 requests/day)
+- You don't need reliability guarantees
+- Cost is the primary concern
+
+### Choose a Managed Provider If:
+
+- You need production reliability
+- DevOps isn't your core competency
+- You want predictable costs
+- Support and documentation matter
+
+## Migration Guide
+
+### From Self-Hosted to LumenQuery
+
+\`\`\`javascript
+// Before: Self-hosted
+const server = new Horizon.Server('https://your-horizon.example.com');
+
+// After: LumenQuery
+const server = new Horizon.Server('https://api.lumenquery.io', {
+  headers: { 'X-API-Key': 'lq_your_key' },
+});
+\`\`\`
+
+### From Public Endpoints to LumenQuery
+
+\`\`\`javascript
+// Before: Public endpoint
+const server = new Horizon.Server('https://horizon.stellar.org');
+
+// After: LumenQuery (with higher rate limits)
+const server = new Horizon.Server('https://api.lumenquery.io', {
+  headers: { 'X-API-Key': 'lq_your_key' },
+});
+\`\`\`
+
+The Stellar SDK is compatible across providers—only the URL and authentication change.
+
+## Cost Analysis
+
+### Total Cost of Ownership (Monthly)
+
+For a medium-scale application (500K requests/month):
+
+| Option | Infrastructure | Operations | Total |
+|--------|---------------|------------|-------|
+| Self-Hosted | $800-1500 | $1000-2000 | $1800-3500 |
+| LumenQuery Team | $99 | $0 | $99 |
+| QuickNode | $49+ overages | $0 | ~$150 |
+
+*Operations cost includes DevOps time at $50-100/hour*
+
+### Break-Even Analysis
+
+Self-hosting becomes cost-effective when:
+
+- Monthly request volume exceeds 10 million
+- You have existing DevOps capacity
+- Compliance requires on-premise infrastructure
+
+For most applications, managed providers offer better economics.
+
+## Conclusion
+
+There's no one-size-fits-all answer. The right choice depends on your specific requirements:
+
+- **Learning/Prototyping**: Start with public endpoints
+- **Production Apps**: Use a managed provider like LumenQuery
+- **Enterprise/Regulated**: Consider self-hosted or dedicated infrastructure
+
+Whatever you choose, ensure your provider supports both Horizon and Soroban RPC—smart contracts are the future of Stellar, and you'll need full-stack support.
+
+---
+
+*Ready to evaluate LumenQuery? [Start free](/auth/signup) with 10,000 requests/month—no credit card required.*
+    `,
+  },
+  'monitor-stellar-validator-horizon-node': {
+    title: 'How to Monitor a Stellar Validator or Horizon Node in Production',
+    date: '2026-02-13',
+    readTime: '14 min read',
+    category: 'Operations',
+    content: `
+Running Stellar infrastructure in production requires robust monitoring. Undetected issues lead to missed transactions, consensus failures, and degraded service. This guide covers everything you need to monitor validators and Horizon nodes effectively.
+
+## Monitoring Architecture
+
+A complete monitoring stack for Stellar infrastructure includes:
+
+\`\`\`
+┌─────────────────────────────────────────────────────────────┐
+│                     Alerting Layer                          │
+│  PagerDuty / Slack / Email / SMS                           │
+└─────────────────────────────────────────────────────────────┘
+                              ▲
+┌─────────────────────────────────────────────────────────────┐
+│                     Prometheus                              │
+│  Metrics Collection & Storage                               │
+└─────────────────────────────────────────────────────────────┘
+        ▲                ▲                    ▲
+┌───────────────┐ ┌───────────────┐ ┌───────────────┐
+│ Stellar Core  │ │    Horizon    │ │  Soroban RPC  │
+│   Exporter    │ │   Exporter    │ │   Exporter    │
+└───────────────┘ └───────────────┘ └───────────────┘
+        ▲                ▲                    ▲
+┌───────────────┐ ┌───────────────┐ ┌───────────────┐
+│ Stellar Core  │ │    Horizon    │ │  Soroban RPC  │
+│   Node        │ │    Server     │ │   Server      │
+└───────────────┘ └───────────────┘ └───────────────┘
+\`\`\`
+
+## Setting Up Prometheus + Grafana
+
+### Docker Compose Setup
+
+\`\`\`yaml
+# docker-compose.monitoring.yml
+version: '3.8'
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.enable-lifecycle'
+
+  grafana:
+    image: grafana/grafana:latest
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=your-secure-password
+      - GF_USERS_ALLOW_SIGN_UP=false
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    ports:
+      - "9093:9093"
+
+volumes:
+  prometheus-data:
+  grafana-data:
+\`\`\`
+
+### Prometheus Configuration
+
+\`\`\`yaml
+# prometheus.yml
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']
+
+rule_files:
+  - '/etc/prometheus/rules/*.yml'
+
+scrape_configs:
+  # Stellar Core metrics
+  - job_name: 'stellar-core'
+    static_configs:
+      - targets: ['stellar-core:11626']
+    metrics_path: /metrics
+
+  # Horizon metrics
+  - job_name: 'horizon'
+    static_configs:
+      - targets: ['horizon:8000']
+    metrics_path: /metrics
+
+  # Soroban RPC metrics (if running)
+  - job_name: 'soroban-rpc'
+    static_configs:
+      - targets: ['soroban-rpc:8001']
+    metrics_path: /metrics
+
+  # Node exporter for system metrics
+  - job_name: 'node'
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  # PostgreSQL exporter
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+\`\`\`
+
+## Critical Metrics to Monitor
+
+### Stellar Core Metrics
+
+| Metric | Description | Alert Threshold |
+|--------|-------------|-----------------|
+| \`stellar_core_ledger_age_seconds\` | Time since last ledger close | > 30 seconds |
+| \`stellar_core_ledger_num\` | Current ledger sequence | Lag > 10 from network |
+| \`stellar_core_herder_pending_txs\` | Pending transactions | > 1000 |
+| \`stellar_core_overlay_inbound_connections\` | Peer connections | < 5 |
+| \`stellar_core_scp_slot_externalized\` | Consensus participation | Missing slots |
+
+### Horizon Metrics
+
+| Metric | Description | Alert Threshold |
+|--------|-------------|-----------------|
+| \`horizon_ingest_ledger_ingested\` | Last ingested ledger | Lag > 5 from Core |
+| \`horizon_request_duration_seconds\` | API response times | P95 > 2s |
+| \`horizon_db_query_duration_seconds\` | Database query times | P95 > 500ms |
+| \`horizon_requests_total\` | Request count | Sudden drops |
+| \`horizon_state_verifier_ok\` | State verification | != 1 |
+
+### System Metrics
+
+| Metric | Description | Alert Threshold |
+|--------|-------------|-----------------|
+| \`node_cpu_seconds_total\` | CPU usage | > 80% sustained |
+| \`node_memory_MemAvailable_bytes\` | Available memory | < 10% |
+| \`node_filesystem_avail_bytes\` | Disk space | < 15% |
+| \`node_disk_io_time_seconds_total\` | Disk I/O | High latency |
+
+## Alert Rules
+
+### Stellar Core Alerts
+
+\`\`\`yaml
+# stellar-core-alerts.yml
+groups:
+  - name: stellar-core
+    rules:
+      # Ledger age alert - critical for validators
+      - alert: StellarCoreLedgerStale
+        expr: stellar_core_ledger_age_seconds > 30
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Stellar Core ledger is stale"
+          description: "Ledger age is {{ $value }}s, expected < 30s"
+
+      # Peer connection alert
+      - alert: StellarCoreLowPeers
+        expr: stellar_core_overlay_inbound_connections < 5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low peer connections"
+          description: "Only {{ $value }} inbound peer connections"
+
+      # Pending transactions pileup
+      - alert: StellarCorePendingTxsHigh
+        expr: stellar_core_herder_pending_txs > 1000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High pending transactions"
+          description: "{{ $value }} transactions pending"
+
+      # SCP consensus issues
+      - alert: StellarCoreConsensusIssue
+        expr: increase(stellar_core_scp_slot_externalized[5m]) == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Stellar Core not participating in consensus"
+          description: "No new slots externalized in 5 minutes"
+
+      # Validator not in quorum
+      - alert: StellarCoreNotInQuorum
+        expr: stellar_core_scp_local_node_not_in_quorum == 1
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Validator not in quorum"
+          description: "This node is not part of the quorum"
+\`\`\`
+
+### Horizon Alerts
+
+\`\`\`yaml
+# horizon-alerts.yml
+groups:
+  - name: horizon
+    rules:
+      # Ingestion lag
+      - alert: HorizonIngestionLag
+        expr: stellar_core_ledger_num - horizon_ingest_ledger_ingested > 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Horizon ingestion lagging"
+          description: "{{ $value }} ledgers behind Core"
+
+      # High API latency
+      - alert: HorizonHighLatency
+        expr: histogram_quantile(0.95, sum(rate(horizon_request_duration_seconds_bucket[5m])) by (le)) > 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High API latency"
+          description: "P95 latency is {{ $value }}s"
+
+      # API errors
+      - alert: HorizonHighErrorRate
+        expr: rate(horizon_requests_total{status=~"5.."}[5m]) / rate(horizon_requests_total[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High API error rate"
+          description: "{{ $value | humanizePercentage }} of requests failing"
+
+      # Database connection issues
+      - alert: HorizonDbConnectionIssues
+        expr: horizon_db_query_duration_seconds{quantile="0.95"} > 0.5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Slow database queries"
+          description: "P95 query time is {{ $value }}s"
+\`\`\`
+
+### System Alerts
+
+\`\`\`yaml
+# system-alerts.yml
+groups:
+  - name: system
+    rules:
+      - alert: HighCpuUsage
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage"
+          description: "CPU usage is {{ $value | humanize }}%"
+
+      - alert: LowMemory
+        expr: (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100 < 10
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Low available memory"
+          description: "Only {{ $value | humanize }}% memory available"
+
+      - alert: LowDiskSpace
+        expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100 < 15
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Low disk space"
+          description: "Only {{ $value | humanize }}% disk space available"
+\`\`\`
+
+## RPC Health Checks
+
+Implement active health checks beyond metrics:
+
+\`\`\`bash
+#!/bin/bash
+# health-check.sh
+
+HORIZON_URL="http://localhost:8000"
+SOROBAN_URL="http://localhost:8001"
+CORE_URL="http://localhost:11626"
+
+# Check Horizon
+horizon_health=$(curl -s -o /dev/null -w "%{http_code}" "$HORIZON_URL/health")
+if [ "$horizon_health" != "200" ]; then
+  echo "CRITICAL: Horizon health check failed"
+  exit 2
+fi
+
+# Check Horizon ledger sync
+horizon_info=$(curl -s "$HORIZON_URL")
+core_ledger=$(curl -s "$CORE_URL/info" | jq -r '.info.ledger.num')
+horizon_ledger=$(echo "$horizon_info" | jq -r '.history_latest_ledger')
+
+lag=$((core_ledger - horizon_ledger))
+if [ "$lag" -gt 10 ]; then
+  echo "WARNING: Horizon ingestion lag is $lag ledgers"
+  exit 1
+fi
+
+# Check Soroban RPC health
+soroban_health=$(curl -s -X POST "$SOROBAN_URL" \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"getHealth"}' | jq -r '.result.status')
+
+if [ "$soroban_health" != "healthy" ]; then
+  echo "CRITICAL: Soroban RPC health check failed"
+  exit 2
+fi
+
+# Check Stellar Core state
+core_state=$(curl -s "$CORE_URL/info" | jq -r '.info.state')
+if [ "$core_state" != "Synced!" ]; then
+  echo "WARNING: Stellar Core state is $core_state"
+  exit 1
+fi
+
+echo "OK: All services healthy"
+exit 0
+\`\`\`
+
+## Ledger Lag Detection
+
+Ledger lag indicates your node is falling behind the network:
+
+\`\`\`python
+# ledger_lag_monitor.py
+import requests
+import time
+from prometheus_client import Gauge, start_http_server
+
+CORE_URL = "http://localhost:11626"
+PUBLIC_HORIZON = "https://horizon.stellar.org"
+
+ledger_lag = Gauge('stellar_ledger_lag', 'Ledger sequence lag from network')
+local_ledger = Gauge('stellar_local_ledger', 'Local ledger sequence')
+network_ledger = Gauge('stellar_network_ledger', 'Network ledger sequence')
+
+def get_local_ledger():
+    try:
+        resp = requests.get(f"{CORE_URL}/info")
+        return resp.json()['info']['ledger']['num']
+    except Exception as e:
+        print(f"Error getting local ledger: {e}")
+        return None
+
+def get_network_ledger():
+    try:
+        resp = requests.get(PUBLIC_HORIZON)
+        return resp.json()['history_latest_ledger']
+    except Exception as e:
+        print(f"Error getting network ledger: {e}")
+        return None
+
+def monitor():
+    while True:
+        local = get_local_ledger()
+        network = get_network_ledger()
+
+        if local and network:
+            lag = network - local
+            ledger_lag.set(lag)
+            local_ledger.set(local)
+            network_ledger.set(network)
+
+            if lag > 100:
+                print(f"CRITICAL: Ledger lag is {lag}")
+            elif lag > 10:
+                print(f"WARNING: Ledger lag is {lag}")
+
+        time.sleep(10)
+
+if __name__ == '__main__':
+    start_http_server(9101)
+    monitor()
+\`\`\`
+
+## Grafana Dashboards
+
+### Stellar Overview Dashboard
+
+\`\`\`json
+{
+  "dashboard": {
+    "title": "Stellar Infrastructure Overview",
+    "panels": [
+      {
+        "title": "Current Ledger",
+        "type": "stat",
+        "targets": [{
+          "expr": "stellar_core_ledger_num"
+        }]
+      },
+      {
+        "title": "Ledger Age",
+        "type": "gauge",
+        "targets": [{
+          "expr": "stellar_core_ledger_age_seconds"
+        }],
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {
+              "steps": [
+                { "color": "green", "value": 0 },
+                { "color": "yellow", "value": 10 },
+                { "color": "red", "value": 30 }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "title": "Horizon Request Rate",
+        "type": "graph",
+        "targets": [{
+          "expr": "rate(horizon_requests_total[5m])"
+        }]
+      },
+      {
+        "title": "API Latency (P95)",
+        "type": "graph",
+        "targets": [{
+          "expr": "histogram_quantile(0.95, sum(rate(horizon_request_duration_seconds_bucket[5m])) by (le))"
+        }]
+      },
+      {
+        "title": "Ingestion Lag",
+        "type": "stat",
+        "targets": [{
+          "expr": "stellar_core_ledger_num - horizon_ingest_ledger_ingested"
+        }]
+      },
+      {
+        "title": "Pending Transactions",
+        "type": "graph",
+        "targets": [{
+          "expr": "stellar_core_herder_pending_txs"
+        }]
+      }
+    ]
+  }
+}
+\`\`\`
+
+## Alertmanager Configuration
+
+\`\`\`yaml
+# alertmanager.yml
+global:
+  slack_api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+  pagerduty_url: 'https://events.pagerduty.com/v2/enqueue'
+
+route:
+  receiver: 'default'
+  group_by: ['alertname', 'severity']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+
+  routes:
+    - match:
+        severity: critical
+      receiver: 'pagerduty-critical'
+
+    - match:
+        severity: warning
+      receiver: 'slack-warnings'
+
+receivers:
+  - name: 'default'
+    slack_configs:
+      - channel: '#alerts'
+        title: '{{ .CommonAnnotations.summary }}'
+        text: '{{ .CommonAnnotations.description }}'
+
+  - name: 'pagerduty-critical'
+    pagerduty_configs:
+      - service_key: 'YOUR_PAGERDUTY_SERVICE_KEY'
+        severity: critical
+
+  - name: 'slack-warnings'
+    slack_configs:
+      - channel: '#stellar-ops'
+        title: ':warning: {{ .CommonAnnotations.summary }}'
+        text: '{{ .CommonAnnotations.description }}'
+\`\`\`
+
+## Runbook Examples
+
+### High Ledger Age
+
+**Alert:** StellarCoreLedgerStale
+
+**Impact:** Node is not processing new ledgers
+
+**Steps:**
+
+1. Check Stellar Core logs: \`docker logs stellar-core --tail 100\`
+2. Verify network connectivity: \`curl -s localhost:11626/info | jq '.info.state'\`
+3. Check peer connections: \`curl -s localhost:11626/peers\`
+4. Restart Core if necessary: \`docker restart stellar-core\`
+5. Monitor recovery in Grafana
+
+### Horizon Ingestion Lag
+
+**Alert:** HorizonIngestionLag
+
+**Impact:** API returning stale data
+
+**Steps:**
+
+1. Check Horizon logs: \`docker logs horizon --tail 100\`
+2. Verify database connectivity
+3. Check disk I/O: \`iostat -x 1 5\`
+4. Reingest if necessary: \`horizon db reingest range START END\`
+
+## Conclusion
+
+Effective monitoring is essential for running Stellar infrastructure in production. Key takeaways:
+
+1. **Monitor all layers** - Core, Horizon, Soroban RPC, and system
+2. **Set appropriate thresholds** - Avoid alert fatigue
+3. **Automate responses** - Where possible, self-heal
+4. **Document runbooks** - Every alert needs a response plan
+5. **Test regularly** - Chaos engineering validates your monitoring
+
+For teams that want reliability without the operational overhead, consider using a managed provider like LumenQuery—we handle the monitoring so you can focus on building.
+
+---
+
+*Need production-ready Stellar infrastructure without the ops burden? [Try LumenQuery](/auth/signup)—fully managed with built-in monitoring and 99.9% uptime SLA.*
+    `,
+  },
 };
 
 export async function generateStaticParams() {

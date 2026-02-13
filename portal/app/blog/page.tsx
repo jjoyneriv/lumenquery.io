@@ -24,6 +24,38 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: 'build-stellar-blockchain-explorer-horizon-api',
+    title: 'How to Build a Stellar Blockchain Explorer Using Horizon API (Step-by-Step Guide)',
+    excerpt: 'Build a fully functional Stellar blockchain explorer from scratch. Learn to fetch transactions, query accounts, parse operations, and display ledger data using the LumenQuery Horizon API.',
+    date: '2026-02-13',
+    readTime: '15 min read',
+    category: 'Developer Guide',
+  },
+  {
+    slug: 'soroban-json-rpc-explained',
+    title: 'Soroban JSON RPC Explained: How to Query Smart Contracts on Stellar',
+    excerpt: 'Master Soroban JSON-RPC for smart contract development on Stellar. Learn contract calls, event queries, simulation, and when to use Horizon vs Soroban RPC with production-ready infrastructure.',
+    date: '2026-02-13',
+    readTime: '12 min read',
+    category: 'Developer Guide',
+  },
+  {
+    slug: 'best-stellar-api-providers-2026',
+    title: 'Best Stellar API Providers in 2026 (Comparison Guide)',
+    excerpt: 'Compare Stellar API providers: self-hosted Horizon, public endpoints, and managed services. Performance benchmarks, pricing, and feature comparisons to help you choose the right infrastructure.',
+    date: '2026-02-13',
+    readTime: '10 min read',
+    category: 'Comparison',
+  },
+  {
+    slug: 'monitor-stellar-validator-horizon-node',
+    title: 'How to Monitor a Stellar Validator or Horizon Node in Production',
+    excerpt: 'Set up comprehensive monitoring for Stellar validators and Horizon nodes. Covers Prometheus, Grafana dashboards, alerting strategies, RPC health checks, and ledger lag detection.',
+    date: '2026-02-13',
+    readTime: '14 min read',
+    category: 'Operations',
+  },
+  {
     slug: 'using-claude-code-with-json-rpc-api',
     title: 'Using Claude Code to Interface with JSON-RPC APIs',
     excerpt: 'Learn how to leverage Claude Code, Anthropic\'s AI-powered CLI tool, to interact with JSON-RPC APIs like Stellar\'s Soroban RPC. Build, test, and debug blockchain applications faster with AI assistance.',
