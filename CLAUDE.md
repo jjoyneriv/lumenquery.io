@@ -217,6 +217,7 @@
 35. Add Administrative Console
 36. Update CLAUDE.md with Administrative Console documentation
 37. Add product navigation links to dashboard and admin console
+38. Add live transaction viewer dashboard
 
 ## CI/CD Pipelines
 
@@ -809,6 +810,21 @@ docker compose up -d
     - Dashboard: Added navigation bar with Contracts, Analytics, Intelligence, Compliance, Portfolio, Docs, Admin links
     - Admin Console: Added Products section in sidebar with all product links
 13. Committed and pushed navigation updates to GitHub
+14. Built Live Transaction Viewer Dashboard:
+    - Real-time transaction streaming via SSE (Server-Sent Events)
+    - Decoded XDR operations in plain English
+    - Human-readable descriptions for 25+ operation types:
+      - Payments, path payments, create account
+      - Manage offers (buy/sell), passive offers
+      - Change trust, allow trust, set options
+      - Account merge, bump sequence, manage data
+      - Soroban: invoke_host_function, extend_footprint_ttl, restore_footprint
+      - Claimable balances, sponsorship, liquidity pools
+    - Expandable transaction details with full JSON
+    - Dark theme UI for comfortable monitoring
+    - Pause/resume and clear controls
+    - Accessible at /dashboard/transactions
+15. Committed and pushed transaction viewer to GitHub
 
 ## SEO & Performance Optimization
 
@@ -1624,6 +1640,43 @@ Public analytics dashboard for Stellar network insights. No authentication requi
 ### Future Phases
 - Phase 2: Token analytics (velocity, whale movements >100K XLM, issuer risk)
 - Phase 3: Soroban contract analytics (call frequency, gas usage, events)
+
+## Live Transaction Viewer
+
+### Overview
+Real-time transaction monitoring dashboard with decoded XDR operations. Accessible at `/dashboard/transactions`.
+
+### Features
+- **Real-time Streaming**: Transactions stream via SSE, updates every 5 seconds
+- **Decoded Operations**: XDR translated to plain English descriptions
+- **Expandable Details**: Click to see full transaction details and raw JSON
+- **Controls**: Pause/resume streaming, clear transaction list
+- **Dark Theme**: Comfortable for extended monitoring
+
+### Supported Operation Types
+| Operation | Example Description |
+|-----------|---------------------|
+| payment | Payment of 100 XLM from GAXJ...ABC to GBCD...XYZ |
+| create_account | Create account GXYZ...123 with 10 XLM |
+| path_payment_* | Path payment: 50 USDC → 100 XLM to GABC... |
+| manage_sell_offer | Sell 500 XLM for USDC @ 0.12 |
+| manage_buy_offer | Buy 100 USDC for XLM @ 8.5 |
+| change_trust | Add trustline for USDC:GBBD... |
+| set_options | Set options: home domain: example.com |
+| account_merge | Merge account into GABC... |
+| invoke_host_function | Invoke Soroban contract |
+| And 15+ more... | |
+
+### Files
+```
+portal/app/api/transactions/stream/route.ts  # SSE endpoint
+portal/app/dashboard/transactions/page.tsx   # Viewer UI
+```
+
+### API Endpoint
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| /api/transactions/stream | GET (SSE) | Stream decoded transactions |
 
 ## Administrative Console
 
