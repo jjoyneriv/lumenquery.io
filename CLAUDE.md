@@ -1,9 +1,10 @@
 # Project Context
 
 ## Current Status
-- Working on: Administrative Console
+- Working on: Live Transaction Viewer
 - Last session: 2026-02-14
 - Last validated: 2026-02-14
+- Live Transaction Viewer: Implementation complete, SSE route fix deployed
 - Admin Console: Implementation complete, deployed, navigation added
 - Blog Posts: 12 articles (4 new SEO-optimized posts added)
 - Portfolio Intelligence: Implementation complete, deployed, documentation complete
@@ -218,6 +219,7 @@
 36. Update CLAUDE.md with Administrative Console documentation
 37. Add product navigation links to dashboard and admin console
 38. Add live transaction viewer dashboard
+39. Fix SSE streaming route static generation timeout
 
 ## CI/CD Pipelines
 
@@ -825,6 +827,17 @@ docker compose up -d
     - Pause/resume and clear controls
     - Accessible at /dashboard/transactions
 15. Committed and pushed transaction viewer to GitHub
+16. Fixed SSE route static generation timeout:
+    - Issue: Build was timing out because Next.js tried to statically pre-render the SSE endpoint
+    - Error: "Static page generation for /api/transactions/stream is still timing out after 3 attempts"
+    - Fix: Added dynamic route exports to prevent static generation:
+      ```typescript
+      export const dynamic = 'force-dynamic';
+      export const runtime = 'nodejs';
+      ```
+    - Rebuilt and redeployed portal
+    - Verified page returns HTTP 200 and SSE stream is working
+17. Committed and pushed SSE route fix to GitHub
 
 ## SEO & Performance Optimization
 
@@ -1677,6 +1690,13 @@ portal/app/dashboard/transactions/page.tsx   # Viewer UI
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | /api/transactions/stream | GET (SSE) | Stream decoded transactions |
+
+### Route Configuration
+The SSE endpoint requires dynamic rendering to prevent Next.js from attempting static generation during build:
+```typescript
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+```
 
 ## Administrative Console
 
