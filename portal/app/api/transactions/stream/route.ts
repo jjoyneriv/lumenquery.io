@@ -1,5 +1,9 @@
 import { NextRequest } from 'next/server';
 
+// Force dynamic rendering - this is a streaming endpoint
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 const HORIZON_URL = process.env.HORIZON_URL || 'http://stellar-horizon:8000';
 
 // Decode operation type to human-readable description
