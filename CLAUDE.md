@@ -1,9 +1,10 @@
 # Project Context
 
 ## Current Status
-- Working on: Live Transaction Viewer
-- Last session: 2026-02-14
-- Last validated: 2026-02-14
+- Working on: Analytics API Fallback Fix
+- Last session: 2026-02-19
+- Last validated: 2026-02-19
+- Analytics API: Fixed with public Horizon fallback (local Horizon DB unreachable)
 - Live Transaction Viewer: Implementation complete, SSE route fix deployed
 - Admin Console: Implementation complete, deployed, navigation added
 - Blog Posts: 12 articles (4 new SEO-optimized posts added)
@@ -46,7 +47,9 @@
 | Captive Core | SQLite | `/opt/stellar/captive-core/captive-core/stellar.db` | ✅ 375 MB |
 | LumenQuery | PostgreSQL | lumenquery-postgres:5432 | ✅ Healthy (40 tables) |
 | LumenQuery Cache | Redis | lumenquery-redis:6379 | ✅ Healthy |
-| Horizon (remote) | PostgreSQL | 184.105.230.246:5432 | ✅ Connected |
+| Horizon (remote) | PostgreSQL | 184.105.230.246:5432 | ❌ Unreachable (connection refused) |
+
+**Note:** Local Horizon instance cannot reach its remote PostgreSQL database. Analytics API has been configured to fallback to public Stellar Horizon API (https://horizon.stellar.org).
 
 ## Firewall Configuration (api1)
 
@@ -838,6 +841,32 @@ docker compose up -d
     - Rebuilt and redeployed portal
     - Verified page returns HTTP 200 and SSE stream is working
 17. Committed and pushed SSE route fix to GitHub
+
+### 2026-02-19
+1. Fixed Analytics API "Failed to fetch metrics" error:
+   - Root cause: Local Horizon instance's PostgreSQL database at 184.105.230.246:5432 is unreachable (connection refused)
+   - All Horizon API calls were returning HTTP 500 errors
+   - Local Horizon container was running but couldn't connect to its remote database
+2. Implemented public Horizon API fallback:
+   - Added `fetchWithFallback()` helper function to all analytics routes
+   - Uses public Stellar Horizon API (https://horizon.stellar.org) as default/fallback
+   - When local Horizon fails or is unreachable, automatically falls back to public API
+   - Updated pagination in fetchLedgerHistory to use consistent base URL
+3. Updated analytics routes:
+   - /api/analytics/network - Network metrics, ledgers, fees
+   - /api/analytics/tokens - Token velocity, whales, issuer risk
+   - /api/analytics/contracts - Soroban activity, gas usage, events
+4. Verified all analytics pages working:
+   - /analytics (Overview) - ✅ Working
+   - /analytics/network - ✅ Working
+   - /analytics/tokens - ✅ Working
+   - /analytics/contracts - ✅ Working
+5. Current network metrics (live from public Horizon):
+   - Ledger: 61,297,116
+   - TPS: 73.45
+   - Success Rate: 73.4%
+6. Rebuilt and deployed portal
+7. Committed and pushed fix to GitHub
 
 ## SEO & Performance Optimization
 
