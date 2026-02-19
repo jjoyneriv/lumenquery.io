@@ -1,8 +1,31 @@
 import { NextResponse } from 'next/server';
 import Redis from 'ioredis';
 
-const HORIZON_URL = process.env.HORIZON_API_URL || 'http://127.0.0.1:8000';
+// Use public Stellar Horizon API as default/fallback
+const HORIZON_URL = process.env.HORIZON_API_URL || 'https://horizon.stellar.org';
+const PUBLIC_HORIZON_URL = 'https://horizon.stellar.org';
 const REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
+
+// Helper to fetch with fallback to public Horizon
+async function fetchWithFallback(path: string, options?: RequestInit): Promise<Response> {
+  try {
+    const res = await fetch(`${HORIZON_URL}${path}`, options);
+    if (res.ok) return res;
+    // If local Horizon fails, try public
+    if (HORIZON_URL !== PUBLIC_HORIZON_URL) {
+      console.log(`Local Horizon failed for ${path}, falling back to public`);
+      return fetch(`${PUBLIC_HORIZON_URL}${path}`, options);
+    }
+    return res;
+  } catch (error) {
+    // Network error - try public Horizon
+    if (HORIZON_URL !== PUBLIC_HORIZON_URL) {
+      console.log(`Local Horizon unreachable for ${path}, falling back to public`);
+      return fetch(`${PUBLIC_HORIZON_URL}${path}`, options);
+    }
+    throw error;
+  }
+}
 
 // Cache TTLs
 const VELOCITY_CACHE_TTL = 60;    // 60 seconds
@@ -175,8 +198,8 @@ function calculateRiskScore(flags: {
 
 // Fetch functions
 async function fetchPayments(limit: number = 200): Promise<HorizonPayment[]> {
-  const res = await fetch(
-    `${HORIZON_URL}/payments?order=desc&limit=${limit}&include_failed=false`,
+  const res = await fetchWithFallback(
+    `/payments?order=desc&limit=${limit}&include_failed=false`,
     { next: { revalidate: 30 } }
   );
   if (!res.ok) throw new Error('Failed to fetch payments');
@@ -187,8 +210,8 @@ async function fetchPayments(limit: number = 200): Promise<HorizonPayment[]> {
 }
 
 async function fetchTopAssets(limit: number = 15): Promise<HorizonAsset[]> {
-  const res = await fetch(
-    `${HORIZON_URL}/assets?order=desc&limit=${limit}`,
+  const res = await fetchWithFallback(
+    `/assets?order=desc&limit=${limit}`,
     { next: { revalidate: 60 } }
   );
   if (!res.ok) throw new Error('Failed to fetch assets');
@@ -200,8 +223,8 @@ async function fetchTopXLMHolders(): Promise<HorizonAccount[]> {
   // Note: Horizon doesn't have a direct "top holders" endpoint
   // We'll use a known list of large accounts or fetch from accounts endpoint
   // For now, we'll fetch accounts with high balances from recent activity
-  const res = await fetch(
-    `${HORIZON_URL}/accounts?order=desc&limit=50`,
+  const res = await fetchWithFallback(
+    '/accounts?order=desc&limit=50',
     { next: { revalidate: 120 } }
   );
   if (!res.ok) {

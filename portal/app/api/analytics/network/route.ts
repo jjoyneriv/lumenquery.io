@@ -1,9 +1,32 @@
 import { NextResponse } from 'next/server';
 import Redis from 'ioredis';
 
-const HORIZON_URL = process.env.HORIZON_API_URL || 'http://127.0.0.1:8000';
+// Use public Stellar Horizon API as default/fallback
+const HORIZON_URL = process.env.HORIZON_API_URL || 'https://horizon.stellar.org';
+const PUBLIC_HORIZON_URL = 'https://horizon.stellar.org';
 const REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
 const CACHE_TTL = 30; // 30 seconds
+
+// Helper to fetch with fallback to public Horizon
+async function fetchWithFallback(path: string, options?: RequestInit): Promise<Response> {
+  try {
+    const res = await fetch(`${HORIZON_URL}${path}`, options);
+    if (res.ok) return res;
+    // If local Horizon fails, try public
+    if (HORIZON_URL !== PUBLIC_HORIZON_URL) {
+      console.log(`Local Horizon failed for ${path}, falling back to public`);
+      return fetch(`${PUBLIC_HORIZON_URL}${path}`, options);
+    }
+    return res;
+  } catch (error) {
+    // Network error - try public Horizon
+    if (HORIZON_URL !== PUBLIC_HORIZON_URL) {
+      console.log(`Local Horizon unreachable for ${path}, falling back to public`);
+      return fetch(`${PUBLIC_HORIZON_URL}${path}`, options);
+    }
+    throw error;
+  }
+}
 
 let redisClient: Redis | null = null;
 
@@ -64,7 +87,7 @@ interface HorizonFeeStats {
 }
 
 async function fetchLedgers(limit: number = 10): Promise<HorizonLedger[]> {
-  const res = await fetch(`${HORIZON_URL}/ledgers?order=desc&limit=${limit}`, {
+  const res = await fetchWithFallback(`/ledgers?order=desc&limit=${limit}`, {
     next: { revalidate: 10 },
   });
   if (!res.ok) throw new Error('Failed to fetch ledgers');
@@ -73,7 +96,7 @@ async function fetchLedgers(limit: number = 10): Promise<HorizonLedger[]> {
 }
 
 async function fetchFeeStats(): Promise<HorizonFeeStats> {
-  const res = await fetch(`${HORIZON_URL}/fee_stats`, {
+  const res = await fetchWithFallback('/fee_stats', {
     next: { revalidate: 10 },
   });
   if (!res.ok) throw new Error('Failed to fetch fee stats');
@@ -91,8 +114,10 @@ async function fetchLedgerHistory(hours: number): Promise<HorizonLedger[]> {
   // These requests are cached (5min for 7d, 10min for 30d) to avoid slow responses
   const maxPages = hours <= 24 ? 100 : hours <= 168 ? 700 : 1600;
 
+  // Use public Horizon for pagination since HAL links would point to the original host
+  const baseUrl = PUBLIC_HORIZON_URL;
   const allLedgers: HorizonLedger[] = [];
-  let nextUrl: string | null = `${HORIZON_URL}/ledgers?order=desc&limit=200`;
+  let nextUrl: string | null = `${baseUrl}/ledgers?order=desc&limit=200`;
 
   for (let page = 0; page < maxPages && nextUrl; page++) {
     try {
@@ -114,7 +139,7 @@ async function fetchLedgerHistory(hours: number): Promise<HorizonLedger[]> {
       // Get next page URL from HAL links
       nextUrl = data._links?.next?.href || null;
       if (nextUrl && !nextUrl.startsWith('http')) {
-        nextUrl = `${HORIZON_URL}${nextUrl}`;
+        nextUrl = `${baseUrl}${nextUrl}`;
       }
     } catch (error) {
       console.error('Error fetching ledger page:', error);
