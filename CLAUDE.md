@@ -899,6 +899,21 @@ docker compose up -d
      - Uses public Horizon when local fails or is unreachable
    - Rebuilt and deployed portal
 4. Committed and pushed transaction stream fix to GitHub
+5. Fixed Payment Activity chart on /analytics/tokens page:
+   - Issue: Chart only showing 1 data point instead of area graph
+   - Root cause: Only fetching 200 payments (~1-2 minutes of data), all in same time bucket
+   - Additional issue: Only counting XLM payments (very few vs total payments)
+   - Fix: Updated `/portal/app/api/analytics/tokens/route.ts`:
+     - Fetch 5 pages of payments (1000 total) using HAL link pagination
+     - Aggregate by 30-second intervals instead of hourly
+     - Count ALL payment types for chart data (not just XLM)
+   - Result: Chart now displays 5+ data points as proper area graph
+   - Rebuilt and deployed portal
+6. Committed and pushed token analytics fix to GitHub
+7. Initialized git repo for /opt/stellar/ infrastructure configs:
+   - Created .gitignore for captive-core data directories
+   - Initial commit with horizon/docker-compose.yml
+   - Pending: Create GitHub remote repository
 
 ## SEO & Performance Optimization
 
