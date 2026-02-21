@@ -69,7 +69,6 @@ export async function GET(request: NextRequest) {
             name: true,
             tier: true,
             intelligenceTier: true,
-            complianceTier: true,
             portfolioTier: true,
           },
         },

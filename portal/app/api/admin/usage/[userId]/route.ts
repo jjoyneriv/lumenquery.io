@@ -42,7 +42,6 @@ export async function GET(
           monthlyRequestLimit: true,
           sorobanProEnabled: true,
           intelligenceEnabled: true,
-          complianceEnabled: true,
           portfolioEnabled: true,
         },
       },
@@ -130,30 +129,6 @@ export async function GET(
     };
   }
 
-  // Compliance usage
-  if (user.organization.complianceEnabled) {
-    const [accountCount, ruleCount, violationCount] = await Promise.all([
-      prisma.monitoredAccount.count({
-        where: { organizationId: user.organization.id },
-      }),
-      prisma.complianceRule.count({
-        where: { organizationId: user.organization.id },
-      }),
-      prisma.complianceViolation.count({
-        where: {
-          organizationId: user.organization.id,
-          createdAt: { gte: startDate },
-        },
-      }),
-    ]);
-    featureUsage.compliance = {
-      enabled: true,
-      monitoredAccounts: accountCount,
-      activeRules: ruleCount,
-      violations: violationCount,
-    };
-  }
-
   // Portfolio usage
   if (user.organization.portfolioEnabled) {
     const [portfolioCount, accountCount] = await Promise.all([
@@ -179,13 +154,11 @@ export async function GET(
   const categorizedUsage = {
     analytics: endpointUsage.filter(e => e.endpoint.startsWith('/api/analytics')),
     contracts: endpointUsage.filter(e => e.endpoint.startsWith('/api/contracts')),
-    compliance: endpointUsage.filter(e => e.endpoint.startsWith('/api/compliance')),
     intelligence: endpointUsage.filter(e => e.endpoint.startsWith('/api/intelligence')),
     portfolio: endpointUsage.filter(e => e.endpoint.startsWith('/api/portfolio')),
     other: endpointUsage.filter(e =>
       !e.endpoint.startsWith('/api/analytics') &&
       !e.endpoint.startsWith('/api/contracts') &&
-      !e.endpoint.startsWith('/api/compliance') &&
       !e.endpoint.startsWith('/api/intelligence') &&
       !e.endpoint.startsWith('/api/portfolio')
     ),

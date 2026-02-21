@@ -22,7 +22,6 @@ interface DashboardStats {
   featureUsage: {
     sorobanPro: number;
     intelligence: number;
-    compliance: number;
     portfolio: number;
   };
 }
@@ -186,13 +185,6 @@ export default function AdminDashboard() {
               <span className="text-sm text-black">Transaction Intelligence</span>
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium text-black">{stats.featureUsage.intelligence}</span>
-                <span className="text-xs text-[#6A6A6A]">orgs</span>
-              </div>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-black">Compliance & AML</span>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-black">{stats.featureUsage.compliance}</span>
                 <span className="text-xs text-[#6A6A6A]">orgs</span>
               </div>
             </div>

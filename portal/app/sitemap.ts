@@ -41,12 +41,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/docs/compliance`,
-      lastModified: today,
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
       url: `${baseUrl}/docs/contracts`,
       lastModified: today,
       changeFrequency: 'monthly',
@@ -195,7 +189,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Note: The following are excluded from sitemap (require auth or noindex):
   // - /auth/* (blocked by robots.txt)
   // - /dashboard/* (requires auth, noindex)
-  // - /compliance/* (requires auth, noindex)
   // - /intelligence/* (requires auth, noindex)
   // - /portfolio/* (requires auth, noindex)
   // - /contracts/[contractId]/* (dynamic routes, require auth for full features)

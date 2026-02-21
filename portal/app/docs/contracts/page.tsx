@@ -41,7 +41,6 @@ export default function ContractsDocsPage() {
           <li><Link href="/docs" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>API Documentation</Link></li>
           <li><Link href="/docs/analytics" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Network Analytics</Link></li>
           <li><Link href="/docs/intelligence" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Transaction Intelligence</Link></li>
-          <li><Link href="/docs/compliance" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Compliance & AML</Link></li>
         </ul>
       </div>
     </div>

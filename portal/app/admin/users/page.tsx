@@ -16,7 +16,6 @@ interface User {
     name: string;
     tier: string;
     intelligenceTier: string;
-    complianceTier: string;
     portfolioTier: string;
   } | null;
   apiKeyCount: number;

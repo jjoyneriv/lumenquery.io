@@ -108,10 +108,6 @@ export async function GET(request: NextRequest) {
     prisma.organization.count({
       where: { intelligenceEnabled: true },
     }),
-    // Compliance usage
-    prisma.organization.count({
-      where: { complianceEnabled: true },
-    }),
     // Portfolio usage
     prisma.organization.count({
       where: { portfolioEnabled: true },
@@ -140,8 +136,7 @@ export async function GET(request: NextRequest) {
     featureUsage: {
       sorobanPro: featureUsage[0],
       intelligence: featureUsage[1],
-      compliance: featureUsage[2],
-      portfolio: featureUsage[3],
+      portfolio: featureUsage[2],
     },
     topEndpoints: topEndpoints.map(e => ({
       endpoint: e.endpoint,

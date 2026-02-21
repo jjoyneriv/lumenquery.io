@@ -24,8 +24,6 @@ interface UserDetail {
     sorobanProEnabled: boolean;
     intelligenceEnabled: boolean;
     intelligenceTier: string;
-    complianceEnabled: boolean;
-    complianceTier: string;
     portfolioEnabled: boolean;
     portfolioTier: string;
   } | null;
@@ -331,9 +329,6 @@ export default function UserDetailPage() {
                     )}
                     {user.organization.intelligenceEnabled && (
                       <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs">Intelligence</span>
-                    )}
-                    {user.organization.complianceEnabled && (
-                      <span className="px-2 py-0.5 bg-orange-100 text-orange-700 rounded text-xs">Compliance</span>
                     )}
                     {user.organization.portfolioEnabled && (
                       <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs">Portfolio</span>

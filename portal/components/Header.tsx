@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 
 interface HeaderProps {
-  activePage?: 'home' | 'docs' | 'blog' | 'dashboard' | 'analytics' | 'contracts' | 'pricing' | 'intelligence' | 'compliance' | 'portfolio' | 'admin';
+  activePage?: 'home' | 'docs' | 'blog' | 'dashboard' | 'analytics' | 'contracts' | 'pricing' | 'intelligence' | 'portfolio' | 'admin';
 }
 
 export default function Header({ activePage = 'home' }: HeaderProps) {
@@ -33,7 +33,6 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
           <Link href="/contracts" className={navLinkClass('contracts')}>Contracts</Link>
           <Link href="/analytics" className={navLinkClass('analytics')}>Analytics</Link>
           <Link href="/intelligence" className={navLinkClass('intelligence')}>Intelligence</Link>
-          <Link href="/compliance" className={navLinkClass('compliance')}>Compliance</Link>
           <Link href="/portfolio" className={navLinkClass('portfolio')}>Portfolio</Link>
           <Link href="/docs" className={navLinkClass('docs')}>Docs</Link>
           <Link href="/pricing" className={navLinkClass('pricing')}>Pricing</Link>
@@ -93,13 +92,6 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
               onClick={() => setMobileMenuOpen(false)}
             >
               Intelligence
-            </Link>
-            <Link
-              href="/compliance"
-              className={`py-2 ${navLinkClass('compliance')}`}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Compliance
             </Link>
             <Link
               href="/portfolio"

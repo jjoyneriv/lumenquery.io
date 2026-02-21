@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { randomBytes } from 'crypto';
-import { sendEmail } from '@/lib/notifications/channels/email';
+import { sendEmail } from '@/lib/email';
 
 // Rate limiting: max 3 requests per email per hour
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();

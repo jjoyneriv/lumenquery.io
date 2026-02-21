@@ -126,7 +126,6 @@ export function formatUserForResponse(user: any) {
       name: user.organization.name,
       tier: user.organization.tier,
       intelligenceTier: user.organization.intelligenceTier,
-      complianceTier: user.organization.complianceTier,
       portfolioTier: user.organization.portfolioTier,
     } : null,
   };
