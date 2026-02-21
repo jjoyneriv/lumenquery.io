@@ -1,10 +1,13 @@
 # Project Context
 
 ## Current Status
-- Working on: Analytics API Fallback Fix
-- Last session: 2026-02-19
-- Last validated: 2026-02-19
-- Analytics API: Fixed with public Horizon fallback (local Horizon DB unreachable)
+- Working on: Infrastructure fixes
+- Last session: 2026-02-21
+- Last validated: 2026-02-21
+- All services: 12 containers running healthy
+- Stellar Horizon: Fixed database connection (184.105.230.250)
+- Transaction Viewer: Fixed with public Horizon API fallback
+- Analytics API: Fixed with public Horizon fallback
 - Live Transaction Viewer: Implementation complete, SSE route fix deployed
 - Admin Console: Implementation complete, deployed, navigation added
 - Blog Posts: 12 articles (4 new SEO-optimized posts added)
@@ -867,6 +870,35 @@ docker compose up -d
    - Success Rate: 73.4%
 6. Rebuilt and deployed portal
 7. Committed and pushed fix to GitHub
+
+### 2026-02-21
+1. Fixed stellar-horizon container restart loop:
+   - Issue: Container was in constant restart loop, unable to connect to PostgreSQL
+   - Root cause: Database URL pointed to wrong IP (184.105.230.246 instead of 184.105.230.250)
+   - Fix: Updated DATABASE_URL in `/opt/stellar/horizon/docker-compose.yml`
+   - Restarted stellar-horizon container, now healthy
+2. Verified all 12 Docker containers running:
+   - stellar-horizon ✅ (fixed)
+   - soroban-rpc ✅
+   - lumenquery-portal ✅
+   - lumenquery-api-gateway ✅
+   - lumenquery-rpc-gateway ✅
+   - lumenquery-traefik ✅
+   - lumenquery-postgres ✅
+   - lumenquery-redis ✅
+   - cadvisor ✅
+   - node-exporter ✅
+   - postgres-exporter ✅
+   - redis-exporter ✅
+3. Fixed /dashboard/transactions "Error fetching transactions":
+   - Issue: Portal couldn't reach stellar-horizon (different Docker networks)
+   - Additional issue: Local Horizon had no data after restart
+   - Fix: Added fallback to public Stellar Horizon API (horizon.stellar.org)
+   - Updated `/portal/app/api/transactions/stream/route.ts`:
+     - Added `fetchWithFallback()` helper function
+     - Uses public Horizon when local fails or is unreachable
+   - Rebuilt and deployed portal
+4. Committed and pushed transaction stream fix to GitHub
 
 ## SEO & Performance Optimization
 
