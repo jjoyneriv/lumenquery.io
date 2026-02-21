@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import MetricCard from '@/components/analytics/MetricCard';
 import AreaChart from '@/components/analytics/AreaChart';
-import TimeRangeSelector from '@/components/analytics/TimeRangeSelector';
 
 interface NetworkMetrics {
   ledger: {
@@ -32,12 +31,11 @@ interface NetworkMetrics {
 export default function NetworkAnalyticsPage() {
   const [metrics, setMetrics] = useState<NetworkMetrics | null>(null);
   const [loading, setLoading] = useState(true);
-  const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d'>('24h');
 
   useEffect(() => {
     const fetchMetrics = async () => {
       try {
-        const res = await fetch(`/api/analytics/network?range=${timeRange}`);
+        const res = await fetch('/api/analytics/network?range=24h');
         if (!res.ok) throw new Error('Failed to fetch');
         const data = await res.json();
         setMetrics(data);
@@ -51,7 +49,7 @@ export default function NetworkAnalyticsPage() {
     fetchMetrics();
     const interval = setInterval(fetchMetrics, 30000);
     return () => clearInterval(interval);
-  }, [timeRange]);
+  }, []);
 
   const formatNumber = (num: number) => new Intl.NumberFormat().format(num);
 
@@ -72,7 +70,6 @@ export default function NetworkAnalyticsPage() {
             Detailed ledger and transaction analytics
           </p>
         </div>
-        <TimeRangeSelector value={timeRange} onChange={setTimeRange} />
       </div>
 
       {/* Ledger Info */}

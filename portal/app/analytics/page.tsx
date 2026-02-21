@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import MetricCard from '@/components/analytics/MetricCard';
 import AreaChart from '@/components/analytics/AreaChart';
-import TimeRangeSelector from '@/components/analytics/TimeRangeSelector';
 
 interface NetworkMetrics {
   ledger: {
@@ -34,13 +33,12 @@ export default function AnalyticsPage() {
   const [metrics, setMetrics] = useState<NetworkMetrics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d'>('24h');
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
 
   useEffect(() => {
-    const fetchMetrics = async (range: string) => {
+    const fetchMetrics = async () => {
       try {
-        const res = await fetch(`/api/analytics/network?range=${range}`);
+        const res = await fetch('/api/analytics/network?range=24h');
         if (!res.ok) throw new Error('Failed to fetch metrics');
         const data = await res.json();
         setMetrics(data);
@@ -53,14 +51,12 @@ export default function AnalyticsPage() {
       }
     };
 
-    // Set loading on time range change
-    setLoading(true);
-    fetchMetrics(timeRange);
+    fetchMetrics();
 
     // Refresh every 30 seconds
-    const interval = setInterval(() => fetchMetrics(timeRange), 30000);
+    const interval = setInterval(fetchMetrics, 30000);
     return () => clearInterval(interval);
-  }, [timeRange]);
+  }, []);
 
   const formatNumber = (num: number) => new Intl.NumberFormat().format(num);
   const formatTPS = (tps: number) => tps.toFixed(2);
@@ -97,7 +93,6 @@ export default function AnalyticsPage() {
             )}
           </p>
         </div>
-        <TimeRangeSelector value={timeRange} onChange={setTimeRange} />
       </div>
 
       {/* Live Indicator */}
@@ -147,13 +142,12 @@ export default function AnalyticsPage() {
             {loading && <span className="text-xs text-[#6A6A6A]">Loading...</span>}
           </div>
           <AreaChart
-            key={`transactions-${timeRange}`}
             data={metrics?.history || []}
             dataKey="transactions"
             xAxisKey="timestamp"
             color="#2855FF"
             height={250}
-            chartId={`transactions-${timeRange}`}
+            chartId="transactions-24h"
           />
         </div>
         <div className="bg-white rounded-2xl border border-[#E6E7E9] p-6">
@@ -162,14 +156,13 @@ export default function AnalyticsPage() {
             {loading && <span className="text-xs text-[#6A6A6A]">Loading...</span>}
           </div>
           <AreaChart
-            key={`successRate-${timeRange}`}
             data={metrics?.history || []}
             dataKey="successRate"
             xAxisKey="timestamp"
             color="#10B981"
             height={250}
             valueFormatter={(v) => `${v.toFixed(1)}%`}
-            chartId={`successRate-${timeRange}`}
+            chartId="successRate-24h"
           />
         </div>
       </div>

@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import MetricCard from '@/components/analytics/MetricCard';
 import AreaChart from '@/components/analytics/AreaChart';
-import TimeRangeSelector from '@/components/analytics/TimeRangeSelector';
 import { ContractTable } from '@/components/analytics/contracts/ContractTable';
 import { EventsTable } from '@/components/analytics/contracts/EventsTable';
 
@@ -45,29 +44,28 @@ export default function ContractAnalyticsPage() {
   const [data, setData] = useState<ContractAnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d'>('24h');
-
-  const fetchData = useCallback(async () => {
-    try {
-      setLoading(true);
-      const res = await fetch(`/api/analytics/contracts?range=${timeRange}`);
-      if (!res.ok) throw new Error('Failed to fetch contract analytics');
-      const result = await res.json();
-      setData(result);
-      setError(null);
-    } catch (err) {
-      setError('Failed to load contract analytics');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  }, [timeRange]);
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch('/api/analytics/contracts?range=24h');
+        if (!res.ok) throw new Error('Failed to fetch contract analytics');
+        const result = await res.json();
+        setData(result);
+        setError(null);
+      } catch (err) {
+        setError('Failed to load contract analytics');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchData();
     const interval = setInterval(fetchData, 60000); // Refresh every 60 seconds
     return () => clearInterval(interval);
-  }, [fetchData]);
+  }, []);
 
   // Transform hourly activity for chart
   const chartData = data?.activity.hourlyActivity.map((item) => ({
@@ -94,7 +92,6 @@ export default function ContractAnalyticsPage() {
             Soroban contract activity, gas usage, and event tracking
           </p>
         </div>
-        <TimeRangeSelector value={timeRange} onChange={setTimeRange} />
       </div>
 
       {error && (
