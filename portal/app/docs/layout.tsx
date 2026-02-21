@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import DocsLayoutClient from './layout-client';
 
 export const metadata: Metadata = {
   title: 'API Documentation - LumenQuery | Stellar Horizon API & Soroban RPC',
@@ -24,5 +25,5 @@ export default function DocsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return <DocsLayoutClient>{children}</DocsLayoutClient>;
 }
