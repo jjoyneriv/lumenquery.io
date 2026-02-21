@@ -1056,6 +1056,35 @@ docker compose up -d
     - Reorganized page.tsx with tier info card at top and features grid
     - Rebuilt and deployed portal
 35. Committed and pushed portfolio page layout update to GitHub
+36. Updated docs page layout to match dashboard:
+    - Replaced Header/Footer with custom header matching dashboard style
+    - Added LumenQuery logo (LQ) with page title "API Documentation"
+    - Added subtitle "Horizon API & Soroban RPC"
+    - Added product navigation bar (Live Transactions, Contracts, etc.)
+    - Added docs sub-navigation tabs (API Reference, Analytics, Intelligence, Contracts, Portfolio)
+    - Created new layout-client.tsx for client-side navigation
+    - Reorganized page.tsx into card-based sections:
+      - Hero card with API endpoints overview
+      - Authentication and Quick Start side-by-side
+      - Horizon API endpoints grid
+      - Soroban RPC methods grid
+      - Rate limits tables (side-by-side)
+      - SDK integration examples
+      - Feature documentation link cards
+    - Verified all docs sub-pages working (/docs, /docs/analytics, /docs/intelligence, /docs/contracts)
+    - Rebuilt and deployed portal
+37. Committed and pushed docs page layout update to GitHub
+38. Fixed transaction viewer rate limiting issues:
+    - Issue: Page showed "Error fetching transactions" after ~14 transactions loaded
+    - Root cause: Making too many requests to Horizon API (11 requests per poll cycle)
+    - Fix: Reduced transactions per batch from 10 to 5
+    - Fix: Added 100ms delay between operations requests
+    - Fix: Made operations fetch non-blocking (continue if individual fetch fails)
+    - Fix: Only show error to client after 3 consecutive failures
+    - Fix: Added exponential backoff on errors (up to 30s poll interval)
+    - Fix: Handle 429 rate limit responses silently with backoff
+    - Rebuilt and deployed portal
+39. Committed and pushed transaction stream fix to GitHub
 
 ## SEO & Performance Optimization
 
