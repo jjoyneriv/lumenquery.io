@@ -196,17 +196,36 @@ function calculateRiskScore(flags: {
   return 'low';
 }
 
-// Fetch functions
-async function fetchPayments(limit: number = 200): Promise<HorizonPayment[]> {
-  const res = await fetchWithFallback(
-    `/payments?order=desc&limit=${limit}&include_failed=false`,
-    { next: { revalidate: 30 } }
-  );
-  if (!res.ok) throw new Error('Failed to fetch payments');
-  const data = await res.json();
-  return (data._embedded?.records || []).filter(
-    (p: HorizonPayment) => p.type === 'payment' || p.type === 'create_account'
-  );
+// Fetch multiple pages of payments with proper pagination and error handling
+async function fetchPayments(): Promise<HorizonPayment[]> {
+  const allPayments: HorizonPayment[] = [];
+  const maxPages = 5; // Fetch 5 pages (1000 payments) which should span several ledgers/minutes
+  let nextUrl: string | null = `${PUBLIC_HORIZON_URL}/payments?order=desc&limit=200&include_failed=false`;
+
+  for (let page = 0; page < maxPages && nextUrl; page++) {
+    try {
+      const res: Response = await fetch(nextUrl, { next: { revalidate: 30 } });
+      if (!res.ok) break;
+
+      const data = await res.json();
+      const records = data._embedded?.records || [];
+      if (records.length === 0) break;
+
+      // Filter to payment and create_account operations
+      const payments = records.filter(
+        (p: HorizonPayment) => p.type === 'payment' || p.type === 'create_account'
+      );
+      allPayments.push(...payments);
+
+      // Get next page URL from HAL links
+      nextUrl = data._links?.next?.href || null;
+    } catch (error) {
+      console.error('Error fetching payments page:', error);
+      break;
+    }
+  }
+
+  return allPayments;
 }
 
 async function fetchTopAssets(limit: number = 15): Promise<HorizonAsset[]> {
@@ -296,19 +315,25 @@ function calculateVelocity(payments: HorizonPayment[]): TokenVelocity {
       };
     });
 
-  // Aggregate by hour for chart
-  const hourlyData = new Map<string, { payments: number; volume: number }>();
-  for (const payment of xlmPayments) {
+  // Aggregate ALL payments by 30-second intervals for chart
+  // Ledgers close every ~5 seconds, so 30-second buckets group ~6 ledgers
+  const intervalData = new Map<string, { payments: number; volume: number }>();
+  for (const payment of payments) {
     const date = new Date(payment.created_at);
-    date.setMinutes(0, 0, 0);
-    const hourKey = date.toISOString();
-    const existing = hourlyData.get(hourKey) || { payments: 0, volume: 0 };
+    // Round to 30-second intervals
+    const seconds = Math.floor(date.getSeconds() / 30) * 30;
+    date.setSeconds(seconds, 0);
+    const intervalKey = date.toISOString();
+    const existing = intervalData.get(intervalKey) || { payments: 0, volume: 0 };
     existing.payments += 1;
-    existing.volume += parseFloat(payment.amount);
-    hourlyData.set(hourKey, existing);
+    // Only add volume for payments with amount (not all operations have amount)
+    if (payment.amount) {
+      existing.volume += parseFloat(payment.amount);
+    }
+    intervalData.set(intervalKey, existing);
   }
 
-  const hourlyActivity = Array.from(hourlyData.entries())
+  const hourlyActivity = Array.from(intervalData.entries())
     .map(([timestamp, data]) => ({
       timestamp,
       payments: data.payments,
@@ -316,8 +341,11 @@ function calculateVelocity(payments: HorizonPayment[]): TokenVelocity {
     }))
     .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
 
+  // Also update total payments to use all payments, not just XLM
+  const estimated24hAllPayments = Math.round(payments.length * scaleFactor);
+
   return {
-    totalPayments24h: estimated24hPayments,
+    totalPayments24h: estimated24hAllPayments,
     totalVolumeXLM: formatXLM(estimated24hVolume),
     avgPaymentSize: formatXLM(avgPayment),
     topTokensByVolume: topTokens,
@@ -401,23 +429,15 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const range = searchParams.get('range') || '24h';
 
-    // Determine sample size based on range
-    const limitMap: Record<string, number> = {
-      '24h': 200,
-      '7d': 200,
-      '30d': 200,
-    };
-    const limit = limitMap[range] || 200;
-
     // Fetch all data in parallel with caching
     const [velocity, whaleData, riskData] = await Promise.all([
       getCachedOrFetch(`analytics:tokens:velocity:${range}`, VELOCITY_CACHE_TTL, async () => {
-        const payments = await fetchPayments(limit);
+        const payments = await fetchPayments();
         return calculateVelocity(payments);
       }),
       getCachedOrFetch(`analytics:tokens:whales:${range}`, WHALE_CACHE_TTL, async () => {
         const [payments, accounts] = await Promise.all([
-          fetchPayments(limit),
+          fetchPayments(),
           fetchTopXLMHolders(),
         ]);
         return calculateWhaleData(payments, accounts);
