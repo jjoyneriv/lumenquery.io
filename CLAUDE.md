@@ -914,6 +914,22 @@ docker compose up -d
    - Created .gitignore for captive-core data directories
    - Initial commit with horizon/docker-compose.yml
    - Pending: Create GitHub remote repository
+8. Fixed /analytics overview page time range switching:
+   - Issue: Charts didn't update when selecting 7d or 30d time ranges
+   - Root cause: Stale closure bug - fetchMetrics captured old timeRange value
+   - Fix: Moved fetchMetrics inside useEffect and pass timeRange as parameter
+   - Also set loading state on time range change for better UX
+9. Improved AreaChart x-axis formatting:
+   - 24h: Shows hours only (e.g., "2:00 PM")
+   - 7d: Shows date and hour (e.g., "Feb 14, 12 AM")
+   - 30d: Shows date only (e.g., "Feb 14")
+   - Automatically detects data span to choose appropriate format
+10. Enhanced transaction viewer with Soroban highlighting:
+    - Soroban operations (invoke_host_function, etc.) now have white badge
+    - Transactions with Soroban operations have highlighted border
+11. Fixed contracts API error handling:
+    - getEvents now handles errors gracefully for contracts without events
+12. Committed and pushed all fixes to GitHub
 
 ## SEO & Performance Optimization
 
