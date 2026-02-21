@@ -28,7 +28,7 @@ async function fetchWithFallback(path: string, options?: RequestInit): Promise<R
 }
 
 // Cache TTLs
-const VELOCITY_CACHE_TTL = 60;    // 60 seconds
+const VELOCITY_CACHE_TTL = 30;    // 30 seconds (for 5-minute chart)
 const WHALE_CACHE_TTL = 120;      // 2 minutes
 const RISK_CACHE_TTL = 300;       // 5 minutes
 
@@ -199,7 +199,7 @@ function calculateRiskScore(flags: {
 // Fetch multiple pages of payments with proper pagination and error handling
 async function fetchPayments(): Promise<HorizonPayment[]> {
   const allPayments: HorizonPayment[] = [];
-  const maxPages = 5; // Fetch 5 pages (1000 payments) which should span several ledgers/minutes
+  const maxPages = 25; // Fetch 25 pages (5000 payments) to cover ~5 minutes of activity
   let nextUrl: string | null = `${PUBLIC_HORIZON_URL}/payments?order=desc&limit=200&include_failed=false`;
 
   for (let page = 0; page < maxPages && nextUrl; page++) {
@@ -315,13 +315,19 @@ function calculateVelocity(payments: HorizonPayment[]): TokenVelocity {
       };
     });
 
-  // Aggregate ALL payments by 30-second intervals for chart
-  // Ledgers close every ~5 seconds, so 30-second buckets group ~6 ledgers
+  // Aggregate payments by 15-second intervals for chart (last 5 minutes only)
+  // This gives ~20 data points for good visualization
+  const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
   const intervalData = new Map<string, { payments: number; volume: number }>();
+
   for (const payment of payments) {
+    const paymentTime = new Date(payment.created_at).getTime();
+    // Only include payments from the last 5 minutes
+    if (paymentTime < fiveMinutesAgo) continue;
+
     const date = new Date(payment.created_at);
-    // Round to 30-second intervals
-    const seconds = Math.floor(date.getSeconds() / 30) * 30;
+    // Round to 15-second intervals for finer granularity
+    const seconds = Math.floor(date.getSeconds() / 15) * 15;
     date.setSeconds(seconds, 0);
     const intervalKey = date.toISOString();
     const existing = intervalData.get(intervalKey) || { payments: 0, volume: 0 };
