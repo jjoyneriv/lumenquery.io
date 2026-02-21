@@ -79,30 +79,15 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-black">Stellar Network Analytics</h1>
-          <p className="text-[#6A6A6A] text-sm mt-1">
-            Real-time insights into the Stellar network
-            {lastUpdate && (
-              <span className="ml-2 text-xs">
-                Updated {lastUpdate.toLocaleTimeString()}
-              </span>
-            )}
-          </p>
+    <div>
+      {/* Last Update Indicator */}
+      {lastUpdate && (
+        <div className="flex items-center justify-end mb-4">
+          <span className="text-xs text-[#6A6A6A]">
+            Updated {lastUpdate.toLocaleTimeString()}
+          </span>
         </div>
-      </div>
-
-      {/* Live Indicator */}
-      <div className="flex items-center gap-2 mb-6">
-        <span className="relative flex h-3 w-3">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-        </span>
-        <span className="text-sm text-[#6A6A6A]">Live data</span>
-      </div>
+      )}
 
       {/* Key Metrics Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">

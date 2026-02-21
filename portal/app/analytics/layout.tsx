@@ -1,7 +1,5 @@
 import { Metadata } from 'next';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import AnalyticsNav from '@/components/analytics/AnalyticsNav';
+import AnalyticsLayoutClient from './layout-client';
 
 export const metadata: Metadata = {
   title: 'Stellar Network Analytics - LumenQuery | Real-Time Blockchain Metrics',
@@ -27,20 +25,5 @@ export default function AnalyticsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="min-h-screen bg-[#F5F6F7] flex flex-col">
-      <Header activePage="analytics" />
-
-      <div className="flex-1 flex flex-col lg:flex-row">
-        <AnalyticsNav />
-
-        {/* Main Content */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8">
-          {children}
-        </main>
-      </div>
-
-      <Footer variant="simple" />
-    </div>
-  );
+  return <AnalyticsLayoutClient>{children}</AnalyticsLayoutClient>;
 }
