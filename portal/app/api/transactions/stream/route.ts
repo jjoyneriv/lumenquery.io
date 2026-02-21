@@ -4,7 +4,30 @@ import { NextRequest } from 'next/server';
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
-const HORIZON_URL = process.env.HORIZON_URL || 'http://stellar-horizon:8000';
+// Use public Stellar Horizon API as default/fallback
+const HORIZON_URL = process.env.HORIZON_API_URL || 'https://horizon.stellar.org';
+const PUBLIC_HORIZON_URL = 'https://horizon.stellar.org';
+
+// Helper to fetch with fallback to public Horizon
+async function fetchWithFallback(path: string, options?: RequestInit): Promise<Response> {
+  try {
+    const res = await fetch(`${HORIZON_URL}${path}`, options);
+    if (res.ok) return res;
+    // If local Horizon fails, try public
+    if (HORIZON_URL !== PUBLIC_HORIZON_URL) {
+      console.log(`Local Horizon failed for ${path}, falling back to public`);
+      return fetch(`${PUBLIC_HORIZON_URL}${path}`, options);
+    }
+    return res;
+  } catch (error) {
+    // Network error - try public Horizon
+    if (HORIZON_URL !== PUBLIC_HORIZON_URL) {
+      console.log(`Local Horizon unreachable for ${path}, falling back to public`);
+      return fetch(`${PUBLIC_HORIZON_URL}${path}`, options);
+    }
+    throw error;
+  }
+}
 
 // Decode operation type to human-readable description
 function describeOperation(op: any): string {
@@ -186,12 +209,12 @@ export async function GET(request: NextRequest) {
       const fetchTransactions = async () => {
         try {
           // Fetch latest transactions
-          let url = `${HORIZON_URL}/transactions?order=desc&limit=10`;
+          let path = `/transactions?order=desc&limit=10`;
           if (cursor) {
-            url = `${HORIZON_URL}/transactions?cursor=${cursor}&order=asc&limit=10`;
+            path = `/transactions?cursor=${cursor}&order=asc&limit=10`;
           }
 
-          const response = await fetch(url, {
+          const response = await fetchWithFallback(path, {
             headers: { 'Accept': 'application/json' },
           });
 
@@ -207,7 +230,7 @@ export async function GET(request: NextRequest) {
 
           for (const tx of txList) {
             // Fetch operations for this transaction
-            const opsResponse = await fetch(`${HORIZON_URL}/transactions/${tx.hash}/operations?limit=10`, {
+            const opsResponse = await fetchWithFallback(`/transactions/${tx.hash}/operations?limit=10`, {
               headers: { 'Accept': 'application/json' },
             });
 
