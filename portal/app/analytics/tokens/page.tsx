@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import MetricCard from '@/components/analytics/MetricCard';
-import AreaChart from '@/components/analytics/AreaChart';
+import BarChart from '@/components/analytics/BarChart';
 import { WhaleTable } from '@/components/analytics/tokens/WhaleTable';
 import { RiskBadge } from '@/components/analytics/tokens/RiskBadge';
 
@@ -144,7 +144,7 @@ export default function TokenAnalyticsPage() {
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF]" />
               </div>
             ) : chartData.length > 0 ? (
-              <AreaChart
+              <BarChart
                 data={chartData}
                 dataKey="payments"
                 xAxisKey="timestamp"
