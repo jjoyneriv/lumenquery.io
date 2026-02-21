@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { IntelligenceNav } from '@/components/intelligence';
 import MetricCard from '@/components/analytics/MetricCard';
 
 interface DashboardStats {
@@ -76,28 +75,8 @@ export default function IntelligenceDashboard() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex flex-col lg:flex-row gap-8">
-        {/* Sidebar */}
-        <aside className="w-full lg:w-64 flex-shrink-0">
-          <div className="bg-white rounded-xl border border-[#E6E7E9] p-4 sticky top-8">
-            <h2 className="font-semibold text-black mb-4">Intelligence</h2>
-            <IntelligenceNav unreadAlerts={stats.unreadAlerts} />
-          </div>
-        </aside>
-
-        {/* Main Content */}
-        <div className="flex-1 space-y-6">
-          <header>
-            <h1 className="text-2xl sm:text-3xl font-bold text-black">
-              Transaction Intelligence
-            </h1>
-            <p className="text-[#6A6A6A] mt-2">
-              Monitor Stellar network activity with real-time alerts and analytics
-            </p>
-          </header>
-
-          {/* Stats Grid */}
+    <div className="space-y-6">
+      {/* Stats Grid */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <MetricCard
               title="Unread Alerts"
@@ -268,8 +247,6 @@ export default function IntelligenceDashboard() {
                 Create Watchlist
               </Link>
             </div>
-          </div>
-        </div>
       </div>
     </div>
   );

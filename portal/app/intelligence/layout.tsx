@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import IntelligenceLayoutClient from './layout-client';
 
 export const metadata: Metadata = {
   title: 'Transaction Intelligence - LumenQuery',
@@ -13,13 +12,5 @@ export default function IntelligenceLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="min-h-screen flex flex-col bg-[#F5F6F7]">
-      <Header />
-      <main className="flex-1">
-        {children}
-      </main>
-      <Footer variant="simple" />
-    </div>
-  );
+  return <IntelligenceLayoutClient>{children}</IntelligenceLayoutClient>;
 }
