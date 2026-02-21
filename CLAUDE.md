@@ -20,6 +20,7 @@
 - Performance: Gzip compression enabled, Core Web Vitals optimized
 - Forgot Password: Implementation complete, deployed
 - Analytics Charts: Fixed (24h only, removed 7d/30d due to performance)
+- Analytics Performance: Optimized (1.5s uncached, 47ms cached, page loads in 0.6s)
 
 ## Service Status (api1.lumenquery.io)
 
@@ -966,6 +967,21 @@ docker compose up -d
     - All public routes returning 200: /, /analytics, /pricing, /docs, /blog, /contracts, /dashboard
     - Compliance routes correctly returning 404
     - Public HTTPS URLs verified working
+20. Optimized analytics API response time:
+    - Issue: Analytics page took ~8-11 seconds to load
+    - Root cause: `fetchWithFallback()` tried local Horizon first, but portal container
+      couldn't reach stellar-horizon (different Docker networks), causing timeout
+    - Fix: Use public Horizon API directly for analytics endpoint
+    - Changed `/portal/app/api/analytics/network/route.ts`:
+      - Removed fetchWithFallback() function
+      - Use public Horizon API (`https://horizon.stellar.org`) directly
+      - Single request for 200 ledgers instead of pagination
+    - Performance results:
+      - Uncached API: 11s → 1.5s (86% faster)
+      - Cached API: 47ms
+      - Page load: ~8s → 0.6s (92% faster)
+    - Rebuilt and deployed portal
+21. Committed and pushed analytics optimization to GitHub
 
 ## SEO & Performance Optimization
 
