@@ -147,11 +147,13 @@ export default function AnalyticsPage() {
             {loading && <span className="text-xs text-[#6A6A6A]">Loading...</span>}
           </div>
           <AreaChart
+            key={`transactions-${timeRange}`}
             data={metrics?.history || []}
             dataKey="transactions"
             xAxisKey="timestamp"
             color="#2855FF"
             height={250}
+            chartId={`transactions-${timeRange}`}
           />
         </div>
         <div className="bg-white rounded-2xl border border-[#E6E7E9] p-6">
@@ -160,12 +162,14 @@ export default function AnalyticsPage() {
             {loading && <span className="text-xs text-[#6A6A6A]">Loading...</span>}
           </div>
           <AreaChart
+            key={`successRate-${timeRange}`}
             data={metrics?.history || []}
             dataKey="successRate"
             xAxisKey="timestamp"
             color="#10B981"
             height={250}
             valueFormatter={(v) => `${v.toFixed(1)}%`}
+            chartId={`successRate-${timeRange}`}
           />
         </div>
       </div>

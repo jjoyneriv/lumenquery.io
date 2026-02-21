@@ -18,6 +18,7 @@ interface AreaChartProps {
   height?: number;
   valueFormatter?: (value: number) => string;
   showGrid?: boolean;
+  chartId?: string;
 }
 
 export default function AreaChart({
@@ -28,7 +29,10 @@ export default function AreaChart({
   height = 300,
   valueFormatter = (v) => v.toLocaleString(),
   showGrid = true,
+  chartId,
 }: AreaChartProps) {
+  // Generate unique gradient ID to avoid SVG conflicts when multiple charts on page
+  const gradientId = chartId ? `gradient-${chartId}` : `gradient-${dataKey}-${Math.random().toString(36).slice(2, 9)}`;
   if (!data || data.length === 0) {
     return (
       <div
@@ -79,7 +83,7 @@ export default function AreaChart({
         margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
       >
         <defs>
-          <linearGradient id={`gradient-${dataKey}`} x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor={color} stopOpacity={0.3} />
             <stop offset="95%" stopColor={color} stopOpacity={0} />
           </linearGradient>
@@ -129,7 +133,7 @@ export default function AreaChart({
           dataKey={dataKey}
           stroke={color}
           strokeWidth={2}
-          fill={`url(#gradient-${dataKey})`}
+          fill={`url(#${gradientId})`}
           animationDuration={500}
         />
       </RechartsAreaChart>
