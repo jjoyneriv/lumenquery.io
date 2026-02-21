@@ -1046,6 +1046,16 @@ docker compose up -d
     - Removed sidebar from page.tsx
     - Rebuilt and deployed portal
 33. Committed and pushed intelligence page layout update to GitHub
+34. Updated portfolio page layout to match dashboard:
+    - Replaced Header/Footer components with custom header
+    - Added LumenQuery logo (LQ) with page title "Portfolio Intelligence"
+    - Added subtitle "P&L, yield tracking & risk analysis"
+    - Added product navigation bar (Live Transactions, Contracts, Analytics, etc.)
+    - Added conditional sub-navigation for portfolio detail pages (All Portfolios / Portfolio Details)
+    - Created new layout-client.tsx for client-side navigation
+    - Reorganized page.tsx with tier info card at top and features grid
+    - Rebuilt and deployed portal
+35. Committed and pushed portfolio page layout update to GitHub
 
 ## SEO & Performance Optimization
 
