@@ -1,7 +1,7 @@
 # Project Context
 
 ## Current Status
-- Working on: Infrastructure fixes
+- Working on: Feature cleanup
 - Last session: 2026-02-21
 - Last validated: 2026-02-21
 - All services: 12 containers running healthy
@@ -13,13 +13,13 @@
 - Blog Posts: 12 articles (4 new SEO-optimized posts added)
 - Portfolio Intelligence: Implementation complete, deployed, documentation complete
 - Soroban Pro: Implementation complete, deployed, documentation complete
-- Compliance & AML: Implementation complete, deployed, documentation complete
+- Compliance & AML: **REMOVED** (feature completely removed from codebase)
 - Transaction Intelligence: Documentation complete
 - Stellar Network Analytics: Documentation complete
 - SEO Optimization: Complete, ready for Google indexing
 - Performance: Gzip compression enabled, Core Web Vitals optimized
 - Forgot Password: Implementation complete, deployed
-- Analytics Charts: Fixed for all time ranges (24h, 7d, 30d)
+- Analytics Charts: Fixed (24h only, removed 7d/30d due to performance)
 
 ## Service Status (api1.lumenquery.io)
 
@@ -129,16 +129,11 @@
 | Analytics Components | `/opt/lumenquery-portal/portal/components/analytics/` | MetricCard, AreaChart, TimeRangeSelector |
 | Analytics Pages | `/opt/lumenquery-portal/portal/app/analytics/` | Public analytics dashboard |
 | Analytics API | `/opt/lumenquery-portal/portal/app/api/analytics/` | Network metrics API endpoint |
-| Compliance Components | `/opt/lumenquery-portal/portal/components/compliance/` | ViolationTable, RuleCard, StatusCard |
-| Compliance Pages | `/opt/lumenquery-portal/portal/app/compliance/` | Compliance dashboard |
-| Compliance API | `/opt/lumenquery-portal/portal/app/api/compliance/` | Rules, violations, reports API |
-| Compliance Lib | `/opt/lumenquery-portal/portal/lib/compliance/` | Rules engine, evaluators, audit |
 | Intelligence Components | `/opt/lumenquery-portal/portal/components/intelligence/` | WatchlistTable, AlertTable, TrustlineMonitor |
 | Intelligence Pages | `/opt/lumenquery-portal/portal/app/intelligence/` | Intelligence dashboard |
 | Intelligence API | `/opt/lumenquery-portal/portal/app/api/intelligence/` | Watchlists, alerts, stream API |
 | Intelligence Docs | `/opt/lumenquery-portal/portal/app/docs/intelligence/` | Transaction Intelligence documentation |
 | Analytics Docs | `/opt/lumenquery-portal/portal/app/docs/analytics/` | Stellar Network Analytics documentation |
-| Compliance Docs | `/opt/lumenquery-portal/portal/app/docs/compliance/` | Compliance & AML documentation |
 | Contracts Docs | `/opt/lumenquery-portal/portal/app/docs/contracts/` | Soroban Smart Contracts Explorer documentation |
 | Portfolio Docs | `/opt/lumenquery-portal/portal/app/docs/portfolio/` | Portfolio Intelligence documentation |
 | Portfolio Components | `/opt/lumenquery-portal/portal/components/portfolio/` | PortfolioNav, PortfolioSummary, AssetTable |
@@ -950,6 +945,22 @@ docker compose up -d
       - /analytics/contracts
     - Result: All analytics pages now load quickly with 24h data only
 16. Committed and pushed time range removal to GitHub
+17. Removed Compliance & AML feature:
+    - Deleted all compliance pages (/compliance/*)
+    - Deleted all compliance API routes (/api/compliance/*)
+    - Deleted compliance components (/components/compliance/)
+    - Deleted compliance library (/lib/compliance/)
+    - Deleted compliance docs (/app/docs/compliance/)
+    - Deleted jobs system (/lib/jobs/) - was compliance-specific
+    - Deleted notifications system (/lib/notifications/) - was compliance-specific
+    - Created standalone email module (/lib/email.ts) for forgot-password
+    - Added nodemailer package for email sending
+    - Removed compliance links from Header, AdminNav, docs pages
+    - Removed complianceEnabled/complianceTier from admin APIs
+    - Updated pricing page metadata
+    - Rebuilt and deployed portal
+    - Verified compliance routes return 404
+18. Committed and pushed compliance removal to GitHub
 
 ## SEO & Performance Optimization
 
@@ -1115,159 +1126,20 @@ The password reset email includes:
 
 ## Compliance & AML Alerting Service
 
-### Overview
-Enterprise compliance monitoring and AML alerting for Stellar network. Designed for exchanges, custodians, and financial institutions requiring regulatory compliance.
+**STATUS: REMOVED**
 
-### Pages
-| Route | Description | Status |
-|-------|-------------|--------|
-| /compliance | Overview dashboard | ✅ Deployed |
-| /compliance/accounts | Monitored accounts management | ✅ Deployed |
-| /compliance/violations | Violations list with filters | ✅ Deployed |
-| /compliance/violations/[id] | Violation detail and review | ✅ Deployed |
-| /compliance/rules | Rules management | ✅ Deployed |
-| /compliance/reports | Report generation | ✅ Deployed |
-| /compliance/audit | Audit log viewer | ✅ Deployed |
+This feature was removed from the codebase on 2026-02-21. The Compliance & AML alerting service, including all pages, API routes, components, and library code, has been deleted.
 
-### API Endpoints
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| /api/compliance/status | GET | Compliance status overview |
-| /api/compliance/accounts | GET, POST | List/add monitored accounts |
-| /api/compliance/accounts/[id] | GET, PUT, DELETE | Account operations |
-| /api/compliance/rules | GET, POST | List/create rules |
-| /api/compliance/rules/[id] | GET, PUT, DELETE | Rule operations |
-| /api/compliance/violations | GET | List violations with filters |
-| /api/compliance/violations/[id] | GET, PUT | View/update violation |
-| /api/compliance/reports | GET, POST | List/generate reports |
-| /api/compliance/reports/[id] | GET, DELETE | Report operations |
-| /api/compliance/reports/[id]/export | GET | Export CSV/JSON |
-| /api/compliance/audit | GET | Audit log entries |
+Removed items:
+- `/app/compliance/*` - All compliance pages
+- `/app/api/compliance/*` - All compliance API routes
+- `/app/docs/compliance/` - Compliance documentation
+- `/components/compliance/*` - All compliance components
+- `/lib/compliance/*` - Rules engine, evaluators, audit
+- `/lib/jobs/*` - Background job queue (was compliance-specific)
+- `/lib/notifications/*` - Notification system (was compliance-specific)
 
-### Rule Types
-| Type | Description | Tier |
-|------|-------------|------|
-| SANCTIONS_SCREENING | OFAC/UN sanctions list matching | Basic |
-| VELOCITY_LIMIT | Transaction frequency limits | Basic |
-| VOLUME_LIMIT | Transaction volume limits | Basic |
-| CIRCULAR_PAYMENT | Detect circular payment patterns | Standard |
-| MIXER_DETECTION | Known mixer service detection | Standard |
-| UNUSUAL_PATTERN | Anomaly detection | Standard |
-| COUNTERPARTY_RISK | Counterparty risk assessment | Standard |
-| CONTRACT_ABUSE | Soroban contract abuse detection | Enterprise |
-| STRUCTURING | Transaction structuring detection | Enterprise |
-| DORMANT_ACTIVATION | Dormant account activation alerts | Enterprise |
-
-### Violation Status Workflow
-```
-PENDING → UNDER_REVIEW → CLEARED
-                      → CONFIRMED → ESCALATED → REPORTED
-```
-
-### Tier Feature Matrix
-| Feature | BASIC ($49) | STANDARD ($149) | ENTERPRISE (Custom) |
-|---------|-------------|-----------------|---------------------|
-| Monitored Accounts | 100 | 1,000 | Unlimited |
-| Rule Types | 3 (basic) | 7 (+ advanced) | 10 (all) |
-| Report Retention | 30 days | 90 days | Unlimited |
-| Audit Log | 30 days | 1 year | Unlimited |
-| Real-time Alerts | Email only | Email + Slack | All channels |
-| API Access | Limited | Full | Full + Webhooks |
-| Custom Rules | No | No | Yes |
-| Dedicated Support | No | Email | 24/7 Phone |
-
-### Files Created
-```
-portal/lib/compliance/
-├── types.ts
-├── tiers.ts
-├── gates.ts
-├── audit.ts
-├── rules-engine.ts
-├── index.ts
-└── evaluators/
-    ├── index.ts
-    ├── sanctions-evaluator.ts
-    ├── velocity-evaluator.ts
-    ├── volume-evaluator.ts
-    ├── circular-payment-evaluator.ts
-    ├── mixer-evaluator.ts
-    ├── pattern-evaluator.ts
-    ├── counterparty-evaluator.ts
-    ├── contract-abuse-evaluator.ts
-    └── structuring-evaluator.ts
-
-portal/lib/jobs/
-├── types.ts
-├── queue.ts
-├── scheduler.ts
-├── index.ts
-└── workers/
-    ├── index.ts
-    ├── account-scan-worker.ts
-    ├── risk-assessment-worker.ts
-    └── sanctions-sync-worker.ts
-
-portal/lib/notifications/
-├── index.ts
-├── manager.ts
-├── channels/
-│   ├── email.ts
-│   ├── slack.ts
-│   └── webhook.ts
-└── templates/
-    └── violation-alert.ts
-
-portal/app/api/compliance/
-├── status/route.ts
-├── accounts/route.ts
-├── accounts/[accountId]/route.ts
-├── rules/route.ts
-├── rules/[ruleId]/route.ts
-├── violations/route.ts
-├── violations/[violationId]/route.ts
-├── reports/route.ts
-├── reports/[reportId]/route.ts
-├── reports/[reportId]/export/route.ts
-└── audit/route.ts
-
-portal/app/compliance/
-├── layout.tsx
-├── page.tsx
-├── accounts/page.tsx
-├── violations/page.tsx
-├── violations/[violationId]/page.tsx
-├── rules/page.tsx
-├── reports/page.tsx
-└── audit/page.tsx
-
-portal/components/compliance/
-├── index.ts
-├── ComplianceNav.tsx
-├── ViolationTable.tsx
-├── AccountTable.tsx
-├── RuleCard.tsx
-├── RuleForm.tsx
-├── AuditLogTable.tsx
-└── StatusCard.tsx
-
-portal/lib/redis.ts
-```
-
-### Environment Variables
-```
-SMTP_HOST=smtp.example.com          # Email notifications
-SMTP_PORT=587
-SMTP_USER=user
-SMTP_PASSWORD=password
-SMTP_FROM=compliance@lumenquery.io
-SLACK_WEBHOOK_URL=https://hooks.slack.com/...  # Slack notifications
-```
-
-### Deployment
-The service is deployed and running. Access at:
-- Dashboard: https://lumenquery.io/compliance
-- API: https://lumenquery.io/api/compliance/*
+Database schema still contains compliance-related models but they are not used.
 
 ## Soroban Pro
 
@@ -1458,63 +1330,9 @@ portal/app/docs/page.tsx            # Updated with Analytics link
 
 ## Compliance & AML Documentation
 
-### Overview
-Comprehensive documentation for the Compliance & AML Alerting Service, available at `/docs/compliance`.
+**STATUS: REMOVED**
 
-### Documentation Sections
-| Section | Description |
-|---------|-------------|
-| Introduction | Feature overview and compliance dashboard |
-| Dashboard | Key statistics, active rules, pending violations |
-| Subscription Tiers | Basic, Standard, Enterprise comparison table |
-| Accounts | Monitored accounts with monitoring levels |
-| Rules | 10 rule types with parameters and conditions |
-| Violations | Status workflow, severity levels, review process |
-| Reports | Compliance report generation and export |
-| Audit Log | Immutable audit trail with hash chain verification |
-| How-to: Add Account | Step-by-step account onboarding guide |
-| How-to: Create Rule | Rule configuration walkthrough |
-| API Reference | Complete endpoint documentation |
-
-### Monitoring Levels Documented
-- BASIC - Standard transaction monitoring
-- STANDARD - Enhanced with pattern analysis
-- ENHANCED - Full monitoring with real-time alerts
-- RESTRICTED - Maximum scrutiny for high-risk accounts
-
-### Rule Types Documented
-| Type | Description | Tier |
-|------|-------------|------|
-| SANCTIONS_SCREENING | OFAC/UN sanctions list matching | Basic |
-| VELOCITY_LIMIT | Transaction frequency limits | Basic |
-| VOLUME_LIMIT | Transaction volume limits | Basic |
-| CIRCULAR_PAYMENT | Detect circular payment patterns | Standard |
-| MIXER_DETECTION | Known mixer service detection | Standard |
-| UNUSUAL_PATTERN | Anomaly detection | Standard |
-| COUNTERPARTY_RISK | Counterparty risk assessment | Standard |
-| CONTRACT_ABUSE | Soroban contract abuse detection | Enterprise |
-| STRUCTURING | Transaction structuring detection | Enterprise |
-| DORMANT_ACTIVATION | Dormant account activation alerts | Enterprise |
-
-### Violation Status Workflow
-```
-PENDING → UNDER_REVIEW → CLEARED
-                       → CONFIRMED → ESCALATED → REPORTED
-```
-
-### API Endpoints Documented
-- `/api/compliance/status` - Compliance overview statistics
-- `/api/compliance/accounts` - Monitored accounts management
-- `/api/compliance/rules` - Rule CRUD operations
-- `/api/compliance/violations` - Violations list and review
-- `/api/compliance/reports` - Report generation and export
-- `/api/compliance/audit` - Audit log access
-
-### Files
-```
-portal/app/docs/compliance/page.tsx  # Main documentation page
-portal/app/docs/page.tsx             # Updated with Compliance link
-```
+This documentation has been removed along with the Compliance & AML feature on 2026-02-21. The `/docs/compliance` page no longer exists.
 
 ## Soroban Pro Documentation
 
