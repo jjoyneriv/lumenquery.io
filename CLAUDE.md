@@ -1085,6 +1085,20 @@ docker compose up -d
     - Fix: Handle 429 rate limit responses silently with backoff
     - Rebuilt and deployed portal
 39. Committed and pushed transaction stream fix to GitHub
+40. Updated pricing page layout to match dashboard:
+    - Replaced Header/Footer with custom header matching dashboard style
+    - Added LumenQuery logo (LQ) with page title "Pricing"
+    - Added subtitle "Simple, transparent plans"
+    - Added product navigation bar (Live Transactions, Contracts, etc.)
+    - Created new layout-client.tsx for client-side navigation
+    - Reorganized page.tsx into card-based sections:
+      - Hero card with gradient background
+      - Soroban Pro section with icon header and 4-column tier grid
+      - Transaction Intelligence section with icon header and 3-column tier grid
+      - FAQ section in 2-column grid
+      - CTA section with action buttons
+    - Rebuilt and deployed portal
+41. Committed and pushed pricing page layout update to GitHub
 
 ## SEO & Performance Optimization
 
