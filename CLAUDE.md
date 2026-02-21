@@ -1022,6 +1022,13 @@ docker compose up -d
     - Verified all sub-pages working (/analytics, /network, /tokens, /contracts)
     - Rebuilt and deployed portal
 27. Committed and pushed analytics page layout update to GitHub
+28. Changed Payment Activity chart to bar chart on /analytics/tokens:
+    - Created new BarChart component at portal/components/analytics/BarChart.tsx
+    - Uses Recharts BarChart with rounded top corners and hover highlight
+    - Same tooltip styling and x-axis formatting as AreaChart
+    - Updated tokens page to import and use BarChart instead of AreaChart
+    - Rebuilt and deployed portal
+29. Committed and pushed bar chart changes to GitHub
 
 ## SEO & Performance Optimization
 
