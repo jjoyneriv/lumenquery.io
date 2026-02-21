@@ -940,6 +940,16 @@ docker compose up -d
       - 7d: 43 four-hour data points
       - 30d: 23 daily data points
 14. Committed and pushed chart re-rendering fix to GitHub
+15. Removed 7d and 30d time range options from all analytics pages:
+    - Issue: 7d and 30d API calls were slow (fetching 700-1600 pages of data)
+    - Fix: Removed TimeRangeSelector from all pages, hardcoded to 24h only
+    - Updated pages:
+      - /analytics (overview)
+      - /analytics/network
+      - /analytics/tokens
+      - /analytics/contracts
+    - Result: All analytics pages now load quickly with 24h data only
+16. Committed and pushed time range removal to GitHub
 
 ## SEO & Performance Optimization
 
