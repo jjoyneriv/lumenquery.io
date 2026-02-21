@@ -195,6 +195,9 @@ function decodeMemo(tx: any): string | null {
   }
 }
 
+// Small delay helper to avoid rate limiting
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 export async function GET(request: NextRequest) {
   const encoder = new TextEncoder();
 
@@ -202,16 +205,17 @@ export async function GET(request: NextRequest) {
     async start(controller) {
       let cursor = '';
       let running = true;
+      let consecutiveErrors = 0;
 
       // Send initial message
       controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'connected', message: 'Connected to transaction stream' })}\n\n`));
 
       const fetchTransactions = async () => {
         try {
-          // Fetch latest transactions
-          let path = `/transactions?order=desc&limit=10`;
+          // Fetch latest transactions (fewer per batch to reduce rate limit issues)
+          let path = `/transactions?order=desc&limit=5`;
           if (cursor) {
-            path = `/transactions?cursor=${cursor}&order=asc&limit=10`;
+            path = `/transactions?cursor=${cursor}&order=asc&limit=5`;
           }
 
           const response = await fetchWithFallback(path, {
@@ -219,8 +223,17 @@ export async function GET(request: NextRequest) {
           });
 
           if (!response.ok) {
+            // Rate limited - back off silently
+            if (response.status === 429) {
+              console.log('Rate limited by Horizon, backing off...');
+              consecutiveErrors++;
+              return;
+            }
             throw new Error(`Horizon error: ${response.status}`);
           }
+
+          // Reset error counter on success
+          consecutiveErrors = 0;
 
           const data = await response.json();
           const transactions = data._embedded?.records || [];
@@ -229,15 +242,23 @@ export async function GET(request: NextRequest) {
           const txList = cursor ? transactions : transactions.reverse();
 
           for (const tx of txList) {
-            // Fetch operations for this transaction
-            const opsResponse = await fetchWithFallback(`/transactions/${tx.hash}/operations?limit=10`, {
-              headers: { 'Accept': 'application/json' },
-            });
+            // Add small delay between operations requests to avoid rate limiting
+            await delay(100);
 
+            // Fetch operations for this transaction - don't fail if this errors
             let operations: any[] = [];
-            if (opsResponse.ok) {
-              const opsData = await opsResponse.json();
-              operations = opsData._embedded?.records || [];
+            try {
+              const opsResponse = await fetchWithFallback(`/transactions/${tx.hash}/operations?limit=10`, {
+                headers: { 'Accept': 'application/json' },
+              });
+
+              if (opsResponse.ok) {
+                const opsData = await opsResponse.json();
+                operations = opsData._embedded?.records || [];
+              }
+            } catch (opError) {
+              // Log but don't fail - we can still show the transaction without operation details
+              console.log(`Failed to fetch operations for ${tx.hash}:`, opError);
             }
 
             // Build decoded transaction
@@ -273,26 +294,35 @@ export async function GET(request: NextRequest) {
           }
         } catch (error) {
           console.error('Error fetching transactions:', error);
-          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'error', message: 'Error fetching transactions' })}\n\n`));
+          consecutiveErrors++;
+
+          // Only send error to client after multiple consecutive failures
+          if (consecutiveErrors >= 3) {
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'error', message: 'Connection issues - retrying...' })}\n\n`));
+          }
         }
       };
 
       // Initial fetch
       await fetchTransactions();
 
-      // Poll for new transactions every 5 seconds
-      const interval = setInterval(async () => {
-        if (!running) {
-          clearInterval(interval);
-          return;
-        }
+      // Poll for new transactions - dynamic interval based on errors
+      const poll = async () => {
+        if (!running) return;
+
         await fetchTransactions();
-      }, 5000);
+
+        // Back off if we're having errors (up to 30 seconds)
+        const pollInterval = Math.min(5000 + (consecutiveErrors * 5000), 30000);
+        setTimeout(poll, pollInterval);
+      };
+
+      // Start polling after initial fetch
+      setTimeout(poll, 5000);
 
       // Handle client disconnect
       request.signal.addEventListener('abort', () => {
         running = false;
-        clearInterval(interval);
         controller.close();
       });
     },
