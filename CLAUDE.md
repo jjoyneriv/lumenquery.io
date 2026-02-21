@@ -1029,6 +1029,23 @@ docker compose up -d
     - Updated tokens page to import and use BarChart instead of AreaChart
     - Rebuilt and deployed portal
 29. Committed and pushed bar chart changes to GitHub
+30. Updated Payment Activity bar chart to show last 5 minutes:
+    - Filter chart data to only include payments from last 5 minutes
+    - Changed interval from 30-second to 15-second buckets (~20 data points)
+    - Increased pages fetched from 5 to 25 (5000 payments) for better coverage
+    - Reduced cache TTL from 60s to 30s for more frequent updates
+    - Rebuilt and deployed portal
+31. Committed and pushed 5-minute chart changes to GitHub
+32. Updated intelligence page layout to match dashboard:
+    - Replaced Header component and sidebar with custom header
+    - Added LumenQuery logo (LQ) with page title "Transaction Intelligence"
+    - Added subtitle "Real-time monitoring & alerts" and live indicator
+    - Added product navigation bar (Live Transactions, Contracts, Analytics, etc.)
+    - Converted sidebar IntelligenceNav to inline tabs (Overview, Live Stream, Accounts, Watchlists, Alerts, Trustlines, Contracts)
+    - Created new layout-client.tsx for client-side navigation
+    - Removed sidebar from page.tsx
+    - Rebuilt and deployed portal
+33. Committed and pushed intelligence page layout update to GitHub
 
 ## SEO & Performance Optimization
 
