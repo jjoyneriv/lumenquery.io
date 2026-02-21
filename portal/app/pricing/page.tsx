@@ -1,10 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 
-const tiers = [
+const sorobanTiers = [
   {
     name: 'Free',
     price: '$0',
@@ -89,388 +87,276 @@ const tiers = [
   },
 ];
 
+const intelligenceTiers = [
+  {
+    name: 'Solo',
+    price: '$49',
+    period: '/month',
+    description: 'For individual traders and analysts',
+    features: [
+      '2 concurrent streams',
+      '50 watchlist accounts',
+      '10 alert configurations',
+      '100K XLM whale threshold',
+      'Email notifications',
+    ],
+    notIncluded: ['Webhook notifications'],
+    cta: 'Get Solo',
+    ctaLink: '/intelligence/upgrade',
+    highlighted: false,
+  },
+  {
+    name: 'Teams',
+    price: '$199',
+    period: '/month',
+    description: 'For funds, compliance teams, and DAOs',
+    features: [
+      '10 concurrent streams',
+      '500 watchlist accounts',
+      '50 alert configurations',
+      '50K XLM whale threshold',
+      'Email + Webhook notifications',
+      'Anomaly detection',
+      'Priority support',
+    ],
+    notIncluded: [],
+    cta: 'Get Teams',
+    ctaLink: '/intelligence/upgrade',
+    highlighted: true,
+  },
+  {
+    name: 'Enterprise',
+    price: 'Custom',
+    period: '',
+    description: 'For exchanges and large organizations',
+    features: [
+      'Unlimited streams',
+      'Unlimited watchlist accounts',
+      'Unlimited alert configurations',
+      'Custom whale thresholds',
+      'All notification channels',
+      'Dedicated support + SLA',
+      'Custom integrations',
+    ],
+    notIncluded: [],
+    cta: 'Contact Sales',
+    ctaLink: 'mailto:sales@lumenquery.io',
+    highlighted: false,
+  },
+];
+
+const faqs = [
+  {
+    question: 'What counts as a contract exploration?',
+    answer: 'Each unique contract you view counts towards your monthly limit. Viewing the same contract multiple times only counts once per month.',
+  },
+  {
+    question: 'Can I upgrade or downgrade my plan?',
+    answer: 'Yes, you can change your plan at any time. Upgrades take effect immediately, and downgrades take effect at the start of your next billing cycle.',
+  },
+  {
+    question: 'What payment methods do you accept?',
+    answer: 'We accept all major credit cards, processed securely through Stripe. Enterprise customers can also pay via invoice.',
+  },
+  {
+    question: 'Is there a free trial?',
+    answer: 'Yes! Developer and Team plans include a 14-day free trial with full access to all features. No credit card required to start.',
+  },
+];
+
 export default function PricingPage() {
   return (
-    <div className="min-h-screen bg-[#F5F6F7] flex flex-col">
-      <Header activePage="pricing" />
+    <div className="space-y-6">
+      {/* Hero Card */}
+      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-gradient-to-r from-[#2855FF] to-[#1E44CC] text-white">
+        <div className="text-center">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2">Simple, Transparent Pricing</h1>
+          <p className="text-white/80 text-sm sm:text-base max-w-xl mx-auto">
+            Choose the plan that fits your needs. All plans include access to the Stellar network analytics dashboard.
+          </p>
+        </div>
+      </div>
 
-      <main className="flex-1">
-        {/* Hero */}
-        <section className="bg-gradient-to-b from-black to-[#1a1a2e] text-white py-16 px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-              Simple, Transparent Pricing
-            </h1>
-            <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-              Choose the plan that fits your needs. All plans include access to
-              the Stellar network analytics dashboard.
-            </p>
+      {/* Soroban Pro Section */}
+      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
+        <div className="flex items-center gap-2 mb-6">
+          <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+            <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
           </div>
-        </section>
-
-        {/* Pricing Grid */}
-        <section className="py-12 px-4 -mt-8">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {tiers.map((tier) => (
-                <div
-                  key={tier.name}
-                  className={`bg-white rounded-xl border-2 ${
-                    tier.highlighted
-                      ? 'border-[#2855FF] shadow-lg shadow-[#2855FF]/10'
-                      : 'border-[#E6E7E9]'
-                  } p-6 flex flex-col`}
-                >
-                  {tier.highlighted && (
-                    <div className="text-center mb-4">
-                      <span className="inline-block px-3 py-1 bg-[#2855FF] text-white text-xs font-medium rounded-full">
-                        Most Popular
-                      </span>
-                    </div>
-                  )}
-
-                  <h3 className="text-xl font-bold mb-2">{tier.name}</h3>
-                  <div className="mb-4">
-                    <span className="text-3xl font-bold">{tier.price}</span>
-                    <span className="text-[#6A6A6A]">{tier.period}</span>
-                  </div>
-                  <p className="text-sm text-[#6A6A6A] mb-6">{tier.description}</p>
-
-                  <ul className="space-y-3 mb-6 flex-1">
-                    {tier.features.map((feature) => (
-                      <li key={feature} className="flex items-start gap-2 text-sm">
-                        <svg
-                          className="w-5 h-5 text-green-500 flex-shrink-0"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                        {feature}
-                      </li>
-                    ))}
-                    {tier.notIncluded.map((feature) => (
-                      <li
-                        key={feature}
-                        className="flex items-start gap-2 text-sm text-[#6A6A6A]"
-                      >
-                        <svg
-                          className="w-5 h-5 text-gray-300 flex-shrink-0"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M6 18L18 6M6 6l12 12"
-                          />
-                        </svg>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Link
-                    href={tier.ctaLink}
-                    className={`w-full py-3 rounded-lg text-center font-medium transition-colors ${
-                      tier.highlighted
-                        ? 'bg-[#2855FF] text-white hover:bg-[#1e44cc]'
-                        : 'bg-[#F5F6F7] text-black hover:bg-[#E6E7E9]'
-                    }`}
-                  >
-                    {tier.cta}
-                  </Link>
-                </div>
-              ))}
-            </div>
+          <div>
+            <h2 className="text-lg font-bold">Soroban Pro</h2>
+            <p className="text-xs text-[#6A6A6A]">Smart contract explorer</p>
           </div>
-        </section>
+        </div>
 
-        {/* Intelligence Tiers */}
-        <section className="py-16 px-4 bg-white">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-2xl sm:text-3xl font-bold mb-4">
-                Transaction Intelligence
-              </h2>
-              <p className="text-[#6A6A6A] max-w-2xl mx-auto">
-                Real-time monitoring, whale alerts, and account behavior analytics.
-                Built for funds, exchanges, DAOs, and compliance teams.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Solo */}
-              <div className="bg-[#F5F6F7] rounded-xl border border-[#E6E7E9] p-6 flex flex-col">
-                <h3 className="text-xl font-bold mb-2">Solo</h3>
-                <div className="mb-4">
-                  <span className="text-3xl font-bold">$49</span>
-                  <span className="text-[#6A6A6A]">/month</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {sorobanTiers.map((tier) => (
+            <div
+              key={tier.name}
+              className={`rounded-xl border-2 ${
+                tier.highlighted
+                  ? 'border-[#2855FF] shadow-lg shadow-[#2855FF]/10'
+                  : 'border-[#E6E7E9]'
+              } p-4 flex flex-col bg-white`}
+            >
+              {tier.highlighted && (
+                <div className="text-center mb-3">
+                  <span className="inline-block px-2 py-0.5 bg-[#2855FF] text-white text-xs font-medium rounded-full">
+                    Most Popular
+                  </span>
                 </div>
-                <p className="text-sm text-[#6A6A6A] mb-6">
-                  For individual traders and analysts
-                </p>
+              )}
 
-                <ul className="space-y-3 mb-6 flex-1">
-                  <li className="flex items-start gap-2 text-sm">
-                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <h3 className="text-lg font-bold mb-1">{tier.name}</h3>
+              <div className="mb-3">
+                <span className="text-2xl font-bold">{tier.price}</span>
+                <span className="text-[#6A6A6A] text-sm">{tier.period}</span>
+              </div>
+              <p className="text-xs text-[#6A6A6A] mb-4">{tier.description}</p>
+
+              <ul className="space-y-2 mb-4 flex-1 text-xs">
+                {tier.features.map((feature) => (
+                  <li key={feature} className="flex items-start gap-2">
+                    <svg className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    2 concurrent streams
+                    {feature}
                   </li>
-                  <li className="flex items-start gap-2 text-sm">
-                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    50 watchlist accounts
-                  </li>
-                  <li className="flex items-start gap-2 text-sm">
-                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    10 alert configurations
-                  </li>
-                  <li className="flex items-start gap-2 text-sm">
-                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    100K XLM whale threshold
-                  </li>
-                  <li className="flex items-start gap-2 text-sm">
-                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Email notifications
-                  </li>
-                  <li className="flex items-start gap-2 text-sm text-[#6A6A6A]">
-                    <svg className="w-5 h-5 text-gray-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                ))}
+                {tier.notIncluded.map((feature) => (
+                  <li key={feature} className="flex items-start gap-2 text-[#6A6A6A]">
+                    <svg className="w-4 h-4 text-gray-300 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
-                    Webhook notifications
+                    {feature}
                   </li>
-                </ul>
+                ))}
+              </ul>
 
-                <Link
-                  href="/intelligence/upgrade"
-                  className="w-full py-3 rounded-lg text-center font-medium bg-[#E6E7E9] text-black hover:bg-[#D4D5D7] transition-colors"
-                >
-                  Get Solo
-                </Link>
-              </div>
+              <Link
+                href={tier.ctaLink}
+                className={`w-full py-2 rounded-lg text-center font-medium text-sm transition-colors ${
+                  tier.highlighted
+                    ? 'bg-[#2855FF] text-white hover:bg-[#1e44cc]'
+                    : 'bg-[#F5F6F7] text-black hover:bg-[#E6E7E9]'
+                }`}
+              >
+                {tier.cta}
+              </Link>
+            </div>
+          ))}
+        </div>
+      </div>
 
-              {/* Teams */}
-              <div className="bg-white rounded-xl border-2 border-[#2855FF] shadow-lg shadow-[#2855FF]/10 p-6 flex flex-col">
-                <div className="text-center mb-4">
-                  <span className="inline-block px-3 py-1 bg-[#2855FF] text-white text-xs font-medium rounded-full">
+      {/* Transaction Intelligence Section */}
+      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
+        <div className="flex items-center gap-2 mb-6">
+          <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+            <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+          </div>
+          <div>
+            <h2 className="text-lg font-bold">Transaction Intelligence</h2>
+            <p className="text-xs text-[#6A6A6A]">Real-time monitoring & alerts</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {intelligenceTiers.map((tier) => (
+            <div
+              key={tier.name}
+              className={`rounded-xl border-2 ${
+                tier.highlighted
+                  ? 'border-[#2855FF] shadow-lg shadow-[#2855FF]/10'
+                  : 'border-[#E6E7E9]'
+              } p-4 flex flex-col bg-white`}
+            >
+              {tier.highlighted && (
+                <div className="text-center mb-3">
+                  <span className="inline-block px-2 py-0.5 bg-[#2855FF] text-white text-xs font-medium rounded-full">
                     Recommended
                   </span>
                 </div>
+              )}
 
-                <h3 className="text-xl font-bold mb-2">Teams</h3>
-                <div className="mb-4">
-                  <span className="text-3xl font-bold">$199</span>
-                  <span className="text-[#6A6A6A]">/month</span>
-                </div>
-                <p className="text-sm text-[#6A6A6A] mb-6">
-                  For funds, compliance teams, and DAOs
-                </p>
-
-                <ul className="space-y-3 mb-6 flex-1">
-                  <li className="flex items-start gap-2 text-sm">
-                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    10 concurrent streams
-                  </li>
-                  <li className="flex items-start gap-2 text-sm">
-                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    500 watchlist accounts
-                  </li>
-                  <li className="flex items-start gap-2 text-sm">
-                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    50 alert configurations
-                  </li>
-                  <li className="flex items-start gap-2 text-sm">
-                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    50K XLM whale threshold
-                  </li>
-                  <li className="flex items-start gap-2 text-sm">
-                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Email + Webhook notifications
-                  </li>
-                  <li className="flex items-start gap-2 text-sm">
-                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Anomaly detection
-                  </li>
-                  <li className="flex items-start gap-2 text-sm">
-                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Priority support
-                  </li>
-                </ul>
-
-                <Link
-                  href="/intelligence/upgrade"
-                  className="w-full py-3 rounded-lg text-center font-medium bg-[#2855FF] text-white hover:bg-[#1E44CC] transition-colors"
-                >
-                  Get Teams
-                </Link>
+              <h3 className="text-lg font-bold mb-1">{tier.name}</h3>
+              <div className="mb-3">
+                <span className="text-2xl font-bold">{tier.price}</span>
+                {tier.period && <span className="text-[#6A6A6A] text-sm">{tier.period}</span>}
               </div>
+              <p className="text-xs text-[#6A6A6A] mb-4">{tier.description}</p>
 
-              {/* Enterprise */}
-              <div className="bg-[#F5F6F7] rounded-xl border border-[#E6E7E9] p-6 flex flex-col">
-                <h3 className="text-xl font-bold mb-2">Enterprise</h3>
-                <div className="mb-4">
-                  <span className="text-3xl font-bold">Custom</span>
-                </div>
-                <p className="text-sm text-[#6A6A6A] mb-6">
-                  For exchanges and large organizations
-                </p>
-
-                <ul className="space-y-3 mb-6 flex-1">
-                  <li className="flex items-start gap-2 text-sm">
-                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <ul className="space-y-2 mb-4 flex-1 text-xs">
+                {tier.features.map((feature) => (
+                  <li key={feature} className="flex items-start gap-2">
+                    <svg className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    Unlimited streams
+                    {feature}
                   </li>
-                  <li className="flex items-start gap-2 text-sm">
-                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                ))}
+                {tier.notIncluded.map((feature) => (
+                  <li key={feature} className="flex items-start gap-2 text-[#6A6A6A]">
+                    <svg className="w-4 h-4 text-gray-300 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
-                    Unlimited watchlist accounts
+                    {feature}
                   </li>
-                  <li className="flex items-start gap-2 text-sm">
-                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Unlimited alert configurations
-                  </li>
-                  <li className="flex items-start gap-2 text-sm">
-                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Custom whale thresholds
-                  </li>
-                  <li className="flex items-start gap-2 text-sm">
-                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    All notification channels
-                  </li>
-                  <li className="flex items-start gap-2 text-sm">
-                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Dedicated support + SLA
-                  </li>
-                  <li className="flex items-start gap-2 text-sm">
-                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Custom integrations
-                  </li>
-                </ul>
+                ))}
+              </ul>
 
-                <Link
-                  href="mailto:sales@lumenquery.io"
-                  className="w-full py-3 rounded-lg text-center font-medium bg-[#E6E7E9] text-black hover:bg-[#D4D5D7] transition-colors"
-                >
-                  Contact Sales
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* FAQ */}
-        <section className="py-12 px-4 bg-white">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-2xl font-bold text-center mb-8">
-              Frequently Asked Questions
-            </h2>
-
-            <div className="space-y-6">
-              <div>
-                <h3 className="font-semibold mb-2">What counts as a contract exploration?</h3>
-                <p className="text-[#6A6A6A]">
-                  Each unique contract you view counts towards your monthly limit. Viewing the
-                  same contract multiple times only counts once per month.
-                </p>
-              </div>
-
-              <div>
-                <h3 className="font-semibold mb-2">Can I upgrade or downgrade my plan?</h3>
-                <p className="text-[#6A6A6A]">
-                  Yes, you can change your plan at any time. Upgrades take effect immediately,
-                  and downgrades take effect at the start of your next billing cycle.
-                </p>
-              </div>
-
-              <div>
-                <h3 className="font-semibold mb-2">What payment methods do you accept?</h3>
-                <p className="text-[#6A6A6A]">
-                  We accept all major credit cards, processed securely through Stripe.
-                  Enterprise customers can also pay via invoice.
-                </p>
-              </div>
-
-              <div>
-                <h3 className="font-semibold mb-2">Is there a free trial?</h3>
-                <p className="text-[#6A6A6A]">
-                  Yes! Developer and Team plans include a 14-day free trial with full access
-                  to all features. No credit card required to start.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA */}
-        <section className="py-16 px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-2xl font-bold mb-4">Ready to explore Soroban contracts?</h2>
-            <p className="text-[#6A6A6A] mb-8">
-              Start with the free plan and upgrade when you need more.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
-                href="/contracts"
-                className="px-8 py-3 bg-[#2855FF] text-white rounded-lg font-medium hover:bg-[#1e44cc] transition-colors"
+                href={tier.ctaLink}
+                className={`w-full py-2 rounded-lg text-center font-medium text-sm transition-colors ${
+                  tier.highlighted
+                    ? 'bg-[#2855FF] text-white hover:bg-[#1e44cc]'
+                    : 'bg-[#F5F6F7] text-black hover:bg-[#E6E7E9]'
+                }`}
               >
-                Start Exploring
-              </Link>
-              <Link
-                href="/docs"
-                className="px-8 py-3 bg-white border border-[#E6E7E9] rounded-lg font-medium hover:border-[#2855FF] transition-colors"
-              >
-                View Documentation
+                {tier.cta}
               </Link>
             </div>
-          </div>
-        </section>
-      </main>
+          ))}
+        </div>
+      </div>
 
-      <Footer variant="full" />
+      {/* FAQ Section */}
+      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
+        <h2 className="text-lg font-bold mb-6">Frequently Asked Questions</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {faqs.map((faq) => (
+            <div key={faq.question} className="p-4 rounded-lg bg-[#F5F6F7]">
+              <h3 className="font-semibold text-sm mb-2">{faq.question}</h3>
+              <p className="text-xs text-[#6A6A6A]">{faq.answer}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* CTA Section */}
+      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#2855FF] text-white">
+        <div className="text-center">
+          <h2 className="text-lg font-bold mb-2">Ready to explore Soroban contracts?</h2>
+          <p className="text-white/80 text-sm mb-4">Start with the free plan and upgrade when you need more.</p>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/contracts"
+              className="px-6 py-2 bg-white text-[#2855FF] rounded-lg font-medium text-sm hover:bg-gray-100 transition-colors"
+            >
+              Start Exploring
+            </Link>
+            <Link
+              href="/docs"
+              className="px-6 py-2 bg-white/20 text-white rounded-lg font-medium text-sm hover:bg-white/30 transition-colors"
+            >
+              View Documentation
+            </Link>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

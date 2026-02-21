@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import PricingLayoutClient from './layout-client';
 
 export const metadata: Metadata = {
   title: 'Pricing - LumenQuery | Soroban Pro & Intelligence Plans',
@@ -24,5 +25,5 @@ export default function PricingLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return <PricingLayoutClient>{children}</PricingLayoutClient>;
 }
