@@ -1,32 +1,10 @@
 import { NextResponse } from 'next/server';
 import Redis from 'ioredis';
 
-// Use public Stellar Horizon API as default/fallback
-const HORIZON_URL = process.env.HORIZON_API_URL || 'https://horizon.stellar.org';
-const PUBLIC_HORIZON_URL = 'https://horizon.stellar.org';
+// Always use public Stellar Horizon API for analytics (local Horizon on different Docker network)
+const HORIZON_URL = 'https://horizon.stellar.org';
 const REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
-const CACHE_TTL = 30; // 30 seconds
-
-// Helper to fetch with fallback to public Horizon
-async function fetchWithFallback(path: string, options?: RequestInit): Promise<Response> {
-  try {
-    const res = await fetch(`${HORIZON_URL}${path}`, options);
-    if (res.ok) return res;
-    // If local Horizon fails, try public
-    if (HORIZON_URL !== PUBLIC_HORIZON_URL) {
-      console.log(`Local Horizon failed for ${path}, falling back to public`);
-      return fetch(`${PUBLIC_HORIZON_URL}${path}`, options);
-    }
-    return res;
-  } catch (error) {
-    // Network error - try public Horizon
-    if (HORIZON_URL !== PUBLIC_HORIZON_URL) {
-      console.log(`Local Horizon unreachable for ${path}, falling back to public`);
-      return fetch(`${PUBLIC_HORIZON_URL}${path}`, options);
-    }
-    throw error;
-  }
-}
+const CACHE_TTL = 300; // 5 minutes - analytics data doesn't need to be real-time
 
 let redisClient: Redis | null = null;
 
@@ -87,7 +65,7 @@ interface HorizonFeeStats {
 }
 
 async function fetchLedgers(limit: number = 10): Promise<HorizonLedger[]> {
-  const res = await fetchWithFallback(`/ledgers?order=desc&limit=${limit}`, {
+  const res = await fetch(`${HORIZON_URL}/ledgers?order=desc&limit=${limit}`, {
     next: { revalidate: 10 },
   });
   if (!res.ok) throw new Error('Failed to fetch ledgers');
@@ -96,58 +74,27 @@ async function fetchLedgers(limit: number = 10): Promise<HorizonLedger[]> {
 }
 
 async function fetchFeeStats(): Promise<HorizonFeeStats> {
-  const res = await fetchWithFallback('/fee_stats', {
+  const res = await fetch(`${HORIZON_URL}/fee_stats`, {
     next: { revalidate: 10 },
   });
   if (!res.ok) throw new Error('Failed to fetch fee stats');
   return res.json();
 }
 
-async function fetchLedgerHistory(hours: number): Promise<HorizonLedger[]> {
-  // Fetch ledgers with sequential pagination using HAL links
-  const targetTime = Date.now() - (hours * 60 * 60 * 1000);
-
-  // Limit pages based on time range
-  // Each page = 200 ledgers = ~17 minutes of data
-  // 24h needs ~84 pages, 7d needs ~605 pages
-  // 30d: Our Horizon history only goes back ~19 days, so cap at 1600 pages
-  // These requests are cached (5min for 7d, 10min for 30d) to avoid slow responses
-  const maxPages = hours <= 24 ? 100 : hours <= 168 ? 700 : 1600;
-
-  // Use public Horizon for pagination since HAL links would point to the original host
-  const baseUrl = PUBLIC_HORIZON_URL;
-  const allLedgers: HorizonLedger[] = [];
-  let nextUrl: string | null = `${baseUrl}/ledgers?order=desc&limit=200`;
-
-  for (let page = 0; page < maxPages && nextUrl; page++) {
-    try {
-      const res: Response = await fetch(nextUrl, { next: { revalidate: 60 } });
-      if (!res.ok) break;
-
-      const data = await res.json();
-      const records: HorizonLedger[] = data._embedded?.records || [];
-
-      if (records.length === 0) break;
-
-      allLedgers.push(...records);
-
-      // Check if we've gone back far enough in time
-      const oldestLedger = records[records.length - 1];
-      const oldestTime = new Date(oldestLedger.closed_at).getTime();
-      if (oldestTime <= targetTime) break;
-
-      // Get next page URL from HAL links
-      nextUrl = data._links?.next?.href || null;
-      if (nextUrl && !nextUrl.startsWith('http')) {
-        nextUrl = `${baseUrl}${nextUrl}`;
-      }
-    } catch (error) {
-      console.error('Error fetching ledger page:', error);
-      break;
-    }
+async function fetchLedgerHistory(): Promise<HorizonLedger[]> {
+  // Single request for 200 recent ledgers (~17 minutes of data)
+  // Enough for trend visualization with minimal latency
+  try {
+    const response = await fetch(
+      `${HORIZON_URL}/ledgers?order=desc&limit=200`,
+      { next: { revalidate: 60 } }
+    );
+    if (!response.ok) return [];
+    const data = await response.json();
+    return (data._embedded?.records || []) as HorizonLedger[];
+  } catch {
+    return [];
   }
-
-  return allLedgers;
 }
 
 function calculateMetrics(ledgers: HorizonLedger[], feeStats: HorizonFeeStats) {
@@ -222,30 +169,19 @@ function aggregateHistory(ledgers: HorizonLedger[], hours: number): Array<{
 }> {
   if (ledgers.length === 0) return [];
 
-  // Helper to get total transactions (transaction_count can be null in some Horizon versions)
+  // Helper to get total transactions
   const getTxCount = (ledger: HorizonLedger) =>
     ledger.transaction_count ?? (ledger.successful_transaction_count + ledger.failed_transaction_count);
 
-  // Determine bucket size based on time range
-  // 24h: hourly buckets (24 data points)
-  // 7d: 4-hour buckets (42 data points)
-  // 30d: daily buckets (30 data points)
-  const bucketHours = hours <= 24 ? 1 : hours <= 168 ? 4 : 24;
-
+  // Use 5-minute buckets for recent data visualization
+  // With ~600 ledgers over ~50 minutes, this gives us ~10 data points
   const bucketData = new Map<string, { txs: number; success: number; total: number }>();
 
   for (const ledger of ledgers) {
     const date = new Date(ledger.closed_at);
-
-    // Round to bucket boundary
-    if (bucketHours === 1) {
-      date.setMinutes(0, 0, 0);
-    } else if (bucketHours === 4) {
-      const bucketHour = Math.floor(date.getHours() / 4) * 4;
-      date.setHours(bucketHour, 0, 0, 0);
-    } else {
-      date.setHours(0, 0, 0, 0);
-    }
+    // Round to 5-minute boundary
+    const minutes = Math.floor(date.getMinutes() / 5) * 5;
+    date.setMinutes(minutes, 0, 0);
 
     const bucketKey = date.toISOString();
 
@@ -286,7 +222,7 @@ export async function GET(req: Request) {
       const [ledgers, feeStats, historyLedgers] = await Promise.all([
         fetchLedgers(100),
         fetchFeeStats(),
-        fetchLedgerHistory(hours),
+        fetchLedgerHistory(),
       ]);
 
       const metrics = calculateMetrics(ledgers, feeStats);

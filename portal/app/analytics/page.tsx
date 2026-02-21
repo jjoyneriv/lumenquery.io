@@ -53,8 +53,8 @@ export default function AnalyticsPage() {
 
     fetchMetrics();
 
-    // Refresh every 30 seconds
-    const interval = setInterval(fetchMetrics, 30000);
+    // Refresh every 5 minutes (matches server cache TTL)
+    const interval = setInterval(fetchMetrics, 300000);
     return () => clearInterval(interval);
   }, []);
 
