@@ -1011,6 +1011,17 @@ docker compose up -d
     - Uses same styling as dashboard (white cards, rounded-xl corners, consistent colors)
     - Rebuilt and deployed portal
 25. Committed and pushed contracts page layout update to GitHub
+26. Updated analytics page layout to match dashboard:
+    - Replaced Header component and sidebar AnalyticsNav with custom header
+    - Added LumenQuery logo (LQ) with page title "Stellar Network Analytics"
+    - Added subtitle "Real-time blockchain metrics" and live indicator
+    - Added product navigation bar (Live Transactions, Contracts, Analytics, etc.)
+    - Converted sidebar navigation to inline tabs (Overview, Network, Tokens, Contracts)
+    - Created new layout-client.tsx for client-side navigation
+    - Removed Footer for cleaner look matching dashboard
+    - Verified all sub-pages working (/analytics, /network, /tokens, /contracts)
+    - Rebuilt and deployed portal
+27. Committed and pushed analytics page layout update to GitHub
 
 ## SEO & Performance Optimization
 
