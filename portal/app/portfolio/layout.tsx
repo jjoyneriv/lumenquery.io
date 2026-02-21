@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import PortfolioLayoutClient from './layout-client';
 
 export const metadata: Metadata = {
   title: 'Portfolio Intelligence - LumenQuery',
@@ -11,5 +12,5 @@ export default function PortfolioLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return <PortfolioLayoutClient>{children}</PortfolioLayoutClient>;
 }
