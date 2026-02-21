@@ -40,10 +40,29 @@ export default function AreaChart({
     );
   }
 
+  // Determine time span of data to format x-axis appropriately
+  const getDataSpanHours = () => {
+    if (data.length < 2) return 24;
+    const first = new Date(data[0][xAxisKey] as string).getTime();
+    const last = new Date(data[data.length - 1][xAxisKey] as string).getTime();
+    return Math.abs(last - first) / (1000 * 60 * 60);
+  };
+
+  const dataSpanHours = getDataSpanHours();
+
   const formatXAxis = (value: string) => {
     try {
       const date = new Date(value);
-      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      // For data spanning more than 3 days, show date only
+      if (dataSpanHours > 72) {
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      }
+      // For data spanning 1-3 days, show date and hour
+      if (dataSpanHours > 24) {
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric' });
+      }
+      // For data spanning less than 24 hours, show just the time
+      return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
     } catch {
       return value;
     }

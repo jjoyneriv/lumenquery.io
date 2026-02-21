@@ -37,25 +37,28 @@ export default function AnalyticsPage() {
   const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d'>('24h');
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
 
-  const fetchMetrics = async () => {
-    try {
-      const res = await fetch(`/api/analytics/network?range=${timeRange}`);
-      if (!res.ok) throw new Error('Failed to fetch metrics');
-      const data = await res.json();
-      setMetrics(data);
-      setLastUpdate(new Date());
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load analytics');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchMetrics();
+    const fetchMetrics = async (range: string) => {
+      try {
+        const res = await fetch(`/api/analytics/network?range=${range}`);
+        if (!res.ok) throw new Error('Failed to fetch metrics');
+        const data = await res.json();
+        setMetrics(data);
+        setLastUpdate(new Date());
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load analytics');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Set loading on time range change
+    setLoading(true);
+    fetchMetrics(timeRange);
+
     // Refresh every 30 seconds
-    const interval = setInterval(fetchMetrics, 30000);
+    const interval = setInterval(() => fetchMetrics(timeRange), 30000);
     return () => clearInterval(interval);
   }, [timeRange]);
 
@@ -139,7 +142,10 @@ export default function AnalyticsPage() {
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <div className="bg-white rounded-2xl border border-[#E6E7E9] p-6">
-          <h3 className="text-lg font-semibold mb-4">Transaction Volume</h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold">Transaction Volume</h3>
+            {loading && <span className="text-xs text-[#6A6A6A]">Loading...</span>}
+          </div>
           <AreaChart
             data={metrics?.history || []}
             dataKey="transactions"
@@ -149,7 +155,10 @@ export default function AnalyticsPage() {
           />
         </div>
         <div className="bg-white rounded-2xl border border-[#E6E7E9] p-6">
-          <h3 className="text-lg font-semibold mb-4">Success Rate</h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold">Success Rate</h3>
+            {loading && <span className="text-xs text-[#6A6A6A]">Loading...</span>}
+          </div>
           <AreaChart
             data={metrics?.history || []}
             dataKey="successRate"

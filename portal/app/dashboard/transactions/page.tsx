@@ -115,11 +115,30 @@ export default function TransactionViewerPage() {
     setTransactions([]);
   };
 
+  // Soroban operation types that should be highlighted in bright yellow
+  const SOROBAN_OPERATIONS = [
+    'invoke_host_function',
+    'extend_footprint_ttl',
+    'restore_footprint',
+  ];
+
+  const isSorobanOperation = (type: string): boolean => {
+    return SOROBAN_OPERATIONS.includes(type);
+  };
+
+  const hasSorobanOperations = (tx: Transaction): boolean => {
+    return tx.operations?.some((op) => isSorobanOperation(op.type)) || false;
+  };
+
   const getOperationColor = (type: string): string => {
+    // Soroban operations get dark blue on white background
+    if (isSorobanOperation(type)) {
+      return 'bg-white text-blue-900 font-semibold';
+    }
+
     const colors: Record<string, string> = {
       payment: 'bg-green-100 text-green-700',
       create_account: 'bg-blue-100 text-blue-700',
-      invoke_host_function: 'bg-purple-100 text-purple-700',
       manage_sell_offer: 'bg-orange-100 text-orange-700',
       manage_buy_offer: 'bg-orange-100 text-orange-700',
       change_trust: 'bg-yellow-100 text-yellow-700',
@@ -220,7 +239,11 @@ export default function TransactionViewerPage() {
             {transactions.map((tx) => (
               <div
                 key={tx.hash}
-                className="bg-[#1A1A1A] rounded-xl border border-[#333] overflow-hidden transition-all"
+                className={`rounded-xl overflow-hidden transition-all ${
+                  hasSorobanOperations(tx)
+                    ? 'bg-blue-950/40 border-2 border-white'
+                    : 'bg-[#1A1A1A] border border-[#333]'
+                }`}
               >
                 {/* Transaction Header */}
                 <div
@@ -232,6 +255,11 @@ export default function TransactionViewerPage() {
                       <div className="flex items-center gap-2 mb-2">
                         <span className={`w-2 h-2 rounded-full ${tx.successful ? 'bg-green-500' : 'bg-red-500'}`} />
                         <code className="text-[#2855FF] text-sm font-mono">{tx.hash?.slice(0, 16)}...</code>
+                        {hasSorobanOperations(tx) && (
+                          <span className="px-2 py-0.5 rounded-full bg-white text-blue-900 text-xs font-bold animate-pulse">
+                            SOROBAN
+                          </span>
+                        )}
                         <span className="text-[#555] text-xs">Ledger #{tx.ledger}</span>
                       </div>
                       <div className="flex flex-wrap items-center gap-2 text-sm">

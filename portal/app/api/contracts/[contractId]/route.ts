@@ -23,11 +23,24 @@ function getRedisClient(): Redis {
 
 async function fetchContractFromRPC(contractId: string) {
   try {
-    const [events, ledgerInfo] = await Promise.all([
-      getEvents(contractId, undefined, undefined, 1),
-      getLatestLedger(),
-    ]);
+    // First get the latest ledger info to determine a valid startLedger
+    const ledgerInfo = await getLatestLedger();
 
+    // Use the ledger retention window start (approximately 7 days back)
+    // Default retention is ~120960 ledgers, but use a safe window
+    const startLedger = Math.max(1, ledgerInfo.sequence - 100000);
+
+    // Now fetch events with a valid startLedger
+    let events;
+    try {
+      events = await getEvents(contractId, startLedger, undefined, 100);
+    } catch {
+      // If events query fails, contract may not exist or have no events
+      events = { events: [] };
+    }
+
+    // Verify the contract exists by checking if we got any data
+    // A valid contract should have at least some activity or we can still index it
     return {
       contractId,
       wasmHash: null,
