@@ -930,6 +930,16 @@ docker compose up -d
 11. Fixed contracts API error handling:
     - getEvents now handles errors gracefully for contracts without events
 12. Committed and pushed all fixes to GitHub
+13. Fixed analytics charts not re-rendering on 30d time range:
+    - Issue: Charts weren't visually updating when switching to 7d or 30d
+    - Root cause: SVG gradient ID conflicts and React not re-rendering charts
+    - Fix: Added unique gradient IDs per chart using chartId prop
+    - Fix: Added React key prop to force chart re-creation on timeRange change
+    - Verified API returns correct data for all ranges:
+      - 24h: 25 hourly data points
+      - 7d: 43 four-hour data points
+      - 30d: 23 daily data points
+14. Committed and pushed chart re-rendering fix to GitHub
 
 ## SEO & Performance Optimization
 
