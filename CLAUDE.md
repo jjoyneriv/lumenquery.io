@@ -1,7 +1,7 @@
 # Project Context
 
 ## Current Status
-- Working on: Maintenance
+- Working on: Contract deployment feature
 - Last session: 2026-02-21
 - Last validated: 2026-02-21 (all routes verified working)
 - All services: 12 containers running healthy
@@ -13,6 +13,7 @@
 - Blog Posts: 12 articles (4 new SEO-optimized posts added)
 - Portfolio Intelligence: Implementation complete, deployed, documentation complete
 - Soroban Pro: Implementation complete, deployed, documentation complete
+- Contract Deployment: Implementation complete, Freighter wallet integration, WASM upload
 - Compliance & AML: **REMOVED** (feature completely removed from codebase)
 - Transaction Intelligence: Documentation complete
 - Stellar Network Analytics: Documentation complete
@@ -982,6 +983,24 @@ docker compose up -d
       - Page load: ~8s → 0.6s (92% faster)
     - Rebuilt and deployed portal
 21. Committed and pushed analytics optimization to GitHub
+22. Added Soroban smart contract deployment feature:
+    - Freighter wallet integration for transaction signing
+    - WASM file upload with drag-and-drop support
+    - File validation (256KB limit, magic bytes check)
+    - Multi-step deployment wizard UI
+    - API endpoints for simulate, submit, and status polling
+    - Uses public Soroban RPC with fallback
+    - Dependencies: @stellar/freighter-api, @stellar/stellar-sdk
+    - New files:
+      - lib/wallet/ (Freighter integration)
+      - lib/soroban/deploy.ts (transaction building)
+      - hooks/useFreighter.ts, useContractDeploy.ts
+      - components/contracts/WalletConnect, WasmUploader, DeploymentWizard, DeploymentStatus
+      - app/contracts/deploy/ (deployment page)
+      - app/api/contracts/deploy/ (simulate, submit, status endpoints)
+    - Added "Deploy Contract" button to /contracts page
+    - Rebuilt and deployed portal
+23. Committed and pushed contract deployment feature to GitHub
 
 ## SEO & Performance Optimization
 
@@ -1171,6 +1190,7 @@ Premium Soroban smart contract explorer for Web3 developers, startups, and audit
 | Route | Description | Status |
 |-------|-------------|--------|
 | /contracts | Explorer home with search | ✅ Built |
+| /contracts/deploy | Contract deployment wizard | ✅ Built |
 | /contracts/[id] | Contract overview | ✅ Built |
 | /contracts/[id]/calls | Call history with filters | ✅ Built |
 | /contracts/[id]/storage | Storage viewer | ✅ Built |
@@ -1182,6 +1202,9 @@ Premium Soroban smart contract explorer for Web3 developers, startups, and audit
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | /api/contracts/search | GET | Search by ID/name |
+| /api/contracts/deploy/simulate | POST | Simulate deployment transaction |
+| /api/contracts/deploy/submit | POST | Submit signed transaction |
+| /api/contracts/deploy/status/[txHash] | GET | Poll transaction status |
 | /api/contracts/[id] | GET | Contract details |
 | /api/contracts/[id]/calls | GET | Paginated call history |
 | /api/contracts/[id]/storage | GET | Storage entries |
@@ -1210,10 +1233,25 @@ portal/lib/soroban/
 ├── formatter.ts
 ├── gates.ts
 ├── rpc-client.ts
+├── deploy.ts              # Contract deployment service
+└── index.ts
+
+portal/lib/wallet/
+├── types.ts               # Wallet state types
+├── freighter.ts           # Freighter API integration
+└── index.ts
+
+portal/hooks/
+├── useFreighter.ts        # Wallet state hook
+├── useContractDeploy.ts   # Deployment workflow hook
 └── index.ts
 
 portal/app/api/contracts/
 ├── search/route.ts
+├── deploy/
+│   ├── simulate/route.ts  # Simulate deployment tx
+│   ├── submit/route.ts    # Submit signed tx
+│   └── status/[txHash]/route.ts  # Poll tx status
 └── [contractId]/
     ├── route.ts
     ├── calls/route.ts
@@ -1227,6 +1265,9 @@ portal/app/api/contracts/
 portal/app/contracts/
 ├── page.tsx
 ├── layout.tsx
+├── deploy/
+│   ├── page.tsx           # Deployment wizard page
+│   └── layout.tsx
 └── [contractId]/
     ├── page.tsx
     ├── layout.tsx
@@ -1244,6 +1285,10 @@ portal/components/contracts/
 ├── EventStream.tsx
 ├── AIExplanation.tsx
 ├── ExportButton.tsx
+├── WalletConnect.tsx      # Freighter wallet connection
+├── WasmUploader.tsx       # WASM file upload
+├── DeploymentWizard.tsx   # Multi-step deployment UI
+├── DeploymentStatus.tsx   # Progress and result display
 └── index.ts
 
 portal/app/pricing/
@@ -1271,6 +1316,82 @@ cd /opt/lumenquery-portal
 docker compose build portal
 docker compose up -d portal
 ```
+
+## Contract Deployment Feature
+
+### Overview
+Deploy Soroban smart contracts to the Stellar network directly from the browser using Freighter wallet for authentication and transaction signing.
+
+### How It Works
+1. **Connect Wallet**: User connects their Freighter browser wallet
+2. **Upload WASM**: User uploads compiled .wasm contract file (max 256KB)
+3. **Simulate**: Transaction is simulated to estimate fees
+4. **Sign Upload**: User signs transaction in Freighter to upload WASM
+5. **Sign Create**: User signs second transaction to create contract instance
+6. **Complete**: Contract ID is returned, linked to explorer
+
+### Pages
+| Route | Description |
+|-------|-------------|
+| /contracts | Explorer with "Deploy Contract" button |
+| /contracts/deploy | Deployment wizard with multi-step UI |
+
+### API Endpoints
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| /api/contracts/deploy/simulate | POST | Simulate deployment transaction |
+| /api/contracts/deploy/submit | POST | Submit signed transaction |
+| /api/contracts/deploy/status/[txHash] | GET | Poll transaction status |
+
+### Components
+| Component | Description |
+|-----------|-------------|
+| WalletConnect | Freighter wallet connection button |
+| WasmUploader | Drag-and-drop WASM file upload |
+| DeploymentWizard | Multi-step deployment flow |
+| DeploymentStatus | Progress indicator and results |
+
+### Hooks
+| Hook | Description |
+|------|-------------|
+| useFreighter | Wallet state management (connect, sign) |
+| useContractDeploy | Deployment workflow (simulate, submit, poll) |
+
+### Dependencies
+```json
+{
+  "@stellar/freighter-api": "^3.1.0",
+  "@stellar/stellar-sdk": "^12.3.0"
+}
+```
+
+### Security Features
+- All signing happens client-side in Freighter (no private keys stored)
+- WASM validation (magic bytes check, 256KB size limit)
+- Mainnet network enforcement
+- Rate limiting on API endpoints
+
+### WASM Validation
+- Magic bytes: `\0asm` (0x00 0x61 0x73 0x6d)
+- Maximum size: 256 KB
+- File extension: `.wasm`
+
+### RPC Configuration
+Uses public Soroban RPC with fallback:
+1. `https://mainnet.sorobanrpc.com` (primary)
+2. `https://soroban-rpc.mainnet.stellar.gateway.fm`
+3. Local RPC (fallback)
+
+### Error Handling
+| Error | User Message |
+|-------|--------------|
+| Freighter not installed | "Install Freighter wallet to deploy contracts" |
+| Wrong network | "Switch to Stellar Mainnet in Freighter" |
+| Invalid WASM | "Invalid WASM file format" |
+| WASM too large | "File exceeds 256KB limit" |
+| Insufficient balance | "Need X XLM for deployment fees" |
+| User rejected | "Transaction cancelled" |
+| Transaction failed | "Deployment failed: {error}" |
 
 ## Transaction Intelligence Documentation
 
