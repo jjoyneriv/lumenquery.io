@@ -1,26 +1,4 @@
 import Link from 'next/link';
-import { Metadata } from 'next';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-
-export const metadata: Metadata = {
-  title: 'Blog - LumenQuery | Stellar Blockchain Insights & Tutorials',
-  description: 'Explore tutorials, developer guides, and insights about Stellar blockchain, Soroban smart contracts, XLM cryptocurrency, and Web3 development from the LumenQuery team.',
-  keywords: ['Stellar blog', 'blockchain tutorials', 'Soroban development', 'XLM guides', 'Web3 tutorials', 'cryptocurrency development'],
-  alternates: {
-    canonical: 'https://lumenquery.io/blog',
-  },
-  openGraph: {
-    title: 'LumenQuery Blog - Stellar Blockchain Insights',
-    description: 'Tutorials, developer guides, and insights about Stellar blockchain and Soroban smart contracts.',
-    type: 'website',
-    url: 'https://lumenquery.io/blog',
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
 
 const posts = [
   {
@@ -121,49 +99,137 @@ const posts = [
   },
 ];
 
+// Get unique categories
+const categories = Array.from(new Set(posts.map(p => p.category)));
+
 export default function BlogPage() {
   return (
-    <div className="min-h-screen bg-white text-black">
-      <Header activePage="blog" />
+    <div className="space-y-6">
+      {/* Hero Card */}
+      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold mb-2">LumenQuery Blog</h1>
+            <p className="text-[#6A6A6A] text-sm sm:text-base">
+              Insights, tutorials, and updates from the LumenQuery team
+            </p>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-[#6A6A6A]">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+            </svg>
+            {posts.length} articles
+          </div>
+        </div>
+      </div>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
-        <header className="text-center mb-8 sm:mb-12 md:mb-16">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4">Blog</h1>
-          <p className="text-base sm:text-lg md:text-xl text-[#6A6A6A]">
-            Insights, tutorials, and updates from the LumenQuery team
-          </p>
-        </header>
+      {/* Categories */}
+      <div className="flex flex-wrap gap-2">
+        {categories.map((category) => (
+          <span
+            key={category}
+            className="px-3 py-1.5 rounded-lg bg-white border border-[#E6E7E9] text-xs font-medium text-[#6A6A6A]"
+          >
+            {category} ({posts.filter(p => p.category === category).length})
+          </span>
+        ))}
+      </div>
 
-        <section aria-label="Blog posts">
-          <div className="space-y-4 sm:space-y-6 md:space-y-8">
-            {posts.map((post) => (
-              <article key={post.slug} className="p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-[#E6E7E9] hover:border-[#2855FF] hover:shadow-lg transition-all">
-                <Link href={`/blog/${post.slug}`}>
-                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-                    <span className="px-2 sm:px-3 py-1 rounded-full bg-[rgba(40,85,255,0.1)] text-[#2855FF] text-xs font-medium">
+      {/* Featured Post */}
+      <Link
+        href={`/blog/${posts[0].slug}`}
+        className="block p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-gradient-to-r from-[#2855FF] to-[#1E44CC] text-white hover:shadow-lg transition-shadow"
+      >
+        <div className="flex items-center gap-2 mb-3">
+          <span className="px-2 py-0.5 rounded-full bg-white/20 text-white text-xs font-medium">
+            Featured
+          </span>
+          <span className="px-2 py-0.5 rounded-full bg-white/20 text-white text-xs font-medium">
+            {posts[0].category}
+          </span>
+        </div>
+        <h2 className="text-lg sm:text-xl font-bold mb-2">{posts[0].title}</h2>
+        <p className="text-white/80 text-sm mb-3 line-clamp-2">{posts[0].excerpt}</p>
+        <div className="flex items-center gap-3 text-xs text-white/60">
+          <time dateTime={posts[0].date}>{posts[0].date}</time>
+          <span>{posts[0].readTime}</span>
+        </div>
+      </Link>
+
+      {/* Recent Posts Grid */}
+      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
+        <h2 className="text-lg font-bold mb-4">Recent Articles</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {posts.slice(1, 5).map((post) => (
+            <Link
+              key={post.slug}
+              href={`/blog/${post.slug}`}
+              className="p-4 rounded-lg bg-[#F5F6F7] hover:bg-[#E6E7E9] transition-colors"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <span className="px-2 py-0.5 rounded-full bg-[#2855FF]/10 text-[#2855FF] text-xs font-medium">
+                  {post.category}
+                </span>
+                <span className="text-[#6A6A6A] text-xs">{post.readTime}</span>
+              </div>
+              <h3 className="font-semibold text-sm mb-1 line-clamp-2">{post.title}</h3>
+              <p className="text-xs text-[#6A6A6A] line-clamp-2">{post.excerpt}</p>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* All Posts */}
+      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
+        <h2 className="text-lg font-bold mb-4">All Articles</h2>
+        <div className="space-y-3">
+          {posts.slice(5).map((post) => (
+            <Link
+              key={post.slug}
+              href={`/blog/${post.slug}`}
+              className="block p-4 rounded-lg border border-[#E6E7E9] hover:border-[#2855FF] hover:shadow-sm transition-all"
+            >
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="px-2 py-0.5 rounded-full bg-[#2855FF]/10 text-[#2855FF] text-xs font-medium">
                       {post.category}
                     </span>
-                    <time dateTime={post.date} className="text-[#6A6A6A] text-xs sm:text-sm">{post.date}</time>
-                    <span className="text-[#6A6A6A] text-xs sm:text-sm hidden sm:inline">•</span>
-                    <span className="text-[#6A6A6A] text-xs sm:text-sm hidden sm:inline">{post.readTime}</span>
                   </div>
-                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-2 sm:mb-3 hover:text-[#2855FF] transition-colors">
-                    {post.title}
-                  </h2>
-                  <p className="text-[#6A6A6A] leading-relaxed text-sm sm:text-base line-clamp-3">
-                    {post.excerpt}
-                  </p>
-                  <div className="mt-3 sm:mt-4 text-[#2855FF] text-sm font-medium">
-                    Read more →
-                  </div>
-                </Link>
-              </article>
-            ))}
-          </div>
-        </section>
-      </main>
+                  <h3 className="font-semibold text-sm mb-1 truncate">{post.title}</h3>
+                  <p className="text-xs text-[#6A6A6A] line-clamp-1">{post.excerpt}</p>
+                </div>
+                <div className="flex items-center gap-3 text-xs text-[#6A6A6A] whitespace-nowrap">
+                  <time dateTime={post.date}>{post.date}</time>
+                  <span>{post.readTime}</span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
 
-      <Footer />
+      {/* CTA */}
+      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#2855FF] text-white">
+        <div className="text-center">
+          <h2 className="text-lg font-bold mb-2">Start Building on Stellar</h2>
+          <p className="text-white/80 text-sm mb-4">Get API access and start integrating with the Stellar network today.</p>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/auth/signup"
+              className="px-6 py-2 bg-white text-[#2855FF] rounded-lg font-medium text-sm hover:bg-gray-100 transition-colors"
+            >
+              Get API Key
+            </Link>
+            <Link
+              href="/docs"
+              className="px-6 py-2 bg-white/20 text-white rounded-lg font-medium text-sm hover:bg-white/30 transition-colors"
+            >
+              View Docs
+            </Link>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
