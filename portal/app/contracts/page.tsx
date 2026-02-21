@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { ContractSearch, ContractCard } from '@/components/contracts';
@@ -55,7 +56,18 @@ export default function ContractsPage() {
               Explore Soroban smart contracts with decoded calls, storage visualization,
               event streams, and AI-powered explanations.
             </p>
-            <ContractSearch />
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <ContractSearch />
+              <Link
+                href="/contracts/deploy"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#2855FF] text-white rounded-lg hover:bg-[#1e44cc] transition-colors whitespace-nowrap"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                Deploy Contract
+              </Link>
+            </div>
           </div>
         </section>
 
