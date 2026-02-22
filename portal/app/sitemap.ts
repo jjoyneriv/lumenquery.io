@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://lumenquery.io';
-  const today = new Date('2026-02-13');
+  const today = new Date('2026-02-22');
 
   // Core pages
   const corePages: MetadataRoute.Sitemap = [
@@ -102,9 +102,34 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Blog posts - ALL 12 posts with their actual publication dates
+  // Blog posts - ALL 16 posts with their actual publication dates
   const blogPosts: MetadataRoute.Sitemap = [
-    // 2026-02-13 posts (new SEO-optimized posts)
+    // 2026-02-22 posts (new Stellar RPC and use case posts)
+    {
+      url: `${baseUrl}/blog/soroban-to-stellar-rpc-rebrand`,
+      lastModified: new Date('2026-02-22'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/horizon-api-vs-stellar-rpc`,
+      lastModified: new Date('2026-02-22'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/stellar-5000-tps-roadmap-api-impact`,
+      lastModified: new Date('2026-02-22'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/horizon-rpc-use-cases-financial-apps-2026`,
+      lastModified: new Date('2026-02-22'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    // 2026-02-13 posts (SEO-optimized posts)
     {
       url: `${baseUrl}/blog/build-stellar-blockchain-explorer-horizon-api`,
       lastModified: new Date('2026-02-13'),

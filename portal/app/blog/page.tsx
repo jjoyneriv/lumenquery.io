@@ -2,6 +2,38 @@ import Link from 'next/link';
 
 const posts = [
   {
+    slug: 'soroban-to-stellar-rpc-rebrand',
+    title: 'From Soroban to Stellar RPC: What the Rebrand Means for Developers',
+    excerpt: 'Explore the recent shift from Soroban RPC to Stellar RPC, why SDF made the change, and how this unified data access strategy simplifies querying real-time network state and smart contract interactions.',
+    date: '2026-02-22',
+    readTime: '10 min read',
+    category: 'Developer Guide',
+  },
+  {
+    slug: 'horizon-api-vs-stellar-rpc',
+    title: 'Building Real-Time Apps on Stellar: Horizon API vs Stellar RPC',
+    excerpt: 'A comparative guide showing when to use Horizon (historical data, deep indexing) versus Stellar RPC (real-time state, transaction simulation), plus code snippets and practical use cases.',
+    date: '2026-02-22',
+    readTime: '12 min read',
+    category: 'Developer Guide',
+  },
+  {
+    slug: 'stellar-5000-tps-roadmap-api-impact',
+    title: "How Stellar's Roadmap to 5000 TPS Impacts Your API Integrations",
+    excerpt: "Break down SDF's scalability goals for ~5000 TPS and what changes developers should expect in Horizon and RPC infrastructure—including performance, redundancy, and future-proofing applications.",
+    date: '2026-02-22',
+    readTime: '11 min read',
+    category: 'Industry Insights',
+  },
+  {
+    slug: 'horizon-rpc-use-cases-financial-apps-2026',
+    title: 'Top 5 Horizon & RPC Use Cases for Financial Apps in 2026',
+    excerpt: 'Popular real-world use cases: cross-border payments, token issuance, DEX integration, real-time monitoring, and smart contract management—with real API patterns for each.',
+    date: '2026-02-22',
+    readTime: '13 min read',
+    category: 'Use Cases',
+  },
+  {
     slug: 'build-stellar-blockchain-explorer-horizon-api',
     title: 'How to Build a Stellar Blockchain Explorer Using Horizon API (Step-by-Step Guide)',
     excerpt: 'Build a fully functional Stellar blockchain explorer from scratch. Learn to fetch transactions, query accounts, parse operations, and display ledger data using the LumenQuery Horizon API.',

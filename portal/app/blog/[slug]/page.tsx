@@ -3995,6 +3995,1948 @@ For teams that want reliability without the operational overhead, consider using
 *Need production-ready Stellar infrastructure without the ops burden? [Try LumenQuery](/auth/signup)—fully managed with built-in monitoring and 99.9% uptime SLA.*
     `,
   },
+  'soroban-to-stellar-rpc-rebrand': {
+    title: 'From Soroban to Stellar RPC: What the Rebrand Means for Developers',
+    date: '2026-02-22',
+    readTime: '10 min read',
+    category: 'Developer Guide',
+    content: `
+The Stellar Development Foundation recently announced a significant change: Soroban RPC is now Stellar RPC. While this might seem like a simple rebrand, it reflects a deeper strategic shift in how developers access and interact with the Stellar network. Let's explore what this means for your applications and how to adapt.
+
+## Why the Rebrand?
+
+The transition from "Soroban RPC" to "Stellar RPC" isn't just cosmetic. It represents SDF's vision of a unified data access layer for the entire Stellar ecosystem.
+
+**The Old Model:**
+- Horizon API for traditional Stellar operations (payments, accounts, offers)
+- Soroban RPC for smart contract interactions
+- Two separate mental models, two sets of endpoints
+
+**The New Model:**
+- Stellar RPC as the unified interface for real-time network state
+- Horizon for historical data and deep indexing
+- Clear separation of concerns: real-time vs. historical
+
+### What SDF Says
+
+According to the Stellar roadmap, the unification aims to:
+
+1. **Simplify developer experience** - One RPC interface for real-time operations
+2. **Reduce infrastructure complexity** - Operators maintain fewer services
+3. **Enable faster innovation** - New features roll out to one service, not two
+4. **Improve performance** - Optimized specifically for real-time state queries
+
+## What's Actually Changing?
+
+### Endpoint Structure
+
+The RPC endpoint structure remains largely compatible, but the branding and some method names are evolving:
+
+\`\`\`javascript
+// Old approach
+const SOROBAN_RPC_URL = 'https://soroban-rpc.mainnet.stellar.org';
+
+// New unified approach
+const STELLAR_RPC_URL = 'https://stellar-rpc.mainnet.stellar.org';
+// Or via LumenQuery
+const STELLAR_RPC_URL = 'https://rpc.lumenquery.io';
+\`\`\`
+
+### Method Naming
+
+Core methods are being standardized:
+
+| Old Method | New Method | Purpose |
+|------------|------------|---------|
+| getHealth | getHealth | Server health check |
+| getLatestLedger | getLatestLedger | Current ledger info |
+| simulateTransaction | simulateTransaction | Tx simulation |
+| sendTransaction | sendTransaction | Submit transaction |
+| getTransaction | getTransaction | Tx status by hash |
+| getLedgerEntries | getLedgerEntries | Read state data |
+| getEvents | getEvents | Query events |
+
+Most methods remain unchanged—the focus is on consistency and future expansion.
+
+### New Capabilities
+
+The rebrand brings additional methods for unified access:
+
+\`\`\`javascript
+// New: Get account state directly via RPC
+const response = await fetch(STELLAR_RPC_URL, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    jsonrpc: '2.0',
+    id: 1,
+    method: 'getLedgerEntries',
+    params: {
+      keys: [
+        // Account ledger key
+        'AAAAAAAAAABVc2VyIGFjY291bnQga2V5...'
+      ]
+    }
+  })
+});
+
+// Real-time account balance without Horizon
+const { result } = await response.json();
+\`\`\`
+
+## Integrating Stellar RPC into Your Stack
+
+### Wallet Integration
+
+Wallets benefit significantly from unified RPC access:
+
+\`\`\`typescript
+// wallet/stellar-rpc-client.ts
+const STELLAR_RPC = 'https://rpc.lumenquery.io';
+
+interface RpcClient {
+  getLatestLedger(): Promise<LatestLedger>;
+  simulateTransaction(xdr: string): Promise<SimulateResult>;
+  sendTransaction(xdr: string): Promise<SendResult>;
+  getTransaction(hash: string): Promise<TransactionStatus>;
+}
+
+export async function createRpcClient(apiKey: string): Promise<RpcClient> {
+  const call = async (method: string, params: any = {}) => {
+    const response = await fetch(STELLAR_RPC, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': apiKey,
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: Date.now(),
+        method,
+        params,
+      }),
+    });
+
+    const data = await response.json();
+    if (data.error) throw new Error(data.error.message);
+    return data.result;
+  };
+
+  return {
+    getLatestLedger: () => call('getLatestLedger'),
+    simulateTransaction: (xdr) => call('simulateTransaction', { transaction: xdr }),
+    sendTransaction: (xdr) => call('sendTransaction', { transaction: xdr }),
+    getTransaction: (hash) => call('getTransaction', { hash }),
+  };
+}
+\`\`\`
+
+### Dashboard Integration
+
+Real-time dashboards can leverage Stellar RPC for live network state:
+
+\`\`\`typescript
+// components/NetworkStatus.tsx
+'use client';
+
+import { useEffect, useState } from 'react';
+
+interface NetworkState {
+  ledger: number;
+  protocolVersion: number;
+  timestamp: number;
+}
+
+export function NetworkStatus() {
+  const [state, setState] = useState<NetworkState | null>(null);
+
+  useEffect(() => {
+    const fetchState = async () => {
+      const response = await fetch('/api/stellar-rpc', {
+        method: 'POST',
+        body: JSON.stringify({ method: 'getLatestLedger' }),
+      });
+      const { result } = await response.json();
+      setState({
+        ledger: result.sequence,
+        protocolVersion: result.protocolVersion,
+        timestamp: Date.now(),
+      });
+    };
+
+    fetchState();
+    const interval = setInterval(fetchState, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (!state) return <div>Loading...</div>;
+
+  return (
+    <div className="grid grid-cols-3 gap-4">
+      <div className="p-4 bg-white rounded-lg shadow">
+        <div className="text-sm text-gray-500">Latest Ledger</div>
+        <div className="text-2xl font-bold">{state.ledger.toLocaleString()}</div>
+      </div>
+      <div className="p-4 bg-white rounded-lg shadow">
+        <div className="text-sm text-gray-500">Protocol</div>
+        <div className="text-2xl font-bold">v{state.protocolVersion}</div>
+      </div>
+      <div className="p-4 bg-white rounded-lg shadow">
+        <div className="text-sm text-gray-500">Updated</div>
+        <div className="text-2xl font-bold">
+          {new Date(state.timestamp).toLocaleTimeString()}
+        </div>
+      </div>
+    </div>
+  );
+}
+\`\`\`
+
+### Monitoring Tools
+
+For operations teams monitoring Stellar infrastructure:
+
+\`\`\`typescript
+// monitoring/health-checker.ts
+interface HealthStatus {
+  rpc: 'healthy' | 'degraded' | 'down';
+  latency: number;
+  ledgerLag: number;
+}
+
+export async function checkStellarRpcHealth(
+  rpcUrl: string
+): Promise<HealthStatus> {
+  const start = Date.now();
+
+  try {
+    // Check basic health
+    const healthResponse = await fetch(rpcUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'getHealth',
+      }),
+    });
+
+    const latency = Date.now() - start;
+    const { result } = await healthResponse.json();
+
+    if (result.status !== 'healthy') {
+      return { rpc: 'degraded', latency, ledgerLag: -1 };
+    }
+
+    // Check ledger freshness
+    const ledgerResponse = await fetch(rpcUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 2,
+        method: 'getLatestLedger',
+      }),
+    });
+
+    const { result: ledger } = await ledgerResponse.json();
+    const ledgerAge = Date.now() / 1000 - ledger.timestamp;
+
+    return {
+      rpc: ledgerAge < 10 ? 'healthy' : 'degraded',
+      latency,
+      ledgerLag: Math.round(ledgerAge),
+    };
+  } catch (error) {
+    return { rpc: 'down', latency: Date.now() - start, ledgerLag: -1 };
+  }
+}
+\`\`\`
+
+## Migration Checklist
+
+If you're currently using Soroban RPC, here's your migration path:
+
+### 1. Update Endpoint URLs
+
+\`\`\`javascript
+// Before
+const RPC_URL = process.env.SOROBAN_RPC_URL;
+
+// After
+const RPC_URL = process.env.STELLAR_RPC_URL;
+\`\`\`
+
+### 2. Update Environment Variables
+
+\`\`\`bash
+# .env
+# Before
+SOROBAN_RPC_URL=https://soroban-rpc.mainnet.stellar.org
+
+# After
+STELLAR_RPC_URL=https://rpc.lumenquery.io
+\`\`\`
+
+### 3. Review Method Names
+
+Most methods are unchanged, but verify against the latest documentation for any deprecations.
+
+### 4. Update SDK Versions
+
+\`\`\`bash
+npm update @stellar/stellar-sdk
+\`\`\`
+
+The latest SDK versions support both naming conventions during the transition period.
+
+## Best Practices for Unified RPC
+
+### Use Stellar RPC for Real-Time, Horizon for Historical
+
+\`\`\`typescript
+// Real-time: Use Stellar RPC
+async function getCurrentLedger() {
+  return await stellarRpc.getLatestLedger();
+}
+
+// Historical: Use Horizon
+async function getTransactionHistory(account: string) {
+  return await horizon.transactions()
+    .forAccount(account)
+    .order('desc')
+    .limit(100)
+    .call();
+}
+\`\`\`
+
+### Implement Graceful Fallbacks
+
+\`\`\`typescript
+async function getAccountBalance(accountId: string) {
+  try {
+    // Try Stellar RPC first (faster for real-time)
+    const entries = await stellarRpc.getLedgerEntries([
+      createAccountKey(accountId)
+    ]);
+    return parseBalance(entries);
+  } catch (error) {
+    // Fall back to Horizon
+    const account = await horizon.loadAccount(accountId);
+    return account.balances;
+  }
+}
+\`\`\`
+
+### Cache Appropriately
+
+\`\`\`typescript
+const cache = new Map<string, { data: any; expires: number }>();
+
+async function cachedRpcCall(method: string, params: any, ttl = 5000) {
+  const key = \`\${method}:\${JSON.stringify(params)}\`;
+  const cached = cache.get(key);
+
+  if (cached && cached.expires > Date.now()) {
+    return cached.data;
+  }
+
+  const result = await stellarRpc.call(method, params);
+  cache.set(key, { data: result, expires: Date.now() + ttl });
+  return result;
+}
+\`\`\`
+
+## Conclusion
+
+The Soroban to Stellar RPC rebrand reflects a maturing ecosystem with clearer architectural boundaries. For developers:
+
+1. **Real-time operations** → Stellar RPC
+2. **Historical queries** → Horizon API
+3. **Smart contracts** → Both (Stellar RPC for invocation, Horizon for indexed history)
+
+The transition is designed to be smooth, with backwards compatibility during the migration period. Start updating your endpoints today to take advantage of the unified infrastructure.
+
+---
+
+*Ready to use the new Stellar RPC? [LumenQuery](/auth/signup) provides fully managed Stellar RPC with 99.9% uptime, automatic failover, and built-in rate limiting.*
+    `,
+  },
+  'horizon-api-vs-stellar-rpc': {
+    title: 'Building Real-Time Apps on Stellar: Horizon API vs Stellar RPC',
+    date: '2026-02-22',
+    readTime: '12 min read',
+    category: 'Developer Guide',
+    content: `
+When building on Stellar, developers face a crucial architectural decision: when to use Horizon API versus Stellar RPC. Both provide access to the Stellar network, but they're optimized for different use cases. This guide breaks down the differences with practical examples.
+
+## Understanding the Two Services
+
+### Horizon API
+
+Horizon is Stellar's REST API server. It maintains a full index of the Stellar network's history and provides:
+
+- **RESTful endpoints** for accounts, transactions, operations, effects
+- **Historical queries** with pagination and filtering
+- **Real-time streaming** via Server-Sent Events (SSE)
+- **Multi-network support** (mainnet, testnet, futurenet)
+
+### Stellar RPC
+
+Stellar RPC (formerly Soroban RPC) is a JSON-RPC 2.0 service optimized for:
+
+- **Real-time state queries** without full historical indexing
+- **Transaction simulation** before submission
+- **Smart contract interactions** (Soroban)
+- **Lightweight deployment** with minimal storage requirements
+
+## When to Use Each
+
+| Use Case | Horizon | Stellar RPC | Why |
+|----------|---------|-------------|-----|
+| Get account balances | ✓ | ✓ | Both work; Horizon has richer data |
+| Transaction history | ✓ | ✗ | Horizon indexes all history |
+| Submit payments | ✓ | ✓ | Both can submit; RPC is faster |
+| Invoke smart contracts | ✗ | ✓ | RPC has simulation support |
+| Query contract state | ✗ | ✓ | RPC reads ledger entries directly |
+| Stream transactions | ✓ | ✗ | Horizon has SSE streaming |
+| Get fee estimates | ✓ | ✓ | RPC has getFeeStats |
+| Build explorers | ✓ | ✗ | Horizon has complete history |
+| Build wallets | ✓ | ✓ | Use both for full functionality |
+
+## Practical Code Examples
+
+### Example 1: Getting Account Balance
+
+**Using Horizon (REST)**
+
+\`\`\`typescript
+// horizon-client.ts
+const HORIZON_URL = 'https://api.lumenquery.io';
+
+async function getAccountBalances(accountId: string) {
+  const response = await fetch(
+    \`\${HORIZON_URL}/accounts/\${accountId}\`,
+    {
+      headers: { 'X-API-Key': process.env.LUMENQUERY_API_KEY! }
+    }
+  );
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      return { balances: [], exists: false };
+    }
+    throw new Error(\`Horizon error: \${response.status}\`);
+  }
+
+  const account = await response.json();
+  return {
+    balances: account.balances.map((b: any) => ({
+      asset: b.asset_type === 'native' ? 'XLM' : \`\${b.asset_code}:\${b.asset_issuer}\`,
+      balance: b.balance,
+    })),
+    exists: true,
+    sequence: account.sequence,
+    thresholds: account.thresholds,
+  };
+}
+\`\`\`
+
+**Using Stellar RPC (JSON-RPC)**
+
+\`\`\`typescript
+// stellar-rpc-client.ts
+import { Address, xdr } from '@stellar/stellar-sdk';
+
+const STELLAR_RPC_URL = 'https://rpc.lumenquery.io';
+
+async function getAccountBalancesRpc(accountId: string) {
+  // Create the account ledger key
+  const accountKey = xdr.LedgerKey.account(
+    new xdr.LedgerKeyAccount({
+      accountId: Address.fromString(accountId).toScAddress().accountId(),
+    })
+  ).toXDR('base64');
+
+  const response = await fetch(STELLAR_RPC_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-API-Key': process.env.LUMENQUERY_API_KEY!,
+    },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'getLedgerEntries',
+      params: { keys: [accountKey] },
+    }),
+  });
+
+  const { result } = await response.json();
+
+  if (!result.entries || result.entries.length === 0) {
+    return { balances: [], exists: false };
+  }
+
+  // Parse the XDR response
+  const entry = xdr.LedgerEntryData.fromXDR(
+    result.entries[0].xdr,
+    'base64'
+  );
+
+  const account = entry.account();
+  return {
+    balances: [{
+      asset: 'XLM',
+      balance: (BigInt(account.balance().toString()) / 10000000n).toString()
+    }],
+    exists: true,
+  };
+}
+\`\`\`
+
+**Verdict:** Horizon is easier for account data—it returns JSON directly. Use RPC when you need raw ledger state or are already in a Soroban context.
+
+### Example 2: Transaction History
+
+**Using Horizon (the only option)**
+
+\`\`\`typescript
+interface Transaction {
+  id: string;
+  hash: string;
+  created_at: string;
+  source_account: string;
+  fee_charged: string;
+  operation_count: number;
+  successful: boolean;
+  memo?: string;
+}
+
+async function getTransactionHistory(
+  accountId: string,
+  options: { limit?: number; cursor?: string } = {}
+): Promise<{ transactions: Transaction[]; nextCursor: string | null }> {
+  const limit = options.limit || 20;
+  const cursor = options.cursor || '';
+
+  const url = new URL(\`\${HORIZON_URL}/accounts/\${accountId}/transactions\`);
+  url.searchParams.set('limit', limit.toString());
+  url.searchParams.set('order', 'desc');
+  if (cursor) url.searchParams.set('cursor', cursor);
+
+  const response = await fetch(url.toString(), {
+    headers: { 'X-API-Key': process.env.LUMENQUERY_API_KEY! }
+  });
+
+  const data = await response.json();
+  const records = data._embedded?.records || [];
+
+  return {
+    transactions: records.map((tx: any) => ({
+      id: tx.id,
+      hash: tx.hash,
+      created_at: tx.created_at,
+      source_account: tx.source_account,
+      fee_charged: tx.fee_charged,
+      operation_count: tx.operation_count,
+      successful: tx.successful,
+      memo: tx.memo,
+    })),
+    nextCursor: records.length === limit ? records[records.length - 1].paging_token : null,
+  };
+}
+
+// Usage with pagination
+async function getAllTransactions(accountId: string) {
+  const allTransactions: Transaction[] = [];
+  let cursor: string | null = null;
+
+  do {
+    const result = await getTransactionHistory(accountId, {
+      limit: 200,
+      cursor: cursor || undefined
+    });
+    allTransactions.push(...result.transactions);
+    cursor = result.nextCursor;
+  } while (cursor);
+
+  return allTransactions;
+}
+\`\`\`
+
+**Verdict:** Stellar RPC doesn't index transaction history—use Horizon for any historical queries.
+
+### Example 3: Submitting a Payment
+
+**Using Horizon**
+
+\`\`\`typescript
+import { Keypair, Networks, Operation, TransactionBuilder } from '@stellar/stellar-sdk';
+
+async function submitPaymentViaHorizon(
+  sourceKeypair: Keypair,
+  destination: string,
+  amount: string
+) {
+  // Load account to get sequence number
+  const accountResponse = await fetch(
+    \`\${HORIZON_URL}/accounts/\${sourceKeypair.publicKey()}\`,
+    { headers: { 'X-API-Key': process.env.LUMENQUERY_API_KEY! } }
+  );
+  const sourceAccount = await accountResponse.json();
+
+  // Build transaction
+  const transaction = new TransactionBuilder(
+    {
+      accountId: () => sourceAccount.id,
+      sequenceNumber: () => sourceAccount.sequence,
+      incrementSequenceNumber: () => {},
+    },
+    {
+      fee: '100',
+      networkPassphrase: Networks.PUBLIC,
+    }
+  )
+    .addOperation(
+      Operation.payment({
+        destination,
+        asset: Asset.native(),
+        amount,
+      })
+    )
+    .setTimeout(30)
+    .build();
+
+  transaction.sign(sourceKeypair);
+
+  // Submit via Horizon
+  const submitResponse = await fetch(\`\${HORIZON_URL}/transactions\`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-API-Key': process.env.LUMENQUERY_API_KEY!,
+    },
+    body: \`tx=\${encodeURIComponent(transaction.toXDR())}\`,
+  });
+
+  return submitResponse.json();
+}
+\`\`\`
+
+**Using Stellar RPC**
+
+\`\`\`typescript
+async function submitPaymentViaRpc(signedXdr: string) {
+  const response = await fetch(STELLAR_RPC_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-API-Key': process.env.LUMENQUERY_API_KEY!,
+    },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'sendTransaction',
+      params: { transaction: signedXdr },
+    }),
+  });
+
+  const { result } = await response.json();
+  return result;
+}
+
+// Poll for completion
+async function waitForTransaction(hash: string, timeoutMs = 30000) {
+  const start = Date.now();
+
+  while (Date.now() - start < timeoutMs) {
+    const response = await fetch(STELLAR_RPC_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': process.env.LUMENQUERY_API_KEY!,
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'getTransaction',
+        params: { hash },
+      }),
+    });
+
+    const { result } = await response.json();
+
+    if (result.status === 'SUCCESS') return { success: true, result };
+    if (result.status === 'FAILED') return { success: false, result };
+
+    await new Promise(r => setTimeout(r, 1000));
+  }
+
+  throw new Error('Transaction timeout');
+}
+\`\`\`
+
+**Verdict:** Both work. RPC is slightly faster for submission and better for Soroban transactions. Horizon gives richer response data.
+
+### Example 4: Invoking a Smart Contract
+
+**Using Stellar RPC (the only option)**
+
+\`\`\`typescript
+import { Contract, Address, nativeToScVal, Networks } from '@stellar/stellar-sdk';
+
+async function invokeContract(
+  contractId: string,
+  method: string,
+  args: any[],
+  sourceKeypair: Keypair
+) {
+  const contract = new Contract(contractId);
+
+  // Build the invocation
+  const operation = contract.call(
+    method,
+    ...args.map(arg => nativeToScVal(arg))
+  );
+
+  // Get account for sequence
+  const accountResponse = await fetch(STELLAR_RPC_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'getLedgerEntries',
+      params: { keys: [createAccountKey(sourceKeypair.publicKey())] },
+    }),
+  });
+
+  // Build transaction
+  const transaction = new TransactionBuilder(sourceAccount, {
+    fee: '1000000',
+    networkPassphrase: Networks.PUBLIC,
+  })
+    .addOperation(operation)
+    .setTimeout(30)
+    .build();
+
+  // Simulate first
+  const simResponse = await fetch(STELLAR_RPC_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'simulateTransaction',
+      params: { transaction: transaction.toXDR() },
+    }),
+  });
+
+  const { result: simulation } = await simResponse.json();
+
+  if (simulation.error) {
+    throw new Error(\`Simulation failed: \${simulation.error}\`);
+  }
+
+  // Prepare transaction with simulation results
+  const preparedTx = SorobanRpc.assembleTransaction(
+    transaction,
+    simulation
+  );
+
+  preparedTx.sign(sourceKeypair);
+
+  // Submit
+  const submitResponse = await fetch(STELLAR_RPC_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'sendTransaction',
+      params: { transaction: preparedTx.toXDR() },
+    }),
+  });
+
+  return submitResponse.json();
+}
+\`\`\`
+
+**Verdict:** Smart contracts require Stellar RPC for simulation. Horizon can index the results after the fact.
+
+### Example 5: Real-Time Streaming
+
+**Using Horizon SSE**
+
+\`\`\`typescript
+function streamTransactions(
+  accountId: string,
+  onTransaction: (tx: Transaction) => void,
+  onError: (err: Error) => void
+) {
+  const url = \`\${HORIZON_URL}/accounts/\${accountId}/transactions?cursor=now\`;
+
+  const eventSource = new EventSource(url);
+
+  eventSource.onmessage = (event) => {
+    const tx = JSON.parse(event.data);
+    onTransaction(tx);
+  };
+
+  eventSource.onerror = (error) => {
+    onError(new Error('Stream connection error'));
+  };
+
+  return () => eventSource.close();
+}
+
+// Usage
+const stopStreaming = streamTransactions(
+  'GABC...XYZ',
+  (tx) => console.log('New transaction:', tx.hash),
+  (err) => console.error('Stream error:', err)
+);
+
+// Later: stopStreaming();
+\`\`\`
+
+**Verdict:** Horizon is the only option for streaming. Stellar RPC is pull-based.
+
+## Architecture Patterns
+
+### Pattern 1: Wallet Application
+
+\`\`\`
+┌─────────────────────────────────────────┐
+│           Wallet Frontend               │
+├─────────────────────────────────────────┤
+│                                         │
+│  ┌─────────────┐    ┌───────────────┐   │
+│  │   Horizon   │    │  Stellar RPC  │   │
+│  └──────┬──────┘    └───────┬───────┘   │
+│         │                   │           │
+│         ▼                   ▼           │
+│  • Account info       • Simulate tx     │
+│  • Tx history         • Submit tx       │
+│  • Stream updates     • Contract calls  │
+│  • Asset metadata     • Fee estimates   │
+│                                         │
+└─────────────────────────────────────────┘
+\`\`\`
+
+### Pattern 2: DeFi Application
+
+\`\`\`
+┌─────────────────────────────────────────┐
+│           DeFi Protocol UI              │
+├─────────────────────────────────────────┤
+│                                         │
+│  Stellar RPC (Primary)                  │
+│  • Contract state queries               │
+│  • Transaction simulation               │
+│  • Swap execution                       │
+│  • LP position management               │
+│                                         │
+│  Horizon (Secondary)                    │
+│  • Trade history                        │
+│  • Volume analytics                     │
+│  • Price charts (historical)            │
+│                                         │
+└─────────────────────────────────────────┘
+\`\`\`
+
+### Pattern 3: Block Explorer
+
+\`\`\`
+┌─────────────────────────────────────────┐
+│           Block Explorer                │
+├─────────────────────────────────────────┤
+│                                         │
+│  Horizon (Primary)                      │
+│  • All historical data                  │
+│  • Transaction search                   │
+│  • Account lookup                       │
+│  • Operations & effects                 │
+│  • Asset issuance history               │
+│                                         │
+│  Stellar RPC (Secondary)                │
+│  • Contract code viewer                 │
+│  • Contract state inspector             │
+│  • Real-time ledger info                │
+│                                         │
+└─────────────────────────────────────────┘
+\`\`\`
+
+## Performance Considerations
+
+| Metric | Horizon | Stellar RPC |
+|--------|---------|-------------|
+| Cold query latency | 50-200ms | 20-50ms |
+| State query depth | Full history | Current + recent |
+| Storage requirements | 1TB+ | ~50GB |
+| Memory usage | 8-16GB | 2-4GB |
+| Concurrent connections | ~1000 | ~5000 |
+
+## Conclusion
+
+Choose your data access layer based on your use case:
+
+- **Building a wallet?** Use both—Horizon for history/streaming, RPC for transactions
+- **Building DeFi?** Primarily Stellar RPC, with Horizon for analytics
+- **Building an explorer?** Primarily Horizon, with RPC for contract inspection
+- **Building monitoring tools?** Stellar RPC for real-time, Horizon for historical metrics
+
+The best applications use both services strategically, leveraging each for its strengths.
+
+---
+
+*Need both Horizon and Stellar RPC with a single API key? [LumenQuery](/auth/signup) provides unified access to the complete Stellar infrastructure stack.*
+    `,
+  },
+  'stellar-5000-tps-roadmap-api-impact': {
+    title: "How Stellar's Roadmap to 5000 TPS Impacts Your API Integrations",
+    date: '2026-02-22',
+    readTime: '11 min read',
+    category: 'Industry Insights',
+    content: `
+The Stellar Development Foundation has outlined ambitious scalability goals: achieving approximately 5,000 transactions per second (TPS) on mainnet. This represents a 50x increase from current capacity. Here's what this means for developers building on Stellar's API infrastructure.
+
+## Current State vs. Future State
+
+### Where We Are Today
+
+Stellar mainnet currently processes around 100-200 TPS during peak periods, with theoretical capacity around 1,000 TPS. The network handles:
+
+- ~50 million monthly transactions
+- ~5-second ledger close times
+- ~1MB maximum ledger size
+- Protocol version 21 (Soroban-enabled)
+
+### Where We're Heading
+
+The SDF's scalability roadmap targets:
+
+- **5,000+ TPS sustained throughput**
+- **Sub-second finality** (potential future enhancement)
+- **Parallel transaction processing**
+- **Optimized Soroban execution**
+
+## Technical Changes Driving Scale
+
+### 1. Parallel Transaction Validation
+
+Current Stellar processes transactions sequentially within a ledger. The new architecture introduces:
+
+\`\`\`
+Current Model:
+┌─────────────────────────────────────────┐
+│ Ledger N                                │
+│ Tx1 → Tx2 → Tx3 → ... → TxN (sequential)│
+└─────────────────────────────────────────┘
+
+Future Model:
+┌─────────────────────────────────────────┐
+│ Ledger N                                │
+│ ┌────────┐ ┌────────┐ ┌────────┐        │
+│ │ Shard 1│ │ Shard 2│ │ Shard 3│ (parallel)
+│ │Tx1,Tx4 │ │Tx2,Tx5 │ │Tx3,Tx6 │        │
+│ └────────┘ └────────┘ └────────┘        │
+└─────────────────────────────────────────┘
+\`\`\`
+
+**API Impact:** Transaction ordering within a ledger may become non-deterministic for independent transactions.
+
+### 2. Expanded Ledger Capacity
+
+To support 5,000 TPS with 5-second ledgers, each ledger must contain ~25,000 transactions:
+
+| Metric | Current | 5K TPS Target |
+|--------|---------|---------------|
+| Transactions/ledger | ~500-1000 | ~25,000 |
+| Ledger size | ~1MB | ~10-20MB |
+| Operations/ledger | ~2000 | ~100,000 |
+
+**API Impact:**
+- Horizon pagination limits may change
+- Larger response payloads for ledger queries
+- Increased streaming volume
+
+### 3. Optimized Soroban VM
+
+Smart contract execution is being optimized with:
+
+- **Parallel contract execution** for non-conflicting calls
+- **Improved gas metering** for more predictable costs
+- **Enhanced state access patterns** for faster reads
+
+**API Impact:** simulateTransaction responses will include new fields for parallel execution hints.
+
+## Preparing Your API Integrations
+
+### Update 1: Handle Increased Data Volume
+
+**Current approach (may break):**
+
+\`\`\`typescript
+// This might timeout or OOM at 5K TPS
+async function getAllTransactions(ledger: number) {
+  const response = await fetch(
+    \`\${HORIZON_URL}/ledgers/\${ledger}/transactions?limit=200\`
+  );
+  const data = await response.json();
+
+  // Simple pagination - loads everything into memory
+  let allTxs = data._embedded.records;
+  let nextUrl = data._links.next?.href;
+
+  while (nextUrl) {
+    const next = await fetch(nextUrl);
+    const nextData = await next.json();
+    allTxs = allTxs.concat(nextData._embedded.records);
+    nextUrl = nextData._links.next?.href;
+  }
+
+  return allTxs; // Could be 25,000+ records!
+}
+\`\`\`
+
+**Future-proof approach:**
+
+\`\`\`typescript
+// Stream-based processing
+async function* streamTransactions(ledger: number) {
+  let cursor = '';
+
+  while (true) {
+    const url = new URL(\`\${HORIZON_URL}/ledgers/\${ledger}/transactions\`);
+    url.searchParams.set('limit', '200');
+    url.searchParams.set('order', 'asc');
+    if (cursor) url.searchParams.set('cursor', cursor);
+
+    const response = await fetch(url);
+    const data = await response.json();
+    const records = data._embedded.records;
+
+    for (const tx of records) {
+      yield tx; // Process one at a time
+    }
+
+    if (records.length < 200) break;
+    cursor = records[records.length - 1].paging_token;
+  }
+}
+
+// Usage - memory efficient
+async function processLedger(ledger: number) {
+  for await (const tx of streamTransactions(ledger)) {
+    await processSingleTransaction(tx);
+  }
+}
+\`\`\`
+
+### Update 2: Implement Robust Connection Pooling
+
+At 5K TPS, your application will need efficient connection management:
+
+\`\`\`typescript
+// connection-pool.ts
+import { Agent } from 'https';
+
+const horizonAgent = new Agent({
+  keepAlive: true,
+  maxSockets: 50,         // Increase from default 5
+  maxFreeSockets: 10,
+  timeout: 30000,
+});
+
+const rpcAgent = new Agent({
+  keepAlive: true,
+  maxSockets: 100,        // Higher for RPC due to simulation load
+  maxFreeSockets: 20,
+  timeout: 60000,         // Longer for complex simulations
+});
+
+export async function horizonFetch(path: string, options: RequestInit = {}) {
+  return fetch(\`\${HORIZON_URL}\${path}\`, {
+    ...options,
+    // @ts-ignore - Node.js specific
+    agent: horizonAgent,
+    headers: {
+      'X-API-Key': process.env.LUMENQUERY_API_KEY!,
+      ...options.headers,
+    },
+  });
+}
+
+export async function rpcFetch(method: string, params: any) {
+  return fetch(STELLAR_RPC_URL, {
+    method: 'POST',
+    // @ts-ignore - Node.js specific
+    agent: rpcAgent,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-API-Key': process.env.LUMENQUERY_API_KEY!,
+    },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: Date.now(),
+      method,
+      params,
+    }),
+  });
+}
+\`\`\`
+
+### Update 3: Prepare for New Response Fields
+
+The Stellar RPC will include new fields for scalability features:
+
+\`\`\`typescript
+// Future simulateTransaction response
+interface SimulateTransactionResult {
+  // Existing fields
+  transactionData: string;
+  minResourceFee: string;
+  events: string[];
+
+  // New scalability-related fields (coming soon)
+  parallelizationHint?: {
+    conflictingAccounts: string[];
+    conflictingContracts: string[];
+    canParallelize: boolean;
+  };
+
+  executionMetrics?: {
+    cpuInstructions: number;
+    memoryBytes: number;
+    estimatedWallTime: number;  // New: actual execution time estimate
+  };
+}
+
+// Future-proof parsing
+function parseSimulation(result: any): SimulateTransactionResult {
+  return {
+    transactionData: result.transactionData,
+    minResourceFee: result.minResourceFee,
+    events: result.events || [],
+    // Gracefully handle new fields
+    parallelizationHint: result.parallelizationHint,
+    executionMetrics: result.executionMetrics,
+  };
+}
+\`\`\`
+
+### Update 4: Implement Adaptive Rate Limiting
+
+With increased throughput, API providers may adjust rate limits:
+
+\`\`\`typescript
+// adaptive-rate-limiter.ts
+class AdaptiveRateLimiter {
+  private tokens: number;
+  private maxTokens: number;
+  private refillRate: number;
+  private lastRefill: number;
+  private backoffMultiplier: number = 1;
+
+  constructor(maxTokens = 100, refillRate = 10) {
+    this.tokens = maxTokens;
+    this.maxTokens = maxTokens;
+    this.refillRate = refillRate;
+    this.lastRefill = Date.now();
+  }
+
+  private refill() {
+    const now = Date.now();
+    const elapsed = (now - this.lastRefill) / 1000;
+    this.tokens = Math.min(
+      this.maxTokens,
+      this.tokens + elapsed * this.refillRate
+    );
+    this.lastRefill = now;
+  }
+
+  async acquire(): Promise<void> {
+    this.refill();
+
+    if (this.tokens < 1) {
+      const waitTime = ((1 - this.tokens) / this.refillRate) * 1000;
+      await new Promise(r => setTimeout(r, waitTime * this.backoffMultiplier));
+      this.refill();
+    }
+
+    this.tokens -= 1;
+  }
+
+  // Call when receiving 429 responses
+  backoff() {
+    this.backoffMultiplier = Math.min(this.backoffMultiplier * 2, 32);
+  }
+
+  // Call on successful requests
+  reset() {
+    this.backoffMultiplier = 1;
+  }
+}
+
+const limiter = new AdaptiveRateLimiter();
+
+export async function rateLimitedFetch(url: string, options?: RequestInit) {
+  await limiter.acquire();
+
+  const response = await fetch(url, options);
+
+  if (response.status === 429) {
+    limiter.backoff();
+    throw new Error('Rate limited');
+  }
+
+  limiter.reset();
+  return response;
+}
+\`\`\`
+
+## Infrastructure Implications
+
+### Running Your Own Nodes
+
+At 5K TPS, node requirements increase significantly:
+
+| Component | Current | 5K TPS Ready |
+|-----------|---------|--------------|
+| CPU | 4 cores | 16+ cores |
+| RAM | 16GB | 64GB+ |
+| Storage | 2TB SSD | 10TB NVMe |
+| Network | 100Mbps | 1Gbps+ |
+| Horizon DB | 1TB | 5TB+ |
+
+### Managed Infrastructure Benefits
+
+For most teams, managed infrastructure becomes more attractive at scale:
+
+**LumenQuery handles:**
+- Automatic scaling during traffic spikes
+- Multi-region redundancy
+- Database optimization for large datasets
+- Rate limit management
+- Automatic protocol upgrades
+
+\`\`\`typescript
+// Simple configuration for managed infrastructure
+const config = {
+  horizonUrl: 'https://api.lumenquery.io',
+  rpcUrl: 'https://rpc.lumenquery.io',
+  apiKey: process.env.LUMENQUERY_API_KEY,
+
+  // Automatic handling of:
+  // - Connection pooling
+  // - Retry logic
+  // - Regional failover
+  // - Rate limit compliance
+};
+\`\`\`
+
+## Timeline and Migration Path
+
+### Expected Rollout
+
+| Phase | Timeline | Changes |
+|-------|----------|---------|
+| Phase 1 | Q2 2026 | Increased ledger size (2MB → 5MB) |
+| Phase 2 | Q3 2026 | Parallel validation (subset of txs) |
+| Phase 3 | Q4 2026 | Full parallel processing |
+| Phase 4 | 2027 | Sub-second finality exploration |
+
+### Migration Checklist
+
+✅ **Now:**
+- Implement streaming/pagination for large result sets
+- Add connection pooling
+- Handle unknown response fields gracefully
+
+✅ **Q2 2026:**
+- Test with larger ledger sizes
+- Verify memory usage under load
+- Update pagination defaults
+
+✅ **Q3 2026:**
+- Adapt to potential transaction ordering changes
+- Implement parallel-aware processing logic
+- Update monitoring thresholds
+
+## Conclusion
+
+Stellar's path to 5,000 TPS is an exciting development that will unlock new use cases—high-frequency trading, mass micropayments, and enterprise-scale applications. Prepare your integrations now by:
+
+1. **Designing for volume** - Stream data, don't batch
+2. **Building resilience** - Connection pools, rate limiting, retries
+3. **Staying flexible** - Handle new fields, changing limits
+4. **Considering managed infrastructure** - Focus on your app, not ops
+
+The future of Stellar is high-throughput, and your applications should be ready.
+
+---
+
+*Want infrastructure that scales with Stellar? [LumenQuery](/auth/signup) is built for the 5K TPS future—automatic scaling, global distribution, and zero ops burden.*
+    `,
+  },
+  'horizon-rpc-use-cases-financial-apps-2026': {
+    title: 'Top 5 Horizon & RPC Use Cases for Financial Apps in 2026',
+    date: '2026-02-22',
+    readTime: '13 min read',
+    category: 'Use Cases',
+    content: `
+Stellar's combination of Horizon API and Stellar RPC powers some of the most innovative financial applications in the blockchain space. Here are the top five use cases we're seeing in 2026, complete with real API patterns you can implement today.
+
+## 1. Cross-Border Payments
+
+The original Stellar use case remains one of the strongest. Cross-border payment platforms use Stellar for instant, low-cost international transfers.
+
+### How It Works
+
+\`\`\`
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│  Sender     │     │   Stellar   │     │  Recipient  │
+│  (USD)      │────▶│   Network   │────▶│  (EUR)      │
+└─────────────┘     └─────────────┘     └─────────────┘
+     │                    │                    │
+     ▼                    ▼                    ▼
+  On-ramp            Path Payment          Off-ramp
+  (Bank→USDC)        (USDC→EUR)           (EUR→Bank)
+\`\`\`
+
+### API Pattern: Path Payment with Best Rate
+
+\`\`\`typescript
+// Find the best path for a cross-border payment
+async function findBestPath(
+  sourceAsset: Asset,
+  destAsset: Asset,
+  amount: string
+) {
+  // Use Horizon's path finding endpoint
+  const response = await fetch(
+    \`\${HORIZON_URL}/paths/strict-send?\` +
+    \`source_asset_type=\${sourceAsset.type}&\` +
+    \`source_asset_code=\${sourceAsset.code}&\` +
+    \`source_asset_issuer=\${sourceAsset.issuer}&\` +
+    \`destination_assets=\${destAsset.code}:\${destAsset.issuer}&\` +
+    \`source_amount=\${amount}\`,
+    { headers: { 'X-API-Key': API_KEY } }
+  );
+
+  const data = await response.json();
+  const paths = data._embedded.records;
+
+  // Return path with maximum destination amount
+  return paths.reduce((best, current) =>
+    parseFloat(current.destination_amount) > parseFloat(best.destination_amount)
+      ? current
+      : best
+  );
+}
+
+// Execute the path payment
+async function executePathPayment(
+  sender: Keypair,
+  destination: string,
+  path: PathResult,
+  sourceAmount: string
+) {
+  const account = await server.loadAccount(sender.publicKey());
+
+  const transaction = new TransactionBuilder(account, {
+    fee: '100',
+    networkPassphrase: Networks.PUBLIC,
+  })
+    .addOperation(Operation.pathPaymentStrictSend({
+      sendAsset: path.source_asset,
+      sendAmount: sourceAmount,
+      destination,
+      destAsset: path.destination_asset,
+      destMin: (parseFloat(path.destination_amount) * 0.99).toFixed(7), // 1% slippage
+      path: path.path.map(p => new Asset(p.asset_code, p.asset_issuer)),
+    }))
+    .setTimeout(30)
+    .build();
+
+  transaction.sign(sender);
+  return server.submitTransaction(transaction);
+}
+\`\`\`
+
+### Real-World Example
+
+**MoneyGram Access:** Uses Stellar for USD↔local currency corridors across 180 countries.
+
+## 2. Token Issuance & Management
+
+Companies issue tokens on Stellar for loyalty points, securities, stablecoins, and digital collectibles.
+
+### How It Works
+
+\`\`\`
+┌─────────────────────────────────────────────────────┐
+│                 Issuer Account                       │
+│  • Issues tokens                                     │
+│  • Sets authorization flags                          │
+│  • Controls supply                                   │
+└─────────────────┬───────────────────────────────────┘
+                  │
+       ┌──────────┴──────────┐
+       ▼                     ▼
+┌─────────────┐       ┌─────────────┐
+│ Distribution│       │  Treasury   │
+│  Account    │       │  Account    │
+│ (sells/airdrops)    │ (holds reserves)
+└─────────────┘       └─────────────┘
+\`\`\`
+
+### API Pattern: Token Creation & Distribution
+
+\`\`\`typescript
+// Create a new token with controlled distribution
+async function createControlledToken(
+  issuerKeypair: Keypair,
+  distributorPublicKey: string,
+  assetCode: string,
+  totalSupply: string
+) {
+  // Step 1: Configure issuer account with auth flags
+  const issuerAccount = await server.loadAccount(issuerKeypair.publicKey());
+
+  const configTx = new TransactionBuilder(issuerAccount, {
+    fee: '100',
+    networkPassphrase: Networks.PUBLIC,
+  })
+    .addOperation(Operation.setOptions({
+      setFlags: AuthRequiredFlag | AuthRevocableFlag,
+    }))
+    .setTimeout(30)
+    .build();
+
+  configTx.sign(issuerKeypair);
+  await server.submitTransaction(configTx);
+
+  // Step 2: Create trustline from distributor to issuer
+  // (Distributor must do this separately)
+
+  // Step 3: Send initial supply to distributor
+  const asset = new Asset(assetCode, issuerKeypair.publicKey());
+  const mintTx = new TransactionBuilder(
+    await server.loadAccount(issuerKeypair.publicKey()),
+    { fee: '100', networkPassphrase: Networks.PUBLIC }
+  )
+    .addOperation(Operation.payment({
+      destination: distributorPublicKey,
+      asset,
+      amount: totalSupply,
+    }))
+    .setTimeout(30)
+    .build();
+
+  mintTx.sign(issuerKeypair);
+  return server.submitTransaction(mintTx);
+}
+
+// Monitor token holders using Horizon
+async function getTokenHolders(assetCode: string, issuer: string) {
+  let holders = [];
+  let cursor = '';
+
+  while (true) {
+    const response = await fetch(
+      \`\${HORIZON_URL}/accounts?\` +
+      \`asset=\${assetCode}:\${issuer}&\` +
+      \`limit=200&cursor=\${cursor}\`,
+      { headers: { 'X-API-Key': API_KEY } }
+    );
+
+    const data = await response.json();
+    const accounts = data._embedded.records;
+
+    holders = holders.concat(accounts.map(acc => ({
+      account: acc.id,
+      balance: acc.balances.find(
+        b => b.asset_code === assetCode && b.asset_issuer === issuer
+      )?.balance || '0',
+    })));
+
+    if (accounts.length < 200) break;
+    cursor = accounts[accounts.length - 1].paging_token;
+  }
+
+  return holders.sort((a, b) =>
+    parseFloat(b.balance) - parseFloat(a.balance)
+  );
+}
+\`\`\`
+
+### Real-World Example
+
+**Circle USDC:** Issues USDC natively on Stellar with full reserve backing.
+
+## 3. Decentralized Exchange (DEX) Integration
+
+Stellar's built-in DEX enables peer-to-peer trading without smart contracts.
+
+### How It Works
+
+\`\`\`
+        ┌─────────────────────────────────┐
+        │       Stellar Order Book        │
+        │  ┌─────────────────────────┐    │
+        │  │ XLM/USDC               │    │
+        │  │ Bids        Asks       │    │
+        │  │ 0.099  |   | 0.101     │    │
+        │  │ 0.098  |   | 0.102     │    │
+        │  │ 0.097  |   | 0.103     │    │
+        │  └─────────────────────────┘    │
+        └─────────────────────────────────┘
+                 ▲              │
+                 │              ▼
+          ┌──────┴──────┐  ┌────────────┐
+          │ Manage Offer│  │ Path Pay   │
+          │ (Makers)    │  │ (Takers)   │
+          └─────────────┘  └────────────┘
+\`\`\`
+
+### API Pattern: Order Book Trading
+
+\`\`\`typescript
+// Fetch orderbook for trading pair
+async function getOrderbook(
+  baseAsset: Asset,
+  counterAsset: Asset
+) {
+  const response = await fetch(
+    \`\${HORIZON_URL}/order_book?\` +
+    \`selling_asset_type=\${baseAsset.isNative() ? 'native' : 'credit_alphanum4'}&\` +
+    (baseAsset.isNative() ? '' :
+      \`selling_asset_code=\${baseAsset.code}&selling_asset_issuer=\${baseAsset.issuer}&\`) +
+    \`buying_asset_type=\${counterAsset.isNative() ? 'native' : 'credit_alphanum4'}&\` +
+    (counterAsset.isNative() ? '' :
+      \`buying_asset_code=\${counterAsset.code}&buying_asset_issuer=\${counterAsset.issuer}\`),
+    { headers: { 'X-API-Key': API_KEY } }
+  );
+
+  const data = await response.json();
+
+  return {
+    bids: data.bids.map(b => ({
+      price: b.price,
+      amount: b.amount,
+    })),
+    asks: data.asks.map(a => ({
+      price: a.price,
+      amount: a.amount,
+    })),
+    spread: data.asks[0] && data.bids[0]
+      ? ((parseFloat(data.asks[0].price) - parseFloat(data.bids[0].price)) /
+         parseFloat(data.bids[0].price) * 100).toFixed(2) + '%'
+      : 'N/A',
+  };
+}
+
+// Place a limit order
+async function placeLimitOrder(
+  trader: Keypair,
+  selling: Asset,
+  buying: Asset,
+  amount: string,
+  price: string,
+  offerId: string = '0' // '0' for new order
+) {
+  const account = await server.loadAccount(trader.publicKey());
+
+  const transaction = new TransactionBuilder(account, {
+    fee: '100',
+    networkPassphrase: Networks.PUBLIC,
+  })
+    .addOperation(Operation.manageSellOffer({
+      selling,
+      buying,
+      amount,
+      price,
+      offerId,
+    }))
+    .setTimeout(30)
+    .build();
+
+  transaction.sign(trader);
+  return server.submitTransaction(transaction);
+}
+
+// Stream trades for real-time updates
+function streamTrades(
+  baseAsset: Asset,
+  counterAsset: Asset,
+  onTrade: (trade: Trade) => void
+) {
+  const url = new URL(\`\${HORIZON_URL}/trades\`);
+  url.searchParams.set('base_asset_type', baseAsset.isNative() ? 'native' : 'credit_alphanum4');
+  if (!baseAsset.isNative()) {
+    url.searchParams.set('base_asset_code', baseAsset.code);
+    url.searchParams.set('base_asset_issuer', baseAsset.issuer);
+  }
+  // ... counter asset params
+  url.searchParams.set('cursor', 'now');
+
+  const eventSource = new EventSource(url.toString());
+  eventSource.onmessage = (event) => {
+    onTrade(JSON.parse(event.data));
+  };
+
+  return () => eventSource.close();
+}
+\`\`\`
+
+### Real-World Example
+
+**StellarX & Lumenswap:** DEX interfaces built entirely on Stellar's native orderbook.
+
+## 4. Real-Time Transaction Monitoring
+
+Financial institutions monitor Stellar for compliance, fraud detection, and treasury management.
+
+### How It Works
+
+\`\`\`
+┌─────────────────────────────────────────────────────────┐
+│                 Monitoring System                        │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────┐  │
+│  │ Horizon SSE │  │ Rule Engine │  │ Alert Dashboard │  │
+│  │  (Stream)   │──│ (Evaluate)  │──│   (Notify)      │  │
+│  └─────────────┘  └─────────────┘  └─────────────────┘  │
+│        │                                    │           │
+│        │ Real-time                          │ Alerts    │
+│        │ transactions                       ▼           │
+│        │                           ┌─────────────────┐  │
+│        └──────────────────────────▶│  Compliance     │  │
+│                                    │  Team / API     │  │
+│                                    └─────────────────┘  │
+└─────────────────────────────────────────────────────────┘
+\`\`\`
+
+### API Pattern: Compliance Monitoring System
+
+\`\`\`typescript
+// Real-time transaction monitoring with rules
+interface MonitoringRule {
+  id: string;
+  name: string;
+  evaluate: (tx: Transaction, ops: Operation[]) => Alert | null;
+}
+
+interface Alert {
+  ruleId: string;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  transaction: string;
+  details: Record<string, any>;
+}
+
+const rules: MonitoringRule[] = [
+  {
+    id: 'large-payment',
+    name: 'Large Payment Detection',
+    evaluate: (tx, ops) => {
+      const payments = ops.filter(op => op.type === 'payment');
+      for (const payment of payments) {
+        const amount = parseFloat(payment.amount);
+        if (payment.asset_type === 'native' && amount > 100000) {
+          return {
+            ruleId: 'large-payment',
+            severity: 'high',
+            transaction: tx.hash,
+            details: {
+              amount,
+              from: tx.source_account,
+              to: payment.to,
+            },
+          };
+        }
+      }
+      return null;
+    },
+  },
+  {
+    id: 'new-trustline',
+    name: 'Trustline Addition',
+    evaluate: (tx, ops) => {
+      const trustlines = ops.filter(op => op.type === 'change_trust');
+      if (trustlines.length > 0) {
+        return {
+          ruleId: 'new-trustline',
+          severity: 'low',
+          transaction: tx.hash,
+          details: {
+            assets: trustlines.map(t => \`\${t.asset_code}:\${t.asset_issuer}\`),
+          },
+        };
+      }
+      return null;
+    },
+  },
+];
+
+// Start monitoring
+async function startMonitoring(
+  accounts: string[],
+  onAlert: (alert: Alert) => void
+) {
+  for (const accountId of accounts) {
+    const url = \`\${HORIZON_URL}/accounts/\${accountId}/transactions?cursor=now\`;
+    const eventSource = new EventSource(url);
+
+    eventSource.onmessage = async (event) => {
+      const tx = JSON.parse(event.data);
+
+      // Fetch operations for this transaction
+      const opsResponse = await fetch(
+        \`\${HORIZON_URL}/transactions/\${tx.hash}/operations\`,
+        { headers: { 'X-API-Key': API_KEY } }
+      );
+      const opsData = await opsResponse.json();
+      const operations = opsData._embedded.records;
+
+      // Evaluate all rules
+      for (const rule of rules) {
+        const alert = rule.evaluate(tx, operations);
+        if (alert) {
+          onAlert(alert);
+        }
+      }
+    };
+  }
+}
+
+// Usage
+startMonitoring(
+  ['GA...TREASURY', 'GA...OPERATIONS'],
+  (alert) => {
+    console.log(\`[\${alert.severity.toUpperCase()}] \${alert.ruleId}\`);
+    // Send to Slack, email, database, etc.
+  }
+);
+\`\`\`
+
+### Real-World Example
+
+**Chainalysis & Elliptic:** Blockchain analytics firms monitor Stellar for compliance.
+
+## 5. Smart Contract Management (Soroban)
+
+DeFi protocols and automated financial services use Soroban smart contracts.
+
+### How It Works
+
+\`\`\`
+┌─────────────────────────────────────────────────────────┐
+│                   DeFi Protocol                          │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────┐  │
+│  │   Frontend  │  │   Stellar   │  │    Contract     │  │
+│  │   (React)   │──│     RPC     │──│   (Soroban)     │  │
+│  └─────────────┘  └─────────────┘  └─────────────────┘  │
+│        │               │                    │           │
+│        │ User          │ Simulate +         │ State     │
+│        │ Actions       │ Submit             │ Changes   │
+│        ▼               ▼                    ▼           │
+│  ┌─────────────────────────────────────────────────┐    │
+│  │              Horizon (Historical)               │    │
+│  │    • Transaction history                        │    │
+│  │    • Event indexing                             │    │
+│  │    • Analytics                                  │    │
+│  └─────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────┘
+\`\`\`
+
+### API Pattern: DeFi Protocol Integration
+
+\`\`\`typescript
+// Interact with a lending protocol smart contract
+const LENDING_CONTRACT = 'CDLZFC...';
+
+interface LendingPosition {
+  deposited: bigint;
+  borrowed: bigint;
+  collateralRatio: number;
+}
+
+// Read current position from contract state
+async function getPosition(accountId: string): Promise<LendingPosition> {
+  const response = await fetch(STELLAR_RPC_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'getLedgerEntries',
+      params: {
+        keys: [createContractDataKey(LENDING_CONTRACT, 'Position', accountId)],
+      },
+    }),
+  });
+
+  const { result } = await response.json();
+  const entry = result.entries[0];
+
+  if (!entry) {
+    return { deposited: 0n, borrowed: 0n, collateralRatio: 0 };
+  }
+
+  // Parse contract state
+  const data = xdr.LedgerEntryData.fromXDR(entry.xdr, 'base64');
+  const contractData = data.contractData();
+
+  return parsePositionData(contractData.val());
+}
+
+// Deposit collateral
+async function deposit(
+  user: Keypair,
+  amount: string
+): Promise<TransactionResult> {
+  const contract = new Contract(LENDING_CONTRACT);
+
+  // Build the invocation
+  const operation = contract.call(
+    'deposit',
+    nativeToScVal(Address.fromString(user.publicKey())),
+    nativeToScVal(BigInt(parseFloat(amount) * 10_000_000), { type: 'i128' })
+  );
+
+  // Get account and build transaction
+  const account = await server.loadAccount(user.publicKey());
+  const transaction = new TransactionBuilder(account, {
+    fee: '1000000',
+    networkPassphrase: Networks.PUBLIC,
+  })
+    .addOperation(operation)
+    .setTimeout(30)
+    .build();
+
+  // Simulate
+  const simResponse = await fetch(STELLAR_RPC_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'simulateTransaction',
+      params: { transaction: transaction.toXDR() },
+    }),
+  });
+
+  const { result: simulation } = await simResponse.json();
+
+  if (simulation.error) {
+    throw new Error(\`Simulation failed: \${simulation.error}\`);
+  }
+
+  // Prepare and sign
+  const prepared = SorobanRpc.assembleTransaction(transaction, simulation);
+  prepared.sign(user);
+
+  // Submit
+  const submitResponse = await fetch(STELLAR_RPC_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'sendTransaction',
+      params: { transaction: prepared.toXDR() },
+    }),
+  });
+
+  return submitResponse.json();
+}
+
+// Monitor protocol events
+async function getProtocolEvents(fromLedger: number) {
+  const response = await fetch(STELLAR_RPC_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'getEvents',
+      params: {
+        startLedger: fromLedger,
+        filters: [{
+          type: 'contract',
+          contractIds: [LENDING_CONTRACT],
+        }],
+      },
+    }),
+  });
+
+  const { result } = await response.json();
+  return result.events.map(event => ({
+    ledger: event.ledger,
+    type: parseEventType(event.topic),
+    data: parseEventData(event.value),
+  }));
+}
+\`\`\`
+
+### Real-World Example
+
+**Blend Protocol:** Lending and borrowing protocol built on Soroban.
+
+## Putting It All Together
+
+The most powerful financial applications combine multiple use cases:
+
+\`\`\`typescript
+// Example: Remittance platform combining multiple patterns
+class RemittancePlatform {
+  // Use Case 1: Cross-border payments
+  async sendRemittance(from: User, to: User, amount: Money) {
+    const path = await this.findBestPath(from.currency, to.currency, amount);
+    return this.executePathPayment(from, to, path);
+  }
+
+  // Use Case 2: Token management (stablecoin)
+  async issueLocalCurrency(user: User, amount: string) {
+    return this.mintToken(user, this.localStablecoin, amount);
+  }
+
+  // Use Case 3: DEX for liquidity
+  async provideLiquidity(asset: Asset, amount: string) {
+    return this.placeLimitOrder(this.treasury, asset, XLM, amount);
+  }
+
+  // Use Case 4: Compliance monitoring
+  async monitorTransactions() {
+    return this.startMonitoring(this.regulatedAccounts, this.handleAlert);
+  }
+
+  // Use Case 5: Smart contracts for automation
+  async setupAutomaticConversion(user: User, rules: ConversionRule[]) {
+    return this.deployConversionContract(user, rules);
+  }
+}
+\`\`\`
+
+## Conclusion
+
+Stellar's dual API approach—Horizon for historical data and Stellar RPC for real-time state—enables sophisticated financial applications:
+
+1. **Cross-border payments** leverage path finding and atomic swaps
+2. **Token issuance** uses account configuration and payment operations
+3. **DEX integration** taps into the native orderbook
+4. **Transaction monitoring** streams data for compliance
+5. **Smart contracts** power automated financial logic
+
+With the right API patterns, you can build financial applications that rival traditional fintech—but with the transparency and efficiency of blockchain.
+
+---
+
+*Building financial applications on Stellar? [LumenQuery](/auth/signup) provides the reliable API infrastructure your fintech needs—Horizon and Stellar RPC with 99.9% uptime.*
+    `,
+  },
 };
 
 export async function generateStaticParams() {
