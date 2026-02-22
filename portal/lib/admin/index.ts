@@ -1,6 +1,5 @@
-import { getServerSession } from 'next-auth/next';
 import { NextRequest, NextResponse } from 'next/server';
-import { authOptions } from '@/lib/auth';
+import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { UserRole } from '@prisma/client';
 
@@ -16,7 +15,7 @@ export interface AdminSession {
 
 // Check if user has admin role
 export async function requireAdmin(): Promise<AdminSession | null> {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
   if (!session?.user) {
     return null;
@@ -50,7 +49,7 @@ export async function requireAdmin(): Promise<AdminSession | null> {
 
 // Check if user is a super admin (for admin management)
 export async function requireSuperAdmin(): Promise<AdminSession | null> {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
   if (!session?.user) {
     return null;

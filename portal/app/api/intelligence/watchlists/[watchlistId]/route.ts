@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
-import { authOptions } from '@/lib/auth';
 import { checkIntelligenceAccess } from '@/lib/intelligence/gates';
 
 // GET - Get watchlist details
@@ -10,7 +9,7 @@ export async function GET(
   { params }: { params: { watchlistId: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.email) {
       return NextResponse.json(
         { error: 'Authentication required' },
@@ -79,7 +78,7 @@ export async function PUT(
   { params }: { params: { watchlistId: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.email) {
       return NextResponse.json(
         { error: 'Authentication required' },
@@ -148,7 +147,7 @@ export async function DELETE(
   { params }: { params: { watchlistId: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.email) {
       return NextResponse.json(
         { error: 'Authentication required' },

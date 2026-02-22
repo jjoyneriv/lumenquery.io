@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
-import { authOptions } from '@/lib/auth';
 import { checkIntelligenceAccess } from '@/lib/intelligence/gates';
 import {
   fetchAccount,
@@ -42,7 +41,7 @@ export async function GET(
     }
 
     // Check authentication (optional - public access with limited data)
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     let hasFullAccess = false;
 
     if (session?.user?.email) {

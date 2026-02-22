@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
-import { authOptions } from '@/lib/auth';
 import { checkSorobanProAccess, incrementContractsExplored } from '@/lib/soroban/gates';
 import { getEvents, getLatestLedger } from '@/lib/soroban/rpc-client';
 import Redis from 'ioredis';
@@ -123,7 +122,7 @@ export async function GET(
       });
 
       // Track exploration for authenticated users
-      const session = await getServerSession(authOptions);
+      const session = await auth();
       if (session?.user) {
         const user = await prisma.user.findUnique({
           where: { email: session.user.email! },

@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
-import { authOptions } from '@/lib/auth';
 import { checkIntelligenceAccess, getWhaleThreshold } from '@/lib/intelligence/gates';
 import {
   fetchPayments,
@@ -16,7 +15,7 @@ const HORIZON_URL = process.env.HORIZON_API_URL || 'http://stellar-horizon:8000'
 
 export async function GET(req: Request) {
   // Check authentication
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   if (!session?.user?.email) {
     return NextResponse.json(
       { error: 'Authentication required' },

@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
-import { authOptions } from '@/lib/auth';
 import { checkSorobanProAccess } from '@/lib/soroban/gates';
 import { getEvents } from '@/lib/soroban/rpc-client';
 
@@ -12,7 +11,7 @@ export async function GET(
   const { contractId } = params;
 
   // Check authentication
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   if (!session?.user?.email) {
     return NextResponse.json(
       { error: 'Authentication required' },

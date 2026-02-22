@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
-import { authOptions } from '@/lib/auth';
 import { getHistoryDateLimit } from '@/lib/soroban/gates';
 import Redis from 'ioredis';
 
@@ -48,7 +47,7 @@ export async function GET(
 
     // Determine history limit based on user tier
     let dateLimit: Date | null = null;
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (session?.user) {
       const user = await prisma.user.findUnique({
         where: { email: session.user.email! },
