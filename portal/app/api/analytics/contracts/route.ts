@@ -219,20 +219,44 @@ function formatTimeAgo(timestamp: string): string {
 }
 
 // Fetch functions
-async function fetchSorobanOperations(limit: number = 200): Promise<HorizonOperation[]> {
+async function fetchSorobanOperations(pages: number = 10): Promise<HorizonOperation[]> {
   try {
-    const res = await fetchWithFallback(
-      `/operations?order=desc&limit=${limit}&include_failed=false`,
-      { next: { revalidate: 30 } }
-    );
-    if (!res.ok) {
-      console.error('Failed to fetch operations from Horizon');
-      return [];
+    const allOperations: HorizonOperation[] = [];
+    let nextUrl = `/operations?order=desc&limit=200&include_failed=false`;
+
+    // Fetch multiple pages to get more data
+    for (let i = 0; i < pages; i++) {
+      const res = await fetchWithFallback(nextUrl, { next: { revalidate: 30 } });
+      if (!res.ok) {
+        console.error('Failed to fetch operations from Horizon');
+        break;
+      }
+
+      const data = await res.json();
+      const records = data._embedded?.records || [];
+
+      // Filter for invoke_host_function operations (type 24)
+      const sorobanOps = records.filter(
+        (op: HorizonOperation) => op.type === 'invoke_host_function' || op.type_i === 24
+      );
+      allOperations.push(...sorobanOps);
+
+      // Stop if we have enough operations for a good sample
+      if (allOperations.length >= 500) break;
+
+      // Get next page URL
+      const nextLink = data._links?.next?.href;
+      if (!nextLink) break;
+
+      // Extract path from full URL
+      const url = new URL(nextLink);
+      nextUrl = url.pathname + url.search;
+
+      // Small delay to avoid rate limiting
+      await new Promise(r => setTimeout(r, 100));
     }
-    const data = await res.json();
-    const records = data._embedded?.records || [];
-    // Filter for invoke_host_function operations (type 24)
-    return records.filter((op: HorizonOperation) => op.type === 'invoke_host_function' || op.type_i === 24);
+
+    return allOperations;
   } catch (error) {
     console.error('Error fetching Soroban operations:', error);
     return [];
@@ -284,24 +308,31 @@ function calculateActivity(operations: HorizonOperation[]): ContractActivity {
   const successful = operations.filter((op) => op.transaction_successful).length;
   const successRate = operations.length > 0 ? (successful / operations.length) * 100 : 100;
 
-  // Calculate time span for extrapolation
-  const firstOp = new Date(operations[operations.length - 1].created_at).getTime();
-  const lastOp = new Date(operations[0].created_at).getTime();
-  const sampleTimeSpan = (lastOp - firstOp) / 1000;
-  const scaleFactor = sampleTimeSpan > 0 ? (24 * 3600) / sampleTimeSpan : 1;
+  // Use actual count - don't extrapolate since it's inaccurate with small samples
+  const totalInvocations = operations.length;
 
-  // Estimate 24h totals
-  const estimated24hInvocations = Math.round(operations.length * scaleFactor);
-
-  // Group by hour for chart
+  // Generate time series for the last 24 hours with hourly buckets
+  const now = new Date();
+  now.setMinutes(0, 0, 0); // Round to current hour
   const hourlyData = new Map<string, number>();
-  for (const op of operations) {
-    const date = new Date(op.created_at);
-    date.setMinutes(0, 0, 0);
-    const hourKey = date.toISOString();
-    hourlyData.set(hourKey, (hourlyData.get(hourKey) || 0) + 1);
+
+  // Initialize last 24 hours with zeros
+  for (let i = 23; i >= 0; i--) {
+    const hourDate = new Date(now.getTime() - i * 60 * 60 * 1000);
+    hourlyData.set(hourDate.toISOString(), 0);
   }
 
+  // Fill in actual operation counts
+  for (const op of operations) {
+    const date = new Date(op.created_at);
+    date.setMinutes(0, 0, 0); // Round to hour
+    const hourKey = date.toISOString();
+    if (hourlyData.has(hourKey)) {
+      hourlyData.set(hourKey, (hourlyData.get(hourKey) || 0) + 1);
+    }
+  }
+
+  // Convert to sorted array
   const hourlyActivity = Array.from(hourlyData.entries())
     .map(([timestamp, invocations]) => ({ timestamp, invocations }))
     .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
@@ -324,17 +355,18 @@ function calculateActivity(operations: HorizonOperation[]): ContractActivity {
     }
   }
 
+  // Use actual counts, not extrapolated
   const topContracts = Array.from(contractCalls.entries())
     .sort((a, b) => b[1].count - a[1].count)
     .slice(0, 10)
     .map(([contractId, data]) => ({
       contractId: truncateAddress(contractId),
-      invocations: Math.round(data.count * scaleFactor),
+      invocations: data.count,
       lastActivity: formatTimeAgo(data.lastActivity),
     }));
 
   return {
-    totalInvocations24h: estimated24hInvocations,
+    totalInvocations24h: totalInvocations,
     successRate: Math.round(successRate * 10) / 10,
     hourlyActivity,
     topContracts,
@@ -394,18 +426,18 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const range = searchParams.get('range') || '24h';
 
-    // Determine sample size based on range
-    const limitMap: Record<string, number> = {
-      '24h': 200,
-      '7d': 200,
-      '30d': 200,
+    // Determine number of pages to fetch based on range
+    const pagesMap: Record<string, number> = {
+      '24h': 10,
+      '7d': 10,
+      '30d': 10,
     };
-    const limit = limitMap[range] || 200;
+    const pages = pagesMap[range] || 10;
 
     // Fetch all data in parallel with caching
     const [activity, gasUsage, eventData] = await Promise.all([
       getCachedOrFetch(`analytics:contracts:activity:${range}`, ACTIVITY_CACHE_TTL, async () => {
-        const operations = await fetchSorobanOperations(limit);
+        const operations = await fetchSorobanOperations(pages);
         return calculateActivity(operations);
       }),
       getCachedOrFetch(`analytics:contracts:gas:${range}`, FEE_CACHE_TTL, async () => {
