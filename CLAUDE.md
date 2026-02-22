@@ -1,9 +1,9 @@
 # Project Context
 
 ## Current Status
-- Working on: UI consistency updates
-- Last session: 2026-02-21
-- Last validated: 2026-02-21 (all routes verified working)
+- Working on: Authentication fixes
+- Last session: 2026-02-22
+- Last validated: 2026-02-22 (login working with NextAuth v5)
 - All services: 12 containers running healthy
 - Stellar Horizon: Fixed database connection (184.105.230.250)
 - Transaction Viewer: Fixed with public Horizon API fallback
@@ -22,6 +22,7 @@
 - Forgot Password: Implementation complete, deployed
 - Analytics Charts: Fixed (24h only, removed 7d/30d due to performance)
 - Analytics Performance: Optimized (1.5s uncached, 47ms cached, page loads in 0.6s)
+- Authentication: NextAuth v5 migration complete, login working
 
 ## Service Status (api1.lumenquery.io)
 
@@ -1099,6 +1100,37 @@ docker compose up -d
       - CTA section with action buttons
     - Rebuilt and deployed portal
 41. Committed and pushed pricing page layout update to GitHub
+
+### 2026-02-22
+1. Fixed authentication/login not working:
+   - Issue: Users unable to login at /auth/signin
+   - Root cause: NextAuth v4 webpack bundling issue where CredentialsProvider
+     authorize function was being stubbed out (`authorize: () => null`)
+   - Solution: Upgraded from NextAuth v4 to NextAuth v5 beta
+2. NextAuth v5 Migration:
+   - Created new `portal/auth.ts` as central NextAuth v5 configuration
+   - Updated `portal/app/api/auth/[...nextauth]/route.ts` to use v5 handlers
+   - Replaced `@next-auth/prisma-adapter` with `@auth/prisma-adapter`
+   - Updated 18+ API routes to use `auth()` instead of `getServerSession(authOptions)`
+   - Added `trustHost: true` for production environment
+3. Database discovery:
+   - Found portal was connecting to `lumenquery_portal` database (not `lumenquery`)
+   - Container uses Docker network with `postgres:5432` hostname
+   - Updated admin password in correct database
+4. Files changed:
+   - portal/auth.ts (new): Central NextAuth v5 configuration
+   - portal/app/api/auth/[...nextauth]/route.ts: Simplified handler
+   - portal/lib/auth.ts: Re-exports from auth.ts
+   - portal/lib/admin/index.ts: Updated auth imports
+   - portal/app/admin/layout.tsx: Updated auth imports
+   - 18+ API routes: Updated to use auth() instead of getServerSession
+   - portal/package.json: Updated next-auth to v5 beta
+5. Admin credentials updated:
+   - Email: admin@lumenquery.io
+   - Password: abc123abc123
+   - Role: SUPER_ADMIN
+6. Verified login working in browser
+7. Committed and pushed to GitHub
 
 ## SEO & Performance Optimization
 
