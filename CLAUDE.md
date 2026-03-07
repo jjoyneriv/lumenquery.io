@@ -1,15 +1,15 @@
 # Project Context
 
 ## Current Status
-- Working on: Branding updates
+- Working on: Admin Console access restrictions
 - Last session: 2026-03-07
-- Last validated: 2026-03-07 (logo updated, analytics validated)
+- Last validated: 2026-03-07 (logo updated, analytics validated, Admin Console restricted to SUPER_ADMIN)
 - All services: 12 containers running healthy
 - Stellar Horizon: Fixed database connection (184.105.230.250)
 - Transaction Viewer: Fixed with public Horizon API fallback
 - Analytics API: Fixed with public Horizon fallback
 - Live Transaction Viewer: Implementation complete, SSE route fix deployed
-- Admin Console: Implementation complete, deployed, navigation added
+- Admin Console: Implementation complete, deployed, SUPER_ADMIN only access
 - Blog Posts: 12 articles (4 new SEO-optimized posts added)
 - Portfolio Intelligence: Implementation complete, deployed, documentation complete
 - Soroban Pro: Implementation complete, deployed, documentation complete
@@ -1161,6 +1161,30 @@ docker compose up -d
    - Network API returning: Ledger 61,547,528, TPS 104.2, Success 65.3%
    - Contracts API returning: 536 invocations (24h), 100% success rate
 6. Committed and pushed logo update to GitHub
+7. Fixed docs page layout:
+   - Issue: Two menus at top of page
+   - Fix: Kept main product navigation at top, moved docs sub-navigation to left sidebar
+   - Updated docs/layout-client.tsx with flexbox layout (sidebar + main content)
+8. Fixed intelligence page layout:
+   - Issue: Two menus at top of page
+   - Fix: Kept main product navigation at top, moved intelligence sub-navigation to left sidebar
+   - Updated intelligence/layout-client.tsx with same sidebar pattern as docs
+9. Restricted Admin Console to SUPER_ADMIN role only:
+   - Previously: Both ADMIN and SUPER_ADMIN could access Admin Console
+   - Now: Only SUPER_ADMIN role can see and access Admin Console
+   - Updated 10 files:
+     - admin/layout.tsx - Server-side role check
+     - Header.tsx - Desktop and mobile navigation
+     - dashboard/page.tsx - Product navigation
+     - contracts/page.tsx - Product navigation
+     - analytics/layout-client.tsx - Product navigation
+     - portfolio/layout-client.tsx - Product navigation
+     - blog/layout-client.tsx - Product navigation
+     - pricing/layout-client.tsx - Product navigation
+     - docs/layout-client.tsx - Product navigation
+     - intelligence/layout-client.tsx - Product navigation
+10. Rebuilt and deployed portal with all changes
+11. Committed and pushed all changes to GitHub
 
 ## SEO & Performance Optimization
 
@@ -1933,7 +1957,7 @@ export const runtime = 'nodejs';
 ## Administrative Console
 
 ### Overview
-Internal admin console for managing users, monitoring feature usage, tracking login activity, and performing admin tasks. Access restricted to users with ADMIN or SUPER_ADMIN role.
+Internal admin console for managing users, monitoring feature usage, tracking login activity, and performing admin tasks. Access restricted to users with SUPER_ADMIN role only.
 
 ### Pages
 | Route | Description | Status |
