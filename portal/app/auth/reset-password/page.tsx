@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect, Suspense } from 'react';
 
@@ -167,9 +168,13 @@ function ResetPasswordForm() {
       <div className="w-full max-w-md">
         <header className="text-center mb-6 sm:mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-4 sm:mb-6" aria-label="LumenQuery home">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-[#2855FF] flex items-center justify-center">
-              <span className="text-white font-bold text-lg sm:text-xl">LQ</span>
-            </div>
+            <Image
+              src="/logo.png"
+              alt="LumenQuery"
+              width={48}
+              height={48}
+              className="w-10 h-10 sm:w-12 sm:h-12"
+            />
           </Link>
           <h1 className="text-2xl sm:text-3xl font-bold text-black">Create new password</h1>
           <p className="text-[#6A6A6A] mt-2 text-sm sm:text-base">

@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface Operation {
   index: number;
@@ -167,9 +168,13 @@ export default function TransactionViewerPage() {
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/dashboard" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-[#2855FF] flex items-center justify-center">
-                <span className="text-white font-bold text-sm">LQ</span>
-              </div>
+              <Image
+                src="/logo.png"
+                alt="LumenQuery"
+                width={32}
+                height={32}
+                className="w-8 h-8"
+              />
             </Link>
             <div>
               <h1 className="text-lg font-bold">Transaction Viewer</h1>

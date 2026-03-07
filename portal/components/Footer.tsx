@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface FooterProps {
   variant?: 'full' | 'simple';
@@ -12,9 +13,13 @@ export default function Footer({ variant = 'simple' }: FooterProps) {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-8">
             <div className="col-span-2 md:col-span-1">
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-[#2855FF] flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">LQ</span>
-                </div>
+                <Image
+                  src="/logo.png"
+                  alt="LumenQuery"
+                  width={32}
+                  height={32}
+                  className="w-8 h-8"
+                />
                 <span className="font-bold">LumenQuery</span>
               </div>
               <p className="text-[#6A6A6A] text-sm">
@@ -56,9 +61,13 @@ export default function Footer({ variant = 'simple' }: FooterProps) {
     <footer className="border-t border-[#E6E7E9] py-6 sm:py-8 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-[#2855FF] flex items-center justify-center">
-            <span className="text-white font-bold text-sm">LQ</span>
-          </div>
+          <Image
+            src="/logo.png"
+            alt="LumenQuery"
+            width={32}
+            height={32}
+            className="w-8 h-8"
+          />
           <span className="text-[#6A6A6A]">© 2026 LumenQuery</span>
         </div>
         <div className="flex gap-6 text-sm text-[#6A6A6A]">

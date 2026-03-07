@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ContractSearch, ContractCard } from '@/components/contracts';
 
 interface Contract {
@@ -42,9 +43,13 @@ export default function ContractsPage() {
         <nav className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
           <div className="flex items-center gap-3 sm:gap-4">
             <Link href="/" className="flex items-center gap-2" aria-label="LumenQuery home">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-[#2855FF] flex items-center justify-center">
-                <span className="text-white font-bold text-sm sm:text-base">LQ</span>
-              </div>
+              <Image
+                src="/logo.png"
+                alt="LumenQuery"
+                width={40}
+                height={40}
+                className="w-8 h-8 sm:w-10 sm:h-10"
+              />
             </Link>
             <div className="min-w-0">
               <h1 className="text-lg sm:text-2xl font-bold">Smart Contract Explorer</h1>

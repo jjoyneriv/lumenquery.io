@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 
@@ -22,9 +23,13 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
     <header className="border-b border-[#E6E7E9]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-[#2855FF] flex items-center justify-center">
-            <span className="text-white font-bold text-sm sm:text-base">LQ</span>
-          </div>
+          <Image
+            src="/logo.png"
+            alt="LumenQuery"
+            width={40}
+            height={40}
+            className="w-8 h-8 sm:w-10 sm:h-10"
+          />
           <span className="text-lg sm:text-xl font-bold">LumenQuery</span>
         </Link>
 
