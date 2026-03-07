@@ -89,13 +89,8 @@ export default function IntelligenceLayoutClient({
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-6 md:py-8">
         <div className="flex flex-col md:flex-row gap-6 md:gap-8">
-          {/* Main Content */}
-          <main className="flex-1 min-w-0 order-2 md:order-1">
-            {children}
-          </main>
-
-          {/* Right Sidebar Navigation */}
-          <aside className="w-full md:w-56 flex-shrink-0 order-1 md:order-2">
+          {/* Left Sidebar Navigation */}
+          <aside className="w-full md:w-56 flex-shrink-0">
             <nav className="bg-white rounded-xl border border-[#E6E7E9] p-4 sticky top-4">
               <h2 className="text-xs font-semibold text-[#6A6A6A] uppercase tracking-wider mb-3">
                 Intelligence
@@ -122,6 +117,11 @@ export default function IntelligenceLayoutClient({
               </ul>
             </nav>
           </aside>
+
+          {/* Main Content */}
+          <main className="flex-1 min-w-0">
+            {children}
+          </main>
         </div>
       </div>
     </div>
