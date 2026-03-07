@@ -1,9 +1,9 @@
 # Project Context
 
 ## Current Status
-- Working on: Authentication fixes
-- Last session: 2026-02-22
-- Last validated: 2026-02-22 (login working with NextAuth v5)
+- Working on: Branding updates
+- Last session: 2026-03-07
+- Last validated: 2026-03-07 (logo updated, analytics validated)
 - All services: 12 containers running healthy
 - Stellar Horizon: Fixed database connection (184.105.230.250)
 - Transaction Viewer: Fixed with public Horizon API fallback
@@ -1131,6 +1131,36 @@ docker compose up -d
    - Role: SUPER_ADMIN
 6. Verified login working in browser
 7. Committed and pushed to GitHub
+
+### 2026-03-07
+1. Updated website logo with new LumenQuery branding:
+   - Replaced blue "LQ" text box with new logo image
+   - Logo features magnifying glass with blockchain cube elements
+   - Copied logo to `/opt/lumenquery-portal/portal/public/logo.png`
+2. Updated 16 files to use new logo:
+   - portal/components/Header.tsx - Main site header
+   - portal/components/Footer.tsx - Site footer (both full and simple variants)
+   - portal/app/analytics/layout-client.tsx
+   - portal/app/portfolio/layout-client.tsx
+   - portal/app/blog/layout-client.tsx
+   - portal/app/docs/layout-client.tsx
+   - portal/app/pricing/layout-client.tsx
+   - portal/app/intelligence/layout-client.tsx
+   - portal/app/dashboard/page.tsx
+   - portal/app/dashboard/transactions/page.tsx
+   - portal/app/contracts/page.tsx
+   - portal/app/auth/signin/page.tsx
+   - portal/app/auth/signup/page.tsx
+   - portal/app/auth/forgot-password/page.tsx
+   - portal/app/auth/reset-password/page.tsx
+3. Used Next.js Image component for optimized logo loading
+4. Rebuilt and deployed portal with new logo
+5. Validated Analytics and Smart Contract Analytics pages:
+   - /analytics page: ✅ Working with live data
+   - /analytics/contracts page: ✅ Working with Soroban metrics
+   - Network API returning: Ledger 61,547,528, TPS 104.2, Success 65.3%
+   - Contracts API returning: 536 invocations (24h), 100% success rate
+6. Committed and pushed logo update to GitHub
 
 ## SEO & Performance Optimization
 
