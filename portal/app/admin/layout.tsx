@@ -24,13 +24,13 @@ export default async function AdminLayout({
     redirect('/auth/signin');
   }
 
-  // Check if user is admin
+  // Check if user is super admin (only SUPER_ADMIN can access admin console)
   const user = await prisma.user.findUnique({
     where: { id: (session.user as any).id },
     select: { role: true },
   });
 
-  if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
+  if (!user || user.role !== 'SUPER_ADMIN') {
     redirect('/dashboard');
   }
 
