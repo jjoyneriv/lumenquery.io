@@ -54,7 +54,7 @@ export default function IntelligenceLayoutClient({
           </div>
         </nav>
         {/* Product Navigation */}
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2 flex items-center gap-1 sm:gap-2 overflow-x-auto">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2 flex items-center gap-1 sm:gap-2 overflow-x-auto border-t border-[#E6E7E9]">
           <Link href="/dashboard/transactions" className="px-3 py-1.5 rounded-lg text-sm font-medium text-[#6A6A6A] hover:bg-[#F5F6F7] hover:text-black transition-colors whitespace-nowrap flex items-center gap-1">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -85,33 +85,45 @@ export default function IntelligenceLayoutClient({
             </Link>
           )}
         </div>
-        {/* Intelligence Sub-Navigation */}
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2 border-t border-[#E6E7E9]">
-          <div className="flex items-center gap-1 overflow-x-auto">
-            {intelligenceNavItems.map((item) => {
-              const isActive = pathname === item.href ||
-                (item.href !== '/intelligence' && pathname?.startsWith(item.href));
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-                    isActive
-                      ? 'bg-black text-white'
-                      : 'text-[#6A6A6A] hover:bg-[#F5F6F7] hover:text-black'
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
-          </div>
-        </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-6 md:py-8">
-        {children}
-      </main>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-6 md:py-8">
+        <div className="flex flex-col md:flex-row gap-6 md:gap-8">
+          {/* Main Content */}
+          <main className="flex-1 min-w-0 order-2 md:order-1">
+            {children}
+          </main>
+
+          {/* Right Sidebar Navigation */}
+          <aside className="w-full md:w-56 flex-shrink-0 order-1 md:order-2">
+            <nav className="bg-white rounded-xl border border-[#E6E7E9] p-4 sticky top-4">
+              <h2 className="text-xs font-semibold text-[#6A6A6A] uppercase tracking-wider mb-3">
+                Intelligence
+              </h2>
+              <ul className="space-y-1">
+                {intelligenceNavItems.map((item) => {
+                  const isActive = pathname === item.href ||
+                    (item.href !== '/intelligence' && pathname?.startsWith(item.href));
+                  return (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                          isActive
+                            ? 'bg-[#2855FF] text-white'
+                            : 'text-[#6A6A6A] hover:bg-[#F5F6F7] hover:text-black'
+                        }`}
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+          </aside>
+        </div>
+      </div>
     </div>
   );
 }
