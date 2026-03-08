@@ -3,8 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { IntelligenceNav, WatchlistTable, WatchlistManager } from '@/components/intelligence';
+import { WatchlistTable, WatchlistManager } from '@/components/intelligence';
 
 interface Watchlist {
   id: string;
@@ -97,91 +96,70 @@ export default function WatchlistsPage() {
 
   if (status === 'loading' || status === 'unauthenticated') {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center py-12">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF]" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex flex-col lg:flex-row gap-8">
-        {/* Sidebar */}
-        <aside className="w-full lg:w-64 flex-shrink-0">
-          <div className="bg-white rounded-xl border border-[#E6E7E9] p-4 sticky top-8">
-            <h2 className="font-semibold text-black mb-4">Intelligence</h2>
-            <IntelligenceNav />
-          </div>
-        </aside>
-
-        {/* Main Content */}
-        <div className="flex-1 space-y-6">
-          <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-black">
-                Watchlists
-              </h1>
-              <p className="text-[#6A6A6A] mt-1">
-                Monitor specific Stellar accounts for activity
-                {limits && (
-                  <span className="ml-2 text-sm">
-                    ({limits.used}/{limits.limit} accounts used)
-                  </span>
-                )}
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <Link
-                href="/intelligence"
-                className="text-[#2855FF] hover:text-[#1E44CC] text-sm"
-              >
-                &larr; Back to Dashboard
-              </Link>
-              {!showCreateForm && !editingWatchlist && (
-                <button
-                  onClick={() => setShowCreateForm(true)}
-                  className="px-4 py-2 bg-[#2855FF] text-white rounded-lg font-medium hover:bg-[#1E44CC] transition-colors"
-                >
-                  Create Watchlist
-                </button>
-              )}
-            </div>
-          </header>
-
-          {/* Create/Edit Form */}
-          {showCreateForm && (
-            <WatchlistManager
-              onSubmit={handleCreate}
-              onCancel={() => setShowCreateForm(false)}
-            />
-          )}
-
-          {editingWatchlist && (
-            <WatchlistManager
-              onSubmit={handleUpdate}
-              onCancel={() => setEditingWatchlist(null)}
-              initialData={{
-                name: editingWatchlist.name,
-                description: editingWatchlist.description || '',
-              }}
-              isEdit
-            />
-          )}
-
-          {/* Watchlists Table */}
-          {loading ? (
-            <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF] mx-auto" />
-            </div>
-          ) : (
-            <WatchlistTable
-              watchlists={watchlists}
-              onDelete={handleDelete}
-              onEdit={(w) => setEditingWatchlist(w)}
-            />
-          )}
+    <div className="space-y-6">
+      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-black">
+            Watchlists
+          </h1>
+          <p className="text-[#6A6A6A] mt-1">
+            Monitor specific Stellar accounts for activity
+            {limits && (
+              <span className="ml-2 text-sm">
+                ({limits.used}/{limits.limit} accounts used)
+              </span>
+            )}
+          </p>
         </div>
-      </div>
+        {!showCreateForm && !editingWatchlist && (
+          <button
+            onClick={() => setShowCreateForm(true)}
+            className="px-4 py-2 bg-[#2855FF] text-white rounded-lg font-medium hover:bg-[#1E44CC] transition-colors"
+          >
+            Create Watchlist
+          </button>
+        )}
+      </header>
+
+      {/* Create/Edit Form */}
+      {showCreateForm && (
+        <WatchlistManager
+          onSubmit={handleCreate}
+          onCancel={() => setShowCreateForm(false)}
+        />
+      )}
+
+      {editingWatchlist && (
+        <WatchlistManager
+          onSubmit={handleUpdate}
+          onCancel={() => setEditingWatchlist(null)}
+          initialData={{
+            name: editingWatchlist.name,
+            description: editingWatchlist.description || '',
+          }}
+          isEdit
+        />
+      )}
+
+      {/* Watchlists Table */}
+      {loading ? (
+        <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF] mx-auto" />
+        </div>
+      ) : (
+        <WatchlistTable
+          watchlists={watchlists}
+          onDelete={handleDelete}
+          onEdit={(w) => setEditingWatchlist(w)}
+        />
+      )}
     </div>
   );
 }

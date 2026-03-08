@@ -3,8 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { IntelligenceNav, TrustlineMonitor } from '@/components/intelligence';
+import { TrustlineMonitor } from '@/components/intelligence';
 
 interface TrustlineChange {
   id: string;
@@ -72,7 +71,7 @@ export default function TrustlinesPage() {
         setTopAssets(data.topAssets || []);
       }
     } catch (error) {
-      console.error('Failed to fetch trustlines:', error);
+      console.error('Trustlines fetch error:', error);
     } finally {
       setLoading(false);
     }
@@ -80,86 +79,63 @@ export default function TrustlinesPage() {
 
   if (status === 'loading' || status === 'unauthenticated') {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center py-12">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF]" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex flex-col lg:flex-row gap-8">
-        {/* Sidebar */}
-        <aside className="w-full lg:w-64 flex-shrink-0">
-          <div className="bg-white rounded-xl border border-[#E6E7E9] p-4 sticky top-8">
-            <h2 className="font-semibold text-black mb-4">Intelligence</h2>
-            <IntelligenceNav />
-          </div>
-        </aside>
+    <div className="space-y-6">
+      <header>
+        <h1 className="text-2xl sm:text-3xl font-bold text-black">
+          Trustline Monitor
+        </h1>
+        <p className="text-[#6A6A6A] mt-1">
+          Track trustline creation and removal across the network
+        </p>
+      </header>
 
-        {/* Main Content */}
-        <div className="flex-1 space-y-6">
-          <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-black">
-                Trustline Monitor
-              </h1>
-              <p className="text-[#6A6A6A] mt-1">
-                Track trustline creation and removal across the network
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <Link
-                href="/intelligence"
-                className="text-[#2855FF] hover:text-[#1E44CC] text-sm"
-              >
-                &larr; Back to Dashboard
-              </Link>
-            </div>
-          </header>
-
-          {/* Asset Filter */}
-          <div className="bg-white rounded-xl border border-[#E6E7E9] p-4">
-            <div className="flex items-center gap-4">
-              <label htmlFor="assetFilter" className="text-sm text-[#6A6A6A]">
-                Filter by Asset:
-              </label>
-              <input
-                type="text"
-                id="assetFilter"
-                value={assetFilter}
-                onChange={(e) => setAssetFilter(e.target.value)}
-                placeholder="e.g., USDC"
-                className="px-3 py-2 border border-[#E6E7E9] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#2855FF] w-32"
-              />
-              {assetFilter && (
-                <button
-                  onClick={() => setAssetFilter('')}
-                  className="text-sm text-[#6A6A6A] hover:text-black"
-                >
-                  Clear
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Trustline Monitor */}
-          {loading ? (
-            <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF] mx-auto" />
-            </div>
-          ) : (
-            <TrustlineMonitor
-              trustlines={trustlines}
-              summary={summary}
-              topAssets={topAssets}
-              hasFullAccess={true}
-              onRefresh={fetchTrustlines}
-              isLoading={loading}
-            />
+      {/* Asset Filter */}
+      <div className="bg-white rounded-xl border border-[#E6E7E9] p-4">
+        <div className="flex items-center gap-4">
+          <label htmlFor="assetFilter" className="text-sm text-[#6A6A6A]">
+            Filter by Asset:
+          </label>
+          <input
+            type="text"
+            id="assetFilter"
+            value={assetFilter}
+            onChange={(e) => setAssetFilter(e.target.value)}
+            placeholder="e.g., USDC"
+            className="px-3 py-2 border border-[#E6E7E9] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#2855FF] w-32"
+          />
+          {assetFilter && (
+            <button
+              onClick={() => setAssetFilter('')}
+              className="text-sm text-[#6A6A6A] hover:text-black"
+            >
+              Clear
+            </button>
           )}
         </div>
       </div>
+
+      {/* Trustline Monitor */}
+      {loading ? (
+        <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF] mx-auto" />
+        </div>
+      ) : (
+        <TrustlineMonitor
+          trustlines={trustlines}
+          summary={summary}
+          topAssets={topAssets}
+          hasFullAccess={true}
+          onRefresh={fetchTrustlines}
+          isLoading={loading}
+        />
+      )}
     </div>
   );
 }

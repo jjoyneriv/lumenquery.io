@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { IntelligenceNav, AlertTable } from '@/components/intelligence';
+import { AlertTable } from '@/components/intelligence';
 
 interface Alert {
   id: string;
@@ -64,7 +64,7 @@ export default function AlertsPage() {
         setUnreadCount(data.unreadCount || 0);
       }
     } catch (error) {
-      console.error('Failed to fetch alerts:', error);
+      console.error('Alerts list error:', error);
     } finally {
       setLoading(false);
     }
@@ -132,140 +132,119 @@ export default function AlertsPage() {
 
   if (status === 'loading' || status === 'unauthenticated') {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center py-12">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF]" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex flex-col lg:flex-row gap-8">
-        {/* Sidebar */}
-        <aside className="w-full lg:w-64 flex-shrink-0">
-          <div className="bg-white rounded-xl border border-[#E6E7E9] p-4 sticky top-8">
-            <h2 className="font-semibold text-black mb-4">Intelligence</h2>
-            <IntelligenceNav unreadAlerts={unreadCount} />
-          </div>
-        </aside>
+    <div className="space-y-6">
+      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-black">
+            Alert Inbox
+          </h1>
+          <p className="text-[#6A6A6A] mt-1">
+            {unreadCount > 0
+              ? `${unreadCount} unread alert${unreadCount > 1 ? 's' : ''}`
+              : 'All caught up!'}
+          </p>
+        </div>
+        <Link
+          href="/intelligence/alerts/configs"
+          className="px-4 py-2 bg-[#2855FF] text-white rounded-lg font-medium hover:bg-[#1E44CC] transition-colors"
+        >
+          Manage Configs
+        </Link>
+      </header>
 
-        {/* Main Content */}
-        <div className="flex-1 space-y-6">
-          <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-black">
-                Alert Inbox
-              </h1>
-              <p className="text-[#6A6A6A] mt-1">
-                {unreadCount > 0
-                  ? `${unreadCount} unread alert${unreadCount > 1 ? 's' : ''}`
-                  : 'All caught up!'}
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <Link
-                href="/intelligence"
-                className="text-[#2855FF] hover:text-[#1E44CC] text-sm"
-              >
-                &larr; Back to Dashboard
-              </Link>
-              <Link
-                href="/intelligence/alerts/configs"
-                className="px-4 py-2 bg-[#2855FF] text-white rounded-lg font-medium hover:bg-[#1E44CC] transition-colors"
-              >
-                Manage Configs
-              </Link>
-            </div>
-          </header>
-
-          {/* Filters */}
-          <div className="bg-white rounded-xl border border-[#E6E7E9] p-4">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-[#6A6A6A]">Status:</span>
-                <button
-                  onClick={() => setFilter('all')}
-                  className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                    filter === 'all'
-                      ? 'bg-[#2855FF] text-white'
-                      : 'bg-[#F5F6F7] text-[#6A6A6A] hover:text-black'
-                  }`}
-                >
-                  All
-                </button>
-                <button
-                  onClick={() => setFilter('unread')}
-                  className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                    filter === 'unread'
-                      ? 'bg-[#2855FF] text-white'
-                      : 'bg-[#F5F6F7] text-[#6A6A6A] hover:text-black'
-                  }`}
-                >
-                  Unread
-                </button>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-[#6A6A6A]">Severity:</span>
-                <select
-                  value={severityFilter}
-                  onChange={(e) => setSeverityFilter(e.target.value)}
-                  className="px-3 py-1.5 border border-[#E6E7E9] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#2855FF]"
-                >
-                  <option value="">All</option>
-                  <option value="INFO">Info</option>
-                  <option value="WARNING">Warning</option>
-                  <option value="CRITICAL">Critical</option>
-                </select>
-              </div>
-            </div>
+      {/* Filters */}
+      <div className="bg-white rounded-xl border border-[#E6E7E9] p-4">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-[#6A6A6A]">Status:</span>
+            <button
+              onClick={() => setFilter('all')}
+              className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                filter === 'all'
+                  ? 'bg-[#2855FF] text-white'
+                  : 'bg-[#F5F6F7] text-[#6A6A6A] hover:text-black'
+              }`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setFilter('unread')}
+              className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                filter === 'unread'
+                  ? 'bg-[#2855FF] text-white'
+                  : 'bg-[#F5F6F7] text-[#6A6A6A] hover:text-black'
+              }`}
+            >
+              Unread
+            </button>
           </div>
 
-          {/* Alerts Table */}
-          {loading ? (
-            <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF] mx-auto" />
-            </div>
-          ) : (
-            <AlertTable
-              alerts={alerts}
-              onMarkRead={handleMarkRead}
-              onMarkAllRead={handleMarkAllRead}
-              onDelete={handleDelete}
-            />
-          )}
-
-          {/* Pagination */}
-          {pagination.total > pagination.limit && (
-            <div className="flex items-center justify-center gap-2">
-              <button
-                onClick={() =>
-                  setPagination((p) => ({ ...p, offset: Math.max(0, p.offset - p.limit) }))
-                }
-                disabled={pagination.offset === 0}
-                className="px-3 py-1.5 bg-[#F5F6F7] text-[#6A6A6A] rounded-lg text-sm disabled:opacity-50"
-              >
-                Previous
-              </button>
-              <span className="text-sm text-[#6A6A6A]">
-                {pagination.offset + 1}-{Math.min(pagination.offset + pagination.limit, pagination.total)} of {pagination.total}
-              </span>
-              <button
-                onClick={() =>
-                  setPagination((p) => ({
-                    ...p,
-                    offset: Math.min(p.total - p.limit, p.offset + p.limit),
-                  }))
-                }
-                disabled={pagination.offset + pagination.limit >= pagination.total}
-                className="px-3 py-1.5 bg-[#F5F6F7] text-[#6A6A6A] rounded-lg text-sm disabled:opacity-50"
-              >
-                Next
-              </button>
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-[#6A6A6A]">Severity:</span>
+            <select
+              value={severityFilter}
+              onChange={(e) => setSeverityFilter(e.target.value)}
+              className="px-3 py-1.5 border border-[#E6E7E9] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#2855FF]"
+            >
+              <option value="">All</option>
+              <option value="INFO">Info</option>
+              <option value="WARNING">Warning</option>
+              <option value="CRITICAL">Critical</option>
+            </select>
+          </div>
         </div>
       </div>
+
+      {/* Alerts Table */}
+      {loading ? (
+        <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF] mx-auto" />
+        </div>
+      ) : (
+        <AlertTable
+          alerts={alerts}
+          onMarkRead={handleMarkRead}
+          onMarkAllRead={handleMarkAllRead}
+          onDelete={handleDelete}
+        />
+      )}
+
+      {/* Pagination */}
+      {pagination.total > pagination.limit && (
+        <div className="flex items-center justify-center gap-2">
+          <button
+            onClick={() =>
+              setPagination((p) => ({ ...p, offset: Math.max(0, p.offset - p.limit) }))
+            }
+            disabled={pagination.offset === 0}
+            className="px-3 py-1.5 bg-[#F5F6F7] text-[#6A6A6A] rounded-lg text-sm disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <span className="text-sm text-[#6A6A6A]">
+            {pagination.offset + 1}-{Math.min(pagination.offset + pagination.limit, pagination.total)} of {pagination.total}
+          </span>
+          <button
+            onClick={() =>
+              setPagination((p) => ({
+                ...p,
+                offset: Math.min(p.total - p.limit, p.offset + p.limit),
+              }))
+            }
+            disabled={pagination.offset + pagination.limit >= pagination.total}
+            className="px-3 py-1.5 bg-[#F5F6F7] text-[#6A6A6A] rounded-lg text-sm disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 }
