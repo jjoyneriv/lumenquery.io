@@ -3,7 +3,7 @@
 ## Current Status
 - Working on: UI layout improvements
 - Last session: 2026-03-08
-- Last validated: 2026-03-08 (intelligence pages duplicate sidebar fixed)
+- Last validated: 2026-03-08 (docs sidebar removed)
 - All services: 12 containers running healthy
 - Stellar Horizon: Fixed database connection (184.105.230.250)
 - Transaction Viewer: Fixed with public Horizon API fallback
@@ -1209,6 +1209,14 @@ docker compose up -d
 6. Rebuilt and deployed portal with intelligence page fixes
 7. Verified all 5 pages return HTTP 200
 8. Committed and pushed intelligence page fixes to GitHub
+9. Removed sidebar from all docs pages:
+   - Updated docs/layout-client.tsx to remove left sidebar navigation
+   - Removed docsNavItems array and usePathname import (no longer needed)
+   - Content now takes full width within the layout
+   - Affected pages: /docs, /docs/analytics, /docs/intelligence, /docs/contracts, /docs/portfolio
+   - Rebuilt and deployed portal
+   - Verified all 5 docs pages return HTTP 200
+10. Committed and pushed docs sidebar removal to GitHub
 
 ## SEO & Performance Optimization
 
