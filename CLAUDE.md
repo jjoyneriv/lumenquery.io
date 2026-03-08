@@ -3,7 +3,7 @@
 ## Current Status
 - Working on: UI layout improvements
 - Last session: 2026-03-08
-- Last validated: 2026-03-08 (analytics sidebar layout updated)
+- Last validated: 2026-03-08 (intelligence pages duplicate sidebar fixed)
 - All services: 12 containers running healthy
 - Stellar Horizon: Fixed database connection (184.105.230.250)
 - Transaction Viewer: Fixed with public Horizon API fallback
@@ -1196,6 +1196,19 @@ docker compose up -d
 2. Rebuilt and deployed portal with analytics sidebar change
 3. Verified analytics page returns HTTP 200
 4. Committed and pushed changes to GitHub
+5. Fixed duplicate sidebar menus on 5 intelligence pages:
+   - Issue: Pages had their own IntelligenceNav sidebar, but layout-client.tsx already provides it
+   - Fixed pages:
+     - /intelligence/accounts
+     - /intelligence/watchlists
+     - /intelligence/alerts
+     - /intelligence/trustlines
+     - /intelligence/contracts
+   - Removed duplicate sidebar wrappers, keeping only page content
+   - Each page now renders cleanly within the layout's main content area
+6. Rebuilt and deployed portal with intelligence page fixes
+7. Verified all 5 pages return HTTP 200
+8. Committed and pushed intelligence page fixes to GitHub
 
 ## SEO & Performance Optimization
 
