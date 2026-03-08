@@ -2105,7 +2105,7 @@ UPDATE "User" SET role = 'SUPER_ADMIN' WHERE email = 'admin@example.com';
 
 # Project Memory Summary
 
-*Generated: 2026-03-08 | For future session context loading*
+*Last Updated: 2026-03-08 | For future session context loading*
 
 ## Project Purpose
 
@@ -2339,7 +2339,13 @@ Each major section has a `layout-client.tsx` with:
 1. Header with logo and page title
 2. Product navigation bar (Live Transactions, Contracts, Analytics, etc.)
 3. Admin link visible only to SUPER_ADMIN users
-4. Section-specific sub-navigation (tabs or sidebar)
+4. Section-specific sub-navigation (sidebar for analytics/intelligence, none for docs)
+
+### Layout Patterns
+- **Analytics/Intelligence**: Left sidebar navigation with sticky positioning
+- **Docs**: Full-width content (sidebar removed 2026-03-08)
+- **Portfolio**: Conditional sub-navigation based on route depth
+- **Dashboard/Contracts**: Product navigation bar only, no sub-nav
 
 ## Open Problems
 
@@ -2421,4 +2427,41 @@ curl https://horizon.stellar.org/ledgers?limit=1
 ```bash
 docker compose build portal 2>&1 | tail -100
 ```
+
+## Recent Session Changes (2026-03-08)
+
+### UI Layout Updates
+1. **Analytics page**: Changed from top tabs to left sidebar navigation
+2. **Intelligence pages**: Fixed duplicate sidebar issue on 5 sub-pages (accounts, watchlists, alerts, trustlines, contracts) - removed duplicate IntelligenceNav from individual pages since layout-client.tsx provides it
+3. **Docs pages**: Removed sidebar completely - content now full-width
+
+### Key Files Modified
+- `portal/app/analytics/layout-client.tsx` - Added left sidebar
+- `portal/app/intelligence/layout-client.tsx` - Already had sidebar
+- `portal/app/docs/layout-client.tsx` - Removed sidebar
+- `portal/app/intelligence/*/page.tsx` (5 files) - Removed duplicate sidebar wrappers
+
+### Pattern Learned
+When a `layout-client.tsx` provides a sidebar, individual pages within that layout should NOT include their own sidebar - they should only render their content. The layout wraps all pages with consistent navigation.
+
+## URLs Reference
+
+### Public Pages (no auth)
+- https://lumenquery.io/ - Home
+- https://lumenquery.io/analytics - Network analytics
+- https://lumenquery.io/contracts - Contract explorer
+- https://lumenquery.io/docs - API documentation
+- https://lumenquery.io/blog - Blog posts
+- https://lumenquery.io/pricing - Pricing
+
+### Authenticated Pages
+- https://lumenquery.io/dashboard - User dashboard
+- https://lumenquery.io/intelligence - Transaction intelligence
+- https://lumenquery.io/portfolio - Portfolio management
+- https://lumenquery.io/admin - Admin console (SUPER_ADMIN only)
+
+### API Endpoints
+- https://lumenquery.io/api/health - Health check
+- https://lumenquery.io/api/analytics/network - Network metrics
+- https://lumenquery.io/api/transactions/stream - SSE transaction stream
 
