@@ -2068,3 +2068,325 @@ UPDATE "User" SET role = 'SUPER_ADMIN' WHERE email = 'admin@example.com';
 - Before ending a session, ask Claude to update this file with current progress
 - Monitoring server (mon1) is ready for stack deployment
 - GitHub secrets need to be configured for automated deployments
+
+---
+
+# Project Memory Summary
+
+*Generated: 2026-03-08 | For future session context loading*
+
+## Project Purpose
+
+**LumenQuery** is a comprehensive Stellar blockchain analytics and developer platform. It provides:
+
+1. **Horizon API Gateway** - Proxied access to Stellar Horizon with rate limiting, caching, and usage tracking
+2. **Soroban RPC Gateway** - JSON-RPC proxy for Soroban smart contracts
+3. **Analytics Dashboard** - Real-time Stellar network metrics (public, no auth required)
+4. **Soroban Pro** - Smart contract explorer with decoded calls, storage viewer, event streaming
+5. **Transaction Intelligence** - Real-time transaction monitoring, watchlists, alerts
+6. **Portfolio Intelligence** - Multi-account aggregation, P&L tracking, yield monitoring
+7. **Admin Console** - User management, usage analytics, audit logging (SUPER_ADMIN only)
+
+**Target users**: Web3 developers, traders, validators, exchanges, custodians, DAOs, DeFi participants
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         Internet                                 │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    Traefik (Reverse Proxy)                      │
+│         - TLS termination (Let's Encrypt)                       │
+│         - Rate limiting                                          │
+│         - Gzip compression                                       │
+│         - Routing: lumenquery.io, api.*, rpc.*                  │
+└─────────────────────────────────────────────────────────────────┘
+          │                    │                    │
+          ▼                    ▼                    ▼
+┌─────────────────┐   ┌─────────────────┐   ┌─────────────────┐
+│  Portal (3000)  │   │ API Gateway     │   │ RPC Gateway     │
+│  Next.js 14     │   │ (8080)          │   │ (8082)          │
+│  - App Router   │   │ - Horizon proxy │   │ - Soroban proxy │
+│  - NextAuth v5  │   │ - Usage logging │   │ - Usage logging │
+│  - Prisma ORM   │   │                 │   │                 │
+└─────────────────┘   └─────────────────┘   └─────────────────┘
+          │                    │                    │
+          ▼                    ▼                    ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                     Data Layer                                   │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐ │
+│  │ PostgreSQL  │  │    Redis    │  │  External APIs          │ │
+│  │  (5432)     │  │   (6379)    │  │  - horizon.stellar.org  │ │
+│  │  40 tables  │  │  - Cache    │  │  - Soroban RPC          │ │
+│  │             │  │  - Sessions │  │                         │ │
+│  └─────────────┘  └─────────────┘  └─────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Docker Services (12 containers)
+| Service | Container | Purpose |
+|---------|-----------|---------|
+| traefik | lumenquery-traefik | Reverse proxy, TLS, routing |
+| portal | lumenquery-portal | Next.js web application |
+| api-gateway | lumenquery-api-gateway | Horizon API proxy |
+| rpc-gateway | lumenquery-rpc-gateway | Soroban RPC proxy |
+| postgres | lumenquery-postgres | Primary database |
+| redis | lumenquery-redis | Cache and sessions |
+| stellar-horizon | stellar-horizon | Local Horizon (uses remote DB) |
+| soroban-rpc | soroban-rpc | Local Soroban RPC |
+| node-exporter | node-exporter | System metrics |
+| cadvisor | cadvisor | Container metrics |
+| postgres-exporter | postgres-exporter | DB metrics |
+| redis-exporter | redis-exporter | Cache metrics |
+
+## Key Directories
+
+```
+/opt/lumenquery-portal/
+├── portal/                      # Next.js application
+│   ├── app/                     # App Router pages and API routes
+│   │   ├── api/                 # API endpoints
+│   │   │   ├── admin/           # Admin APIs (SUPER_ADMIN)
+│   │   │   ├── analytics/       # Network analytics
+│   │   │   ├── auth/            # NextAuth endpoints
+│   │   │   ├── contracts/       # Soroban Pro APIs
+│   │   │   ├── intelligence/    # Transaction intelligence
+│   │   │   ├── portfolio/       # Portfolio APIs
+│   │   │   └── transactions/    # Live transaction stream (SSE)
+│   │   ├── admin/               # Admin Console pages
+│   │   ├── analytics/           # Analytics dashboard
+│   │   ├── contracts/           # Contract explorer
+│   │   ├── dashboard/           # User dashboard
+│   │   ├── docs/                # API documentation
+│   │   ├── intelligence/        # Intelligence dashboard
+│   │   └── portfolio/           # Portfolio pages
+│   ├── components/              # React components
+│   │   ├── Header.tsx           # Main navigation
+│   │   ├── Footer.tsx           # Site footer
+│   │   ├── admin/               # Admin components
+│   │   ├── analytics/           # Charts, metrics
+│   │   ├── contracts/           # Contract explorer UI
+│   │   ├── intelligence/        # Intelligence UI
+│   │   └── portfolio/           # Portfolio UI
+│   ├── lib/                     # Utility libraries
+│   │   ├── admin/               # Admin guards, audit
+│   │   ├── intelligence/        # Account profiling
+│   │   ├── portfolio/           # P&L, risk assessment
+│   │   ├── soroban/             # XDR decoding, RPC client
+│   │   ├── wallet/              # Freighter integration
+│   │   ├── prisma.ts            # DB client
+│   │   ├── redis.ts             # Cache client
+│   │   └── rate-limit.ts        # Rate limiting
+│   ├── hooks/                   # React hooks
+│   ├── prisma/                  # Database schema
+│   └── public/                  # Static assets
+├── api-gateway/                 # Horizon proxy service
+├── rpc-gateway/                 # Soroban RPC proxy
+├── traefik/                     # Traefik configuration
+│   └── dynamic.yml              # Routes and middleware
+├── monitoring/                  # Prometheus/Grafana
+├── docker-compose.yml           # Main orchestration
+├── .env                         # Environment secrets
+└── CLAUDE.md                    # This documentation
+```
+
+## Important Scripts
+
+### Development
+```bash
+cd /opt/lumenquery-portal/portal
+npm run dev                      # Start dev server (port 3000)
+npm run lint                     # Run ESLint
+npm run build                    # Build for production
+```
+
+### Database
+```bash
+cd /opt/lumenquery-portal/portal
+npx prisma db push               # Sync schema (no migration)
+npx prisma migrate dev           # Create migration
+npx prisma studio                # Database GUI
+npx prisma generate              # Generate client
+```
+
+### Docker Operations
+```bash
+cd /opt/lumenquery-portal
+docker compose build portal      # Build portal image
+docker compose up -d portal      # Deploy portal
+docker compose logs -f portal    # View logs
+docker compose ps                # Check status
+```
+
+### Deployment (Full)
+```bash
+cd /opt/lumenquery-portal
+docker compose build portal && docker compose up -d portal
+```
+
+### Git Operations
+```bash
+cd /opt/lumenquery-portal
+git status                       # Check changes
+git add <files>                  # Stage changes
+git commit -m "message"          # Commit
+git push                         # Push to GitHub
+```
+
+## Deployment Process
+
+1. **Make changes** to code in `/opt/lumenquery-portal/portal/`
+
+2. **Build Docker image**:
+   ```bash
+   cd /opt/lumenquery-portal
+   docker compose build portal
+   ```
+
+3. **Deploy**:
+   ```bash
+   docker compose up -d portal
+   ```
+
+4. **Verify**:
+   ```bash
+   curl -s -o /dev/null -w "%{http_code}" https://lumenquery.io
+   # Should return 200
+   ```
+
+5. **Commit and push**:
+   ```bash
+   git add <files>
+   git commit -m "Description of changes"
+   git push
+   ```
+
+### Environment Variables (in .env)
+| Variable | Purpose |
+|----------|---------|
+| DATABASE_URL | PostgreSQL connection string |
+| REDIS_URL | Redis connection string |
+| NEXTAUTH_URL | Public URL (https://lumenquery.io) |
+| NEXTAUTH_SECRET | Session encryption key |
+| DOMAIN | Primary domain |
+| ACME_EMAIL | Let's Encrypt email |
+| STRIPE_* | Payment processing |
+| ANTHROPIC_API_KEY | AI explanations (coming soon) |
+
+## Coding Conventions
+
+### File Structure
+- **Pages**: `/app/[route]/page.tsx` (server component by default)
+- **Layouts**: `/app/[route]/layout.tsx` or `layout-client.tsx` (for client-side nav)
+- **API Routes**: `/app/api/[endpoint]/route.ts`
+- **Components**: `/components/[feature]/ComponentName.tsx`
+- **Libraries**: `/lib/[feature]/index.ts`
+
+### Naming
+- Components: PascalCase (`ContractCard.tsx`)
+- Utilities: camelCase (`formatAddress.ts`)
+- API routes: kebab-case directories (`/api/forgot-password/`)
+
+### Patterns
+- **Authentication**: Use `auth()` from `/auth.ts` (NextAuth v5)
+- **Database**: Import `prisma` from `/lib/prisma`
+- **Cache**: Import `redis` from `/lib/redis`
+- **Role checks**: `(session.user as any)?.role === 'SUPER_ADMIN'`
+
+### UI Conventions
+- **Colors**: Primary blue `#2855FF`, Gray text `#6A6A6A`, Border `#E6E7E9`
+- **Layout**: `max-w-6xl mx-auto px-4 sm:px-6` for content width
+- **Cards**: `rounded-xl bg-white border border-[#E6E7E9] p-4 sm:p-6`
+- **Responsive**: Mobile-first with `sm:`, `md:`, `lg:` breakpoints
+
+### Navigation Pattern
+Each major section has a `layout-client.tsx` with:
+1. Header with logo and page title
+2. Product navigation bar (Live Transactions, Contracts, Analytics, etc.)
+3. Admin link visible only to SUPER_ADMIN users
+4. Section-specific sub-navigation (tabs or sidebar)
+
+## Open Problems
+
+### Infrastructure
+1. **Local Horizon database unreachable** - PostgreSQL at 184.105.230.246:5432 refuses connections
+   - **Workaround**: Analytics/transactions use public Horizon API (horizon.stellar.org)
+   
+2. **Monitoring stack not deployed** - Prometheus/Grafana configured but not running on mon1
+   - Files ready in `/monitoring/`, needs deployment to mon1.lumenquery.io
+
+3. **GitHub Secrets not configured** - CI/CD deployment not automated
+   - Need to add: DEPLOY_HOST, DEPLOY_USER, DEPLOY_SSH_KEY
+
+### Features
+4. **AI Explanations** - Soroban Pro feature not implemented
+   - Requires ANTHROPIC_API_KEY
+   - UI shows "Coming Soon"
+
+5. **Compliance feature removed** - Was removed 2026-02-21
+   - Database schema still has compliance tables (unused)
+   - Consider cleaning up schema in future migration
+
+6. **Analytics 7d/30d removed** - Performance issue (too many API calls)
+   - Only 24h time range available
+   - Would need background job to pre-aggregate data
+
+### Technical Debt
+7. **Type casting for user role** - Uses `(session.user as any)?.role`
+   - Should extend NextAuth types properly
+
+8. **Build warnings** - Stellar SDK has require() warnings
+   - Non-blocking but appears in build logs
+
+9. **Unused enums** - ADMIN role exists but Admin Console is SUPER_ADMIN only
+   - May want to remove ADMIN role or give it limited access
+
+### Data
+10. **No database backups** - PostgreSQL not backed up
+    - Should configure pg_dump cron job or managed backup
+
+11. **No SSL monitoring** - Let's Encrypt certificates not monitored
+    - Should add certificate expiry alerts
+
+## Quick Reference
+
+### Check Service Status
+```bash
+docker ps --format "table {{.Names}}\t{{.Status}}"
+```
+
+### View Logs
+```bash
+docker compose logs -f portal --tail 100
+```
+
+### Database Access
+```bash
+docker exec -it lumenquery-postgres psql -U lumenquery -d lumenquery_portal
+```
+
+### Redis Access
+```bash
+docker exec -it lumenquery-redis redis-cli
+```
+
+### Common Issues
+
+**Portal won't start**: Check logs, usually DATABASE_URL or REDIS_URL issue
+```bash
+docker compose logs portal --tail 50
+```
+
+**API returns 500**: Usually Horizon API unreachable, check fallback is working
+```bash
+curl https://horizon.stellar.org/ledgers?limit=1
+```
+
+**Build fails**: Usually TypeScript error, check build output
+```bash
+docker compose build portal 2>&1 | tail -100
+```
+
