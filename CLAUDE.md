@@ -1226,8 +1226,12 @@ docker compose up -d
 2. Removed sidebar from docs pages:
    - User changed their mind - reverted to full-width content without sidebar
    - Updated docs/layout-client.tsx to remove sidebar and simplify layout
-3. Rebuilt and deployed portal
-4. Committed and pushed changes to GitHub
+3. Removed duplicate Header/Footer from docs sub-pages:
+   - Issue: Docs sub-pages (/docs/analytics, /docs/intelligence, /docs/contracts, /docs/portfolio) had their own Header and Footer components, causing duplicate navigation menus
+   - Fix: Removed Header and Footer imports from all 4 sub-pages
+   - Sub-pages now only render their content, relying on layout-client.tsx for navigation
+4. Rebuilt and deployed portal
+5. Committed and pushed changes to GitHub
 
 ## SEO & Performance Optimization
 
@@ -2443,13 +2447,18 @@ docker compose build portal 2>&1 | tail -100
 
 ### UI Layout Updates
 1. **Docs pages**: Sidebar added then removed - now full-width content without sidebar
-2. Analytics/Intelligence use left sidebar, Docs does not
+2. **Docs sub-pages**: Removed duplicate Header/Footer components that were causing double navigation menus
+3. Analytics/Intelligence use left sidebar, Docs does not
 
 ### Key Files Modified
 - `portal/app/docs/layout-client.tsx` - Removed sidebar, simplified to full-width content
+- `portal/app/docs/analytics/page.tsx` - Removed Header/Footer imports
+- `portal/app/docs/intelligence/page.tsx` - Removed Header/Footer imports
+- `portal/app/docs/contracts/page.tsx` - Removed Header/Footer imports
+- `portal/app/docs/portfolio/page.tsx` - Removed Header/Footer imports
 
 ### Pattern Learned
-When a `layout-client.tsx` provides a sidebar, individual pages within that layout should NOT include their own sidebar - they should only render their content. The layout wraps all pages with consistent navigation.
+When a `layout-client.tsx` provides navigation, individual pages within that layout should NOT include their own Header/Footer components - they should only render their content. The layout wraps all pages with consistent navigation.
 
 ## URLs Reference
 
