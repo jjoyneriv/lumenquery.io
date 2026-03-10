@@ -2,8 +2,8 @@
 
 ## Current Status
 - Working on: UI layout improvements
-- Last session: 2026-03-08
-- Last validated: 2026-03-08 (docs sidebar removed)
+- Last session: 2026-03-10
+- Last validated: 2026-03-10 (docs sidebar removed)
 - All services: 12 containers running healthy
 - Stellar Horizon: Fixed database connection (184.105.230.250)
 - Transaction Viewer: Fixed with public Horizon API fallback
@@ -1218,6 +1218,17 @@ docker compose up -d
    - Verified all 5 docs pages return HTTP 200
 10. Committed and pushed docs sidebar removal to GitHub
 
+### 2026-03-10
+1. Added sidebar navigation to docs pages (later removed):
+   - Added left sidebar with links to API Reference, Analytics, Intelligence, Contracts, Portfolio
+   - Sidebar highlighted active page with blue background
+   - Used sticky positioning on desktop
+2. Removed sidebar from docs pages:
+   - User changed their mind - reverted to full-width content without sidebar
+   - Updated docs/layout-client.tsx to remove sidebar and simplify layout
+3. Rebuilt and deployed portal
+4. Committed and pushed changes to GitHub
+
 ## SEO & Performance Optimization
 
 ### Sitemap Configuration
@@ -2343,7 +2354,7 @@ Each major section has a `layout-client.tsx` with:
 
 ### Layout Patterns
 - **Analytics/Intelligence**: Left sidebar navigation with sticky positioning
-- **Docs**: Full-width content (sidebar removed 2026-03-08)
+- **Docs**: Full-width content, no sidebar
 - **Portfolio**: Conditional sub-navigation based on route depth
 - **Dashboard/Contracts**: Product navigation bar only, no sub-nav
 
@@ -2428,18 +2439,14 @@ curl https://horizon.stellar.org/ledgers?limit=1
 docker compose build portal 2>&1 | tail -100
 ```
 
-## Recent Session Changes (2026-03-08)
+## Recent Session Changes (2026-03-10)
 
 ### UI Layout Updates
-1. **Analytics page**: Changed from top tabs to left sidebar navigation
-2. **Intelligence pages**: Fixed duplicate sidebar issue on 5 sub-pages (accounts, watchlists, alerts, trustlines, contracts) - removed duplicate IntelligenceNav from individual pages since layout-client.tsx provides it
-3. **Docs pages**: Removed sidebar completely - content now full-width
+1. **Docs pages**: Sidebar added then removed - now full-width content without sidebar
+2. Analytics/Intelligence use left sidebar, Docs does not
 
 ### Key Files Modified
-- `portal/app/analytics/layout-client.tsx` - Added left sidebar
-- `portal/app/intelligence/layout-client.tsx` - Already had sidebar
-- `portal/app/docs/layout-client.tsx` - Removed sidebar
-- `portal/app/intelligence/*/page.tsx` (5 files) - Removed duplicate sidebar wrappers
+- `portal/app/docs/layout-client.tsx` - Removed sidebar, simplified to full-width content
 
 ### Pattern Learned
 When a `layout-client.tsx` provides a sidebar, individual pages within that layout should NOT include their own sidebar - they should only render their content. The layout wraps all pages with consistent navigation.
