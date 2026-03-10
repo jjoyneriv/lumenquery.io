@@ -1,8 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { useState } from 'react';
 
 export default function AnalyticsDocsPage() {
@@ -46,9 +44,7 @@ export default function AnalyticsDocsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-white text-black">
-      <Header activePage="docs" />
-
+    <div className="bg-white text-black">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
         {/* Mobile sidebar toggle */}
         <button
@@ -806,8 +802,6 @@ const stroops = xlm * 10_000_000;
           </main>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 }

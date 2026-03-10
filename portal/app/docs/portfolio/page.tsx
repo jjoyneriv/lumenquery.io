@@ -1,8 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { useState } from 'react';
 
 export default function PortfolioDocsPage() {
@@ -59,9 +57,7 @@ export default function PortfolioDocsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-white text-black">
-      <Header activePage="docs" />
-
+    <div className="bg-white text-black">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
         {/* Mobile sidebar toggle */}
         <button
@@ -1010,8 +1006,6 @@ Remaining: 500 XLM
           </main>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 }
