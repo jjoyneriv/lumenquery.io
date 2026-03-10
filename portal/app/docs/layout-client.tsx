@@ -2,13 +2,23 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+
+const docsNavItems = [
+  { href: '/docs', label: 'API Reference' },
+  { href: '/docs/analytics', label: 'Analytics' },
+  { href: '/docs/intelligence', label: 'Intelligence' },
+  { href: '/docs/contracts', label: 'Contracts' },
+  { href: '/docs/portfolio', label: 'Portfolio' },
+];
 
 export default function DocsLayoutClient({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
   const { data: session } = useSession();
 
   return (
@@ -75,9 +85,40 @@ export default function DocsLayoutClient({
       </header>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-6 md:py-8">
-        <main className="w-full">
-          {children}
-        </main>
+        <div className="flex flex-col md:flex-row gap-6 md:gap-8">
+          {/* Sidebar Navigation */}
+          <aside className="w-full md:w-56 shrink-0">
+            <nav className="bg-white rounded-xl border border-[#E6E7E9] p-4 md:sticky md:top-4">
+              <h2 className="text-sm font-semibold text-[#6A6A6A] uppercase tracking-wider mb-3">
+                Documentation
+              </h2>
+              <ul className="space-y-1">
+                {docsNavItems.map((item) => {
+                  const isActive = pathname === item.href;
+                  return (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                          isActive
+                            ? 'bg-[#2855FF] text-white'
+                            : 'text-[#6A6A6A] hover:bg-[#F5F6F7] hover:text-black'
+                        }`}
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+          </aside>
+
+          {/* Main Content */}
+          <main className="flex-1 min-w-0">
+            {children}
+          </main>
+        </div>
       </div>
     </div>
   );
