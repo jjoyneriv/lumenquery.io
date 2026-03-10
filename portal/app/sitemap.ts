@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://lumenquery.io';
-  const today = new Date('2026-02-22');
+  const today = new Date('2026-03-10');
 
   // Core pages
   const corePages: MetadataRoute.Sitemap = [
@@ -11,6 +11,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: today,
       changeFrequency: 'weekly',
       priority: 1.0,
+    },
+    {
+      url: `${baseUrl}/query`,
+      lastModified: today,
+      changeFrequency: 'weekly',
+      priority: 0.9,
     },
     {
       url: `${baseUrl}/pricing`,
