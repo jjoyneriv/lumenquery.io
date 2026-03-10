@@ -122,11 +122,20 @@ export default function QueryPage() {
             />
             <span className="text-lg font-semibold">LumenQuery</span>
           </Link>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 sm:gap-6">
+            <Link href="/query" className="text-sm text-[#2855FF] font-medium">
+              Query
+            </Link>
+            <Link href="/contracts" className="hidden sm:block text-sm text-gray-400 hover:text-white transition-colors">
+              Contracts
+            </Link>
+            <Link href="/analytics" className="hidden sm:block text-sm text-gray-400 hover:text-white transition-colors">
+              Analytics
+            </Link>
             <Link href="/docs" className="text-sm text-gray-400 hover:text-white transition-colors">
               Docs
             </Link>
-            <Link href="/pricing" className="text-sm text-gray-400 hover:text-white transition-colors">
+            <Link href="/pricing" className="hidden sm:block text-sm text-gray-400 hover:text-white transition-colors">
               Pricing
             </Link>
             {session ? (

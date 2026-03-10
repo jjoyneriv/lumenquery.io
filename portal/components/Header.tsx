@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 
 interface HeaderProps {
-  activePage?: 'home' | 'docs' | 'blog' | 'dashboard' | 'analytics' | 'contracts' | 'pricing' | 'intelligence' | 'portfolio' | 'admin';
+  activePage?: 'home' | 'docs' | 'blog' | 'dashboard' | 'analytics' | 'contracts' | 'pricing' | 'intelligence' | 'portfolio' | 'admin' | 'query';
 }
 
 export default function Header({ activePage = 'home' }: HeaderProps) {
@@ -35,6 +35,7 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
+          <Link href="/query" className={navLinkClass('query')}>Query</Link>
           <Link href="/contracts" className={navLinkClass('contracts')}>Contracts</Link>
           <Link href="/analytics" className={navLinkClass('analytics')}>Analytics</Link>
           <Link href="/intelligence" className={navLinkClass('intelligence')}>Intelligence</Link>
@@ -77,6 +78,13 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-[#E6E7E9] bg-white">
           <nav className="flex flex-col px-4 py-4 space-y-3">
+            <Link
+              href="/query"
+              className={`py-2 ${navLinkClass('query')}`}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Query
+            </Link>
             <Link
               href="/contracts"
               className={`py-2 ${navLinkClass('contracts')}`}
