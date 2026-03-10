@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Plain English Queries for Stellar Blockchain | LumenQuery',
+  title: 'Plain English Queries for Stellar Blockchain',
   description: 'Query the Stellar blockchain using natural language. No SQL required. Get instant insights on transactions, wallets, assets, and validators.',
   keywords: ['Stellar blockchain', 'natural language query', 'blockchain analytics', 'XLM', 'crypto data', 'SQL-free'],
   openGraph: {
