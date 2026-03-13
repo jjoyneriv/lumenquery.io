@@ -354,11 +354,33 @@ export default function QueryPage() {
                     <tbody>
                       {result.data.map((row, i) => (
                         <tr key={i} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                          {result.columns?.map((col) => (
+                          {result.columns?.map((col) => {
+                            // Check if this is an account ID column that should be clickable
+                            const isAccountColumn = col.includes('account') || col === 'from' || col === 'to' || col === 'source';
+                            const cellValue = String(row[col] || '-');
+
+                            // Get full account ID if available (stored as full_account_id or full_* variant)
+                            const fullAccountId = row[`full_${col}`] || row['full_account_id'] || null;
+
+                            // Check if the full account ID is a valid Stellar address (starts with G, 56 chars)
+                            const isClickableAccount = isAccountColumn && fullAccountId &&
+                              typeof fullAccountId === 'string' &&
+                              fullAccountId.startsWith('G') &&
+                              fullAccountId.length === 56;
+
+                            return (
                             <td key={col} className="py-3 px-4">
-                              {col.includes('account') || col.includes('hash') || col.includes('issuer') ? (
+                              {isClickableAccount ? (
+                                <button
+                                  onClick={() => handleExampleClick(`Account info for ${fullAccountId}`)}
+                                  className="font-mono text-[#2855FF] hover:underline cursor-pointer text-left"
+                                  title={`View details for ${fullAccountId}`}
+                                >
+                                  {cellValue}
+                                </button>
+                              ) : col.includes('account') || col.includes('hash') || col.includes('issuer') ? (
                                 <span className="font-mono text-[#2855FF]">
-                                  {String(row[col] || '-')}
+                                  {cellValue}
                                 </span>
                               ) : col.includes('amount') || col.includes('balance') || col.includes('supply') ? (
                                 <span className="text-green-400">
@@ -372,7 +394,8 @@ export default function QueryPage() {
                                 String(row[col] || '-')
                               )}
                             </td>
-                          ))}
+                            );
+                          })}
                         </tr>
                       ))}
                     </tbody>

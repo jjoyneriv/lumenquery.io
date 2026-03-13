@@ -159,7 +159,9 @@ async function executeRecentPayments(parsed: ParsedQuery, startTime: number): Pr
     .map((p: HorizonPayment) => ({
       type: p.type,
       from: formatAccountId(p.from || p.source_account),
+      full_from: p.from || p.source_account,
       to: formatAccountId(p.to || ''),
+      full_to: p.to || '',
       amount: formatAmount(p.amount || '0'),
       asset: p.asset_type === 'native' ? 'XLM' : (p.asset_code || p.asset_type),
       time: formatTime(p.created_at),
@@ -194,7 +196,9 @@ async function executeLargePayments(parsed: ParsedQuery, startTime: number): Pro
     .slice(0, limit)
     .map((p: HorizonPayment) => ({
       from: formatAccountId(p.from || p.source_account),
+      full_from: p.from || p.source_account,
       to: formatAccountId(p.to || ''),
+      full_to: p.to || '',
       amount_xlm: formatAmount(p.amount || '0'),
       time: formatTime(p.created_at),
       tx_hash: p.transaction_hash.substring(0, 8) + '...',
@@ -232,6 +236,7 @@ async function executeRecentTransactions(parsed: ParsedQuery, startTime: number)
     hash: t.hash.substring(0, 12) + '...',
     full_hash: t.hash,
     source: formatAccountId(t.source_account),
+    full_source: t.source_account,
     operations: t.operation_count,
     fee: (parseInt(t.fee_charged) / 10000000).toFixed(5) + ' XLM',
     status: t.successful ? 'Success' : 'Failed',
@@ -349,6 +354,7 @@ async function executeOperations(parsed: ParsedQuery, startTime: number): Promis
     id: o.id,
     type: o.type.replace(/_/g, ' '),
     source: formatAccountId(o.source_account),
+    full_source: o.source_account,
     time: formatTime(o.created_at),
     tx_hash: o.transaction_hash.substring(0, 8) + '...',
   }));

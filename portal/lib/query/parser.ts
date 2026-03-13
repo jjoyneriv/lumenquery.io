@@ -22,6 +22,8 @@ const patterns: Array<{
       /biggest\s+(?:xlm\s+)?(?:wallets?|holders?)/i,
       /xlm\s+holders?/i,
       /rich\s+(?:list|wallets?)/i,
+      /(?:which|what)\s+(?:wallets?|accounts?)\s+(?:received|got)\s+(?:the\s+)?most\s+xlm/i,
+      /(?:wallets?|accounts?)\s+(?:that\s+)?received\s+(?:the\s+)?most\s+xlm/i,
     ],
     extractor: (match, query) => {
       const limitMatch = query.match(/\d+/);
@@ -197,13 +199,22 @@ LIMIT ${params.limit};`,
 ];
 
 export function parseQuery(query: string): ParsedQuery {
-  const normalizedQuery = query.trim().toLowerCase();
+  const trimmedQuery = query.trim();
+  const normalizedQuery = trimmedQuery.toLowerCase();
 
   for (const pattern of patterns) {
     for (const regex of pattern.patterns) {
       const match = normalizedQuery.match(regex);
       if (match) {
-        const params = pattern.extractor(match, normalizedQuery);
+        // For account_info, extract account ID from original query to preserve case
+        let params: Record<string, string | number | boolean>;
+        if (pattern.type === 'account_info' || pattern.type === 'account_transactions') {
+          // Extract the account ID from the original query using the same pattern
+          const originalMatch = trimmedQuery.match(regex);
+          params = pattern.extractor(originalMatch || match, trimmedQuery);
+        } else {
+          params = pattern.extractor(match, normalizedQuery);
+        }
         return {
           type: pattern.type,
           params,
