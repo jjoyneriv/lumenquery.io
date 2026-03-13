@@ -14,7 +14,7 @@
 - Portfolio Intelligence: Implementation complete, deployed, documentation complete
 - Soroban Pro: Implementation complete, deployed, documentation complete
 - Contract Deployment: Implementation complete, Freighter wallet integration, WASM upload
-- Natural Language Query: Implementation complete, deployed, 9 query types supported
+- Natural Language Query: Implementation complete, deployed, 9 query types, all 6 examples validated
 - Compliance & AML: **REMOVED** (feature completely removed from codebase)
 - Transaction Intelligence: Documentation complete
 - Stellar Network Analytics: Documentation complete
@@ -1264,6 +1264,19 @@ docker compose up -d
    - Fixed assets query error (num_accounts toLocaleString issue)
 4. Rebuilt and deployed portal
 5. Committed and pushed to GitHub
+6. Validated all 6 example queries on /query page:
+   - Query 1: "Show the top 10 wallets holding XLM" - ✅ Working (top_holders)
+   - Query 2: "Which wallets received the most XLM today?" - ✅ Working (top_holders)
+   - Query 3: "Payments larger than 100,000 XLM" - ✅ Working (large_payments)
+   - Query 4: "What assets are on Stellar?" - ✅ Working (assets)
+   - Query 5: Originally "Which validators processed..." - ❌ Not supported
+   - Query 6: Originally "Compare USDC and yXLM..." - ❌ Not supported
+7. Fixed failing example queries:
+   - Replaced query 5 with "Latest ledger status" (ledger_info)
+   - Replaced query 6 with "Recent 50 transactions" (recent_transactions)
+   - All 6 examples now validated and working
+8. Rebuilt and deployed portal with fixed examples
+9. Committed and pushed example queries fix to GitHub
 
 ## SEO & Performance Optimization
 
