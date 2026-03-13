@@ -23,27 +23,27 @@ interface QueryResult {
 const exampleQueries = [
   {
     query: "Show the top 10 wallets holding XLM",
-    result: "Ranked table of addresses with balances, last activity, and account age"
+    result: "Ranked table of addresses with balances, last activity, and recent transfers"
   },
   {
     query: "Which wallets received the most XLM today?",
-    result: "Leaderboard of inbound transfer recipients with transaction counts"
+    result: "Leaderboard of inbound transfer recipients with balances"
   },
   {
-    query: "Show transactions larger than 1,000,000 XLM in the last 24 hours",
-    result: "Filtered transaction list with sender, receiver, amount, and timestamp"
+    query: "Payments larger than 100,000 XLM",
+    result: "Whale movement alerts with sender, receiver, amount, and timestamp"
   },
   {
-    query: "What assets on Stellar had the highest trading volume today?",
-    result: "Asset table ranked by 24h volume with issuer info and trade count"
+    query: "What assets are on Stellar?",
+    result: "Asset table with holder counts, supply, and issuer flags"
   },
   {
-    query: "Which validators processed the most transactions this week?",
-    result: "Validator performance table with ledger counts and uptime metrics"
+    query: "Latest ledger status",
+    result: "Current network state with ledger sequence, transaction count, and base fees"
   },
   {
-    query: "Compare USDC and yXLM trading volume over the past month",
-    result: "Side-by-side time-series chart with daily volume breakdown"
+    query: "Recent 50 transactions",
+    result: "Transaction table with hashes, sources, operation counts, and status"
   }
 ];
 
