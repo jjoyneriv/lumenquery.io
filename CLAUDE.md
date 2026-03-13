@@ -1,9 +1,9 @@
 # Project Context
 
 ## Current Status
-- Working on: UI layout improvements
-- Last session: 2026-03-10
-- Last validated: 2026-03-10 (docs sidebar removed)
+- Working on: Natural language query feature
+- Last session: 2026-03-13
+- Last validated: 2026-03-13 (query feature deployed)
 - All services: 12 containers running healthy
 - Stellar Horizon: Fixed database connection (184.105.230.250)
 - Transaction Viewer: Fixed with public Horizon API fallback
@@ -14,6 +14,7 @@
 - Portfolio Intelligence: Implementation complete, deployed, documentation complete
 - Soroban Pro: Implementation complete, deployed, documentation complete
 - Contract Deployment: Implementation complete, Freighter wallet integration, WASM upload
+- Natural Language Query: Implementation complete, deployed, 9 query types supported
 - Compliance & AML: **REMOVED** (feature completely removed from codebase)
 - Transaction Intelligence: Documentation complete
 - Stellar Network Analytics: Documentation complete
@@ -147,6 +148,9 @@
 | Admin Pages | `/opt/lumenquery-portal/portal/app/admin/` | Admin dashboard and management pages |
 | Admin API | `/opt/lumenquery-portal/portal/app/api/admin/` | Users, usage, audit log endpoints |
 | Admin Lib | `/opt/lumenquery-portal/portal/lib/admin/` | Admin guards, audit logging utilities |
+| Query Page | `/opt/lumenquery-portal/portal/app/query/` | Natural language query interface |
+| Query API | `/opt/lumenquery-portal/portal/app/api/query/` | Query execution endpoint |
+| Query Lib | `/opt/lumenquery-portal/portal/lib/query/` | Parser, executor, types for NL queries |
 | Jobs System | `/opt/lumenquery-portal/portal/lib/jobs/` | Background job queue and workers |
 | Notifications | `/opt/lumenquery-portal/portal/lib/notifications/` | Email, Slack, webhook channels |
 | Portal Lib | `/opt/lumenquery-portal/portal/lib/` | Auth, Prisma, rate-limit, Redis utilities |
@@ -1233,6 +1237,34 @@ docker compose up -d
 4. Rebuilt and deployed portal
 5. Committed and pushed changes to GitHub
 
+### 2026-03-13
+1. Implemented Natural Language Query feature:
+   - Created `/api/query` endpoint for query execution
+   - Built rule-based natural language parser (`/lib/query/parser.ts`)
+   - Implemented query executor against Horizon API (`/lib/query/executor.ts`)
+   - Supports 9 query types:
+     - `top_holders` - Top XLM holders by balance
+     - `account_info` - Account details by address
+     - `recent_payments` - Recent payment activity
+     - `large_payments` - Whale movements (payments > X XLM)
+     - `recent_transactions` - Latest transactions
+     - `assets` - Stellar assets list
+     - `account_transactions` - Transactions for specific account
+     - `ledger_info` - Latest ledger information
+     - `operations` - Recent operations
+2. Updated /query page with interactive features:
+   - Added onClick handler to Query button
+   - Loading state with spinner
+   - Interactive results table with formatted data
+   - SQL preview with copy button
+   - Quick example buttons for common queries
+   - Click-to-try example queries
+3. Fixed bugs:
+   - Fixed parser to handle simpler phrasings like "top 10 xlm holders"
+   - Fixed assets query error (num_accounts toLocaleString issue)
+4. Rebuilt and deployed portal
+5. Committed and pushed to GitHub
+
 ## SEO & Performance Optimization
 
 ### Sitemap Configuration
@@ -2000,6 +2032,74 @@ The SSE endpoint requires dynamic rendering to prevent Next.js from attempting s
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 ```
+
+## Natural Language Query Interface
+
+### Overview
+Query the Stellar blockchain using plain English. The query interface translates natural language questions into Horizon API calls and returns formatted results. Accessible at `/query`.
+
+### Features
+- **Natural Language Input**: Type questions in plain English
+- **Interactive Results**: Data displayed in sortable tables
+- **SQL Preview**: See the equivalent SQL for learning
+- **Quick Examples**: Click-to-try example queries
+- **Real-time Execution**: Queries executed against live Horizon API
+
+### Supported Query Types
+| Type | Example Query | Description |
+|------|---------------|-------------|
+| `top_holders` | "Top 10 XLM holders" | Find largest XLM holders |
+| `account_info` | "Account GABC..." | Get account details and balances |
+| `recent_payments` | "Recent payments" | View recent payment activity |
+| `large_payments` | "Payments larger than 1M XLM" | Find whale movements |
+| `recent_transactions` | "Latest 50 transactions" | View recent transactions |
+| `assets` | "What assets are on Stellar?" | List popular tokens |
+| `account_transactions` | "Transactions for GABC..." | Account transaction history |
+| `ledger_info` | "Latest ledger" | Current network status |
+| `operations` | "Recent operations" | View recent operations |
+
+### API Endpoint
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| /api/query | POST | Execute natural language query |
+| /api/query | GET | Get query suggestions and examples |
+
+### Request/Response
+```bash
+# Request
+curl -X POST https://lumenquery.io/api/query \
+  -H "Content-Type: application/json" \
+  -d '{"query": "top 10 xlm holders"}'
+
+# Response
+{
+  "success": true,
+  "data": [
+    {"account_id": "GAXJ...7K2F", "balance_xlm": "125,430,000", ...}
+  ],
+  "columns": ["account_id", "balance_xlm", "last_active"],
+  "sql": "SELECT account_id, balance...",
+  "executionTimeMs": 142,
+  "parsedQuery": {"type": "top_holders", "description": "Top 10 XLM holders"}
+}
+```
+
+### Files
+```
+portal/app/query/page.tsx           # Query interface UI
+portal/app/query/layout.tsx         # SEO metadata
+portal/app/api/query/route.ts       # API endpoint
+portal/lib/query/types.ts           # TypeScript interfaces
+portal/lib/query/parser.ts          # Natural language parser
+portal/lib/query/executor.ts        # Query execution against Horizon
+portal/lib/query/index.ts           # Module exports
+```
+
+### Technical Details
+- **Parser**: Rule-based regex matching for query type detection
+- **Executor**: Fetches data from public Horizon API (horizon.stellar.org)
+- **No AI Required**: Works without external AI API (future: Claude integration for complex queries)
+- **Caching**: Results not cached (real-time data)
 
 ## Administrative Console
 
