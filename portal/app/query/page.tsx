@@ -2,8 +2,23 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
+
+interface QueryResult {
+  success: boolean;
+  data?: Record<string, unknown>[];
+  columns?: string[];
+  sql?: string;
+  executionTimeMs?: number;
+  error?: string;
+  suggestion?: string;
+  totalCount?: number;
+  parsedQuery?: {
+    type: string;
+    description: string;
+  };
+}
 
 const exampleQueries = [
   {
@@ -106,6 +121,48 @@ const useCases = [
 export default function QueryPage() {
   const { data: session } = useSession();
   const [queryInput, setQueryInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [result, setResult] = useState<QueryResult | null>(null);
+  const [showResults, setShowResults] = useState(false);
+
+  const executeQuery = useCallback(async (queryText?: string) => {
+    const query = queryText || queryInput;
+    if (!query.trim()) return;
+
+    setIsLoading(true);
+    setShowResults(true);
+    setResult(null);
+
+    try {
+      const response = await fetch('/api/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: query.trim() }),
+      });
+
+      const data = await response.json();
+      setResult(data);
+    } catch (error) {
+      setResult({
+        success: false,
+        error: 'Failed to connect to the query service. Please try again.',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [queryInput]);
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      executeQuery();
+    }
+  };
+
+  const handleExampleClick = (query: string) => {
+    setQueryInput(query);
+    executeQuery(query);
+  };
 
   return (
     <div className="min-h-screen bg-[#0D0D0D] text-white">
@@ -164,7 +221,7 @@ export default function QueryPage() {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
-            New Feature
+            Live Query Interface
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight">
@@ -174,7 +231,7 @@ export default function QueryPage() {
           </h1>
 
           <p className="text-lg sm:text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
-            Query the Stellar blockchain like you're asking a colleague. Transform natural language into powerful blockchain queries and get instant insights.
+            Query the Stellar blockchain like you&apos;re asking a colleague. Transform natural language into powerful blockchain queries and get instant insights.
           </p>
 
           {/* Query Input Box */}
@@ -184,41 +241,183 @@ export default function QueryPage() {
                 type="text"
                 value={queryInput}
                 onChange={(e) => setQueryInput(e.target.value)}
+                onKeyDown={handleKeyPress}
                 placeholder="Ask anything about the Stellar blockchain..."
-                className="w-full px-5 py-4 rounded-xl bg-[#1A1A1A] border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-[#2855FF] focus:ring-1 focus:ring-[#2855FF] text-lg"
+                className="w-full px-5 py-4 rounded-xl bg-[#1A1A1A] border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-[#2855FF] focus:ring-1 focus:ring-[#2855FF] text-lg pr-24"
+                disabled={isLoading}
               />
-              <button className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 rounded-lg bg-[#2855FF] text-white text-sm font-medium hover:bg-[#1E44CC] transition-colors">
-                Query
+              <button
+                onClick={() => executeQuery()}
+                disabled={isLoading || !queryInput.trim()}
+                className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 rounded-lg bg-[#2855FF] text-white text-sm font-medium hover:bg-[#1E44CC] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                {isLoading ? (
+                  <>
+                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    <span>Querying</span>
+                  </>
+                ) : (
+                  'Query'
+                )}
               </button>
             </div>
             <p className="text-sm text-gray-500 mt-3">
-              Try: "Show me the largest XLM transfers in the last hour"
+              Try: &quot;Show me the top 10 XLM holders&quot; or &quot;Recent payments&quot;
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/dashboard"
-              className="px-6 py-3 rounded-lg bg-[#2855FF] text-white font-medium hover:bg-[#1E44CC] transition-colors"
-            >
-              Try the Query Interface
-            </Link>
-            <Link
-              href="/docs"
-              className="px-6 py-3 rounded-lg border border-white/20 text-white font-medium hover:bg-white/5 transition-colors"
-            >
-              View API Docs
-            </Link>
+          {/* Quick Examples */}
+          <div className="flex flex-wrap gap-2 justify-center mb-8">
+            {['Top 10 XLM holders', 'Recent payments', 'Latest ledger', 'Popular assets'].map((example) => (
+              <button
+                key={example}
+                onClick={() => handleExampleClick(example)}
+                className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm text-gray-400 hover:text-white hover:border-[#2855FF]/50 transition-colors"
+              >
+                {example}
+              </button>
+            ))}
           </div>
         </div>
       </section>
+
+      {/* Results Section */}
+      {showResults && (
+        <section className="pb-16 px-4 sm:px-6">
+          <div className="max-w-6xl mx-auto">
+            <div className="rounded-xl bg-[#1A1A1A] border border-white/10 overflow-hidden">
+              {/* Results Header */}
+              <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-medium">
+                    {result?.parsedQuery?.description || 'Query Results'}
+                  </span>
+                  {result?.success && result.totalCount !== undefined && (
+                    <span className="text-xs text-gray-500">
+                      {result.totalCount} {result.totalCount === 1 ? 'result' : 'results'}
+                    </span>
+                  )}
+                </div>
+                {result?.executionTimeMs && (
+                  <span className="text-xs text-gray-500">
+                    {result.executionTimeMs}ms
+                  </span>
+                )}
+              </div>
+
+              {/* Loading State */}
+              {isLoading && (
+                <div className="p-8 flex items-center justify-center">
+                  <div className="flex items-center gap-3 text-gray-400">
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    <span>Executing query...</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Error State */}
+              {!isLoading && result && !result.success && (
+                <div className="p-6">
+                  <div className="flex items-start gap-3 text-red-400 mb-4">
+                    <svg className="w-5 h-5 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                      <p className="font-medium">{result.error}</p>
+                      {result.suggestion && (
+                        <p className="text-sm text-gray-400 mt-1">{result.suggestion}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Success State - Data Table */}
+              {!isLoading && result?.success && result.data && result.data.length > 0 && (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-white/10 bg-white/5">
+                        {result.columns?.map((col) => (
+                          <th key={col} className="text-left py-3 px-4 font-medium text-gray-400 capitalize">
+                            {col.replace(/_/g, ' ')}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {result.data.map((row, i) => (
+                        <tr key={i} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                          {result.columns?.map((col) => (
+                            <td key={col} className="py-3 px-4">
+                              {col.includes('account') || col.includes('hash') || col.includes('issuer') ? (
+                                <span className="font-mono text-[#2855FF]">
+                                  {String(row[col] || '-')}
+                                </span>
+                              ) : col.includes('amount') || col.includes('balance') || col.includes('supply') ? (
+                                <span className="text-green-400">
+                                  {String(row[col] || '0')}
+                                </span>
+                              ) : col === 'status' ? (
+                                <span className={row[col] === 'Success' ? 'text-green-400' : 'text-red-400'}>
+                                  {String(row[col])}
+                                </span>
+                              ) : (
+                                String(row[col] || '-')
+                              )}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              {/* Empty State */}
+              {!isLoading && result?.success && (!result.data || result.data.length === 0) && (
+                <div className="p-8 text-center text-gray-400">
+                  <p>No results found.</p>
+                  {result.suggestion && (
+                    <p className="text-sm mt-2">{result.suggestion}</p>
+                  )}
+                </div>
+              )}
+
+              {/* SQL Preview */}
+              {!isLoading && result?.sql && (
+                <div className="border-t border-white/10">
+                  <div className="px-4 py-2 flex items-center justify-between bg-white/5">
+                    <span className="text-xs text-gray-500">Generated SQL</span>
+                    <button
+                      onClick={() => navigator.clipboard.writeText(result.sql || '')}
+                      className="text-xs text-[#2855FF] hover:underline"
+                    >
+                      Copy
+                    </button>
+                  </div>
+                  <div className="p-4 font-mono text-xs overflow-x-auto">
+                    <pre className="text-gray-400 whitespace-pre-wrap">{result.sql}</pre>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* How It Works */}
       <section className="py-16 px-4 sm:px-6 border-t border-white/10">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4">How It Works</h2>
           <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
-            LumenQuery's query engine bridges the gap between human language and blockchain data.
+            LumenQuery&apos;s query engine bridges the gap between human language and blockchain data.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -286,12 +485,16 @@ export default function QueryPage() {
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4">Example Queries</h2>
           <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
-            LumenQuery understands the questions that matter to blockchain analysts, developers, and operators.
+            Click any example to try it. LumenQuery understands the questions that matter to blockchain analysts, developers, and operators.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {exampleQueries.map((example, index) => (
-              <div key={index} className="p-5 rounded-xl bg-[#1A1A1A] border border-white/10 hover:border-[#2855FF]/50 transition-colors cursor-pointer group">
+              <button
+                key={index}
+                onClick={() => handleExampleClick(example.query)}
+                className="p-5 rounded-xl bg-[#1A1A1A] border border-white/10 hover:border-[#2855FF]/50 transition-colors text-left group"
+              >
                 <div className="flex items-start gap-3">
                   <div className="w-8 h-8 rounded-lg bg-[#2855FF]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[#2855FF]/20 transition-colors">
                     <svg className="w-4 h-4 text-[#2855FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -299,110 +502,12 @@ export default function QueryPage() {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-white font-medium mb-1">"{example.query}"</p>
+                    <p className="text-white font-medium mb-1">&quot;{example.query}&quot;</p>
                     <p className="text-gray-500 text-sm">{example.result}</p>
                   </div>
                 </div>
-              </div>
+              </button>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Example Output */}
-      <section className="py-16 px-4 sm:px-6 border-t border-white/10">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4">Example Output</h2>
-          <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
-            Results appear instantly in a clean, dark-themed dashboard designed for analysis.
-          </p>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Table Preview */}
-            <div className="rounded-xl bg-[#1A1A1A] border border-white/10 overflow-hidden">
-              <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
-                <span className="text-sm font-medium">Top XLM Holders</span>
-                <span className="text-xs text-gray-500">Live</span>
-              </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-white/10 bg-white/5">
-                      <th className="text-left py-3 px-4 font-medium text-gray-400">Wallet</th>
-                      <th className="text-right py-3 px-4 font-medium text-gray-400">Balance (XLM)</th>
-                      <th className="text-right py-3 px-4 font-medium text-gray-400">Last Active</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-white/5">
-                      <td className="py-3 px-4 font-mono text-[#2855FF]">GAXJ...7K2F</td>
-                      <td className="py-3 px-4 text-right">125,430,000.00</td>
-                      <td className="py-3 px-4 text-right text-gray-500">2 hours ago</td>
-                    </tr>
-                    <tr className="border-b border-white/5">
-                      <td className="py-3 px-4 font-mono text-[#2855FF]">GBCD...X9PL</td>
-                      <td className="py-3 px-4 text-right">98,750,000.00</td>
-                      <td className="py-3 px-4 text-right text-gray-500">5 mins ago</td>
-                    </tr>
-                    <tr className="border-b border-white/5">
-                      <td className="py-3 px-4 font-mono text-[#2855FF]">GCEF...M3NK</td>
-                      <td className="py-3 px-4 text-right">67,200,000.00</td>
-                      <td className="py-3 px-4 text-right text-gray-500">1 hour ago</td>
-                    </tr>
-                    <tr>
-                      <td className="py-3 px-4 font-mono text-[#2855FF]">GDEF...Q8RT</td>
-                      <td className="py-3 px-4 text-right">45,100,000.00</td>
-                      <td className="py-3 px-4 text-right text-gray-500">3 hours ago</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Chart Preview */}
-            <div className="rounded-xl bg-[#1A1A1A] border border-white/10 overflow-hidden">
-              <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
-                <span className="text-sm font-medium">Transaction Volume (24h)</span>
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#2855FF]"></span>
-                  <span className="text-xs text-gray-500">Live</span>
-                </div>
-              </div>
-              <div className="p-4 h-64 flex items-end justify-between gap-2">
-                {/* Simulated bar chart */}
-                {[35, 42, 58, 45, 62, 78, 65, 82, 70, 55, 48, 60].map((height, i) => (
-                  <div
-                    key={i}
-                    className="flex-1 bg-gradient-to-t from-[#2855FF] to-[#2855FF]/50 rounded-t-sm transition-all hover:from-[#3366FF] hover:to-[#3366FF]/50"
-                    style={{ height: `${height}%` }}
-                  ></div>
-                ))}
-              </div>
-              <div className="px-4 pb-3 flex justify-between text-xs text-gray-500">
-                <span>12:00</span>
-                <span>18:00</span>
-                <span>00:00</span>
-                <span>06:00</span>
-                <span>Now</span>
-              </div>
-            </div>
-          </div>
-
-          {/* SQL Preview */}
-          <div className="mt-8 rounded-xl bg-[#1A1A1A] border border-white/10 overflow-hidden">
-            <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
-              <span className="text-sm font-medium">Generated SQL</span>
-              <button className="text-xs text-[#2855FF] hover:underline">Copy</button>
-            </div>
-            <div className="p-4 font-mono text-sm overflow-x-auto">
-              <pre className="text-gray-300">
-<span className="text-purple-400">SELECT</span> account_id, balance, last_modified_time
-<span className="text-purple-400">FROM</span> accounts
-<span className="text-purple-400">WHERE</span> asset_type = <span className="text-green-400">'native'</span>
-<span className="text-purple-400">ORDER BY</span> balance <span className="text-purple-400">DESC</span>
-<span className="text-purple-400">LIMIT</span> <span className="text-orange-400">10</span>;
-              </pre>
-            </div>
           </div>
         </div>
       </section>
@@ -489,18 +594,19 @@ export default function QueryPage() {
               <div className="p-4 font-mono text-sm overflow-x-auto">
                 <pre className="text-gray-300">
 <span className="text-gray-500"># Query via API</span>
-<span className="text-green-400">curl</span> -H <span className="text-yellow-400">"Authorization: Bearer YOUR_API_KEY"</span> \
-  <span className="text-yellow-400">"https://api.lumenquery.io/v1/query?q=top+10+xlm+holders"</span>
+<span className="text-green-400">curl</span> -X POST <span className="text-yellow-400">&quot;https://lumenquery.io/api/query&quot;</span> \
+  -H <span className="text-yellow-400">&quot;Content-Type: application/json&quot;</span> \
+  -d <span className="text-yellow-400">&apos;&#123;&quot;query&quot;: &quot;top 10 xlm holders&quot;&#125;&apos;</span>
 
 <span className="text-gray-500"># Response</span>
 {`{`}
-  <span className="text-[#2855FF]">"data"</span>: [{`{`}
-    <span className="text-[#2855FF]">"account_id"</span>: <span className="text-yellow-400">"GAXJ...7K2F"</span>,
-    <span className="text-[#2855FF]">"balance"</span>: <span className="text-orange-400">125430000</span>,
-    <span className="text-[#2855FF]">"last_active"</span>: <span className="text-yellow-400">"2026-03-10T14:30:00Z"</span>
+  <span className="text-[#2855FF]">&quot;success&quot;</span>: <span className="text-orange-400">true</span>,
+  <span className="text-[#2855FF]">&quot;data&quot;</span>: [{`{`}
+    <span className="text-[#2855FF]">&quot;account_id&quot;</span>: <span className="text-yellow-400">&quot;GAXJ...7K2F&quot;</span>,
+    <span className="text-[#2855FF]">&quot;balance_xlm&quot;</span>: <span className="text-yellow-400">&quot;125,430,000&quot;</span>,
+    <span className="text-[#2855FF]">&quot;last_active&quot;</span>: <span className="text-yellow-400">&quot;3/13/2026, 2:30 PM&quot;</span>
   {`}`}, ...],
-  <span className="text-[#2855FF]">"sql"</span>: <span className="text-yellow-400">"SELECT account_id, balance..."</span>,
-  <span className="text-[#2855FF]">"execution_time_ms"</span>: <span className="text-orange-400">42</span>
+  <span className="text-[#2855FF]">&quot;executionTimeMs&quot;</span>: <span className="text-orange-400">142</span>
 {`}`}
                 </pre>
               </div>
@@ -535,16 +641,19 @@ export default function QueryPage() {
             Query the Stellar blockchain<br />in plain English
           </h2>
           <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
-            Stop writing SQL. Start asking questions. Get instant access to the Stellar blockchain's most valuable data—no database expertise required.
+            Stop writing SQL. Start asking questions. Get instant access to the Stellar blockchain&apos;s most valuable data—no database expertise required.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <Link
-              href="/dashboard"
+            <button
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                document.querySelector('input')?.focus();
+              }}
               className="px-8 py-4 rounded-lg bg-[#2855FF] text-white font-medium hover:bg-[#1E44CC] transition-colors text-lg"
             >
-              Try the Query Interface
-            </Link>
+              Try a Query Now
+            </button>
             <Link
               href="/docs"
               className="px-8 py-4 rounded-lg border border-white/20 text-white font-medium hover:bg-white/5 transition-colors text-lg"
@@ -554,7 +663,7 @@ export default function QueryPage() {
           </div>
 
           <Link href="/analytics" className="text-[#2855FF] hover:underline text-sm">
-            Explore sample queries →
+            Explore live analytics →
           </Link>
         </div>
       </section>
