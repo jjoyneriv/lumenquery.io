@@ -260,6 +260,46 @@ export default function Home() {
         </div>
       </section>
 
+        {/* Developer Guides */}
+        <section className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 bg-white" aria-labelledby="guides-heading">
+          <div className="max-w-6xl mx-auto">
+            <h2 id="guides-heading" className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-3 sm:mb-4">Developer Guides</h2>
+            <p className="text-center text-[#6A6A6A] mb-8 sm:mb-12 max-w-2xl mx-auto text-sm sm:text-base">
+              In-depth guides for the Stellar API, RPC, and blockchain data infrastructure
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+              <Link href="/guides/stellar-rpc-guide" className="p-5 sm:p-6 rounded-xl sm:rounded-2xl border border-[#E6E7E9] hover:border-[#2855FF] hover:shadow-md transition-all group">
+                <div className="w-10 h-10 rounded-lg bg-[rgba(40,85,255,0.1)] flex items-center justify-center mb-3 group-hover:bg-[rgba(40,85,255,0.2)] transition-colors">
+                  <svg className="w-5 h-5 text-[#2855FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                </div>
+                <h3 className="font-bold text-sm sm:text-base mb-2">What is Stellar RPC?</h3>
+                <p className="text-xs sm:text-sm text-[#6A6A6A] line-clamp-3">Complete guide to the Stellar RPC API service, JSON-RPC methods, and production best practices.</p>
+              </Link>
+              <Link href="/guides/stellar-api-tutorial" className="p-5 sm:p-6 rounded-xl sm:rounded-2xl border border-[#E6E7E9] hover:border-[#2855FF] hover:shadow-md transition-all group">
+                <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center mb-3 group-hover:bg-green-200 transition-colors">
+                  <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                </div>
+                <h3 className="font-bold text-sm sm:text-base mb-2">Stellar API Tutorial</h3>
+                <p className="text-xs sm:text-sm text-[#6A6A6A] line-clamp-3">Step-by-step guide to querying accounts, transactions, and smart contracts on Stellar.</p>
+              </Link>
+              <Link href="/guides/horizon-vs-rpc-vs-indexers" className="p-5 sm:p-6 rounded-xl sm:rounded-2xl border border-[#E6E7E9] hover:border-[#2855FF] hover:shadow-md transition-all group">
+                <div className="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center mb-3 group-hover:bg-orange-200 transition-colors">
+                  <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                </div>
+                <h3 className="font-bold text-sm sm:text-base mb-2">Horizon vs RPC vs Indexers</h3>
+                <p className="text-xs sm:text-sm text-[#6A6A6A] line-clamp-3">Deep comparison to help you choose the right data access architecture for your app.</p>
+              </Link>
+              <Link href="/guides/lumenquery-tutorial" className="p-5 sm:p-6 rounded-xl sm:rounded-2xl border border-[#E6E7E9] hover:border-[#2855FF] hover:shadow-md transition-all group">
+                <div className="w-10 h-10 rounded-lg bg-[rgba(40,85,255,0.1)] flex items-center justify-center mb-3 group-hover:bg-[rgba(40,85,255,0.2)] transition-colors">
+                  <svg className="w-5 h-5 text-[#2855FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                </div>
+                <h3 className="font-bold text-sm sm:text-base mb-2">LumenQuery Tutorial</h3>
+                <p className="text-xs sm:text-sm text-[#6A6A6A] line-clamp-3">Complete walkthrough of every feature in the Stellar Web3 developer platform.</p>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* Latest from the Blog */}
         <section className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 bg-[#F5F6F7]" aria-labelledby="blog-heading">
           <div className="max-w-6xl mx-auto">
