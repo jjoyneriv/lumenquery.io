@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://lumenquery.io';
-  const today = new Date('2026-03-10');
+  const today = new Date('2026-03-27');
 
   // Core pages
   const corePages: MetadataRoute.Sitemap = [

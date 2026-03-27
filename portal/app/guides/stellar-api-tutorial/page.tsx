@@ -33,7 +33,7 @@ export default function StellarApiTutorialPage() {
 
       <article className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
         <nav className="mb-6 sm:mb-8" aria-label="Breadcrumb">
-          <div className="flex items-center gap-2 text-sm text-[#6A6A6A]">
+          <div className="flex items-center gap-2 text-sm text-gray-400">
             <Link href="/" className="hover:text-[#2855FF]">Home</Link>
             <span>/</span>
             <span>Guides</span>
@@ -42,24 +42,24 @@ export default function StellarApiTutorialPage() {
 
         <header className="mb-8 sm:mb-12">
           <div className="flex items-center gap-2 mb-4">
-            <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-medium">Step-by-Step Tutorial</span>
+            <span className="px-3 py-1 rounded-full bg-green-900/30 text-green-700 text-xs font-medium">Step-by-Step Tutorial</span>
           </div>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight mb-4">
             Stellar API Tutorial: Step-by-Step Guide for Developers
           </h1>
-          <p className="text-lg text-[#6A6A6A]">
+          <p className="text-lg text-gray-400">
             Build your first Stellar application from scratch with this hands-on tutorial.
           </p>
         </header>
 
         <section className="prose prose-gray max-w-none" aria-label="Tutorial content">
-          <p className="text-[#6A6A6A] leading-relaxed mb-4 text-sm sm:text-base">
-            This <strong className="font-semibold text-black">Stellar API for developers</strong> tutorial walks you through building a complete blockchain application using LumenQuery&apos;s infrastructure. You&apos;ll learn to query accounts, fetch transactions, read smart contract data, and build a real-time dashboard—all using the <strong className="font-semibold text-black">Stellar blockchain data API</strong>. By the end, you&apos;ll have a working application that demonstrates the power of the <strong className="font-semibold text-black">Stellar transaction query API</strong> and the broader <strong className="font-semibold text-black">Stellar Web3 developer platform</strong> ecosystem.
+          <p className="text-gray-400 leading-relaxed mb-4 text-sm sm:text-base">
+            This <strong className="font-semibold text-white">Stellar API for developers</strong> tutorial walks you through building a complete blockchain application using LumenQuery&apos;s infrastructure. You&apos;ll learn to query accounts, fetch transactions, read smart contract data, and build a real-time dashboard—all using the <strong className="font-semibold text-white">Stellar blockchain data API</strong>. By the end, you&apos;ll have a working application that demonstrates the power of the <strong className="font-semibold text-white">Stellar transaction query API</strong> and the broader <strong className="font-semibold text-white">Stellar Web3 developer platform</strong> ecosystem.
           </p>
 
-          <div className="my-8 p-4 sm:p-6 rounded-xl bg-[#F5F6F7] border border-[#E6E7E9]">
+          <div className="my-8 p-4 sm:p-6 rounded-xl bg-white/5 border border-white/10">
             <h3 className="text-base font-bold mb-2">Prerequisites</h3>
-            <ul className="text-sm text-[#6A6A6A] space-y-1">
+            <ul className="text-sm text-gray-400 space-y-1">
               <li>- Node.js 18+ installed</li>
               <li>- Basic JavaScript/TypeScript knowledge</li>
               <li>- A free <Link href="/auth/signup" className="text-[#2855FF] hover:underline">LumenQuery account</Link></li>
@@ -68,7 +68,7 @@ export default function StellarApiTutorialPage() {
 
           <h2 className="text-xl sm:text-2xl font-bold mt-10 mb-4">Step 1: Set Up Your Stellar API Environment</h2>
 
-          <p className="text-[#6A6A6A] leading-relaxed mb-4 text-sm sm:text-base">
+          <p className="text-gray-400 leading-relaxed mb-4 text-sm sm:text-base">
             First, <Link href="/auth/signup" className="text-[#2855FF] hover:underline">sign up for a free LumenQuery account</Link> and get your API key from the <Link href="/dashboard" className="text-[#2855FF] hover:underline">dashboard</Link>. Then set up your project:
           </p>
 
@@ -83,8 +83,8 @@ export LUMENQUERY_API_KEY="lq_your_key_here"`}</code></pre>
 
           <h2 className="text-xl sm:text-2xl font-bold mt-10 mb-4">Step 2: Query Account Balances with the Stellar API</h2>
 
-          <p className="text-[#6A6A6A] leading-relaxed mb-4 text-sm sm:text-base">
-            The most common operation is querying account balances. The <strong className="font-semibold text-black">Stellar API for developers</strong> makes this straightforward through the Horizon REST API:
+          <p className="text-gray-400 leading-relaxed mb-4 text-sm sm:text-base">
+            The most common operation is querying account balances. The <strong className="font-semibold text-white">Stellar API for developers</strong> makes this straightforward through the Horizon REST API:
           </p>
 
           <div className="bg-[#0D0D0D] rounded-xl p-4 sm:p-6 my-6 overflow-x-auto">
@@ -113,14 +113,14 @@ getAccountBalances('GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN')
   .then(b => console.table(b));`}</code></pre>
           </div>
 
-          <p className="text-[#6A6A6A] leading-relaxed mb-4 text-sm sm:text-base">
+          <p className="text-gray-400 leading-relaxed mb-4 text-sm sm:text-base">
             You can also query accounts interactively using our <Link href="/query" className="text-[#2855FF] hover:underline">Natural Language Query Interface</Link>—just type &quot;account info for GXXX...&quot; and get instant results.
           </p>
 
           <h2 className="text-xl sm:text-2xl font-bold mt-10 mb-4">Step 3: Fetch Transaction History Using the Stellar Transaction Query API</h2>
 
-          <p className="text-[#6A6A6A] leading-relaxed mb-4 text-sm sm:text-base">
-            The <strong className="font-semibold text-black">Stellar transaction query API</strong> via Horizon lets you fetch recent transactions, filter by account, and stream updates in real time:
+          <p className="text-gray-400 leading-relaxed mb-4 text-sm sm:text-base">
+            The <strong className="font-semibold text-white">Stellar transaction query API</strong> via Horizon lets you fetch recent transactions, filter by account, and stream updates in real time:
           </p>
 
           <div className="bg-[#0D0D0D] rounded-xl p-4 sm:p-6 my-6 overflow-x-auto">
@@ -145,14 +145,14 @@ async function getRecentTransactions(limit = 10) {
 getRecentTransactions(5).then(txs => console.table(txs));`}</code></pre>
           </div>
 
-          <p className="text-[#6A6A6A] leading-relaxed mb-4 text-sm sm:text-base">
+          <p className="text-gray-400 leading-relaxed mb-4 text-sm sm:text-base">
             See this data visualized on our <Link href="/dashboard/transactions" className="text-[#2855FF] hover:underline">Live Transaction Viewer</Link>, which decodes operations into human-readable descriptions.
           </p>
 
           <h2 className="text-xl sm:text-2xl font-bold mt-10 mb-4">Step 4: Read Smart Contract State with the Stellar Smart Contract API</h2>
 
-          <p className="text-[#6A6A6A] leading-relaxed mb-4 text-sm sm:text-base">
-            The <strong className="font-semibold text-black">Stellar smart contract API</strong> (via Stellar RPC) lets you read Soroban contract storage. For a deeper dive into RPC methods, see our <Link href="/guides/stellar-rpc-guide" className="text-[#2855FF] hover:underline">complete Stellar RPC guide</Link>.
+          <p className="text-gray-400 leading-relaxed mb-4 text-sm sm:text-base">
+            The <strong className="font-semibold text-white">Stellar smart contract API</strong> (via Stellar RPC) lets you read Soroban contract storage. For a deeper dive into RPC methods, see our <Link href="/guides/stellar-rpc-guide" className="text-[#2855FF] hover:underline">complete Stellar RPC guide</Link>.
           </p>
 
           <div className="bg-[#0D0D0D] rounded-xl p-4 sm:p-6 my-6 overflow-x-auto">
@@ -182,13 +182,13 @@ getLatestLedger().then(l =>
 );`}</code></pre>
           </div>
 
-          <p className="text-[#6A6A6A] leading-relaxed mb-4 text-sm sm:text-base">
+          <p className="text-gray-400 leading-relaxed mb-4 text-sm sm:text-base">
             Browse decoded contract storage visually using our <Link href="/contracts" className="text-[#2855FF] hover:underline">Smart Contract Explorer</Link>. Read the <Link href="/docs/contracts" className="text-[#2855FF] hover:underline">Soroban contracts documentation</Link> for the full API reference.
           </p>
 
           <h2 className="text-xl sm:text-2xl font-bold mt-10 mb-4">Step 5: Build a Real-Time Dashboard</h2>
 
-          <p className="text-[#6A6A6A] leading-relaxed mb-4 text-sm sm:text-base">
+          <p className="text-gray-400 leading-relaxed mb-4 text-sm sm:text-base">
             Now combine both APIs to build a dashboard that shows live network metrics. This is the same pattern used in our <Link href="/analytics" className="text-[#2855FF] hover:underline">Stellar Network Analytics Dashboard</Link>:
           </p>
 
@@ -227,24 +227,24 @@ setInterval(async () => {
 
           <h2 className="text-xl sm:text-2xl font-bold mt-10 mb-4">Step 6: Explore Data with Natural Language</h2>
 
-          <p className="text-[#6A6A6A] leading-relaxed mb-4 text-sm sm:text-base">
+          <p className="text-gray-400 leading-relaxed mb-4 text-sm sm:text-base">
             LumenQuery also provides a <Link href="/query" className="text-[#2855FF] hover:underline">Natural Language Query Interface</Link> where you can explore data without writing code. Try queries like:
           </p>
 
           <ul className="space-y-2 my-4">
-            <li className="text-[#6A6A6A] ml-4 list-disc text-sm sm:text-base">&quot;Show the top 10 XLM holders&quot;</li>
-            <li className="text-[#6A6A6A] ml-4 list-disc text-sm sm:text-base">&quot;Recent payments larger than 100,000 XLM&quot;</li>
-            <li className="text-[#6A6A6A] ml-4 list-disc text-sm sm:text-base">&quot;What assets are on Stellar?&quot;</li>
-            <li className="text-[#6A6A6A] ml-4 list-disc text-sm sm:text-base">&quot;Latest ledger status&quot;</li>
+            <li className="text-gray-400 ml-4 list-disc text-sm sm:text-base">&quot;Show the top 10 XLM holders&quot;</li>
+            <li className="text-gray-400 ml-4 list-disc text-sm sm:text-base">&quot;Recent payments larger than 100,000 XLM&quot;</li>
+            <li className="text-gray-400 ml-4 list-disc text-sm sm:text-base">&quot;What assets are on Stellar?&quot;</li>
+            <li className="text-gray-400 ml-4 list-disc text-sm sm:text-base">&quot;Latest ledger status&quot;</li>
           </ul>
 
           <h2 className="text-xl sm:text-2xl font-bold mt-10 mb-4">Next Steps for Stellar API Developers</h2>
 
-          <p className="text-[#6A6A6A] leading-relaxed mb-4 text-sm sm:text-base">
-            You now have a working <strong className="font-semibold text-black">Stellar API for developers</strong> foundation. Here&apos;s where to go next:
+          <p className="text-gray-400 leading-relaxed mb-4 text-sm sm:text-base">
+            You now have a working <strong className="font-semibold text-white">Stellar API for developers</strong> foundation. Here&apos;s where to go next:
           </p>
 
-          <div className="my-8 p-5 sm:p-8 rounded-xl bg-[#F5F6F7] border border-[#E6E7E9]">
+          <div className="my-8 p-5 sm:p-8 rounded-xl bg-white/5 border border-white/10">
             <h3 className="text-lg font-bold mb-3">Continue Learning</h3>
             <ul className="space-y-2 text-sm">
               <li><Link href="/guides/stellar-rpc-guide" className="text-[#2855FF] hover:underline">What is Stellar RPC? (Complete Guide)</Link> — Deep dive into all RPC methods</li>

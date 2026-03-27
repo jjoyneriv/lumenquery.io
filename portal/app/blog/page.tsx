@@ -170,15 +170,15 @@ export default function BlogPage() {
   return (
     <div className="space-y-6">
       {/* Hero Card */}
-      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
+      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#1A1A1A] border border-white/10">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-xl sm:text-2xl font-bold mb-2">LumenQuery Blog</h1>
-            <p className="text-[#6A6A6A] text-sm sm:text-base">
+            <p className="text-gray-400 text-sm sm:text-base">
               Insights, tutorials, and updates from the LumenQuery team
             </p>
           </div>
-          <div className="flex items-center gap-2 text-sm text-[#6A6A6A]">
+          <div className="flex items-center gap-2 text-sm text-gray-400">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
             </svg>
@@ -192,7 +192,7 @@ export default function BlogPage() {
         {categories.map((category) => (
           <span
             key={category}
-            className="px-3 py-1.5 rounded-lg bg-white border border-[#E6E7E9] text-xs font-medium text-[#6A6A6A]"
+            className="px-3 py-1.5 rounded-lg bg-[#1A1A1A] border border-white/10 text-xs font-medium text-gray-400"
           >
             {category} ({posts.filter(p => p.category === category).length})
           </span>
@@ -221,37 +221,37 @@ export default function BlogPage() {
       </Link>
 
       {/* Recent Posts Grid */}
-      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
+      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#1A1A1A] border border-white/10">
         <h2 className="text-lg font-bold mb-4">Recent Articles</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {posts.slice(1, 5).map((post) => (
             <Link
               key={post.slug}
               href={`/blog/${post.slug}`}
-              className="p-4 rounded-lg bg-[#F5F6F7] hover:bg-[#E6E7E9] transition-colors"
+              className="p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
             >
               <div className="flex items-center gap-2 mb-2">
                 <span className="px-2 py-0.5 rounded-full bg-[#2855FF]/10 text-[#2855FF] text-xs font-medium">
                   {post.category}
                 </span>
-                <span className="text-[#6A6A6A] text-xs">{post.readTime}</span>
+                <span className="text-gray-400 text-xs">{post.readTime}</span>
               </div>
               <h3 className="font-semibold text-sm mb-1 line-clamp-2">{post.title}</h3>
-              <p className="text-xs text-[#6A6A6A] line-clamp-2">{post.excerpt}</p>
+              <p className="text-xs text-gray-400 line-clamp-2">{post.excerpt}</p>
             </Link>
           ))}
         </div>
       </div>
 
       {/* All Posts */}
-      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
+      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#1A1A1A] border border-white/10">
         <h2 className="text-lg font-bold mb-4">All Articles</h2>
         <div className="space-y-3">
           {posts.slice(5).map((post) => (
             <Link
               key={post.slug}
               href={`/blog/${post.slug}`}
-              className="block p-4 rounded-lg border border-[#E6E7E9] hover:border-[#2855FF] hover:shadow-sm transition-all"
+              className="block p-4 rounded-lg border border-white/10 hover:border-[#2855FF] hover:shadow-sm transition-all"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div className="flex-1 min-w-0">
@@ -261,9 +261,9 @@ export default function BlogPage() {
                     </span>
                   </div>
                   <h3 className="font-semibold text-sm mb-1 truncate">{post.title}</h3>
-                  <p className="text-xs text-[#6A6A6A] line-clamp-1">{post.excerpt}</p>
+                  <p className="text-xs text-gray-400 line-clamp-1">{post.excerpt}</p>
                 </div>
-                <div className="flex items-center gap-3 text-xs text-[#6A6A6A] whitespace-nowrap">
+                <div className="flex items-center gap-3 text-xs text-gray-400 whitespace-nowrap">
                   <time dateTime={post.date}>{post.date}</time>
                   <span>{post.readTime}</span>
                 </div>

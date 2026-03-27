@@ -17,10 +17,10 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
   const navLinkClass = (page: string) =>
     activePage === page
       ? 'text-[#2855FF] font-medium'
-      : 'text-[#6A6A6A] hover:text-black font-medium';
+      : 'text-gray-400 hover:text-white font-medium';
 
   return (
-    <header className="border-b border-[#E6E7E9]">
+    <header className="border-b border-white/10 bg-[#0D0D0D]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <Image
@@ -30,7 +30,7 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
             height={40}
             className="w-8 h-8 sm:w-10 sm:h-10"
           />
-          <span className="text-lg sm:text-xl font-bold">LumenQuery</span>
+          <span className="text-lg sm:text-xl font-bold text-white">LumenQuery</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -50,7 +50,7 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
               Admin
             </Link>
           )}
-          <Link href="/auth/signin" className="text-[#6A6A6A] hover:text-black font-medium">Sign In</Link>
+          <Link href="/auth/signin" className="text-gray-400 hover:text-white font-medium">Sign In</Link>
           <Link href="/auth/signup" className="px-4 py-2 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white text-sm font-medium transition-colors">
             Get Started
           </Link>
@@ -59,7 +59,7 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 rounded-lg hover:bg-[#F5F6F7] transition-colors"
+          className="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors text-white"
           aria-label="Toggle menu"
         >
           {mobileMenuOpen ? (
@@ -76,7 +76,7 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
 
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-[#E6E7E9] bg-white">
+        <div className="md:hidden border-t border-white/10 bg-[#0D0D0D]">
           <nav className="flex flex-col px-4 py-4 space-y-3">
             <Link
               href="/query"
@@ -141,7 +141,7 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
             )}
             <Link
               href="/auth/signin"
-              className="py-2 text-[#6A6A6A] hover:text-black font-medium"
+              className="py-2 text-gray-400 hover:text-white font-medium"
               onClick={() => setMobileMenuOpen(false)}
             >
               Sign In

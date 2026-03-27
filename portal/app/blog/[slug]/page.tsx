@@ -6955,7 +6955,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
           <div key={index} className="overflow-x-auto my-4">
             <table className="w-full min-w-[400px] border-collapse text-sm">
               <thead>
-                <tr className="border-b border-[#E6E7E9] bg-[#F5F6F7]">
+                <tr className="border-b border-white/10 bg-white/5">
                   {tableRows[0]?.map((cell, i) => (
                     <th key={i} className="text-left py-2 sm:py-3 px-2 sm:px-4 font-medium">{cell}</th>
                   ))}
@@ -6963,9 +6963,9 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
               </thead>
               <tbody>
                 {tableRows.slice(1).map((row, rowIndex) => (
-                  <tr key={rowIndex} className="border-b border-[#E6E7E9]">
+                  <tr key={rowIndex} className="border-b border-white/10">
                     {row.map((cell, cellIndex) => (
-                      <td key={cellIndex} className="py-2 sm:py-3 px-2 sm:px-4 text-[#6A6A6A]">{cell}</td>
+                      <td key={cellIndex} className="py-2 sm:py-3 px-2 sm:px-4 text-gray-400">{cell}</td>
                     ))}
                   </tr>
                 ))}
@@ -6979,7 +6979,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
 
       if (line.startsWith('## ')) {
         elements.push(
-          <h2 key={index} className="text-xl sm:text-2xl font-bold mt-8 sm:mt-10 mb-3 sm:mb-4 pb-2 border-b border-[#E6E7E9]">
+          <h2 key={index} className="text-xl sm:text-2xl font-bold mt-8 sm:mt-10 mb-3 sm:mb-4 pb-2 border-b border-white/10">
             {line.slice(3)}
           </h2>
         );
@@ -6996,13 +6996,13 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
       }
 
       if (line.startsWith('---')) {
-        elements.push(<hr key={index} className="border-[#E6E7E9] my-8" />);
+        elements.push(<hr key={index} className="border-white/10 my-8" />);
         return;
       }
 
       if (line.startsWith('- ')) {
         elements.push(
-          <li key={index} className="text-[#6A6A6A] ml-4 mb-2 list-disc text-sm sm:text-base">
+          <li key={index} className="text-gray-400 ml-4 mb-2 list-disc text-sm sm:text-base">
             {renderInlineFormatting(line.slice(2))}
           </li>
         );
@@ -7011,7 +7011,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
 
       if (/^\d+\.\s/.test(line)) {
         elements.push(
-          <li key={index} className="text-[#6A6A6A] ml-4 mb-2 list-decimal text-sm sm:text-base">
+          <li key={index} className="text-gray-400 ml-4 mb-2 list-decimal text-sm sm:text-base">
             {renderInlineFormatting(line.replace(/^\d+\.\s/, ''))}
           </li>
         );
@@ -7023,7 +7023,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
       }
 
       elements.push(
-        <p key={index} className="text-[#6A6A6A] leading-relaxed mb-4 text-sm sm:text-base">
+        <p key={index} className="text-gray-400 leading-relaxed mb-4 text-sm sm:text-base">
           {renderInlineFormatting(line)}
         </p>
       );
@@ -7037,7 +7037,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
     return parts.map((part, i) => {
       if (part.startsWith('`') && part.endsWith('`')) {
         return (
-          <code key={i} className="px-2 py-1 rounded bg-[#F5F6F7] text-[#2855FF] text-sm border border-[#E6E7E9]">
+          <code key={i} className="px-2 py-1 rounded bg-white/5 text-[#2855FF] text-sm border border-white/10">
             {part.slice(1, -1)}
           </code>
         );
@@ -7069,7 +7069,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
   };
 
   return (
-    <div className="min-h-screen bg-white text-black">
+    <div className="min-h-screen bg-[#0D0D0D] text-white">
       <Script
         id="article-schema"
         type="application/ld+json"
@@ -7079,7 +7079,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
 
       <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
         <nav className="mb-6 sm:mb-8" aria-label="Breadcrumb">
-          <Link href="/blog" className="text-[#6A6A6A] hover:text-[#2855FF] text-sm">
+          <Link href="/blog" className="text-gray-400 hover:text-[#2855FF] text-sm">
             ← Back to Blog
           </Link>
         </nav>
@@ -7090,9 +7090,9 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
               <span className="px-2 sm:px-3 py-1 rounded-full bg-[rgba(40,85,255,0.1)] text-[#2855FF] text-xs font-medium">
                 {post.category}
               </span>
-              <time dateTime={post.date} className="text-[#6A6A6A] text-xs sm:text-sm">{post.date}</time>
-              <span className="text-[#6A6A6A] text-xs sm:text-sm hidden sm:inline">•</span>
-              <span className="text-[#6A6A6A] text-xs sm:text-sm hidden sm:inline">{post.readTime}</span>
+              <time dateTime={post.date} className="text-gray-400 text-xs sm:text-sm">{post.date}</time>
+              <span className="text-gray-400 text-xs sm:text-sm hidden sm:inline">•</span>
+              <span className="text-gray-400 text-xs sm:text-sm hidden sm:inline">{post.readTime}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight">
               {post.title}

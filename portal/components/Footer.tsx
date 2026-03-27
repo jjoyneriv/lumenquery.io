@@ -8,7 +8,7 @@ interface FooterProps {
 export default function Footer({ variant = 'simple' }: FooterProps) {
   if (variant === 'full') {
     return (
-      <footer className="bg-white py-8 sm:py-12 px-4 sm:px-6 border-t border-[#E6E7E9]">
+      <footer className="bg-[#0D0D0D] py-8 sm:py-12 px-4 sm:px-6 border-t border-white/10">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-8">
             <div className="col-span-2 md:col-span-1">
@@ -20,36 +20,38 @@ export default function Footer({ variant = 'simple' }: FooterProps) {
                   height={32}
                   className="w-8 h-8"
                 />
-                <span className="font-bold">LumenQuery</span>
+                <span className="font-bold text-white">LumenQuery</span>
               </div>
-              <p className="text-[#6A6A6A] text-sm">
+              <p className="text-gray-400 text-sm">
                 Enterprise Stellar Horizon API and Soroban RPC infrastructure.
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-3 sm:mb-4">Product</h4>
-              <ul className="space-y-2 text-sm text-[#6A6A6A]">
+              <h4 className="font-semibold mb-3 sm:mb-4 text-white">Product</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
                 <li><Link href="/docs" className="hover:text-[#2855FF]">Documentation</Link></li>
                 <li><Link href="/blog" className="hover:text-[#2855FF]">Blog</Link></li>
-                <li><Link href="/auth/signup" className="hover:text-[#2855FF]">Pricing</Link></li>
+                <li><Link href="/pricing" className="hover:text-[#2855FF]">Pricing</Link></li>
+                <li><Link href="/query" className="hover:text-[#2855FF]">Query</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-3 sm:mb-4">Resources</h4>
-              <ul className="space-y-2 text-sm text-[#6A6A6A]">
+              <h4 className="font-semibold mb-3 sm:mb-4 text-white">Resources</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
                 <li><a href="https://developers.stellar.org" target="_blank" rel="noopener noreferrer" className="hover:text-[#2855FF]">Stellar Docs</a></li>
                 <li><a href="https://stellar.org" target="_blank" rel="noopener noreferrer" className="hover:text-[#2855FF]">Stellar.org</a></li>
+                <li><Link href="/sitemap.xml" className="hover:text-[#2855FF]">Sitemap</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-3 sm:mb-4">Support</h4>
-              <ul className="space-y-2 text-sm text-[#6A6A6A]">
+              <h4 className="font-semibold mb-3 sm:mb-4 text-white">Support</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
                 <li><a href="mailto:support@lumenquery.io" className="hover:text-[#2855FF]">Contact Us</a></li>
                 <li><Link href="/dashboard" className="hover:text-[#2855FF]">Dashboard</Link></li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-[#E6E7E9] pt-6 sm:pt-8 text-center text-sm text-[#6A6A6A]">
+          <div className="border-t border-white/10 pt-6 sm:pt-8 text-center text-sm text-gray-500">
             © 2026 LumenQuery. All rights reserved.
           </div>
         </div>
@@ -58,7 +60,7 @@ export default function Footer({ variant = 'simple' }: FooterProps) {
   }
 
   return (
-    <footer className="border-t border-[#E6E7E9] py-6 sm:py-8 px-4 sm:px-6">
+    <footer className="border-t border-white/10 bg-[#0D0D0D] py-6 sm:py-8 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <Image
@@ -68,12 +70,13 @@ export default function Footer({ variant = 'simple' }: FooterProps) {
             height={32}
             className="w-8 h-8"
           />
-          <span className="text-[#6A6A6A]">© 2026 LumenQuery</span>
+          <span className="text-gray-500">© 2026 LumenQuery</span>
         </div>
-        <div className="flex gap-6 text-sm text-[#6A6A6A]">
+        <div className="flex gap-6 text-sm text-gray-400">
           <Link href="/docs" className="hover:text-[#2855FF]">Docs</Link>
           <Link href="/blog" className="hover:text-[#2855FF]">Blog</Link>
           <Link href="/dashboard" className="hover:text-[#2855FF]">Dashboard</Link>
+          <Link href="/sitemap.xml" className="hover:text-[#2855FF]">Sitemap</Link>
         </div>
       </div>
     </footer>
