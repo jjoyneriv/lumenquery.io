@@ -260,6 +260,55 @@ export default function Home() {
         </div>
       </section>
 
+        {/* Latest from the Blog */}
+        <section className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 bg-[#F5F6F7]" aria-labelledby="blog-heading">
+          <div className="max-w-6xl mx-auto">
+            <h2 id="blog-heading" className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-3 sm:mb-4">Latest from the Blog</h2>
+            <p className="text-center text-[#6A6A6A] mb-8 sm:mb-12 max-w-2xl mx-auto text-sm sm:text-base">
+              Industry insights, developer guides, and deep dives into the Stellar ecosystem
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+              <Link href="/blog/stellar-foundation-real-world-assets" className="p-5 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9] hover:border-[#2855FF] hover:shadow-md transition-all">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="px-2 py-0.5 rounded-full bg-[rgba(40,85,255,0.1)] text-[#2855FF] text-xs font-medium">Industry Insights</span>
+                </div>
+                <h3 className="font-bold text-sm sm:text-base mb-2 line-clamp-2">How the Stellar Foundation Is Driving Real World Asset Adoption</h3>
+                <p className="text-xs sm:text-sm text-[#6A6A6A] line-clamp-3 mb-3">Explore how SDF is positioning Stellar as the go-to blockchain for tokenized real world assets.</p>
+                <span className="text-xs text-[#6A6A6A]">2026-03-27 &middot; 12 min read</span>
+              </Link>
+              <Link href="/blog/stellar-foundation-roadmap-2026" className="p-5 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9] hover:border-[#2855FF] hover:shadow-md transition-all">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="px-2 py-0.5 rounded-full bg-[rgba(40,85,255,0.1)] text-[#2855FF] text-xs font-medium">Industry Insights</span>
+                </div>
+                <h3 className="font-bold text-sm sm:text-base mb-2 line-clamp-2">The Stellar Foundation Roadmap for 2026</h3>
+                <p className="text-xs sm:text-sm text-[#6A6A6A] line-clamp-3 mb-3">Key milestones including 5000 TPS targets, Stellar RPC unification, and state archival improvements.</p>
+                <span className="text-xs text-[#6A6A6A]">2026-03-27 &middot; 14 min read</span>
+              </Link>
+              <Link href="/blog/using-stellar-rpc-access-blockchain-data" className="p-5 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9] hover:border-[#2855FF] hover:shadow-md transition-all">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="px-2 py-0.5 rounded-full bg-[rgba(40,85,255,0.1)] text-[#2855FF] text-xs font-medium">Developer Guide</span>
+                </div>
+                <h3 className="font-bold text-sm sm:text-base mb-2 line-clamp-2">Using the Stellar RPC to Access Blockchain Data</h3>
+                <p className="text-xs sm:text-sm text-[#6A6A6A] line-clamp-3 mb-3">Hands-on guide to querying real-time ledger state, simulating transactions, and streaming events.</p>
+                <span className="text-xs text-[#6A6A6A]">2026-03-27 &middot; 13 min read</span>
+              </Link>
+              <Link href="/blog/stellar-expanding-developer-ecosystem" className="p-5 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9] hover:border-[#2855FF] hover:shadow-md transition-all">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="px-2 py-0.5 rounded-full bg-[rgba(40,85,255,0.1)] text-[#2855FF] text-xs font-medium">Industry Insights</span>
+                </div>
+                <h3 className="font-bold text-sm sm:text-base mb-2 line-clamp-2">How Stellar Is Expanding the Developer Ecosystem</h3>
+                <p className="text-xs sm:text-sm text-[#6A6A6A] line-clamp-3 mb-3">From Soroban smart contracts to improved SDKs, tooling, and grant programs for builders.</p>
+                <span className="text-xs text-[#6A6A6A]">2026-03-27 &middot; 11 min read</span>
+              </Link>
+            </div>
+            <div className="text-center mt-6 sm:mt-8">
+              <Link href="/blog" className="inline-block px-6 py-3 rounded-lg border-2 border-[#E6E7E9] hover:border-[#2855FF] hover:text-[#2855FF] font-medium text-sm sm:text-base transition-colors">
+                View All Articles
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* CTA */}
         <section className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 bg-[#0D0D0D]" aria-labelledby="cta-heading">
           <div className="max-w-4xl mx-auto text-center">

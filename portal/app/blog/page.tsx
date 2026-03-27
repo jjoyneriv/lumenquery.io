@@ -2,6 +2,38 @@ import Link from 'next/link';
 
 const posts = [
   {
+    slug: 'stellar-foundation-real-world-assets',
+    title: 'How the Stellar Foundation Is Driving Real World Asset Adoption on Chain',
+    excerpt: 'Explore how SDF is positioning Stellar as the go-to blockchain for tokenized real world assets, from treasury bills and bonds to carbon credits, and what this means for developers and institutions.',
+    date: '2026-03-27',
+    readTime: '12 min read',
+    category: 'Industry Insights',
+  },
+  {
+    slug: 'stellar-foundation-roadmap-2026',
+    title: 'The Stellar Foundation Roadmap for 2026: Key Milestones and What Developers Should Know',
+    excerpt: 'A deep dive into SDF\'s 2026 roadmap including 5000 TPS targets, Stellar RPC unification, state archival improvements, and how each milestone impacts your applications and integrations.',
+    date: '2026-03-27',
+    readTime: '14 min read',
+    category: 'Industry Insights',
+  },
+  {
+    slug: 'using-stellar-rpc-access-blockchain-data',
+    title: 'Using the Stellar RPC to Access Real-Time Blockchain Data',
+    excerpt: 'A hands-on guide to querying real-time ledger state, simulating transactions, and streaming events using the Stellar RPC. Includes code examples, method reference, and best practices for production apps.',
+    date: '2026-03-27',
+    readTime: '13 min read',
+    category: 'Developer Guide',
+  },
+  {
+    slug: 'stellar-expanding-developer-ecosystem',
+    title: 'How Stellar Is Expanding the Developer Ecosystem in 2026',
+    excerpt: 'From Soroban smart contracts to improved SDKs, better tooling, and grant programs, discover how SDF is building a thriving developer community and what opportunities exist for builders.',
+    date: '2026-03-27',
+    readTime: '11 min read',
+    category: 'Industry Insights',
+  },
+  {
     slug: 'soroban-to-stellar-rpc-rebrand',
     title: 'From Soroban to Stellar RPC: What the Rebrand Means for Developers',
     excerpt: 'Explore the recent shift from Soroban RPC to Stellar RPC, why SDF made the change, and how this unified data access strategy simplifies querying real-time network state and smart contract interactions.',

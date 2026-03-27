@@ -3995,6 +3995,907 @@ For teams that want reliability without the operational overhead, consider using
 *Need production-ready Stellar infrastructure without the ops burden? [Try LumenQuery](/auth/signup)—fully managed with built-in monitoring and 99.9% uptime SLA.*
     `,
   },
+  'stellar-foundation-real-world-assets': {
+    title: 'How the Stellar Foundation Is Driving Real World Asset Adoption on Chain',
+    date: '2026-03-27',
+    readTime: '12 min read',
+    category: 'Industry Insights',
+    content: `
+The Stellar Development Foundation has made real world asset (RWA) tokenization a cornerstone of its 2026 strategy. While other blockchains are still debating how to bridge traditional finance and crypto, Stellar is already processing billions in tokenized assets through its network. Here's what's happening and why it matters.
+
+## What Are Real World Assets on Blockchain?
+
+Real world assets (RWAs) refer to traditional financial instruments and tangible assets that have been tokenized and represented on a blockchain. These include:
+
+- **Treasury bills and government bonds** - Tokenized US Treasuries are the fastest-growing RWA category
+- **Corporate bonds and fixed income** - Automated coupon payments via smart contracts
+- **Carbon credits** - Transparent tracking of environmental credits
+- **Real estate** - Fractional ownership of commercial and residential properties
+- **Commodities** - Gold, silver, and other physical assets represented as tokens
+
+The key advantage is that blockchain rails provide 24/7 settlement, programmable compliance, and fractional ownership—things traditional finance can't easily offer.
+
+## Why Stellar for RWAs?
+
+Stellar's architecture was purpose-built for asset issuance and transfer, making it uniquely suited for RWAs. Here's why institutions are choosing Stellar:
+
+### 1. Native Asset Issuance
+
+Unlike Ethereum where tokens require deploying a smart contract, Stellar has native asset issuance built into the protocol. Any account can issue a token in a single operation. This means:
+
+- **Lower cost** - No contract deployment fees
+- **Built-in compliance** - Authorization flags control who can hold assets
+- **Clawback support** - Required by regulators for certain asset types
+- **Trustline model** - Users must explicitly opt-in to hold an asset
+
+You can explore any tokenized asset on the network using [LumenQuery's Analytics Dashboard](/analytics), which tracks asset issuance and holder metrics in real time.
+
+### 2. Regulatory-Friendly Features
+
+Stellar's protocol-level features align with regulatory requirements:
+
+\`\`\`
+Authorization Required  - Issuer must approve each holder
+Authorization Revocable - Issuer can freeze assets if needed
+Clawback Enabled       - Assets can be recovered (court orders, fraud)
+\`\`\`
+
+These aren't afterthoughts—they're core protocol features. Learn more about how these flags affect [portfolio risk assessment](/docs/portfolio) in our documentation.
+
+### 3. Soroban Smart Contracts for Complex RWA Logic
+
+With [Soroban smart contracts](/docs/contracts), issuers can now implement complex RWA logic on Stellar:
+
+- **Automated coupon payments** - Bond interest distributed on schedule
+- **Compliance rules** - Transfer restrictions enforced programmatically
+- **Multi-party governance** - DAO-style management for tokenized funds
+- **Yield distribution** - Automated dividend payments to token holders
+
+Our [Soroban Smart Contract Explorer](/contracts) lets you inspect contract calls and storage, making it easy to audit tokenized asset contracts.
+
+## Major RWA Projects on Stellar
+
+### Franklin Templeton (BENJI)
+
+Franklin Templeton's OnChain US Government Money Fund (BENJI) is one of the largest tokenized funds in crypto, managing over $400 million in assets on Stellar. Each token represents a share of a money market fund backed by US Treasury bills.
+
+### Circle (USDC)
+
+USDC on Stellar is a foundational RWA—each token is backed 1:1 by US dollars held in regulated financial institutions. With Stellar's low fees (fractions of a cent per transaction), USDC on Stellar has become a preferred rail for cross-border payments.
+
+### WisdomTree Prime
+
+WisdomTree launched tokenized funds on Stellar, offering retail investors access to digital fund shares with real-time settlement. This is a significant step toward making traditional investment products accessible through blockchain infrastructure.
+
+## How Developers Can Build RWA Applications
+
+If you're building RWA applications, Stellar provides the infrastructure you need. Here's how to get started:
+
+### Step 1: Asset Issuance
+
+Issue a tokenized asset using the Stellar SDK:
+
+\`\`\`javascript
+const StellarSdk = require('@stellar/stellar-sdk');
+const server = new StellarSdk.Horizon.Server('https://api.lumenquery.io');
+
+// Create issuer and distributor accounts
+// Set authorization flags for compliance
+// Issue tokens to approved holders
+\`\`\`
+
+### Step 2: Monitor Assets with LumenQuery
+
+Track your tokenized assets using our [Analytics API](/docs/analytics). Monitor holder counts, transfer volumes, and asset velocity:
+
+\`\`\`bash
+curl https://api.lumenquery.io/assets?asset_code=TBILL&asset_issuer=GXXX
+\`\`\`
+
+### Step 3: Build Compliance Logic with Soroban
+
+Deploy smart contracts that enforce transfer restrictions and compliance rules. Use [LumenQuery's Soroban RPC](/docs/contracts) to interact with your contracts:
+
+\`\`\`bash
+curl -X POST https://rpc.lumenquery.io \\
+  -H "Content-Type: application/json" \\
+  -d '{"jsonrpc":"2.0","method":"simulateTransaction","id":1}'
+\`\`\`
+
+## The Opportunity for Developers
+
+The RWA tokenization market is projected to reach $16 trillion by 2030. Stellar is positioning itself to capture a significant portion of this market, which creates opportunities for developers to build:
+
+- **Asset management platforms** - Issue and manage tokenized securities
+- **Compliance middleware** - Automate regulatory requirements on-chain
+- **Portfolio trackers** - Aggregate RWA positions across accounts (see our [Portfolio Intelligence](/docs/portfolio) for inspiration)
+- **Analytics dashboards** - Monitor RWA market activity (like our [Network Analytics](/analytics))
+- **Payment rails** - Cross-border settlement for tokenized assets
+
+## What's Next for RWAs on Stellar
+
+The [Stellar Foundation's 2026 roadmap](/blog/stellar-foundation-roadmap-2026) includes several features that will further enhance RWA capabilities:
+
+- **State archival improvements** - Cheaper long-term storage for compliance records
+- **5000 TPS target** - Handle institutional-grade transaction volumes
+- **Enhanced Soroban** - More complex compliance logic in smart contracts
+
+For developers looking to build on this trend, [getting started with LumenQuery](/blog/getting-started-with-lumenquery) is the fastest path to production-ready Stellar infrastructure. Our [Horizon API](/docs) and [Stellar RPC](/blog/using-stellar-rpc-access-blockchain-data) provide the data access layer you need to build institutional-grade RWA applications.
+
+---
+
+**Related reading:**
+- [Building Real-Time Apps on Stellar: Horizon API vs Stellar RPC](/blog/horizon-api-vs-stellar-rpc)
+- [How Stellar Is Expanding the Developer Ecosystem in 2026](/blog/stellar-expanding-developer-ecosystem)
+- [Top 5 Horizon & RPC Use Cases for Financial Apps in 2026](/blog/horizon-rpc-use-cases-financial-apps-2026)
+`,
+  },
+  'stellar-foundation-roadmap-2026': {
+    title: 'The Stellar Foundation Roadmap for 2026: Key Milestones and What Developers Should Know',
+    date: '2026-03-27',
+    readTime: '14 min read',
+    category: 'Industry Insights',
+    content: `
+The Stellar Development Foundation (SDF) has laid out an ambitious roadmap for 2026, focusing on scalability, developer experience, and positioning Stellar as the blockchain of choice for regulated financial applications. Whether you're building payment apps, tokenization platforms, or DeFi protocols, these changes will impact how you architect and deploy your applications.
+
+## The Big Picture: Stellar's 2026 Vision
+
+SDF's roadmap centers around four pillars:
+
+1. **Scalability** - Reaching ~5000 TPS to handle institutional transaction volumes
+2. **Unified Data Access** - Consolidating Soroban RPC into Stellar RPC
+3. **State Management** - Improving state archival for cheaper long-term storage
+4. **Developer Experience** - Better SDKs, tooling, and documentation
+
+Let's break down each area and what it means for your applications.
+
+## Pillar 1: Scaling to 5000 TPS
+
+### Where We Are
+
+Stellar currently handles approximately 100-200 TPS during peak activity. While this is already faster than many blockchains, institutional use cases like [real world asset tokenization](/blog/stellar-foundation-real-world-assets) demand significantly higher throughput.
+
+You can monitor current TPS and network metrics on our [Stellar Network Analytics Dashboard](/analytics), which shows real-time ledger data.
+
+### How They're Getting There
+
+The path to ~5000 TPS involves several optimizations:
+
+**Consensus Layer Improvements:**
+- Optimized SCP (Stellar Consensus Protocol) message handling
+- Reduced inter-validator communication overhead
+- Parallel transaction application within ledgers
+
+**Horizon Infrastructure:**
+- Improved ingestion pipeline for higher throughput
+- Better database indexing for faster queries
+- Connection pooling and caching improvements
+
+For a deeper analysis of how these changes affect API integrations, see our post on [how Stellar's 5000 TPS roadmap impacts your API integrations](/blog/stellar-5000-tps-roadmap-api-impact).
+
+### What Developers Should Do
+
+1. **Design for higher throughput** - Your applications should handle increased data volumes
+2. **Use streaming over polling** - SSE connections are more efficient at scale (our [Live Transaction Viewer](/dashboard/transactions) demonstrates this pattern)
+3. **Implement proper caching** - Use Redis or similar to avoid hitting rate limits
+4. **Monitor with LumenQuery** - Our [Analytics Dashboard](/analytics/network) provides real-time network health metrics
+
+## Pillar 2: Stellar RPC Unification
+
+### The Rebrand
+
+Soroban RPC is becoming Stellar RPC. This isn't just a name change—it represents a fundamental shift in how developers access network data. We covered this transition in detail in our post on the [Soroban to Stellar RPC rebrand](/blog/soroban-to-stellar-rpc-rebrand).
+
+### What Changes
+
+**Before (two interfaces):**
+- Horizon API: Payments, accounts, offers, ledger history
+- Soroban RPC: Smart contract state, transaction simulation, events
+
+**After (clear separation):**
+- Stellar RPC: Real-time state, simulation, submission
+- Horizon API: Historical data, deep indexing, full-text search
+
+### How to Use Stellar RPC
+
+Learn to query real-time blockchain data using Stellar RPC in our hands-on guide: [Using the Stellar RPC to Access Real-Time Blockchain Data](/blog/using-stellar-rpc-access-blockchain-data).
+
+Key RPC methods every developer should know:
+
+\`\`\`bash
+# Check network health
+curl -X POST https://rpc.lumenquery.io \\
+  -d '{"jsonrpc":"2.0","method":"getHealth","id":1}'
+
+# Get latest ledger
+curl -X POST https://rpc.lumenquery.io \\
+  -d '{"jsonrpc":"2.0","method":"getLatestLedger","id":1}'
+
+# Simulate a transaction before submitting
+curl -X POST https://rpc.lumenquery.io \\
+  -d '{"jsonrpc":"2.0","method":"simulateTransaction","id":1,
+       "params":{"transaction":"AAAAAgAA..."}}'
+\`\`\`
+
+LumenQuery provides managed access to both Horizon and Stellar RPC. See our [API documentation](/docs) for the full endpoint reference.
+
+## Pillar 3: State Archival Improvements
+
+### The Problem
+
+Every smart contract on Stellar stores data (state) that validators must maintain. As more contracts are deployed, state bloat becomes a concern—it slows down validators and increases costs.
+
+### The Solution
+
+SDF's state archival strategy involves:
+
+- **Tiered storage** - Frequently accessed data stays in "live" state; older data moves to archival
+- **Rent-based economics** - Contracts pay rent to keep data in live state
+- **Efficient restoration** - Archived state can be restored with a single transaction
+- **Cheaper storage** - Archival storage costs significantly less than live state
+
+### Impact on Developers
+
+If you're building [Soroban smart contracts](/contracts), you need to understand state archival:
+
+- **Use temporary storage** for ephemeral data (cheaper, auto-expires)
+- **Use persistent storage** only for data that must survive across transactions
+- **Budget for rent payments** in your contract economics
+
+Our [Soroban Smart Contracts Explorer documentation](/docs/contracts) explains the three storage types (persistent, temporary, instance) and when to use each.
+
+## Pillar 4: Developer Experience
+
+### SDK Improvements
+
+SDF is investing in better SDKs across multiple languages:
+
+- **JavaScript/TypeScript** - \`@stellar/stellar-sdk\` with improved TypeScript support
+- **Rust** - First-class Soroban SDK for contract development
+- **Python** - Growing community SDK
+- **Go** - Used by many institutional integrators
+
+### Tooling
+
+The developer toolchain is expanding:
+
+- **Stellar CLI** - One tool for contract deployment, testing, and interaction
+- **Soroban Dev Environment** - Local testing without connecting to testnet
+- **Improved Block Explorers** - Like [LumenQuery's Smart Contract Explorer](/contracts) for decoded contract data
+
+### Grant Programs
+
+SDF continues to fund ecosystem development through:
+
+- **Community Fund** - Grants for open-source projects
+- **Startup Programs** - Funding for companies building on Stellar
+- **Bounty Programs** - Rewards for specific development tasks
+
+Read more about these initiatives in our post on [how Stellar is expanding the developer ecosystem](/blog/stellar-expanding-developer-ecosystem).
+
+## Timeline: Key 2026 Milestones
+
+| Quarter | Milestone | Impact |
+|---------|-----------|--------|
+| Q1 2026 | Stellar RPC GA | Unified data access for all apps |
+| Q2 2026 | State archival v2 | Cheaper contract storage |
+| Q2 2026 | Protocol 22 | New transaction types, improved SCP |
+| Q3 2026 | 2000 TPS target | 10x current capacity |
+| Q4 2026 | Enhanced Soroban | More complex contract capabilities |
+| 2027+ | 5000 TPS target | Institutional-grade throughput |
+
+## How to Prepare Your Applications
+
+### 1. Start Using Stellar RPC
+
+Begin migrating from Soroban RPC to Stellar RPC now. LumenQuery supports both endpoints during the transition:
+
+\`\`\`bash
+# LumenQuery Horizon API (historical data)
+curl https://api.lumenquery.io/ledgers?limit=5
+
+# LumenQuery Stellar RPC (real-time state)
+curl -X POST https://rpc.lumenquery.io \\
+  -d '{"jsonrpc":"2.0","method":"getLatestLedger","id":1}'
+\`\`\`
+
+### 2. Monitor Network Changes
+
+Use our [Analytics Dashboard](/analytics) to track protocol upgrades and network metrics. When the protocol version increments, check for new features.
+
+### 3. Test Against Realistic Conditions
+
+Our [Natural Language Query Interface](/query) lets you explore live network data to understand transaction patterns and asset flows.
+
+### 4. Stay Updated
+
+Follow these resources to stay informed:
+- [LumenQuery Blog](/blog) - Developer guides and industry analysis
+- [Stellar Developer Docs](https://developers.stellar.org) - Official SDF documentation
+- [SDF Blog](https://stellar.org/blog) - Announcements and roadmap updates
+
+---
+
+**Related reading:**
+- [How the Stellar Foundation Is Driving Real World Asset Adoption](/blog/stellar-foundation-real-world-assets)
+- [Using the Stellar RPC to Access Real-Time Blockchain Data](/blog/using-stellar-rpc-access-blockchain-data)
+- [How Stellar's Roadmap to 5000 TPS Impacts Your API Integrations](/blog/stellar-5000-tps-roadmap-api-impact)
+- [Best Stellar API Providers in 2026](/blog/best-stellar-api-providers-2026)
+`,
+  },
+  'using-stellar-rpc-access-blockchain-data': {
+    title: 'Using the Stellar RPC to Access Real-Time Blockchain Data',
+    date: '2026-03-27',
+    readTime: '13 min read',
+    category: 'Developer Guide',
+    content: `
+The Stellar RPC (formerly Soroban RPC) is the primary interface for accessing real-time blockchain state on the Stellar network. Whether you're querying smart contract data, simulating transactions, or streaming events, the Stellar RPC is your gateway to live network data. This guide covers every method you need to know, with practical code examples.
+
+## What Is the Stellar RPC?
+
+The Stellar RPC is a JSON-RPC 2.0 interface that provides real-time access to:
+
+- **Current ledger state** - Latest ledger sequence, protocol version
+- **Transaction simulation** - Test transactions before submitting
+- **Contract state** - Read smart contract storage entries
+- **Event streaming** - Monitor contract events as they happen
+- **Fee estimation** - Get current fee statistics for proper transaction pricing
+
+For a comparison of when to use Stellar RPC vs. the Horizon API, read our guide on [Horizon API vs Stellar RPC](/blog/horizon-api-vs-stellar-rpc).
+
+## Getting Started
+
+### Endpoint Configuration
+
+LumenQuery provides managed Stellar RPC access:
+
+\`\`\`bash
+# LumenQuery Stellar RPC endpoint
+RPC_URL="https://rpc.lumenquery.io"
+API_KEY="lq_your_api_key"
+
+# Test connectivity
+curl -X POST $RPC_URL \\
+  -H "Content-Type: application/json" \\
+  -H "X-API-Key: $API_KEY" \\
+  -d '{"jsonrpc":"2.0","id":1,"method":"getHealth"}'
+\`\`\`
+
+Response:
+\`\`\`json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "status": "healthy"
+  }
+}
+\`\`\`
+
+Sign up for a [free LumenQuery account](/auth/signup) to get your API key. See [Getting Started with LumenQuery](/blog/getting-started-with-lumenquery) for a complete setup guide.
+
+## Core RPC Methods
+
+### getLatestLedger
+
+Returns the current ledger sequence and protocol version. This is the most basic health check for your application:
+
+\`\`\`bash
+curl -X POST https://rpc.lumenquery.io \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "getLatestLedger"
+  }'
+\`\`\`
+
+\`\`\`json
+{
+  "result": {
+    "id": "abc123...",
+    "sequence": 62100450,
+    "protocolVersion": 21
+  }
+}
+\`\`\`
+
+You can see this data visualized on our [Analytics Dashboard](/analytics/network), which tracks ledger progression in real time.
+
+### getNetwork
+
+Returns network passphrase and other configuration:
+
+\`\`\`bash
+curl -X POST https://rpc.lumenquery.io \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "getNetwork"
+  }'
+\`\`\`
+
+### getLedgerEntries
+
+Read specific ledger entries, including smart contract storage. This is how you query contract state:
+
+\`\`\`bash
+curl -X POST https://rpc.lumenquery.io \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "getLedgerEntries",
+    "params": {
+      "keys": ["AAAA...base64_encoded_key"]
+    }
+  }'
+\`\`\`
+
+Our [Soroban Smart Contracts Explorer](/contracts) uses this method under the hood to display contract storage entries. You can browse contract state visually using the [Storage Viewer](/docs/contracts).
+
+### simulateTransaction
+
+The most important method for smart contract developers. Simulate a transaction to estimate resources, fees, and catch errors before submitting:
+
+\`\`\`typescript
+async function simulateTransaction(xdr: string) {
+  const response = await fetch('https://rpc.lumenquery.io', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-API-Key': process.env.LUMENQUERY_API_KEY!,
+    },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'simulateTransaction',
+      params: { transaction: xdr },
+    }),
+  });
+
+  const data = await response.json();
+
+  if (data.result.error) {
+    throw new Error(data.result.error);
+  }
+
+  return {
+    cost: data.result.cost,
+    footprint: data.result.transactionData,
+    result: data.result.results,
+  };
+}
+\`\`\`
+
+This is exactly the pattern used in LumenQuery's [contract deployment feature](/contracts/deploy), which lets you deploy Soroban contracts directly from the browser.
+
+### sendTransaction
+
+Submit a signed transaction to the network:
+
+\`\`\`typescript
+async function submitTransaction(signedXdr: string) {
+  const response = await fetch('https://rpc.lumenquery.io', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'sendTransaction',
+      params: { transaction: signedXdr },
+    }),
+  });
+
+  const data = await response.json();
+  return data.result; // { hash, status, latestLedger }
+}
+\`\`\`
+
+### getTransaction
+
+Check the status of a submitted transaction:
+
+\`\`\`bash
+curl -X POST https://rpc.lumenquery.io \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "getTransaction",
+    "params": {
+      "hash": "abc123..."
+    }
+  }'
+\`\`\`
+
+Possible statuses: \`NOT_FOUND\`, \`SUCCESS\`, \`FAILED\`. Our [Live Transaction Viewer](/dashboard/transactions) shows decoded transaction results in real time.
+
+### getEvents
+
+Query historical events emitted by smart contracts:
+
+\`\`\`typescript
+async function getContractEvents(contractId: string, startLedger: number) {
+  const response = await fetch('https://rpc.lumenquery.io', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'getEvents',
+      params: {
+        startLedger,
+        filters: [{
+          type: 'contract',
+          contractIds: [contractId],
+        }],
+        pagination: { limit: 100 },
+      },
+    }),
+  });
+
+  const data = await response.json();
+  return data.result.events;
+}
+\`\`\`
+
+The [Event Stream feature](/docs/contracts) in Soroban Pro provides real-time SSE streaming of contract events.
+
+### getFeeStats
+
+Get current fee statistics for proper transaction pricing:
+
+\`\`\`bash
+curl -X POST https://rpc.lumenquery.io \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "getFeeStats"
+  }'
+\`\`\`
+
+Understanding fees is critical—see our documentation on [understanding stroops](/docs/analytics) for how fees are denominated on Stellar.
+
+## Building a Real-Time Dashboard
+
+Here's a practical example: building a dashboard that monitors ledger progression using Stellar RPC and Horizon API together.
+
+\`\`\`typescript
+// Poll Stellar RPC for latest ledger
+async function pollLedger() {
+  const rpcResponse = await fetch('https://rpc.lumenquery.io', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'getLatestLedger',
+    }),
+  });
+  const rpc = await rpcResponse.json();
+
+  // Get detailed ledger info from Horizon
+  const horizonResponse = await fetch(
+    \`https://api.lumenquery.io/ledgers/\${rpc.result.sequence}\`
+  );
+  const horizon = await horizonResponse.json();
+
+  return {
+    sequence: rpc.result.sequence,
+    protocolVersion: rpc.result.protocolVersion,
+    transactionCount: horizon.successful_transaction_count,
+    operationCount: horizon.operation_count,
+    baseFee: horizon.base_fee_in_stroops,
+    closedAt: horizon.closed_at,
+  };
+}
+\`\`\`
+
+This dual-API approach is exactly what powers our [Analytics Dashboard](/analytics). For more patterns like this, check out our guide on [building a Stellar blockchain explorer](/blog/build-stellar-blockchain-explorer-horizon-api).
+
+## Best Practices
+
+### 1. Always Simulate First
+
+Never submit a transaction without simulating it. Simulation catches errors, estimates fees, and returns resource limits—all for free.
+
+### 2. Handle Rate Limits
+
+LumenQuery provides generous rate limits, but your application should handle 429 responses gracefully:
+
+\`\`\`typescript
+async function rpcCallWithRetry(method: string, params: object, retries = 3) {
+  for (let i = 0; i < retries; i++) {
+    const response = await fetch('https://rpc.lumenquery.io', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }),
+    });
+
+    if (response.status === 429) {
+      await new Promise(r => setTimeout(r, 1000 * (i + 1)));
+      continue;
+    }
+
+    return response.json();
+  }
+  throw new Error('Rate limit exceeded after retries');
+}
+\`\`\`
+
+See our [API documentation](/docs) for current rate limit tiers.
+
+### 3. Cache Where Possible
+
+Ledger data doesn't change once a ledger closes (every ~5 seconds). Cache responses with TTLs:
+
+- **getLatestLedger** - Cache for 3-5 seconds
+- **getLedgerEntries** - Cache based on ledger sequence
+- **getFeeStats** - Cache for 30 seconds
+- **getHealth** - Cache for 10 seconds
+
+### 4. Use Horizon for Historical Data
+
+Stellar RPC is optimized for real-time state. For historical queries (transaction history, payment streams, offer books), use the [Horizon API](/docs):
+
+\`\`\`bash
+# Historical transactions via Horizon
+curl https://api.lumenquery.io/transactions?limit=10&order=desc
+
+# Real-time state via Stellar RPC
+curl -X POST https://rpc.lumenquery.io \\
+  -d '{"jsonrpc":"2.0","method":"getLatestLedger","id":1}'
+\`\`\`
+
+Or use our [Natural Language Query Interface](/query) to explore both data sources with plain English questions.
+
+## RPC Method Reference
+
+| Method | Purpose | Use When |
+|--------|---------|----------|
+| getHealth | Check server status | Monitoring, health checks |
+| getNetwork | Network configuration | Initial setup |
+| getLatestLedger | Current ledger | Dashboard displays |
+| getLedgerEntries | Read ledger state | Contract storage queries |
+| simulateTransaction | Test transaction | Before every submission |
+| sendTransaction | Submit transaction | After simulation + signing |
+| getTransaction | Check tx status | After submission |
+| getTransactions | Batch tx queries | Batch status checking |
+| getEvents | Query contract events | Event monitoring |
+| getFeeStats | Fee estimation | Transaction construction |
+
+## What's Next
+
+The Stellar RPC is evolving rapidly. The [Stellar Foundation roadmap for 2026](/blog/stellar-foundation-roadmap-2026) includes plans for enhanced event streaming, better state archival, and improved developer tooling.
+
+For developers new to Stellar, start with our [Soroban JSON RPC Explained](/blog/soroban-json-rpc-explained) guide for the foundational concepts, then come back here for the practical implementation patterns.
+
+---
+
+**Related reading:**
+- [Building Real-Time Apps on Stellar: Horizon API vs Stellar RPC](/blog/horizon-api-vs-stellar-rpc)
+- [From Soroban to Stellar RPC: What the Rebrand Means](/blog/soroban-to-stellar-rpc-rebrand)
+- [How to Build a Stellar Blockchain Explorer Using Horizon API](/blog/build-stellar-blockchain-explorer-horizon-api)
+- [Soroban Smart Contracts Explorer Documentation](/docs/contracts)
+`,
+  },
+  'stellar-expanding-developer-ecosystem': {
+    title: 'How Stellar Is Expanding the Developer Ecosystem in 2026',
+    date: '2026-03-27',
+    readTime: '11 min read',
+    category: 'Industry Insights',
+    content: `
+Stellar has been quietly building one of the most developer-friendly blockchain ecosystems. With Soroban smart contracts now in production, improved SDKs, better tooling, and active grant programs, the Stellar developer community is growing faster than ever. Here's what's happening and how you can get involved.
+
+## The State of Stellar Development in 2026
+
+The numbers tell a compelling story:
+
+- **Active developers**: Growing steadily quarter-over-quarter
+- **Soroban contracts deployed**: Thousands since mainnet launch
+- **SDK downloads**: Millions of npm installs for @stellar/stellar-sdk
+- **Grant funding**: Tens of millions allocated through SDF programs
+
+You can see the network's growth reflected in our [Stellar Network Analytics Dashboard](/analytics), which tracks transaction volumes, smart contract activity, and network health metrics in real time.
+
+## Soroban: The Game Changer
+
+### What Is Soroban?
+
+Soroban is Stellar's smart contract platform, written in Rust and compiled to WebAssembly (WASM). Unlike EVM-based chains, Soroban was designed from scratch with lessons learned from years of smart contract development:
+
+- **Predictable fees** - Know exactly what you'll pay before submitting
+- **No reentrancy** - Eliminated by design, not by convention
+- **Built-in testing** - First-class test framework in Rust
+- **Resource metering** - CPU, memory, and I/O tracked separately
+
+### Building with Soroban
+
+Getting started with Soroban development is straightforward:
+
+\`\`\`rust
+#[contract]
+pub struct TokenContract;
+
+#[contractimpl]
+impl TokenContract {
+    pub fn transfer(env: Env, from: Address, to: Address, amount: i128) {
+        from.require_auth();
+        // Transfer logic here
+    }
+}
+\`\`\`
+
+Once deployed, you can inspect your contracts using [LumenQuery's Smart Contract Explorer](/contracts), which decodes XDR data into human-readable function calls, storage entries, and events.
+
+For a deeper dive into Soroban development, read our guide on [Soroban JSON RPC Explained](/blog/soroban-json-rpc-explained).
+
+### Deploy Directly from the Browser
+
+LumenQuery's [Contract Deployment feature](/contracts/deploy) lets you deploy Soroban contracts directly from your browser:
+
+1. Connect your Freighter wallet
+2. Upload your compiled .wasm file
+3. Simulate the deployment transaction
+4. Sign and submit
+
+No CLI required. This dramatically lowers the barrier to entry for new Soroban developers.
+
+## SDKs and Libraries
+
+### Official SDKs
+
+SDF maintains SDKs in multiple languages, with the JavaScript SDK being the most popular:
+
+**JavaScript/TypeScript** (most popular):
+\`\`\`bash
+npm install @stellar/stellar-sdk
+\`\`\`
+
+\`\`\`typescript
+import { Horizon, Networks } from '@stellar/stellar-sdk';
+
+const server = new Horizon.Server('https://api.lumenquery.io');
+const account = await server.loadAccount('GXXX...');
+console.log('Balances:', account.balances);
+\`\`\`
+
+**Rust** (for Soroban contracts):
+\`\`\`bash
+cargo install --locked stellar-cli
+stellar contract init my-project
+\`\`\`
+
+**Python**:
+\`\`\`bash
+pip install stellar-sdk
+\`\`\`
+
+### Community Libraries
+
+The community has built tools for:
+
+- **Go** - Popular for institutional backends
+- **Java/Kotlin** - Android applications
+- **Swift** - iOS applications
+- **C#/.NET** - Enterprise integrations
+
+## Developer Tooling
+
+### Stellar CLI
+
+The Stellar CLI is the Swiss Army knife for Stellar development:
+
+\`\`\`bash
+# Initialize a new Soroban project
+stellar contract init my-token
+
+# Build the contract
+stellar contract build
+
+# Deploy to testnet
+stellar contract deploy --wasm target/wasm32-unknown-unknown/release/my_token.wasm
+
+# Invoke a function
+stellar contract invoke --id CXXX... -- transfer --from GXXX... --to GYYY... --amount 100
+\`\`\`
+
+### LumenQuery Developer Tools
+
+LumenQuery provides several tools that complement the Stellar CLI:
+
+- **[Natural Language Query Interface](/query)** - Explore the network with plain English questions like "top 10 XLM holders" or "recent payments"
+- **[Analytics Dashboard](/analytics)** - Monitor network metrics, token activity, and Soroban contract usage
+- **[Smart Contract Explorer](/contracts)** - Inspect decoded contract calls, storage, and events
+- **[Live Transaction Viewer](/dashboard/transactions)** - Watch decoded transactions stream in real time
+- **[Portfolio Intelligence](/portfolio)** - Track multi-account positions and P&L
+- **[API Documentation](/docs)** - Complete Horizon API and Stellar RPC reference
+
+### Block Explorers and Monitoring
+
+Good observability is essential for production applications. Our guide on [how to monitor a Stellar validator or Horizon node](/blog/monitor-stellar-validator-horizon-node) covers Prometheus and Grafana setups for Stellar infrastructure.
+
+## Grant Programs and Funding
+
+### Stellar Community Fund (SCF)
+
+The Stellar Community Fund awards grants to projects that benefit the Stellar ecosystem. Recent funded categories include:
+
+- **DeFi protocols** - AMMs, lending platforms, yield aggregators
+- **Developer tools** - SDKs, libraries, block explorers
+- **Education** - Tutorials, courses, documentation
+- **Infrastructure** - RPC providers, indexers, analytics platforms
+
+### Startup Programs
+
+SDF's startup programs provide:
+
+- **Funding** - Seed grants for early-stage companies
+- **Technical support** - Direct access to SDF engineering
+- **Network introductions** - Connections to institutional partners
+- **Marketing support** - Visibility through SDF channels
+
+### Bounty Programs
+
+Targeted bounties for specific development tasks:
+
+- Bug bounties for the core protocol
+- Feature implementations for ecosystem tools
+- Documentation improvements
+- Integration templates and examples
+
+## Building on Stellar: Where to Start
+
+### For Web3 Newcomers
+
+If you're new to blockchain development, Stellar is an excellent starting point:
+
+1. **Read our [Getting Started guide](/blog/getting-started-with-lumenquery)** - Set up your LumenQuery API key
+2. **Explore the network** - Use our [Query Interface](/query) to ask questions in plain English
+3. **Study the [API docs](/docs)** - Understand Horizon endpoints and Stellar RPC methods
+4. **Build a simple app** - Follow our [blockchain explorer tutorial](/blog/build-stellar-blockchain-explorer-horizon-api)
+
+### For Experienced Blockchain Developers
+
+If you're coming from Ethereum or another chain:
+
+1. **Understand the differences** - Stellar has native asset issuance, built-in DEX, and SCP consensus (not PoS/PoW)
+2. **Learn Soroban** - Read [Soroban JSON RPC Explained](/blog/soroban-json-rpc-explained)
+3. **Compare APIs** - Check our [Horizon vs Stellar RPC guide](/blog/horizon-api-vs-stellar-rpc)
+4. **Deploy a contract** - Use our [browser-based deployment tool](/contracts/deploy)
+
+### For Enterprise Developers
+
+If you're building institutional applications:
+
+1. **Evaluate infrastructure** - Read our [Stellar API providers comparison](/blog/best-stellar-api-providers-2026)
+2. **Understand compliance** - Stellar's built-in authorization flags support regulatory requirements
+3. **Explore RWAs** - See how the [Stellar Foundation is driving real world asset adoption](/blog/stellar-foundation-real-world-assets)
+4. **Plan for scale** - Review [how 5000 TPS impacts your integrations](/blog/stellar-5000-tps-roadmap-api-impact)
+
+## The Road Ahead
+
+The [Stellar Foundation's 2026 roadmap](/blog/stellar-foundation-roadmap-2026) includes several developer-focused initiatives:
+
+- **Improved developer documentation** - More examples, tutorials, and guides
+- **Enhanced testing tools** - Better local development environments
+- **SDK improvements** - More idiomatic APIs across all languages
+- **New grant categories** - Funding for AI/blockchain integration, RWA tooling, and more
+
+The Stellar ecosystem is at an inflection point. With Soroban maturing, institutional adoption growing, and developer tools improving, there has never been a better time to start building on Stellar.
+
+---
+
+**Related reading:**
+- [The Stellar Foundation Roadmap for 2026](/blog/stellar-foundation-roadmap-2026)
+- [How the Stellar Foundation Is Driving RWA Adoption](/blog/stellar-foundation-real-world-assets)
+- [Using the Stellar RPC to Access Real-Time Blockchain Data](/blog/using-stellar-rpc-access-blockchain-data)
+- [5 Powerful Use Cases for the Stellar Horizon API](/blog/stellar-api-use-cases-for-fintech)
+`,
+  },
   'soroban-to-stellar-rpc-rebrand': {
     title: 'From Soroban to Stellar RPC: What the Rebrand Means for Developers',
     date: '2026-02-22',

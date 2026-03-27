@@ -108,8 +108,33 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Blog posts - ALL 16 posts with their actual publication dates
+  // Blog posts - ALL 20 posts with their actual publication dates
   const blogPosts: MetadataRoute.Sitemap = [
+    // 2026-03-27 posts (RWA, roadmap, Stellar RPC, developer ecosystem)
+    {
+      url: `${baseUrl}/blog/stellar-foundation-real-world-assets`,
+      lastModified: new Date('2026-03-27'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/stellar-foundation-roadmap-2026`,
+      lastModified: new Date('2026-03-27'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/using-stellar-rpc-access-blockchain-data`,
+      lastModified: new Date('2026-03-27'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/stellar-expanding-developer-ecosystem`,
+      lastModified: new Date('2026-03-27'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
     // 2026-02-22 posts (new Stellar RPC and use case posts)
     {
       url: `${baseUrl}/blog/soroban-to-stellar-rpc-rebrand`,
