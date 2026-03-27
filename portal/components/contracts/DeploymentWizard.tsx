@@ -130,7 +130,7 @@ export function DeploymentWizard() {
             </div>
             <button
               onClick={() => setWizardStep('upload')}
-              className="w-full py-3 bg-[#2855FF] text-white rounded-lg hover:bg-[#1e44cc] transition-colors"
+              className="w-full py-3 bg-[#7366FF] text-white rounded-lg hover:bg-[#1e44cc] transition-colors"
             >
               Continue to Upload
             </button>
@@ -152,7 +152,7 @@ export function DeploymentWizard() {
               <button
                 onClick={handleSimulate}
                 disabled={deploy.state.step === 'SIMULATING'}
-                className="w-full mt-4 py-3 bg-[#2855FF] text-white rounded-lg hover:bg-[#1e44cc] transition-colors disabled:opacity-50"
+                className="w-full mt-4 py-3 bg-[#7366FF] text-white rounded-lg hover:bg-[#1e44cc] transition-colors disabled:opacity-50"
               >
                 {deploy.state.step === 'SIMULATING' ? 'Simulating...' : 'Continue'}
               </button>
@@ -184,10 +184,10 @@ export function DeploymentWizard() {
                 </div>
               </div>
 
-              <div className="p-4 bg-[#2855FF]/5 rounded-lg border border-[#2855FF]/20">
+              <div className="p-4 bg-[#7366FF]/5 rounded-lg border border-[#7366FF]/20">
                 <div className="flex justify-between items-center">
                   <span className="text-[#6A6A6A]">Estimated Fee</span>
-                  <span className="font-medium text-[#2855FF]">
+                  <span className="font-medium text-[#7366FF]">
                     {estimatedUploadFee || 'Calculating...'}
                   </span>
                 </div>
@@ -204,7 +204,7 @@ export function DeploymentWizard() {
               <button
                 onClick={handleUpload}
                 disabled={!preparedUploadXdr || deploy.state.step !== 'IDLE'}
-                className="flex-1 py-3 bg-[#2855FF] text-white rounded-lg hover:bg-[#1e44cc] transition-colors disabled:opacity-50"
+                className="flex-1 py-3 bg-[#7366FF] text-white rounded-lg hover:bg-[#1e44cc] transition-colors disabled:opacity-50"
               >
                 Sign & Upload
               </button>
@@ -230,10 +230,10 @@ export function DeploymentWizard() {
                 </div>
               </div>
 
-              <div className="p-4 bg-[#2855FF]/5 rounded-lg border border-[#2855FF]/20">
+              <div className="p-4 bg-[#7366FF]/5 rounded-lg border border-[#7366FF]/20">
                 <div className="flex justify-between items-center">
                   <span className="text-[#6A6A6A]">Estimated Fee</span>
-                  <span className="font-medium text-[#2855FF]">
+                  <span className="font-medium text-[#7366FF]">
                     {estimatedCreateFee || 'Calculating...'}
                   </span>
                 </div>
@@ -243,7 +243,7 @@ export function DeploymentWizard() {
             <button
               onClick={handleCreate}
               disabled={!preparedCreateXdr}
-              className="w-full py-3 bg-[#2855FF] text-white rounded-lg hover:bg-[#1e44cc] transition-colors disabled:opacity-50"
+              className="w-full py-3 bg-[#7366FF] text-white rounded-lg hover:bg-[#1e44cc] transition-colors disabled:opacity-50"
             >
               Sign & Create Contract
             </button>
@@ -271,7 +271,7 @@ export function DeploymentWizard() {
             <div className="flex gap-3 justify-center">
               <a
                 href={`/contracts/${deploy.state.contractId}`}
-                className="px-6 py-3 bg-[#2855FF] text-white rounded-lg hover:bg-[#1e44cc] transition-colors"
+                className="px-6 py-3 bg-[#7366FF] text-white rounded-lg hover:bg-[#1e44cc] transition-colors"
               >
                 View Contract
               </a>
@@ -307,7 +307,7 @@ export function DeploymentWizard() {
             <p className="text-[#6A6A6A] mb-6">{deploy.state.error}</p>
             <button
               onClick={handleReset}
-              className="px-6 py-3 bg-[#2855FF] text-white rounded-lg hover:bg-[#1e44cc] transition-colors"
+              className="px-6 py-3 bg-[#7366FF] text-white rounded-lg hover:bg-[#1e44cc] transition-colors"
             >
               Try Again
             </button>

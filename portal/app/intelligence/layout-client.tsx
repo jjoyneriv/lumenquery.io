@@ -24,9 +24,9 @@ export default function IntelligenceLayoutClient({
   const { data: session } = useSession();
 
   return (
-    <div className="min-h-screen bg-[#111111] text-white">
+    <div className="min-h-screen bg-[#1D1E26] text-white">
       {/* Header */}
-      <header className="bg-[#0D0D0D] border-b border-white/10">
+      <header className="bg-[#1D1E26] border-b border-white/10">
         <nav className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
           <div className="flex items-center gap-3 sm:gap-4">
             <Link href="/" className="flex items-center gap-2" aria-label="LumenQuery home">
@@ -67,7 +67,7 @@ export default function IntelligenceLayoutClient({
           <Link href="/analytics" className="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-400 hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap">
             Analytics
           </Link>
-          <Link href="/intelligence" className="px-3 py-1.5 rounded-lg text-sm font-medium text-[#2855FF] bg-[#2855FF]/10 hover:bg-[#2855FF]/20 transition-colors whitespace-nowrap">
+          <Link href="/intelligence" className="px-3 py-1.5 rounded-lg text-sm font-medium text-[#7366FF] bg-[#7366FF]/10 hover:bg-[#7366FF]/20 transition-colors whitespace-nowrap">
             Intelligence
           </Link>
           <Link href="/portfolio" className="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-400 hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap">
@@ -91,7 +91,7 @@ export default function IntelligenceLayoutClient({
         <div className="flex flex-col md:flex-row gap-6 md:gap-8">
           {/* Left Sidebar Navigation */}
           <aside className="w-full md:w-56 flex-shrink-0">
-            <nav className="bg-[#0D0D0D] rounded-xl border border-white/10 p-4 sticky top-4">
+            <nav className="bg-[#1D1E26] rounded-xl border border-white/10 p-4 sticky top-4">
               <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
                 Intelligence
               </h2>
@@ -105,7 +105,7 @@ export default function IntelligenceLayoutClient({
                         href={item.href}
                         className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                           isActive
-                            ? 'bg-[#2855FF] text-white'
+                            ? 'bg-[#7366FF] text-white'
                             : 'text-gray-400 hover:bg-white/10 hover:text-white'
                         }`}
                       >

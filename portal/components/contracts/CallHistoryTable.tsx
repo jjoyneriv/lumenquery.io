@@ -83,7 +83,7 @@ export function CallHistoryTable({
                   onClick={() => setExpandedId(expandedId === call.id ? null : call.id)}
                 >
                   <td className="px-4 py-3">
-                    <code className="text-sm font-mono text-[#2855FF]">
+                    <code className="text-sm font-mono text-[#7366FF]">
                       {call.functionName}
                     </code>
                   </td>
@@ -115,7 +115,7 @@ export function CallHistoryTable({
                         e.stopPropagation();
                         onViewDetails?.(call);
                       }}
-                      className="p-1.5 text-[#6A6A6A] hover:text-[#2855FF] transition-colors"
+                      className="p-1.5 text-[#6A6A6A] hover:text-[#7366FF] transition-colors"
                       title="View Details"
                     >
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

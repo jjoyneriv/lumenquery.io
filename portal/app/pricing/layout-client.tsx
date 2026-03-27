@@ -12,9 +12,9 @@ export default function PricingLayoutClient({
   const { data: session } = useSession();
 
   return (
-    <div className="min-h-screen bg-[#111111] text-white">
+    <div className="min-h-screen bg-[#1D1E26] text-white">
       {/* Header */}
-      <header className="bg-[#0D0D0D] border-b border-white/10">
+      <header className="bg-[#1D1E26] border-b border-white/10">
         <nav className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
           <div className="flex items-center gap-3 sm:gap-4">
             <Link href="/" className="flex items-center gap-2" aria-label="LumenQuery home">
@@ -35,7 +35,7 @@ export default function PricingLayoutClient({
           </div>
           <Link
             href="/auth/signup"
-            className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-[#2855FF] text-white text-xs sm:text-sm font-medium hover:bg-[#1E44CC] transition-colors"
+            className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-[#7366FF] text-white text-xs sm:text-sm font-medium hover:bg-[#5A4FCF] transition-colors"
           >
             Get Started
           </Link>

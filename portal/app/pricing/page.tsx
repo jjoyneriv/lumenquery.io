@@ -168,7 +168,7 @@ export default function PricingPage() {
   return (
     <div className="space-y-6">
       {/* Hero Card */}
-      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-gradient-to-r from-[#2855FF] to-[#1E44CC] text-white">
+      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-gradient-to-r from-[#7366FF] to-[#5A4FCF] text-white">
         <div className="text-center">
           <h1 className="text-2xl sm:text-3xl font-bold mb-2">Simple, Transparent Pricing</h1>
           <p className="text-white/80 text-sm sm:text-base max-w-xl mx-auto">
@@ -197,13 +197,13 @@ export default function PricingPage() {
               key={tier.name}
               className={`rounded-xl border-2 ${
                 tier.highlighted
-                  ? 'border-[#2855FF] shadow-lg shadow-[#2855FF]/10'
+                  ? 'border-[#7366FF] shadow-lg shadow-[#7366FF]/10'
                   : 'border-[#E6E7E9]'
               } p-4 flex flex-col bg-white`}
             >
               {tier.highlighted && (
                 <div className="text-center mb-3">
-                  <span className="inline-block px-2 py-0.5 bg-[#2855FF] text-white text-xs font-medium rounded-full">
+                  <span className="inline-block px-2 py-0.5 bg-[#7366FF] text-white text-xs font-medium rounded-full">
                     Most Popular
                   </span>
                 </div>
@@ -239,7 +239,7 @@ export default function PricingPage() {
                 href={tier.ctaLink}
                 className={`w-full py-2 rounded-lg text-center font-medium text-sm transition-colors ${
                   tier.highlighted
-                    ? 'bg-[#2855FF] text-white hover:bg-[#1e44cc]'
+                    ? 'bg-[#7366FF] text-white hover:bg-[#1e44cc]'
                     : 'bg-[#F5F6F7] text-black hover:bg-[#E6E7E9]'
                 }`}
               >
@@ -270,13 +270,13 @@ export default function PricingPage() {
               key={tier.name}
               className={`rounded-xl border-2 ${
                 tier.highlighted
-                  ? 'border-[#2855FF] shadow-lg shadow-[#2855FF]/10'
+                  ? 'border-[#7366FF] shadow-lg shadow-[#7366FF]/10'
                   : 'border-[#E6E7E9]'
               } p-4 flex flex-col bg-white`}
             >
               {tier.highlighted && (
                 <div className="text-center mb-3">
-                  <span className="inline-block px-2 py-0.5 bg-[#2855FF] text-white text-xs font-medium rounded-full">
+                  <span className="inline-block px-2 py-0.5 bg-[#7366FF] text-white text-xs font-medium rounded-full">
                     Recommended
                   </span>
                 </div>
@@ -312,7 +312,7 @@ export default function PricingPage() {
                 href={tier.ctaLink}
                 className={`w-full py-2 rounded-lg text-center font-medium text-sm transition-colors ${
                   tier.highlighted
-                    ? 'bg-[#2855FF] text-white hover:bg-[#1e44cc]'
+                    ? 'bg-[#7366FF] text-white hover:bg-[#1e44cc]'
                     : 'bg-[#F5F6F7] text-black hover:bg-[#E6E7E9]'
                 }`}
               >
@@ -337,14 +337,14 @@ export default function PricingPage() {
       </div>
 
       {/* CTA Section */}
-      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#2855FF] text-white">
+      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#7366FF] text-white">
         <div className="text-center">
           <h2 className="text-lg font-bold mb-2">Ready to explore Soroban contracts?</h2>
           <p className="text-white/80 text-sm mb-4">Start with the free plan and upgrade when you need more.</p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link
               href="/contracts"
-              className="px-6 py-2 bg-white text-[#2855FF] rounded-lg font-medium text-sm hover:bg-gray-100 transition-colors"
+              className="px-6 py-2 bg-white text-[#7366FF] rounded-lg font-medium text-sm hover:bg-gray-100 transition-colors"
             >
               Start Exploring
             </Link>

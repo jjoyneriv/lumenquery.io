@@ -83,7 +83,7 @@ export default function PasswordResetModal({
               </p>
               <button
                 onClick={handleClose}
-                className="px-6 py-2 bg-[#2855FF] text-white rounded-lg font-medium hover:bg-[#1e40af] transition-colors"
+                className="px-6 py-2 bg-[#7366FF] text-white rounded-lg font-medium hover:bg-[#1e40af] transition-colors"
               >
                 Done
               </button>
@@ -91,7 +91,7 @@ export default function PasswordResetModal({
           ) : (
             <>
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full bg-[#2855FF] flex items-center justify-center text-white text-lg font-medium">
+                <div className="w-12 h-12 rounded-full bg-[#7366FF] flex items-center justify-center text-white text-lg font-medium">
                   {(userName || userEmail).charAt(0).toUpperCase()}
                 </div>
                 <div>
@@ -132,7 +132,7 @@ export default function PasswordResetModal({
                 <button
                   onClick={handleSendReset}
                   disabled={isLoading}
-                  className="px-4 py-2 bg-[#2855FF] text-white rounded-lg font-medium hover:bg-[#1e40af] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  className="px-4 py-2 bg-[#7366FF] text-white rounded-lg font-medium hover:bg-[#1e40af] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 >
                   {isLoading ? (
                     <>

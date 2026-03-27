@@ -544,7 +544,7 @@ export default function PortfolioDocsPage() {
               <p className="text-[#6A6A6A] text-sm sm:text-base">
                 Each trustline receives a risk score from 0-100 based on weighted factors:
               </p>
-              <div className="mt-3 bg-[#0D0D0D] rounded-lg p-4 overflow-x-auto">
+              <div className="mt-3 bg-[#1D1E26] rounded-lg p-4 overflow-x-auto">
                 <pre className="text-xs sm:text-sm text-gray-300">
 {`Risk Score = (
   authRequired * 25 +
@@ -830,7 +830,7 @@ export default function PortfolioDocsPage() {
               </p>
 
               <h3 className="text-lg font-semibold mt-6 mb-3">How FIFO Works</h3>
-              <div className="bg-[#0D0D0D] rounded-lg p-4 overflow-x-auto">
+              <div className="bg-[#1D1E26] rounded-lg p-4 overflow-x-auto">
                 <pre className="text-xs sm:text-sm text-gray-300">
 {`Example: You buy XLM at different prices
 
@@ -964,7 +964,7 @@ Remaining: 500 XLM
               </div>
 
               <h3 className="text-lg font-semibold mt-6 mb-3">Example: Create Portfolio</h3>
-              <div className="bg-[#0D0D0D] rounded-lg p-4 overflow-x-auto">
+              <div className="bg-[#1D1E26] rounded-lg p-4 overflow-x-auto">
                 <pre className="text-xs sm:text-sm text-gray-300">
 {`curl -X POST "https://lumenquery.io/api/portfolio" \\
   -H "Content-Type: application/json" \\
@@ -977,7 +977,7 @@ Remaining: 500 XLM
               </div>
 
               <h3 className="text-lg font-semibold mt-6 mb-3">Example: Add Account</h3>
-              <div className="bg-[#0D0D0D] rounded-lg p-4 overflow-x-auto">
+              <div className="bg-[#1D1E26] rounded-lg p-4 overflow-x-auto">
                 <pre className="text-xs sm:text-sm text-gray-300">
 {`curl -X POST "https://lumenquery.io/api/portfolio/{id}/accounts" \\
   -H "Content-Type: application/json" \\

@@ -11,34 +11,34 @@ export default function IntelligenceDocsPage() {
       <div>
         <h3 className="text-sm font-semibold text-[#6A6A6A] uppercase tracking-wider mb-3">Overview</h3>
         <ul className="space-y-2">
-          <li><a href="#introduction" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Introduction</a></li>
-          <li><a href="#dashboard" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Dashboard</a></li>
-          <li><a href="#tiers" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Subscription Tiers</a></li>
+          <li><a href="#introduction" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Introduction</a></li>
+          <li><a href="#dashboard" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Dashboard</a></li>
+          <li><a href="#tiers" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Subscription Tiers</a></li>
         </ul>
       </div>
       <div>
         <h3 className="text-sm font-semibold text-[#6A6A6A] uppercase tracking-wider mb-3">Features</h3>
         <ul className="space-y-2">
-          <li><a href="#live-stream" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Live Stream</a></li>
-          <li><a href="#accounts" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Accounts</a></li>
-          <li><a href="#watchlists" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Watchlists</a></li>
-          <li><a href="#alerts" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Alerts</a></li>
-          <li><a href="#trustlines" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Trustlines</a></li>
-          <li><a href="#contracts" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Contracts</a></li>
+          <li><a href="#live-stream" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Live Stream</a></li>
+          <li><a href="#accounts" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Accounts</a></li>
+          <li><a href="#watchlists" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Watchlists</a></li>
+          <li><a href="#alerts" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Alerts</a></li>
+          <li><a href="#trustlines" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Trustlines</a></li>
+          <li><a href="#contracts" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Contracts</a></li>
         </ul>
       </div>
       <div>
         <h3 className="text-sm font-semibold text-[#6A6A6A] uppercase tracking-wider mb-3">API Reference</h3>
         <ul className="space-y-2">
-          <li><a href="#api-stream" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Stream API</a></li>
-          <li><a href="#api-accounts" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Accounts API</a></li>
-          <li><a href="#api-watchlists" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Watchlists API</a></li>
-          <li><a href="#api-alerts" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Alerts API</a></li>
-          <li><a href="#api-trustlines" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Trustlines API</a></li>
+          <li><a href="#api-stream" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Stream API</a></li>
+          <li><a href="#api-accounts" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Accounts API</a></li>
+          <li><a href="#api-watchlists" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Watchlists API</a></li>
+          <li><a href="#api-alerts" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Alerts API</a></li>
+          <li><a href="#api-trustlines" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Trustlines API</a></li>
         </ul>
       </div>
       <div>
-        <Link href="/docs" className="text-[#2855FF] hover:underline text-sm flex items-center gap-1">
+        <Link href="/docs" className="text-[#7366FF] hover:underline text-sm flex items-center gap-1">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
@@ -146,7 +146,7 @@ export default function IntelligenceDocsPage() {
               <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-[#E6E7E9]">Dashboard Overview</h2>
               <p className="text-[#6A6A6A] mb-4 text-sm sm:text-base">
                 The Intelligence dashboard provides a central hub for all monitoring operations. Access it at{' '}
-                <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#2855FF] text-xs">/intelligence</code>.
+                <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#7366FF] text-xs">/intelligence</code>.
               </p>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Dashboard Statistics</h3>
@@ -284,7 +284,7 @@ export default function IntelligenceDocsPage() {
               <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-[#E6E7E9]">Live Stream</h2>
               <p className="text-[#6A6A6A] mb-4 text-sm sm:text-base">
                 Monitor Stellar network transactions in real-time with powerful filtering capabilities.
-                Access at <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#2855FF] text-xs">/intelligence/stream</code>.
+                Access at <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#7366FF] text-xs">/intelligence/stream</code>.
               </p>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Stream Filters</h3>
@@ -374,11 +374,11 @@ export default function IntelligenceDocsPage() {
               <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-[#E6E7E9]">Accounts</h2>
               <p className="text-[#6A6A6A] mb-4 text-sm sm:text-base">
                 Analyze any Stellar account or Soroban contract with comprehensive profiling.
-                Access at <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#2855FF] text-xs">/intelligence/accounts</code>.
+                Access at <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#7366FF] text-xs">/intelligence/accounts</code>.
               </p>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Account Profile Data</h3>
-              <div className="bg-[#0D0D0D] rounded-lg p-4 mb-6 overflow-x-auto">
+              <div className="bg-[#1D1E26] rounded-lg p-4 mb-6 overflow-x-auto">
                 <pre className="text-xs sm:text-sm text-gray-300">
 {`{
   "account": {
@@ -482,7 +482,7 @@ export default function IntelligenceDocsPage() {
               <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-[#E6E7E9]">Watchlists</h2>
               <p className="text-[#6A6A6A] mb-4 text-sm sm:text-base">
                 Organize and monitor groups of accounts with custom watchlists.
-                Access at <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#2855FF] text-xs">/intelligence/watchlists</code>.
+                Access at <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#7366FF] text-xs">/intelligence/watchlists</code>.
               </p>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Watchlist Features</h3>
@@ -495,7 +495,7 @@ export default function IntelligenceDocsPage() {
               </ul>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Watchlist Structure</h3>
-              <div className="bg-[#0D0D0D] rounded-lg p-4 mb-6 overflow-x-auto">
+              <div className="bg-[#1D1E26] rounded-lg p-4 mb-6 overflow-x-auto">
                 <pre className="text-xs sm:text-sm text-gray-300">
 {`{
   "id": "wl_abc123",
@@ -518,15 +518,15 @@ export default function IntelligenceDocsPage() {
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Account Limits by Tier</h3>
               <div className="grid grid-cols-3 gap-4">
                 <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9] text-center">
-                  <div className="text-2xl font-bold text-[#2855FF]">50</div>
+                  <div className="text-2xl font-bold text-[#7366FF]">50</div>
                   <div className="text-xs text-[#6A6A6A]">Solo Tier</div>
                 </div>
                 <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9] text-center">
-                  <div className="text-2xl font-bold text-[#2855FF]">500</div>
+                  <div className="text-2xl font-bold text-[#7366FF]">500</div>
                   <div className="text-xs text-[#6A6A6A]">Teams Tier</div>
                 </div>
                 <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9] text-center">
-                  <div className="text-2xl font-bold text-[#2855FF]">&infin;</div>
+                  <div className="text-2xl font-bold text-[#7366FF]">&infin;</div>
                   <div className="text-xs text-[#6A6A6A]">Enterprise</div>
                 </div>
               </div>
@@ -537,8 +537,8 @@ export default function IntelligenceDocsPage() {
               <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-[#E6E7E9]">Alerts</h2>
               <p className="text-[#6A6A6A] mb-4 text-sm sm:text-base">
                 Configure intelligent alerts to be notified of important on-chain events.
-                Inbox at <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#2855FF] text-xs">/intelligence/alerts</code>,
-                configurations at <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#2855FF] text-xs">/intelligence/alerts/configs</code>.
+                Inbox at <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#7366FF] text-xs">/intelligence/alerts</code>,
+                configurations at <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#7366FF] text-xs">/intelligence/alerts/configs</code>.
               </p>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Alert Types</h3>
@@ -668,7 +668,7 @@ export default function IntelligenceDocsPage() {
               <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-[#E6E7E9]">Trustlines</h2>
               <p className="text-[#6A6A6A] mb-4 text-sm sm:text-base">
                 Monitor trustline changes across the Stellar network.
-                Access at <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#2855FF] text-xs">/intelligence/trustlines</code>.
+                Access at <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#7366FF] text-xs">/intelligence/trustlines</code>.
               </p>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Trustline Change Types</h3>
@@ -695,7 +695,7 @@ export default function IntelligenceDocsPage() {
               </ul>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Trustline Data</h3>
-              <div className="bg-[#0D0D0D] rounded-lg p-4 mb-6 overflow-x-auto">
+              <div className="bg-[#1D1E26] rounded-lg p-4 mb-6 overflow-x-auto">
                 <pre className="text-xs sm:text-sm text-gray-300">
 {`{
   "id": "tl_123",
@@ -717,7 +717,7 @@ export default function IntelligenceDocsPage() {
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9] text-center">
-                  <div className="text-lg font-bold text-[#2855FF]">Total</div>
+                  <div className="text-lg font-bold text-[#7366FF]">Total</div>
                   <div className="text-xs text-[#6A6A6A]">All changes</div>
                 </div>
                 <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9] text-center">
@@ -740,7 +740,7 @@ export default function IntelligenceDocsPage() {
               <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-[#E6E7E9]">Contracts</h2>
               <p className="text-[#6A6A6A] mb-4 text-sm sm:text-base">
                 Track Soroban smart contract activity on the Stellar network.
-                Access at <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#2855FF] text-xs">/intelligence/contracts</code>.
+                Access at <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#7366FF] text-xs">/intelligence/contracts</code>.
               </p>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Contract Monitoring Features</h3>
@@ -829,7 +829,7 @@ export default function IntelligenceDocsPage() {
               </div>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Event Types</h3>
-              <div className="bg-[#0D0D0D] rounded-lg p-4 mb-4 overflow-x-auto">
+              <div className="bg-[#1D1E26] rounded-lg p-4 mb-4 overflow-x-auto">
                 <pre className="text-xs sm:text-sm text-gray-300">
 {`// Connection established
 event: connected
@@ -885,7 +885,7 @@ data: {"message": "Rate limit exceeded", "retryAfter": 60}`}
               </div>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Response</h3>
-              <div className="bg-[#0D0D0D] rounded-lg p-4 overflow-x-auto">
+              <div className="bg-[#1D1E26] rounded-lg p-4 overflow-x-auto">
                 <pre className="text-xs sm:text-sm text-gray-300">
 {`{
   "profile": {
@@ -918,7 +918,7 @@ data: {"message": "Rate limit exceeded", "retryAfter": 60}`}
 
                 <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
                   <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <span className="px-2 py-1 rounded bg-[#2855FF]/10 text-[#2855FF] font-mono text-xs">POST</span>
+                    <span className="px-2 py-1 rounded bg-[#7366FF]/10 text-[#7366FF] font-mono text-xs">POST</span>
                     <code className="text-[#6A6A6A] text-sm">/api/intelligence/watchlists</code>
                   </div>
                   <p className="text-xs sm:text-sm text-[#6A6A6A]">Create a new watchlist</p>
@@ -950,7 +950,7 @@ data: {"message": "Rate limit exceeded", "retryAfter": 60}`}
 
                 <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
                   <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <span className="px-2 py-1 rounded bg-[#2855FF]/10 text-[#2855FF] font-mono text-xs">POST</span>
+                    <span className="px-2 py-1 rounded bg-[#7366FF]/10 text-[#7366FF] font-mono text-xs">POST</span>
                     <code className="text-[#6A6A6A] text-sm">/api/intelligence/watchlists/&#123;id&#125;/accounts</code>
                   </div>
                   <p className="text-xs sm:text-sm text-[#6A6A6A]">Add account to watchlist</p>
@@ -1009,7 +1009,7 @@ data: {"message": "Rate limit exceeded", "retryAfter": 60}`}
 
                 <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
                   <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <span className="px-2 py-1 rounded bg-[#2855FF]/10 text-[#2855FF] font-mono text-xs">POST</span>
+                    <span className="px-2 py-1 rounded bg-[#7366FF]/10 text-[#7366FF] font-mono text-xs">POST</span>
                     <code className="text-[#6A6A6A] text-sm">/api/intelligence/alerts/configs</code>
                   </div>
                   <p className="text-xs sm:text-sm text-[#6A6A6A]">Create new alert configuration</p>
@@ -1077,11 +1077,11 @@ data: {"message": "Rate limit exceeded", "retryAfter": 60}`}
             </section>
 
             {/* Support */}
-            <section className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#2855FF] text-white">
+            <section className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#7366FF] text-white">
               <h2 className="text-lg sm:text-xl font-bold mb-2">Need Help?</h2>
               <p className="text-white/80 mb-4 text-sm sm:text-base">Have questions about Transaction Intelligence? We&apos;re here to help.</p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                <a href="mailto:support@lumenquery.io" className="px-4 py-2 rounded-lg bg-white text-[#2855FF] text-sm font-medium hover:bg-gray-100 transition-colors text-center">
+                <a href="mailto:support@lumenquery.io" className="px-4 py-2 rounded-lg bg-white text-[#7366FF] text-sm font-medium hover:bg-gray-100 transition-colors text-center">
                   Contact Support
                 </a>
                 <Link href="/intelligence" className="px-4 py-2 rounded-lg bg-white/20 text-white text-sm font-medium hover:bg-white/30 transition-colors text-center">

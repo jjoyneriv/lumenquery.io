@@ -93,7 +93,7 @@ export default function AuditPage() {
               setActionFilter(e.target.value);
               setPagination(prev => ({ ...prev, page: 1 }));
             }}
-            className="px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:border-[#2855FF] bg-white"
+            className="px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:border-[#7366FF] bg-white"
           >
             <option value="">All Actions</option>
             {actionTypes.map((type) => (
@@ -124,7 +124,7 @@ export default function AuditPage() {
       {/* Loading */}
       {loading ? (
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin w-8 h-8 border-2 border-[#2855FF] border-t-transparent rounded-full" />
+          <div className="animate-spin w-8 h-8 border-2 border-[#7366FF] border-t-transparent rounded-full" />
         </div>
       ) : logs.length > 0 ? (
         <>

@@ -22,11 +22,11 @@ export function ContractCard({
   return (
     <Link
       href={`/contracts/${contractId}`}
-      className="block bg-white border border-[#E6E7E9] rounded-lg p-4 hover:border-[#2855FF] hover:shadow-md transition-all"
+      className="block bg-white border border-[#E6E7E9] rounded-lg p-4 hover:border-[#7366FF] hover:shadow-md transition-all"
     >
       <div className="flex items-start justify-between">
         <div className="flex-1 min-w-0">
-          <h3 className="font-mono text-sm text-[#2855FF] truncate">
+          <h3 className="font-mono text-sm text-[#7366FF] truncate">
             {contractId.slice(0, 12)}...{contractId.slice(-8)}
           </h3>
           {name && (

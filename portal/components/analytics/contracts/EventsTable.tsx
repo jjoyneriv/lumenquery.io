@@ -46,7 +46,7 @@ export function EventsTable({ events }: EventsTableProps) {
               events.map((event, index) => (
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="px-4 sm:px-6 py-4">
-                    <code className="text-sm font-mono text-[#2855FF]">{event.contractId}</code>
+                    <code className="text-sm font-mono text-[#7366FF]">{event.contractId}</code>
                   </td>
                   <td className="px-4 sm:px-6 py-4">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">

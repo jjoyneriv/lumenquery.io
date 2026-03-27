@@ -11,29 +11,29 @@ export default function AnalyticsDocsPage() {
       <div>
         <h3 className="text-sm font-semibold text-[#6A6A6A] uppercase tracking-wider mb-3">Overview</h3>
         <ul className="space-y-2">
-          <li><a href="#introduction" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Introduction</a></li>
-          <li><a href="#dashboard" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Dashboard</a></li>
-          <li><a href="#time-ranges" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Time Ranges</a></li>
+          <li><a href="#introduction" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Introduction</a></li>
+          <li><a href="#dashboard" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Dashboard</a></li>
+          <li><a href="#time-ranges" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Time Ranges</a></li>
         </ul>
       </div>
       <div>
         <h3 className="text-sm font-semibold text-[#6A6A6A] uppercase tracking-wider mb-3">Sections</h3>
         <ul className="space-y-2">
-          <li><a href="#network" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Network Metrics</a></li>
-          <li><a href="#tokens" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Token Analytics</a></li>
-          <li><a href="#contracts" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Smart Contracts</a></li>
+          <li><a href="#network" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Network Metrics</a></li>
+          <li><a href="#tokens" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Token Analytics</a></li>
+          <li><a href="#contracts" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Smart Contracts</a></li>
         </ul>
       </div>
       <div>
         <h3 className="text-sm font-semibold text-[#6A6A6A] uppercase tracking-wider mb-3">Reference</h3>
         <ul className="space-y-2">
-          <li><a href="#stroops" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Understanding Stroops</a></li>
-          <li><a href="#api-reference" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>API Reference</a></li>
-          <li><a href="#data-sources" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Data Sources</a></li>
+          <li><a href="#stroops" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Understanding Stroops</a></li>
+          <li><a href="#api-reference" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>API Reference</a></li>
+          <li><a href="#data-sources" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Data Sources</a></li>
         </ul>
       </div>
       <div>
-        <Link href="/docs" className="text-[#2855FF] hover:underline text-sm flex items-center gap-1">
+        <Link href="/docs" className="text-[#7366FF] hover:underline text-sm flex items-center gap-1">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
@@ -162,7 +162,7 @@ export default function AnalyticsDocsPage() {
             <section id="dashboard" className="mb-10 sm:mb-16">
               <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-[#E6E7E9]">Dashboard Overview</h2>
               <p className="text-[#6A6A6A] mb-4 text-sm sm:text-base">
-                The Analytics dashboard at <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#2855FF] text-xs">/analytics</code> provides
+                The Analytics dashboard at <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#7366FF] text-xs">/analytics</code> provides
                 a high-level view of Stellar network health and activity.
               </p>
 
@@ -273,11 +273,11 @@ export default function AnalyticsDocsPage() {
               <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-[#E6E7E9]">Network Metrics</h2>
               <p className="text-[#6A6A6A] mb-4 text-sm sm:text-base">
                 Detailed ledger and transaction analysis available at{' '}
-                <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#2855FF] text-xs">/analytics/network</code>.
+                <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#7366FF] text-xs">/analytics/network</code>.
               </p>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Current Ledger Information</h3>
-              <div className="bg-[#0D0D0D] rounded-lg p-4 mb-6 overflow-x-auto">
+              <div className="bg-[#1D1E26] rounded-lg p-4 mb-6 overflow-x-auto">
                 <pre className="text-xs sm:text-sm text-gray-300">
 {`{
   "ledger": {
@@ -346,7 +346,7 @@ export default function AnalyticsDocsPage() {
               <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-[#E6E7E9]">Token Analytics</h2>
               <p className="text-[#6A6A6A] mb-4 text-sm sm:text-base">
                 Token velocity, whale tracking, and issuer risk analysis at{' '}
-                <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#2855FF] text-xs">/analytics/tokens</code>.
+                <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#7366FF] text-xs">/analytics/tokens</code>.
               </p>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Velocity Metrics</h3>
@@ -450,7 +450,7 @@ export default function AnalyticsDocsPage() {
               <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-[#E6E7E9]">Smart Contracts (Soroban)</h2>
               <p className="text-[#6A6A6A] mb-4 text-sm sm:text-base">
                 Soroban smart contract activity and gas usage metrics at{' '}
-                <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#2855FF] text-xs">/analytics/contracts</code>.
+                <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#7366FF] text-xs">/analytics/contracts</code>.
               </p>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Activity Metrics</h3>
@@ -475,7 +475,7 @@ export default function AnalyticsDocsPage() {
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
                 <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9] text-center">
-                  <div className="text-lg font-bold text-[#2855FF]">Mode</div>
+                  <div className="text-lg font-bold text-[#7366FF]">Mode</div>
                   <div className="text-xs text-[#6A6A6A]">Most common fee</div>
                 </div>
                 <div className="p-4 rounded-lg bg-green-50 border border-green-200 text-center">
@@ -506,7 +506,7 @@ export default function AnalyticsDocsPage() {
               <p className="text-[#6A6A6A] mb-4 text-sm">
                 Latest contract events from the network:
               </p>
-              <div className="bg-[#0D0D0D] rounded-lg p-4 overflow-x-auto">
+              <div className="bg-[#1D1E26] rounded-lg p-4 overflow-x-auto">
                 <pre className="text-xs sm:text-sm text-gray-300">
 {`{
   "events": [
@@ -533,7 +533,7 @@ export default function AnalyticsDocsPage() {
 
               <div className="p-6 rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 mb-6">
                 <div className="text-center">
-                  <div className="text-3xl sm:text-4xl font-bold text-[#2855FF] mb-2">1 XLM = 10,000,000 stroops</div>
+                  <div className="text-3xl sm:text-4xl font-bold text-[#7366FF] mb-2">1 XLM = 10,000,000 stroops</div>
                   <div className="text-sm text-[#6A6A6A]">One XLM equals ten million stroops (10<sup>7</sup>)</div>
                 </div>
               </div>
@@ -600,7 +600,7 @@ export default function AnalyticsDocsPage() {
               </div>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Conversion Formulas</h3>
-              <div className="bg-[#0D0D0D] rounded-lg p-4 overflow-x-auto">
+              <div className="bg-[#1D1E26] rounded-lg p-4 overflow-x-auto">
                 <pre className="text-xs sm:text-sm text-gray-300">
 {`// Stroops to XLM
 const xlm = stroops / 10_000_000;
@@ -661,7 +661,7 @@ const stroops = xlm * 10_000_000;
                   <p className="text-xs sm:text-sm text-[#6A6A6A] mb-3">Network metrics including ledger info, transactions, and fees</p>
                   <div className="text-xs">
                     <strong>Query Parameters:</strong>
-                    <code className="ml-2 px-2 py-1 rounded bg-white text-[#2855FF]">range=24h|7d|30d</code>
+                    <code className="ml-2 px-2 py-1 rounded bg-white text-[#7366FF]">range=24h|7d|30d</code>
                   </div>
                 </div>
 
@@ -674,7 +674,7 @@ const stroops = xlm * 10_000_000;
                   <p className="text-xs sm:text-sm text-[#6A6A6A] mb-3">Token velocity, whale tracking, and issuer risk analysis</p>
                   <div className="text-xs">
                     <strong>Query Parameters:</strong>
-                    <code className="ml-2 px-2 py-1 rounded bg-white text-[#2855FF]">range=24h|7d|30d</code>
+                    <code className="ml-2 px-2 py-1 rounded bg-white text-[#7366FF]">range=24h|7d|30d</code>
                   </div>
                 </div>
 
@@ -687,13 +687,13 @@ const stroops = xlm * 10_000_000;
                   <p className="text-xs sm:text-sm text-[#6A6A6A] mb-3">Soroban contract activity, gas usage, and events</p>
                   <div className="text-xs">
                     <strong>Query Parameters:</strong>
-                    <code className="ml-2 px-2 py-1 rounded bg-white text-[#2855FF]">range=24h|7d|30d</code>
+                    <code className="ml-2 px-2 py-1 rounded bg-white text-[#7366FF]">range=24h|7d|30d</code>
                   </div>
                 </div>
               </div>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Response Example (Network)</h3>
-              <div className="bg-[#0D0D0D] rounded-lg p-4 overflow-x-auto">
+              <div className="bg-[#1D1E26] rounded-lg p-4 overflow-x-auto">
                 <pre className="text-xs sm:text-sm text-gray-300">
 {`{
   "ledger": {
@@ -787,11 +787,11 @@ const stroops = xlm * 10_000_000;
             </section>
 
             {/* Support */}
-            <section className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#2855FF] text-white">
+            <section className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#7366FF] text-white">
               <h2 className="text-lg sm:text-xl font-bold mb-2">Explore Analytics</h2>
               <p className="text-white/80 mb-4 text-sm sm:text-base">Ready to dive into Stellar network data? Access our real-time analytics dashboard.</p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                <Link href="/analytics" className="px-4 py-2 rounded-lg bg-white text-[#2855FF] text-sm font-medium hover:bg-gray-100 transition-colors text-center">
+                <Link href="/analytics" className="px-4 py-2 rounded-lg bg-white text-[#7366FF] text-sm font-medium hover:bg-gray-100 transition-colors text-center">
                   Go to Analytics
                 </Link>
                 <a href="mailto:support@lumenquery.io" className="px-4 py-2 rounded-lg bg-white/20 text-white text-sm font-medium hover:bg-white/30 transition-colors text-center">

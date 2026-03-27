@@ -27,7 +27,7 @@ export default function AnalyticsNav() {
                 href={item.href}
                 className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                   isActive
-                    ? 'bg-[#2855FF] text-white'
+                    ? 'bg-[#7366FF] text-white'
                     : 'text-[#6A6A6A] hover:bg-[#F5F6F7] hover:text-black'
                 }`}
                 aria-current={isActive ? 'page' : undefined}
@@ -54,7 +54,7 @@ export default function AnalyticsNav() {
                 href={item.href}
                 className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
                   isActive
-                    ? 'bg-[#2855FF] text-white'
+                    ? 'bg-[#7366FF] text-white'
                     : 'text-[#6A6A6A] hover:bg-[#F5F6F7]'
                 }`}
                 aria-current={isActive ? 'page' : undefined}

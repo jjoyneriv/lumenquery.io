@@ -109,7 +109,7 @@ export function WatchlistTable({ watchlists, onDelete, onEdit }: WatchlistTableP
                     href={`/intelligence/watchlists/${watchlist.id}`}
                     className="block"
                   >
-                    <p className="font-medium text-[#2855FF] hover:text-[#1E44CC]">
+                    <p className="font-medium text-[#7366FF] hover:text-[#5A4FCF]">
                       {watchlist.name}
                     </p>
                     {watchlist.description && (
@@ -132,7 +132,7 @@ export function WatchlistTable({ watchlists, onDelete, onEdit }: WatchlistTableP
                     {onEdit && (
                       <button
                         onClick={() => onEdit(watchlist)}
-                        className="p-1.5 text-[#6A6A6A] hover:text-[#2855FF] transition-colors"
+                        className="p-1.5 text-[#6A6A6A] hover:text-[#7366FF] transition-colors"
                         title="Edit"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -216,7 +216,7 @@ export function WatchlistAccountsTable({ accounts, onRemove }: WatchlistAccounts
                 <td className="px-4 sm:px-6 py-4">
                   <Link
                     href={`/intelligence/accounts/${account.accountId}`}
-                    className="font-mono text-sm text-[#2855FF] hover:text-[#1E44CC]"
+                    className="font-mono text-sm text-[#7366FF] hover:text-[#5A4FCF]"
                   >
                     {account.accountId.slice(0, 8)}...{account.accountId.slice(-8)}
                   </Link>
@@ -231,7 +231,7 @@ export function WatchlistAccountsTable({ accounts, onRemove }: WatchlistAccounts
                   <div className="flex items-center justify-end gap-2">
                     <Link
                       href={`/intelligence/accounts/${account.accountId}`}
-                      className="p-1.5 text-[#6A6A6A] hover:text-[#2855FF] transition-colors"
+                      className="p-1.5 text-[#6A6A6A] hover:text-[#7366FF] transition-colors"
                       title="View Profile"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

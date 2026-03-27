@@ -95,7 +95,7 @@ export function WasmUploader({ file, onFileSelect, disabled, error }: WasmUpload
         className={`
           relative border-2 border-dashed rounded-lg p-8 text-center cursor-pointer
           transition-all duration-200
-          ${isDragging ? 'border-[#2855FF] bg-[#2855FF]/5' : 'border-[#E6E7E9] hover:border-[#2855FF]/50'}
+          ${isDragging ? 'border-[#7366FF] bg-[#7366FF]/5' : 'border-[#E6E7E9] hover:border-[#7366FF]/50'}
           ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
           ${error ? 'border-red-300 bg-red-50' : ''}
           ${file ? 'border-green-300 bg-green-50' : ''}
@@ -123,8 +123,8 @@ export function WasmUploader({ file, onFileSelect, disabled, error }: WasmUpload
         ) : (
           // Empty state
           <div className="flex flex-col items-center gap-3">
-            <div className="w-12 h-12 bg-[#2855FF]/10 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-[#2855FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-12 h-12 bg-[#7366FF]/10 rounded-lg flex items-center justify-center">
+              <svg className="w-6 h-6 text-[#7366FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"

@@ -97,7 +97,7 @@ export default function WatchlistsPage() {
   if (status === 'loading' || status === 'unauthenticated') {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF]" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF]" />
       </div>
     );
   }
@@ -121,7 +121,7 @@ export default function WatchlistsPage() {
         {!showCreateForm && !editingWatchlist && (
           <button
             onClick={() => setShowCreateForm(true)}
-            className="px-4 py-2 bg-[#2855FF] text-white rounded-lg font-medium hover:bg-[#1E44CC] transition-colors"
+            className="px-4 py-2 bg-[#7366FF] text-white rounded-lg font-medium hover:bg-[#5A4FCF] transition-colors"
           >
             Create Watchlist
           </button>
@@ -151,7 +151,7 @@ export default function WatchlistsPage() {
       {/* Watchlists Table */}
       {loading ? (
         <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF] mx-auto" />
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF] mx-auto" />
         </div>
       ) : (
         <WatchlistTable

@@ -25,7 +25,7 @@ export default function BarChart({
   data,
   dataKey,
   xAxisKey,
-  color = '#2855FF',
+  color = '#7366FF',
   height = 300,
   valueFormatter = (v) => v.toLocaleString(),
   showGrid = true,

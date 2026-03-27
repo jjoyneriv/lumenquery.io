@@ -21,7 +21,7 @@ export default function ContractLayout({
         {/* Contract ID Header */}
         <div className="mb-6">
           <p className="text-sm text-[#6A6A6A] mb-1">Contract</p>
-          <h1 className="text-lg sm:text-xl font-mono text-[#2855FF] break-all">
+          <h1 className="text-lg sm:text-xl font-mono text-[#7366FF] break-all">
             {contractId}
           </h1>
         </div>

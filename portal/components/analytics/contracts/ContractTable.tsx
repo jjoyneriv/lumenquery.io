@@ -28,7 +28,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="ml-2 text-[#6A6A6A] hover:text-[#2855FF] transition-colors"
+      className="ml-2 text-[#6A6A6A] hover:text-[#7366FF] transition-colors"
       title="Copy address"
     >
       {copied ? (
@@ -76,7 +76,7 @@ export function ContractTable({ contracts }: ContractTableProps) {
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="px-4 sm:px-6 py-4">
                     <div className="flex items-center">
-                      <code className="text-sm font-mono text-[#2855FF]">{contract.contractId}</code>
+                      <code className="text-sm font-mono text-[#7366FF]">{contract.contractId}</code>
                       <CopyButton text={contract.contractId} />
                     </div>
                   </td>

@@ -60,7 +60,7 @@ export function WatchlistManager({
             id="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2855FF] focus:border-transparent"
+            className="w-full px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
             placeholder="e.g., Top Exchanges"
           />
         </div>
@@ -74,7 +74,7 @@ export function WatchlistManager({
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
-            className="w-full px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2855FF] focus:border-transparent resize-none"
+            className="w-full px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent resize-none"
             placeholder="Optional description for this watchlist"
           />
         </div>
@@ -96,7 +96,7 @@ export function WatchlistManager({
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-6 py-2 bg-[#2855FF] text-white rounded-lg hover:bg-[#1E44CC] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2 bg-[#7366FF] text-white rounded-lg hover:bg-[#5A4FCF] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? 'Saving...' : isEdit ? 'Save Changes' : 'Create Watchlist'}
           </button>
@@ -161,7 +161,7 @@ export function AddAccountForm({ onSubmit, onCancel }: AddAccountFormProps) {
             id="accountId"
             value={accountId}
             onChange={(e) => setAccountId(e.target.value)}
-            className="w-full px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2855FF] focus:border-transparent font-mono text-sm"
+            className="w-full px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent font-mono text-sm"
             placeholder="G..."
           />
         </div>
@@ -175,7 +175,7 @@ export function AddAccountForm({ onSubmit, onCancel }: AddAccountFormProps) {
             id="label"
             value={label}
             onChange={(e) => setLabel(e.target.value)}
-            className="w-full px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2855FF] focus:border-transparent"
+            className="w-full px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
             placeholder="e.g., Binance Hot Wallet"
           />
         </div>
@@ -197,7 +197,7 @@ export function AddAccountForm({ onSubmit, onCancel }: AddAccountFormProps) {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-6 py-2 bg-[#2855FF] text-white rounded-lg hover:bg-[#1E44CC] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2 bg-[#7366FF] text-white rounded-lg hover:bg-[#5A4FCF] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? 'Adding...' : 'Add Account'}
           </button>

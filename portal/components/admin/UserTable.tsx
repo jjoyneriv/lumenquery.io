@@ -102,7 +102,7 @@ export default function UserTable({ users, onRefresh }: UserTableProps) {
       );
     }
     return (
-      <svg className="w-4 h-4 text-[#2855FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg className="w-4 h-4 text-[#7366FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
           d={sortOrder === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7'} />
       </svg>
@@ -161,7 +161,7 @@ export default function UserTable({ users, onRefresh }: UserTableProps) {
               <tr key={user.id} className="border-b border-[#E6E7E9] hover:bg-gray-50">
                 <td className="py-3 px-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-[#2855FF] flex items-center justify-center text-white text-sm font-medium">
+                    <div className="w-8 h-8 rounded-full bg-[#7366FF] flex items-center justify-center text-white text-sm font-medium">
                       {(user.name || user.email).charAt(0).toUpperCase()}
                     </div>
                     <div>
@@ -204,7 +204,7 @@ export default function UserTable({ users, onRefresh }: UserTableProps) {
                 <td className="py-3 px-4 text-right">
                   <Link
                     href={`/admin/users/${user.id}`}
-                    className="text-[#2855FF] hover:text-[#1e40af] text-sm font-medium"
+                    className="text-[#7366FF] hover:text-[#1e40af] text-sm font-medium"
                   >
                     View
                   </Link>

@@ -47,7 +47,7 @@ export function TierGate({
         {showUpgrade && (
           <Link
             href="/intelligence/upgrade"
-            className="inline-flex items-center justify-center px-6 py-3 bg-[#2855FF] text-white rounded-lg hover:bg-[#1E44CC] transition-colors font-medium"
+            className="inline-flex items-center justify-center px-6 py-3 bg-[#7366FF] text-white rounded-lg hover:bg-[#5A4FCF] transition-colors font-medium"
           >
             View Plans
           </Link>

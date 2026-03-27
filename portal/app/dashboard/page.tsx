@@ -151,14 +151,14 @@ export default function DashboardPage() {
           </div>
           <button
             onClick={() => signOut({ callbackUrl: '/' })}
-            className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-[#E6E7E9] hover:border-[#2855FF] hover:text-[#2855FF] text-xs sm:text-sm font-medium transition-colors"
+            className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-[#E6E7E9] hover:border-[#7366FF] hover:text-[#7366FF] text-xs sm:text-sm font-medium transition-colors"
           >
             Sign Out
           </button>
         </nav>
         {/* Product Navigation */}
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2 flex items-center gap-1 sm:gap-2 overflow-x-auto">
-          <Link href="/dashboard/transactions" className="px-3 py-1.5 rounded-lg text-sm font-medium text-[#2855FF] bg-[#2855FF]/10 hover:bg-[#2855FF]/20 transition-colors whitespace-nowrap flex items-center gap-1">
+          <Link href="/dashboard/transactions" className="px-3 py-1.5 rounded-lg text-sm font-medium text-[#7366FF] bg-[#7366FF]/10 hover:bg-[#7366FF]/20 transition-colors whitespace-nowrap flex items-center gap-1">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
@@ -206,7 +206,7 @@ export default function DashboardPage() {
             <div className="mt-2">
               <div className="w-full h-1.5 sm:h-2 bg-[#E6E7E9] rounded-full overflow-hidden">
                 <div
-                  className={`h-full rounded-full ${(usage?.month.percentUsed || 0) > 80 ? 'bg-red-500' : 'bg-[#2855FF]'}`}
+                  className={`h-full rounded-full ${(usage?.month.percentUsed || 0) > 80 ? 'bg-red-500' : 'bg-[#7366FF]'}`}
                   style={{ width: `${Math.min(usage?.month.percentUsed || 0, 100)}%` }}
                 />
               </div>
@@ -217,7 +217,7 @@ export default function DashboardPage() {
             <p className="text-[#6A6A6A] text-xs sm:text-sm mb-1">API Keys</p>
             <p className="text-xl sm:text-2xl md:text-3xl font-bold">{apiKeys.length}</p>
           </div>
-          <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#2855FF] text-white">
+          <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#7366FF] text-white">
             <p className="text-white/70 text-xs sm:text-sm mb-1">Current Plan</p>
             <p className="text-xl sm:text-2xl md:text-3xl font-bold">{usage?.tier || 'FREE'}</p>
             <p className="text-white/60 text-xs sm:text-sm mt-1">{formatNumber(usage?.month.limit || 10000)} req/mo</p>
@@ -235,11 +235,11 @@ export default function DashboardPage() {
               <span className="px-2 py-0.5 rounded bg-blue-100 text-blue-700 text-xs">REST</span>
               Horizon API
             </h3>
-            <div className="bg-[#0D0D0D] rounded-lg p-3 sm:p-4 mb-3 overflow-x-auto">
+            <div className="bg-[#1D1E26] rounded-lg p-3 sm:p-4 mb-3 overflow-x-auto">
               <p className="text-[#6A6A6A] text-xs sm:text-sm mb-2">Endpoint:</p>
-              <code className="text-[#2855FF] text-sm sm:text-base">https://api.lumenquery.io</code>
+              <code className="text-[#7366FF] text-sm sm:text-base">https://api.lumenquery.io</code>
             </div>
-            <div className="bg-[#0D0D0D] rounded-lg p-3 sm:p-4 overflow-x-auto">
+            <div className="bg-[#1D1E26] rounded-lg p-3 sm:p-4 overflow-x-auto">
               <p className="text-[#6A6A6A] text-xs sm:text-sm mb-2">Example Request:</p>
               <pre className="text-xs sm:text-sm text-gray-300 whitespace-pre-wrap">
 {`curl -H "X-API-Key: YOUR_API_KEY" \\
@@ -254,11 +254,11 @@ export default function DashboardPage() {
               <span className="px-2 py-0.5 rounded bg-purple-100 text-purple-700 text-xs">JSON-RPC</span>
               Soroban RPC
             </h3>
-            <div className="bg-[#0D0D0D] rounded-lg p-3 sm:p-4 mb-3 overflow-x-auto">
+            <div className="bg-[#1D1E26] rounded-lg p-3 sm:p-4 mb-3 overflow-x-auto">
               <p className="text-[#6A6A6A] text-xs sm:text-sm mb-2">Endpoint:</p>
-              <code className="text-[#2855FF] text-sm sm:text-base">https://rpc.lumenquery.io</code>
+              <code className="text-[#7366FF] text-sm sm:text-base">https://rpc.lumenquery.io</code>
             </div>
-            <div className="bg-[#0D0D0D] rounded-lg p-3 sm:p-4 overflow-x-auto">
+            <div className="bg-[#1D1E26] rounded-lg p-3 sm:p-4 overflow-x-auto">
               <p className="text-[#6A6A6A] text-xs sm:text-sm mb-2">Example Request:</p>
               <pre className="text-xs sm:text-sm text-gray-300 whitespace-pre-wrap">
 {`curl -X POST -H "X-API-Key: YOUR_API_KEY" \\
@@ -276,7 +276,7 @@ export default function DashboardPage() {
             <h2 id="apikeys-heading" className="text-lg sm:text-xl font-bold">API Keys</h2>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="px-4 py-2 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white text-sm font-medium transition-colors"
+              className="px-4 py-2 rounded-lg bg-[#7366FF] hover:bg-[#5A4FCF] text-white text-sm font-medium transition-colors"
             >
               Create API Key
             </button>
@@ -323,7 +323,7 @@ export default function DashboardPage() {
                     value={newKeyName}
                     onChange={(e) => setNewKeyName(e.target.value)}
                     placeholder="e.g., Production, Development"
-                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] focus:outline-none focus:ring-2 focus:ring-[#2855FF] text-sm sm:text-base"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] focus:outline-none focus:ring-2 focus:ring-[#7366FF] text-sm sm:text-base"
                   />
                 </div>
                 <div className="flex gap-3">
@@ -333,7 +333,7 @@ export default function DashboardPage() {
                   <button
                     onClick={createApiKey}
                     disabled={creating || !newKeyName.trim()}
-                    className="flex-1 px-4 py-2 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white disabled:opacity-50 transition-colors text-sm sm:text-base"
+                    className="flex-1 px-4 py-2 rounded-lg bg-[#7366FF] hover:bg-[#5A4FCF] text-white disabled:opacity-50 transition-colors text-sm sm:text-base"
                   >
                     {creating ? 'Creating...' : 'Create'}
                   </button>
@@ -345,7 +345,7 @@ export default function DashboardPage() {
                 <p className="text-[#6A6A6A] text-xs sm:text-sm mb-4">Copy your API key now. You won&apos;t be able to see it again.</p>
                 <div className="mb-4">
                   <div className="flex items-center gap-2">
-                    <code className="flex-1 p-2 sm:p-3 rounded-lg bg-[#F5F6F7] text-[#2855FF] text-xs sm:text-sm break-all border border-[#E6E7E9]">
+                    <code className="flex-1 p-2 sm:p-3 rounded-lg bg-[#F5F6F7] text-[#7366FF] text-xs sm:text-sm break-all border border-[#E6E7E9]">
                       {newSecretKey}
                     </code>
                     <button onClick={() => copyToClipboard(newSecretKey)} className="px-2 sm:px-3 py-2 sm:py-3 rounded-lg bg-[#F5F6F7] hover:bg-[#E6E7E9] border border-[#E6E7E9] transition-colors flex-shrink-0">
@@ -353,7 +353,7 @@ export default function DashboardPage() {
                     </button>
                   </div>
                 </div>
-                <button onClick={closeModal} className="w-full px-4 py-2 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white transition-colors text-sm sm:text-base">
+                <button onClick={closeModal} className="w-full px-4 py-2 rounded-lg bg-[#7366FF] hover:bg-[#5A4FCF] text-white transition-colors text-sm sm:text-base">
                   Done
                 </button>
               </>

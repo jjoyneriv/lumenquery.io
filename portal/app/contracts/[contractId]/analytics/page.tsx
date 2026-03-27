@@ -132,7 +132,7 @@ export default function ContractAnalyticsPage() {
             data={analytics.callVolume.history}
             dataKey="calls"
             xAxisKey="timestamp"
-            color="#2855FF"
+            color="#7366FF"
             height={200}
           />
         ) : (

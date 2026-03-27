@@ -34,7 +34,7 @@ export default function HorizonVsRpcPage() {
       <article className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
         <nav className="mb-6 sm:mb-8" aria-label="Breadcrumb">
           <div className="flex items-center gap-2 text-sm text-gray-400">
-            <Link href="/" className="hover:text-[#2855FF]">Home</Link>
+            <Link href="/" className="hover:text-[#7366FF]">Home</Link>
             <span>/</span>
             <span>Guides</span>
           </div>
@@ -88,22 +88,22 @@ export default function HorizonVsRpcPage() {
           <h2 className="text-xl sm:text-2xl font-bold mt-10 mb-4">Horizon API: The Stellar Blockchain Data API Standard</h2>
 
           <p className="text-gray-400 leading-relaxed mb-4 text-sm sm:text-base">
-            Horizon is the original <strong className="font-semibold text-white">Stellar blockchain data API</strong>. It ingests every ledger, indexes it in PostgreSQL, and exposes a RESTful interface. You can explore it through our <Link href="/docs" className="text-[#2855FF] hover:underline">API documentation</Link>.
+            Horizon is the original <strong className="font-semibold text-white">Stellar blockchain data API</strong>. It ingests every ledger, indexes it in PostgreSQL, and exposes a RESTful interface. You can explore it through our <Link href="/docs" className="text-[#7366FF] hover:underline">API documentation</Link>.
           </p>
 
-          <p className="text-gray-400 leading-relaxed mb-4 text-sm sm:text-base"><strong className="font-semibold text-white">Best for:</strong> Account balances, transaction history, payment streams, offer book queries, asset metadata, and building <Link href="/blog/build-stellar-blockchain-explorer-horizon-api" className="text-[#2855FF] hover:underline">blockchain explorers</Link>.</p>
+          <p className="text-gray-400 leading-relaxed mb-4 text-sm sm:text-base"><strong className="font-semibold text-white">Best for:</strong> Account balances, transaction history, payment streams, offer book queries, asset metadata, and building <Link href="/blog/build-stellar-blockchain-explorer-horizon-api" className="text-[#7366FF] hover:underline">blockchain explorers</Link>.</p>
 
           <p className="text-gray-400 leading-relaxed mb-4 text-sm sm:text-base">
-            Our <Link href="/analytics" className="text-[#2855FF] hover:underline">Stellar Network Analytics Dashboard</Link> and <Link href="/query" className="text-[#2855FF] hover:underline">Natural Language Query Interface</Link> both use Horizon as their primary data source for historical queries.
+            Our <Link href="/analytics" className="text-[#7366FF] hover:underline">Stellar Network Analytics Dashboard</Link> and <Link href="/query" className="text-[#7366FF] hover:underline">Natural Language Query Interface</Link> both use Horizon as their primary data source for historical queries.
           </p>
 
           <h2 className="text-xl sm:text-2xl font-bold mt-10 mb-4">Stellar RPC: Real-Time State and Smart Contracts</h2>
 
           <p className="text-gray-400 leading-relaxed mb-4 text-sm sm:text-base">
-            The <strong className="font-semibold text-white">Stellar RPC API service</strong> is optimized for real-time operations. Read our <Link href="/guides/stellar-rpc-guide" className="text-[#2855FF] hover:underline">complete Stellar RPC guide</Link> for the full method reference.
+            The <strong className="font-semibold text-white">Stellar RPC API service</strong> is optimized for real-time operations. Read our <Link href="/guides/stellar-rpc-guide" className="text-[#7366FF] hover:underline">complete Stellar RPC guide</Link> for the full method reference.
           </p>
 
-          <p className="text-gray-400 leading-relaxed mb-4 text-sm sm:text-base"><strong className="font-semibold text-white">Best for:</strong> Transaction simulation, smart contract storage, event queries, fee estimation, and real-time state. Essential for any app using <Link href="/contracts" className="text-[#2855FF] hover:underline">Soroban smart contracts</Link>.</p>
+          <p className="text-gray-400 leading-relaxed mb-4 text-sm sm:text-base"><strong className="font-semibold text-white">Best for:</strong> Transaction simulation, smart contract storage, event queries, fee estimation, and real-time state. Essential for any app using <Link href="/contracts" className="text-[#7366FF] hover:underline">Soroban smart contracts</Link>.</p>
 
           <h2 className="text-xl sm:text-2xl font-bold mt-10 mb-4">Custom Indexers: When You Need More</h2>
 
@@ -111,7 +111,7 @@ export default function HorizonVsRpcPage() {
             Custom indexers ingest raw Stellar data and store it in your own database with custom schemas. They&apos;re powerful but require significant infrastructure investment, including <strong className="font-semibold text-white">Stellar node monitoring tools</strong> to ensure your ingestion pipeline stays healthy.
           </p>
 
-          <p className="text-gray-400 leading-relaxed mb-4 text-sm sm:text-base"><strong className="font-semibold text-white">Best for:</strong> Complex analytics, custom aggregations, cross-entity queries, and applications requiring sub-10ms latency. See our guide on <Link href="/blog/monitor-stellar-validator-horizon-node" className="text-[#2855FF] hover:underline">monitoring Stellar nodes in production</Link> if you go this route.</p>
+          <p className="text-gray-400 leading-relaxed mb-4 text-sm sm:text-base"><strong className="font-semibold text-white">Best for:</strong> Complex analytics, custom aggregations, cross-entity queries, and applications requiring sub-10ms latency. See our guide on <Link href="/blog/monitor-stellar-validator-horizon-node" className="text-[#7366FF] hover:underline">monitoring Stellar nodes in production</Link> if you go this route.</p>
 
           <h2 className="text-xl sm:text-2xl font-bold mt-10 mb-4">Finding the Best Stellar API Providers</h2>
 
@@ -126,15 +126,15 @@ export default function HorizonVsRpcPage() {
             </div>
             <div className="p-4 rounded-xl border border-white/10">
               <h4 className="font-bold text-sm mb-1">Dual API Support</h4>
-              <p className="text-sm text-gray-400">The <strong className="text-white">best Stellar API providers</strong> offer both Horizon and RPC through a single account. LumenQuery provides both at <Link href="/pricing" className="text-[#2855FF] hover:underline">transparent pricing</Link>.</p>
+              <p className="text-sm text-gray-400">The <strong className="text-white">best Stellar API providers</strong> offer both Horizon and RPC through a single account. LumenQuery provides both at <Link href="/pricing" className="text-[#7366FF] hover:underline">transparent pricing</Link>.</p>
             </div>
             <div className="p-4 rounded-xl border border-white/10">
               <h4 className="font-bold text-sm mb-1">Developer Experience</h4>
-              <p className="text-sm text-gray-400">Good documentation, SDKs, and support make a difference. Check our <Link href="/docs" className="text-[#2855FF] hover:underline">API docs</Link> and <Link href="/blog/best-stellar-api-providers-2026" className="text-[#2855FF] hover:underline">2026 provider comparison</Link>.</p>
+              <p className="text-sm text-gray-400">Good documentation, SDKs, and support make a difference. Check our <Link href="/docs" className="text-[#7366FF] hover:underline">API docs</Link> and <Link href="/blog/best-stellar-api-providers-2026" className="text-[#7366FF] hover:underline">2026 provider comparison</Link>.</p>
             </div>
             <div className="p-4 rounded-xl border border-white/10">
               <h4 className="font-bold text-sm mb-1">Monitoring & Observability</h4>
-              <p className="text-sm text-gray-400">Providers should offer usage dashboards and <strong className="text-white">Stellar node monitoring tools</strong> integration. See our <Link href="/docs/analytics" className="text-[#2855FF] hover:underline">analytics documentation</Link>.</p>
+              <p className="text-sm text-gray-400">Providers should offer usage dashboards and <strong className="text-white">Stellar node monitoring tools</strong> integration. See our <Link href="/docs/analytics" className="text-[#7366FF] hover:underline">analytics documentation</Link>.</p>
             </div>
           </div>
 
@@ -151,32 +151,32 @@ export default function HorizonVsRpcPage() {
             </div>
             <div className="p-4 rounded-xl bg-green-900/20 border border-green-800/50">
               <h4 className="font-bold text-sm mb-1 text-green-300">Building analytics?</h4>
-              <p className="text-sm text-green-400">Start with <strong>Horizon API</strong> (like our <Link href="/analytics" className="text-[#2855FF] hover:underline">analytics dashboard</Link>). Graduate to a custom indexer when you need complex aggregations.</p>
+              <p className="text-sm text-green-400">Start with <strong>Horizon API</strong> (like our <Link href="/analytics" className="text-[#7366FF] hover:underline">analytics dashboard</Link>). Graduate to a custom indexer when you need complex aggregations.</p>
             </div>
             <div className="p-4 rounded-xl bg-orange-900/20 border border-orange-800/50">
               <h4 className="font-bold text-sm mb-1 text-orange-300">Building a portfolio tracker?</h4>
-              <p className="text-sm text-orange-400">Use <strong>both APIs</strong> together. Horizon for balances and history, RPC for DeFi positions. See our <Link href="/docs/portfolio" className="text-[#2855FF] hover:underline">Portfolio Intelligence docs</Link>.</p>
+              <p className="text-sm text-orange-400">Use <strong>both APIs</strong> together. Horizon for balances and history, RPC for DeFi positions. See our <Link href="/docs/portfolio" className="text-[#7366FF] hover:underline">Portfolio Intelligence docs</Link>.</p>
             </div>
           </div>
 
           <div className="my-8 p-5 sm:p-8 rounded-xl bg-white/5 border border-white/10">
             <h3 className="text-lg font-bold mb-3">Related Resources</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/guides/stellar-rpc-guide" className="text-[#2855FF] hover:underline">What is Stellar RPC? (Complete Guide)</Link></li>
-              <li><Link href="/guides/stellar-api-tutorial" className="text-[#2855FF] hover:underline">Stellar API Tutorial (Step-by-Step)</Link></li>
-              <li><Link href="/guides/lumenquery-tutorial" className="text-[#2855FF] hover:underline">LumenQuery Tutorial</Link></li>
-              <li><Link href="/blog/horizon-api-vs-stellar-rpc" className="text-[#2855FF] hover:underline">Building Real-Time Apps: Horizon API vs Stellar RPC</Link></li>
-              <li><Link href="/blog/stellar-5000-tps-roadmap-api-impact" className="text-[#2855FF] hover:underline">How Stellar&apos;s 5000 TPS Roadmap Impacts Your API</Link></li>
-              <li><Link href="/blog/best-stellar-api-providers-2026" className="text-[#2855FF] hover:underline">Best Stellar API Providers in 2026</Link></li>
-              <li><Link href="/blog/stellar-foundation-roadmap-2026" className="text-[#2855FF] hover:underline">Stellar Foundation Roadmap for 2026</Link></li>
+              <li><Link href="/guides/stellar-rpc-guide" className="text-[#7366FF] hover:underline">What is Stellar RPC? (Complete Guide)</Link></li>
+              <li><Link href="/guides/stellar-api-tutorial" className="text-[#7366FF] hover:underline">Stellar API Tutorial (Step-by-Step)</Link></li>
+              <li><Link href="/guides/lumenquery-tutorial" className="text-[#7366FF] hover:underline">LumenQuery Tutorial</Link></li>
+              <li><Link href="/blog/horizon-api-vs-stellar-rpc" className="text-[#7366FF] hover:underline">Building Real-Time Apps: Horizon API vs Stellar RPC</Link></li>
+              <li><Link href="/blog/stellar-5000-tps-roadmap-api-impact" className="text-[#7366FF] hover:underline">How Stellar&apos;s 5000 TPS Roadmap Impacts Your API</Link></li>
+              <li><Link href="/blog/best-stellar-api-providers-2026" className="text-[#7366FF] hover:underline">Best Stellar API Providers in 2026</Link></li>
+              <li><Link href="/blog/stellar-foundation-roadmap-2026" className="text-[#7366FF] hover:underline">Stellar Foundation Roadmap for 2026</Link></li>
             </ul>
           </div>
         </section>
 
-        <aside className="mt-10 sm:mt-16 p-5 sm:p-8 rounded-xl sm:rounded-2xl bg-[#2855FF] text-white text-center">
+        <aside className="mt-10 sm:mt-16 p-5 sm:p-8 rounded-xl sm:rounded-2xl bg-[#7366FF] text-white text-center">
           <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3">Both Horizon and RPC in One Platform</h2>
           <p className="text-white/80 mb-4 sm:mb-6 text-sm sm:text-base">LumenQuery provides managed access to both APIs. Start free.</p>
-          <Link href="/auth/signup" className="inline-block px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg bg-white text-[#2855FF] font-medium hover:bg-gray-100 transition-colors text-sm sm:text-base">
+          <Link href="/auth/signup" className="inline-block px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg bg-white text-[#7366FF] font-medium hover:bg-gray-100 transition-colors text-sm sm:text-base">
             Get Free API Key
           </Link>
         </aside>

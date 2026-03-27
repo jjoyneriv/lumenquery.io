@@ -65,7 +65,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="text-[#6A6A6A] hover:text-[#2855FF] transition-colors"
+      className="text-[#6A6A6A] hover:text-[#7366FF] transition-colors"
       title="Copy"
     >
       {copied ? (
@@ -107,7 +107,7 @@ export function TransactionRow({ transaction, hasFullAccess }: TransactionRowPro
 
             <div className="flex items-center gap-2 text-sm">
               <span className="text-[#6A6A6A]">From:</span>
-              <code className="font-mono text-[#2855FF]">{transaction.sourceAccount}</code>
+              <code className="font-mono text-[#7366FF]">{transaction.sourceAccount}</code>
               {hasFullAccess && transaction.fullSourceAccount && (
                 <CopyButton text={transaction.fullSourceAccount} />
               )}
@@ -118,7 +118,7 @@ export function TransactionRow({ transaction, hasFullAccess }: TransactionRowPro
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
                   <span className="text-[#6A6A6A]">To:</span>
-                  <code className="font-mono text-[#2855FF]">{transaction.destinationAccount}</code>
+                  <code className="font-mono text-[#7366FF]">{transaction.destinationAccount}</code>
                   {hasFullAccess && transaction.fullDestinationAccount && (
                     <CopyButton text={transaction.fullDestinationAccount} />
                   )}
@@ -152,7 +152,7 @@ export function TransactionRow({ transaction, hasFullAccess }: TransactionRowPro
           <div className="bg-white rounded-lg p-4 space-y-3">
             <div className="flex items-center gap-2">
               <span className="text-sm text-[#6A6A6A]">Transaction Hash:</span>
-              <code className="text-sm font-mono text-[#2855FF]">{transaction.txHash}</code>
+              <code className="text-sm font-mono text-[#7366FF]">{transaction.txHash}</code>
               <CopyButton text={transaction.txHash} />
             </div>
 

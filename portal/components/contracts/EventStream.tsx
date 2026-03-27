@@ -89,7 +89,7 @@ export function EventStream({ events, typeCounts }: EventStreamProps) {
 
                     <div className="mb-2">
                       <span className="text-xs text-[#6A6A6A]">TX: </span>
-                      <code className="text-xs font-mono text-[#2855FF]">
+                      <code className="text-xs font-mono text-[#7366FF]">
                         {formatTxHash(event.txHash)}
                       </code>
                     </div>

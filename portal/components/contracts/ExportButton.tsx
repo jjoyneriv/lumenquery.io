@@ -76,10 +76,10 @@ export function ExportButton({ contractId, type, canExport }: ExportButtonProps)
       <button
         onClick={() => setIsOpen(!isOpen)}
         disabled={loading}
-        className="flex items-center gap-2 px-3 py-2 bg-white border border-[#E6E7E9] rounded-lg text-sm hover:border-[#2855FF] transition-colors"
+        className="flex items-center gap-2 px-3 py-2 bg-white border border-[#E6E7E9] rounded-lg text-sm hover:border-[#7366FF] transition-colors"
       >
         {loading ? (
-          <div className="w-4 h-4 border-2 border-[#2855FF] border-t-transparent rounded-full animate-spin" />
+          <div className="w-4 h-4 border-2 border-[#7366FF] border-t-transparent rounded-full animate-spin" />
         ) : (
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path

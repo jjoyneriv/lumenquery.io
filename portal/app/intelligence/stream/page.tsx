@@ -32,7 +32,7 @@ export default function StreamPage() {
   if (status === 'loading' || status === 'unauthenticated') {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF]" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF]" />
       </div>
     );
   }
@@ -60,7 +60,7 @@ export default function StreamPage() {
                   onClick={() => setFilter(option.value)}
                   className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
                     filter === option.value
-                      ? 'bg-[#2855FF] text-white'
+                      ? 'bg-[#7366FF] text-white'
                       : 'bg-[#F5F6F7] text-[#6A6A6A] hover:text-black'
                   }`}
                 >
@@ -80,7 +80,7 @@ export default function StreamPage() {
               value={assetFilter}
               onChange={(e) => setAssetFilter(e.target.value)}
               placeholder="e.g., USDC"
-              className="w-full px-3 py-2 border border-[#E6E7E9] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#2855FF] focus:border-transparent"
+              className="w-full px-3 py-2 border border-[#E6E7E9] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
             />
           </div>
         </div>

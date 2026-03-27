@@ -96,7 +96,7 @@ export default function ContractOverviewPage() {
         <p className="text-red-600 mb-4">{error}</p>
         <Link
           href="/contracts"
-          className="text-[#2855FF] hover:underline"
+          className="text-[#7366FF] hover:underline"
         >
           Back to Explorer
         </Link>
@@ -167,7 +167,7 @@ export default function ContractOverviewPage() {
                   href={contract.sourceUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#2855FF] hover:underline"
+                  className="text-[#7366FF] hover:underline"
                 >
                   {contract.sourceUrl}
                 </a>
@@ -185,7 +185,7 @@ export default function ContractOverviewPage() {
             <h2 className="text-lg font-semibold">Recent Calls</h2>
             <Link
               href={`/contracts/${contractId}/calls`}
-              className="text-sm text-[#2855FF] hover:underline"
+              className="text-sm text-[#7366FF] hover:underline"
             >
               View All
             </Link>
@@ -198,7 +198,7 @@ export default function ContractOverviewPage() {
                   className="flex items-center justify-between p-3 bg-[#F5F6F7] rounded-lg"
                 >
                   <div>
-                    <code className="text-sm font-mono text-[#2855FF]">
+                    <code className="text-sm font-mono text-[#7366FF]">
                       {call.functionName}
                     </code>
                     <p className="text-xs text-[#6A6A6A] mt-1">
@@ -228,7 +228,7 @@ export default function ContractOverviewPage() {
             <h2 className="text-lg font-semibold">Recent Events</h2>
             <Link
               href={`/contracts/${contractId}/events`}
-              className="text-sm text-[#2855FF] hover:underline"
+              className="text-sm text-[#7366FF] hover:underline"
             >
               View All
             </Link>

@@ -64,7 +64,7 @@ export default function UsagePage() {
   if (loading && !stats) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin w-8 h-8 border-2 border-[#2855FF] border-t-transparent rounded-full" />
+        <div className="animate-spin w-8 h-8 border-2 border-[#7366FF] border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -95,7 +95,7 @@ export default function UsagePage() {
               onClick={() => setPeriod(p)}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 period === p
-                  ? 'bg-[#2855FF] text-white'
+                  ? 'bg-[#7366FF] text-white'
                   : 'bg-white border border-[#E6E7E9] text-[#6A6A6A] hover:bg-gray-50'
               }`}
             >
@@ -124,7 +124,7 @@ export default function UsagePage() {
         </div>
         <div className="bg-white rounded-xl border border-[#E6E7E9] p-6">
           <p className="text-sm text-[#6A6A6A] mb-1">Active Users</p>
-          <p className="text-3xl font-bold text-[#2855FF]">{stats.overview.activeUsers}</p>
+          <p className="text-3xl font-bold text-[#7366FF]">{stats.overview.activeUsers}</p>
           <p className="text-sm text-[#6A6A6A] mt-2">of {stats.overview.totalUsers} total</p>
         </div>
       </div>
@@ -183,7 +183,7 @@ export default function UsagePage() {
                 <div className="flex items-center gap-2">
                   <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-[#2855FF] rounded-full"
+                      className="h-full bg-[#7366FF] rounded-full"
                       style={{ width: `${(endpoint.requests / stats.topEndpoints[0].requests) * 100}%` }}
                     />
                   </div>

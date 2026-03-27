@@ -6921,7 +6921,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
       if (line.startsWith('```')) {
         if (inCodeBlock) {
           elements.push(
-            <div key={index} className="bg-[#0D0D0D] rounded-lg p-3 sm:p-4 my-4 overflow-x-auto">
+            <div key={index} className="bg-[#1D1E26] rounded-lg p-3 sm:p-4 my-4 overflow-x-auto">
               <pre className="text-xs sm:text-sm text-gray-300">
                 <code>{codeContent.trim()}</code>
               </pre>
@@ -7037,7 +7037,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
     return parts.map((part, i) => {
       if (part.startsWith('`') && part.endsWith('`')) {
         return (
-          <code key={i} className="px-2 py-1 rounded bg-white/5 text-[#2855FF] text-sm border border-white/10">
+          <code key={i} className="px-2 py-1 rounded bg-white/5 text-[#7366FF] text-sm border border-white/10">
             {part.slice(1, -1)}
           </code>
         );
@@ -7055,7 +7055,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
             if (linkParts[k]) result.push(linkParts[k]);
             if (linkParts[k + 1] && linkParts[k + 2]) {
               result.push(
-                <Link key={`${i}-${j}-${k}`} href={linkParts[k + 2]} className="text-[#2855FF] hover:underline">
+                <Link key={`${i}-${j}-${k}`} href={linkParts[k + 2]} className="text-[#7366FF] hover:underline">
                   {linkParts[k + 1]}
                 </Link>
               );
@@ -7069,7 +7069,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#0D0D0D] text-white">
+    <div className="min-h-screen bg-[#1D1E26] text-white">
       <Script
         id="article-schema"
         type="application/ld+json"
@@ -7079,7 +7079,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
 
       <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
         <nav className="mb-6 sm:mb-8" aria-label="Breadcrumb">
-          <Link href="/blog" className="text-gray-400 hover:text-[#2855FF] text-sm">
+          <Link href="/blog" className="text-gray-400 hover:text-[#7366FF] text-sm">
             ← Back to Blog
           </Link>
         </nav>
@@ -7087,7 +7087,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
         <article>
           <header className="mb-8 sm:mb-12">
             <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-              <span className="px-2 sm:px-3 py-1 rounded-full bg-[rgba(40,85,255,0.1)] text-[#2855FF] text-xs font-medium">
+              <span className="px-2 sm:px-3 py-1 rounded-full bg-[rgba(40,85,255,0.1)] text-[#7366FF] text-xs font-medium">
                 {post.category}
               </span>
               <time dateTime={post.date} className="text-gray-400 text-xs sm:text-sm">{post.date}</time>
@@ -7103,12 +7103,12 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
             {renderContent(post.content)}
           </section>
 
-          <aside className="mt-10 sm:mt-16 p-5 sm:p-8 rounded-xl sm:rounded-2xl bg-[#2855FF] text-white text-center">
+          <aside className="mt-10 sm:mt-16 p-5 sm:p-8 rounded-xl sm:rounded-2xl bg-[#7366FF] text-white text-center">
             <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3">Ready to Get Started?</h2>
             <p className="text-white/80 mb-4 sm:mb-6 text-sm sm:text-base">
               Sign up for free and start building on Stellar with LumenQuery today.
             </p>
-            <Link href="/auth/signup" className="inline-block px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg bg-white text-[#2855FF] font-medium hover:bg-gray-100 transition-colors text-sm sm:text-base">
+            <Link href="/auth/signup" className="inline-block px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg bg-white text-[#7366FF] font-medium hover:bg-gray-100 transition-colors text-sm sm:text-base">
               Create Free Account
             </Link>
           </aside>

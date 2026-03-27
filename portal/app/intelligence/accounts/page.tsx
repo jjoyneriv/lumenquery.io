@@ -64,7 +64,7 @@ export default function AccountsPage() {
   if (status === 'loading' || status === 'unauthenticated') {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF]" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF]" />
       </div>
     );
   }
@@ -92,12 +92,12 @@ export default function AccountsPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="G... or C..."
-            className="flex-1 px-4 py-3 border border-[#E6E7E9] rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-[#2855FF] focus:border-transparent"
+            className="flex-1 px-4 py-3 border border-[#E6E7E9] rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
           />
           <button
             type="submit"
             disabled={loading || !searchQuery.trim()}
-            className="px-6 py-3 bg-[#2855FF] text-white rounded-lg font-medium hover:bg-[#1E44CC] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-3 bg-[#7366FF] text-white rounded-lg font-medium hover:bg-[#5A4FCF] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Searching...' : 'Search'}
           </button>
@@ -123,7 +123,7 @@ export default function AccountsPage() {
           <div className="flex gap-3">
             <Link
               href={`/intelligence/stream?account=${profile.accountId}`}
-              className="px-4 py-2 bg-[#2855FF] text-white rounded-lg text-sm font-medium hover:bg-[#1E44CC] transition-colors"
+              className="px-4 py-2 bg-[#7366FF] text-white rounded-lg text-sm font-medium hover:bg-[#5A4FCF] transition-colors"
             >
               Watch Live Activity
             </Link>
@@ -132,7 +132,7 @@ export default function AccountsPage() {
                 // Add to watchlist logic
                 alert('Add to watchlist functionality coming soon');
               }}
-              className="px-4 py-2 border border-[#E6E7E9] text-[#6A6A6A] rounded-lg text-sm font-medium hover:text-black hover:border-[#2855FF] transition-colors"
+              className="px-4 py-2 border border-[#E6E7E9] text-[#6A6A6A] rounded-lg text-sm font-medium hover:text-black hover:border-[#7366FF] transition-colors"
             >
               Add to Watchlist
             </button>

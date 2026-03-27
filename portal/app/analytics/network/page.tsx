@@ -130,7 +130,7 @@ export default function NetworkAnalyticsPage() {
             data={metrics?.history || []}
             dataKey="transactions"
             xAxisKey="timestamp"
-            color="#2855FF"
+            color="#7366FF"
             height={300}
           />
         </div>

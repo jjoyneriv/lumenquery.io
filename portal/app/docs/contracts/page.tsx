@@ -11,34 +11,34 @@ export default function ContractsDocsPage() {
       <div>
         <h3 className="text-sm font-semibold text-[#6A6A6A] uppercase tracking-wider mb-3">Overview</h3>
         <ul className="space-y-2">
-          <li><a href="#introduction" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Introduction</a></li>
-          <li><a href="#dashboard" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Dashboard</a></li>
-          <li><a href="#tiers" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Subscription Tiers</a></li>
+          <li><a href="#introduction" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Introduction</a></li>
+          <li><a href="#dashboard" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Dashboard</a></li>
+          <li><a href="#tiers" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Subscription Tiers</a></li>
         </ul>
       </div>
       <div>
         <h3 className="text-sm font-semibold text-[#6A6A6A] uppercase tracking-wider mb-3">Features</h3>
         <ul className="space-y-2">
-          <li><a href="#decoded-calls" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Decoded Calls</a></li>
-          <li><a href="#storage-viewer" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Storage Viewer</a></li>
-          <li><a href="#event-stream" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Event Stream</a></li>
-          <li><a href="#ai-explanations" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>AI Explanations</a></li>
+          <li><a href="#decoded-calls" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Decoded Calls</a></li>
+          <li><a href="#storage-viewer" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Storage Viewer</a></li>
+          <li><a href="#event-stream" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Event Stream</a></li>
+          <li><a href="#ai-explanations" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>AI Explanations</a></li>
         </ul>
       </div>
       <div>
         <h3 className="text-sm font-semibold text-[#6A6A6A] uppercase tracking-wider mb-3">Reference</h3>
         <ul className="space-y-2">
-          <li><a href="#xdr-decoding" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>XDR Decoding</a></li>
-          <li><a href="#data-types" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Soroban Data Types</a></li>
-          <li><a href="#api-reference" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>API Reference</a></li>
+          <li><a href="#xdr-decoding" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>XDR Decoding</a></li>
+          <li><a href="#data-types" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Soroban Data Types</a></li>
+          <li><a href="#api-reference" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>API Reference</a></li>
         </ul>
       </div>
       <div>
         <h3 className="text-sm font-semibold text-[#6A6A6A] uppercase tracking-wider mb-3">Documentation</h3>
         <ul className="space-y-2">
-          <li><Link href="/docs" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>API Documentation</Link></li>
-          <li><Link href="/docs/analytics" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Network Analytics</Link></li>
-          <li><Link href="/docs/intelligence" className="text-[#6A6A6A] hover:text-[#2855FF]" onClick={() => setSidebarOpen(false)}>Transaction Intelligence</Link></li>
+          <li><Link href="/docs" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>API Documentation</Link></li>
+          <li><Link href="/docs/analytics" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Network Analytics</Link></li>
+          <li><Link href="/docs/intelligence" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Transaction Intelligence</Link></li>
         </ul>
       </div>
     </div>
@@ -135,7 +135,7 @@ export default function ContractsDocsPage() {
             <section id="dashboard" className="mb-10 sm:mb-16">
               <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-[#E6E7E9]">Dashboard</h2>
               <p className="text-[#6A6A6A] mb-4 text-sm sm:text-base">
-                The Contracts Explorer dashboard at <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#2855FF] text-xs">/contracts</code> provides
+                The Contracts Explorer dashboard at <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#7366FF] text-xs">/contracts</code> provides
                 a centralized interface for exploring Soroban smart contracts.
               </p>
               <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9] mb-4">
@@ -162,7 +162,7 @@ export default function ContractsDocsPage() {
               <div className="p-4 rounded-lg bg-purple-50 border border-purple-200">
                 <h3 className="font-semibold mb-2 text-sm">Getting Started</h3>
                 <ol className="list-decimal list-inside space-y-1 text-sm text-[#6A6A6A]">
-                  <li>Navigate to <Link href="/contracts" className="text-[#2855FF] hover:underline">/contracts</Link></li>
+                  <li>Navigate to <Link href="/contracts" className="text-[#7366FF] hover:underline">/contracts</Link></li>
                   <li>Enter a contract ID in the search bar (e.g., <code className="px-1 bg-white rounded text-xs">CDLZ...XYZ</code>)</li>
                   <li>Explore decoded calls, storage, events, and analytics</li>
                 </ol>
@@ -287,7 +287,7 @@ export default function ContractsDocsPage() {
               <div className="space-y-4">
                 <div>
                   <p className="text-sm text-[#6A6A6A] mb-2">Raw XDR (unreadable):</p>
-                  <div className="bg-[#0D0D0D] rounded-lg p-4 overflow-x-auto">
+                  <div className="bg-[#1D1E26] rounded-lg p-4 overflow-x-auto">
                     <pre className="text-xs text-gray-400">
 {`AAAAAgAAAADo...base64_encoded_xdr_data...AAAAAAAAAA==`}
                     </pre>
@@ -295,7 +295,7 @@ export default function ContractsDocsPage() {
                 </div>
                 <div>
                   <p className="text-sm text-[#6A6A6A] mb-2">Decoded (human-readable):</p>
-                  <div className="bg-[#0D0D0D] rounded-lg p-4 overflow-x-auto">
+                  <div className="bg-[#1D1E26] rounded-lg p-4 overflow-x-auto">
                     <pre className="text-xs text-gray-300">
 {`{
   "function": "transfer",
@@ -456,7 +456,7 @@ export default function ContractsDocsPage() {
               </div>
 
               <h3 className="text-lg font-semibold mt-6 mb-3">Example: Token Contract Storage</h3>
-              <div className="bg-[#0D0D0D] rounded-lg p-4 overflow-x-auto">
+              <div className="bg-[#1D1E26] rounded-lg p-4 overflow-x-auto">
                 <pre className="text-xs text-gray-300">
 {`// Token contract storage entries (decoded)
 ┌────────────────────────────────────┬────────────┬─────────────────┐
@@ -495,7 +495,7 @@ export default function ContractsDocsPage() {
               <p className="text-[#6A6A6A] mb-4 text-sm">
                 Each Soroban event contains the following decoded information:
               </p>
-              <div className="bg-[#0D0D0D] rounded-lg p-4 overflow-x-auto mb-6">
+              <div className="bg-[#1D1E26] rounded-lg p-4 overflow-x-auto mb-6">
                 <pre className="text-xs text-gray-300">
 {`{
   "type": "contract",           // Event type: contract, system, or diagnostic
@@ -643,7 +643,7 @@ export default function ContractsDocsPage() {
               </div>
 
               <h3 className="text-lg font-semibold mt-6 mb-3">Example Explanation</h3>
-              <div className="bg-[#0D0D0D] rounded-lg p-4 overflow-x-auto mb-6">
+              <div className="bg-[#1D1E26] rounded-lg p-4 overflow-x-auto mb-6">
                 <p className="text-xs text-gray-500 mb-2">// Contract call: transfer(from, to, amount)</p>
                 <pre className="text-xs text-gray-300">
 {`{
@@ -760,7 +760,7 @@ export default function ContractsDocsPage() {
               </div>
 
               <h3 className="text-lg font-semibold mt-6 mb-3">Decoding Process</h3>
-              <div className="bg-[#0D0D0D] rounded-lg p-4 overflow-x-auto">
+              <div className="bg-[#1D1E26] rounded-lg p-4 overflow-x-auto">
                 <pre className="text-xs text-gray-300">
 {`// 1. Raw XDR (Base64 encoded)
 AAAABQAAAADo...base64...==
@@ -937,7 +937,7 @@ AAAABQAAAADo...base64...==
                 {/* AI Explain */}
                 <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
                   <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <span className="px-2 py-1 rounded bg-[#2855FF]/10 text-[#2855FF] font-mono text-xs">POST</span>
+                    <span className="px-2 py-1 rounded bg-[#7366FF]/10 text-[#7366FF] font-mono text-xs">POST</span>
                     <code className="text-sm font-medium">/api/contracts/[contractId]/calls/[callId]/explain</code>
                     <span className="px-2 py-1 rounded bg-amber-100 text-amber-700 text-xs">Coming Soon</span>
                   </div>
@@ -972,13 +972,13 @@ AAAABQAAAADo...base64...==
             </section>
 
             {/* Support */}
-            <section className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#2855FF] text-white">
+            <section className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#7366FF] text-white">
               <h2 className="text-lg sm:text-xl font-bold mb-2">Need Help with Soroban?</h2>
               <p className="text-white/80 mb-4 text-sm sm:text-base">
                 Our team can help you explore contracts, debug issues, or integrate with the Soroban Pro API.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                <a href="mailto:support@lumenquery.io" className="px-4 py-2 rounded-lg bg-white text-[#2855FF] text-sm font-medium hover:bg-gray-100 transition-colors text-center">
+                <a href="mailto:support@lumenquery.io" className="px-4 py-2 rounded-lg bg-white text-[#7366FF] text-sm font-medium hover:bg-gray-100 transition-colors text-center">
                   Contact Support
                 </a>
                 <Link href="/contracts" className="px-4 py-2 rounded-lg bg-white/20 text-white text-sm font-medium hover:bg-white/30 transition-colors text-center">

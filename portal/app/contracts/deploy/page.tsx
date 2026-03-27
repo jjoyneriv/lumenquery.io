@@ -14,7 +14,7 @@ export default function DeployContractPage() {
         <div className="max-w-4xl mx-auto">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 text-sm text-[#6A6A6A] mb-6">
-            <Link href="/contracts" className="hover:text-[#2855FF]">
+            <Link href="/contracts" className="hover:text-[#7366FF]">
               Contracts
             </Link>
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -25,7 +25,7 @@ export default function DeployContractPage() {
 
           {/* Page Header */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#2855FF]/10 rounded-full text-sm text-[#2855FF] mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#7366FF]/10 rounded-full text-sm text-[#7366FF] mb-4">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
@@ -77,10 +77,10 @@ export default function DeployContractPage() {
                 href="https://developers.stellar.org/docs/build/smart-contracts"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 p-4 border border-[#E6E7E9] rounded-lg hover:border-[#2855FF]/50 transition-colors"
+                className="flex items-center gap-3 p-4 border border-[#E6E7E9] rounded-lg hover:border-[#7366FF]/50 transition-colors"
               >
-                <div className="w-10 h-10 bg-[#2855FF]/10 rounded-lg flex items-center justify-center">
-                  <svg className="w-5 h-5 text-[#2855FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="w-10 h-10 bg-[#7366FF]/10 rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-[#7366FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -99,10 +99,10 @@ export default function DeployContractPage() {
                 href="https://github.com/stellar/soroban-examples"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 p-4 border border-[#E6E7E9] rounded-lg hover:border-[#2855FF]/50 transition-colors"
+                className="flex items-center gap-3 p-4 border border-[#E6E7E9] rounded-lg hover:border-[#7366FF]/50 transition-colors"
               >
-                <div className="w-10 h-10 bg-[#2855FF]/10 rounded-lg flex items-center justify-center">
-                  <svg className="w-5 h-5 text-[#2855FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="w-10 h-10 bg-[#7366FF]/10 rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-[#7366FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"

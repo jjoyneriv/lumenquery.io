@@ -18,7 +18,7 @@ export default function ContractsPage() {
   if (status === 'loading' || status === 'unauthenticated') {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF]" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF]" />
       </div>
     );
   }
@@ -81,7 +81,7 @@ export default function ContractsPage() {
 
           <Link
             href="/contracts"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#2855FF] text-white rounded-lg font-medium hover:bg-[#1E44CC] transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[#7366FF] text-white rounded-lg font-medium hover:bg-[#5A4FCF] transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />

@@ -68,7 +68,7 @@ export default function MetricCard({
       <div className="flex items-start justify-between mb-2">
         <p className="text-[#6A6A6A] text-xs sm:text-sm">{title}</p>
         {IconComponent && (
-          <div className="text-[#2855FF]">
+          <div className="text-[#7366FF]">
             {IconComponent}
           </div>
         )}

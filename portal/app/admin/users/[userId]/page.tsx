@@ -161,7 +161,7 @@ export default function UserDetailPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin w-8 h-8 border-2 border-[#2855FF] border-t-transparent rounded-full" />
+        <div className="animate-spin w-8 h-8 border-2 border-[#7366FF] border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -170,7 +170,7 @@ export default function UserDetailPage() {
     return (
       <div className="bg-red-50 border border-red-200 rounded-xl p-6">
         <p className="text-red-700 mb-4">{error}</p>
-        <Link href="/admin/users" className="text-[#2855FF] hover:underline">
+        <Link href="/admin/users" className="text-[#7366FF] hover:underline">
           ← Back to Users
         </Link>
       </div>
@@ -187,7 +187,7 @@ export default function UserDetailPage() {
         </Link>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-[#2855FF] flex items-center justify-center text-white text-2xl font-medium">
+            <div className="w-16 h-16 rounded-full bg-[#7366FF] flex items-center justify-center text-white text-2xl font-medium">
               {(user.name || user.email).charAt(0).toUpperCase()}
             </div>
             <div>
@@ -228,7 +228,7 @@ export default function UserDetailPage() {
                     <select
                       value={newRole}
                       onChange={(e) => setNewRole(e.target.value)}
-                      className="px-3 py-1 border border-[#E6E7E9] rounded-lg focus:outline-none focus:border-[#2855FF] bg-white text-sm"
+                      className="px-3 py-1 border border-[#E6E7E9] rounded-lg focus:outline-none focus:border-[#7366FF] bg-white text-sm"
                     >
                       <option value="USER">User</option>
                       <option value="ADMIN">Admin</option>
@@ -237,7 +237,7 @@ export default function UserDetailPage() {
                     <button
                       onClick={handleUpdateRole}
                       disabled={isUpdating}
-                      className="px-3 py-1 bg-[#2855FF] text-white rounded-lg text-sm font-medium hover:bg-[#1e40af] disabled:opacity-50"
+                      className="px-3 py-1 bg-[#7366FF] text-white rounded-lg text-sm font-medium hover:bg-[#1e40af] disabled:opacity-50"
                     >
                       {isUpdating ? '...' : 'Save'}
                     </button>
@@ -262,7 +262,7 @@ export default function UserDetailPage() {
                     </span>
                     <button
                       onClick={() => setEditingRole(true)}
-                      className="text-[#2855FF] text-sm hover:underline"
+                      className="text-[#7366FF] text-sm hover:underline"
                     >
                       Edit
                     </button>

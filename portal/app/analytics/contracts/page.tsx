@@ -131,7 +131,7 @@ export default function ContractAnalyticsPage() {
           <div className="h-64">
             {loading ? (
               <div className="h-full flex items-center justify-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF]" />
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF]" />
               </div>
             ) : chartData.length > 0 ? (
               <AreaChart
@@ -165,7 +165,7 @@ export default function ContractAnalyticsPage() {
             <div className="p-4 sm:p-6">
               {loading ? (
                 <div className="flex items-center justify-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF]" />
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF]" />
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -197,7 +197,7 @@ export default function ContractAnalyticsPage() {
             <div className="p-4 sm:p-6">
               {loading ? (
                 <div className="flex items-center justify-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF]" />
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF]" />
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -225,7 +225,7 @@ export default function ContractAnalyticsPage() {
         <h2 id="contracts-heading" className="sr-only">Top Contracts</h2>
         {loading ? (
           <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF]" />
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF]" />
           </div>
         ) : (
           <ContractTable contracts={data?.activity.topContracts || []} />
@@ -237,7 +237,7 @@ export default function ContractAnalyticsPage() {
         <h2 id="events-heading" className="sr-only">Recent Events</h2>
         {loading ? (
           <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF]" />
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF]" />
           </div>
         ) : (
           <EventsTable events={data?.events.recentEvents || []} />

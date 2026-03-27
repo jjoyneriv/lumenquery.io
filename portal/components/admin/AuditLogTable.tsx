@@ -112,7 +112,7 @@ export default function AuditLogTable({ logs }: AuditLogTableProps) {
                     {log.details && (
                       <button
                         onClick={() => setExpandedId(expandedId === log.id ? null : log.id)}
-                        className="text-[#2855FF] hover:text-[#1e40af] text-sm font-medium"
+                        className="text-[#7366FF] hover:text-[#1e40af] text-sm font-medium"
                       >
                         {expandedId === log.id ? 'Hide' : 'Show'}
                       </button>

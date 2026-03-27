@@ -12,9 +12,9 @@ export default function DocsLayoutClient({
   const { data: session } = useSession();
 
   return (
-    <div className="min-h-screen bg-[#111111] text-white">
+    <div className="min-h-screen bg-[#1D1E26] text-white">
       {/* Header */}
-      <header className="bg-[#0D0D0D] border-b border-white/10">
+      <header className="bg-[#1D1E26] border-b border-white/10">
         <nav className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
           <div className="flex items-center gap-3 sm:gap-4">
             <Link href="/" className="flex items-center gap-2" aria-label="LumenQuery home">
@@ -35,7 +35,7 @@ export default function DocsLayoutClient({
           </div>
           <Link
             href="/dashboard"
-            className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-[#2855FF] text-white text-xs sm:text-sm font-medium hover:bg-[#1E44CC] transition-colors"
+            className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-[#7366FF] text-white text-xs sm:text-sm font-medium hover:bg-[#5A4FCF] transition-colors"
           >
             Dashboard
           </Link>
@@ -60,7 +60,7 @@ export default function DocsLayoutClient({
           <Link href="/portfolio" className="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-400 hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap">
             Portfolio
           </Link>
-          <Link href="/docs" className="px-3 py-1.5 rounded-lg text-sm font-medium text-[#2855FF] bg-[#2855FF]/10 hover:bg-[#2855FF]/20 transition-colors whitespace-nowrap">
+          <Link href="/docs" className="px-3 py-1.5 rounded-lg text-sm font-medium text-[#7366FF] bg-[#7366FF]/10 hover:bg-[#7366FF]/20 transition-colors whitespace-nowrap">
             Docs
           </Link>
           {session && (session.user as any)?.role === 'SUPER_ADMIN' && (

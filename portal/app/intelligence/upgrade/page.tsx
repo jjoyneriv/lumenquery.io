@@ -79,7 +79,7 @@ export default function UpgradePage() {
   if (status === 'loading' || status === 'unauthenticated') {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF]" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF]" />
       </div>
     );
   }
@@ -114,13 +114,13 @@ export default function UpgradePage() {
                 key={tier.name}
                 className={`bg-white rounded-xl border p-6 relative ${
                   tier.popular
-                    ? 'border-[#2855FF] shadow-lg'
+                    ? 'border-[#7366FF] shadow-lg'
                     : 'border-[#E6E7E9]'
                 }`}
               >
                 {tier.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="bg-[#2855FF] text-white px-3 py-1 rounded-full text-xs font-medium">
+                    <span className="bg-[#7366FF] text-white px-3 py-1 rounded-full text-xs font-medium">
                       Most Popular
                     </span>
                   </div>
@@ -161,7 +161,7 @@ export default function UpgradePage() {
                 <button
                   className={`w-full py-3 rounded-lg font-medium transition-colors ${
                     tier.popular
-                      ? 'bg-[#2855FF] text-white hover:bg-[#1E44CC]'
+                      ? 'bg-[#7366FF] text-white hover:bg-[#5A4FCF]'
                       : 'bg-[#F5F6F7] text-black hover:bg-[#E6E7E9]'
                   }`}
                 >
@@ -213,7 +213,7 @@ export default function UpgradePage() {
               Have questions? {' '}
               <a
                 href="mailto:support@lumenquery.io"
-                className="text-[#2855FF] hover:text-[#1E44CC]"
+                className="text-[#7366FF] hover:text-[#5A4FCF]"
               >
                 Contact our sales team
               </a>

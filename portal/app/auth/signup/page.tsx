@@ -97,7 +97,7 @@ export default function SignUpPage() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] text-black focus:outline-none focus:ring-2 focus:ring-[#2855FF] focus:border-transparent text-sm sm:text-base"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] text-black focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent text-sm sm:text-base"
                 placeholder="John Doe"
                 required
               />
@@ -109,7 +109,7 @@ export default function SignUpPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] text-black focus:outline-none focus:ring-2 focus:ring-[#2855FF] focus:border-transparent text-sm sm:text-base"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] text-black focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent text-sm sm:text-base"
                 placeholder="you@example.com"
                 required
               />
@@ -121,7 +121,7 @@ export default function SignUpPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] text-black focus:outline-none focus:ring-2 focus:ring-[#2855FF] focus:border-transparent text-sm sm:text-base"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] text-black focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent text-sm sm:text-base"
                 placeholder="••••••••"
                 required
               />
@@ -133,7 +133,7 @@ export default function SignUpPage() {
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] text-black focus:outline-none focus:ring-2 focus:ring-[#2855FF] focus:border-transparent text-sm sm:text-base"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] text-black focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent text-sm sm:text-base"
                 placeholder="••••••••"
                 required
               />
@@ -142,7 +142,7 @@ export default function SignUpPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 sm:py-3 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white font-semibold disabled:opacity-50 transition-colors text-sm sm:text-base"
+              className="w-full py-2.5 sm:py-3 rounded-lg bg-[#7366FF] hover:bg-[#5A4FCF] text-white font-semibold disabled:opacity-50 transition-colors text-sm sm:text-base"
             >
               {loading ? 'Creating account...' : 'Create Account'}
             </button>
@@ -150,7 +150,7 @@ export default function SignUpPage() {
 
           <p className="text-center text-[#6A6A6A] mt-4 sm:mt-6 text-sm">
             Already have an account?{' '}
-            <Link href="/auth/signin" className="text-[#2855FF] hover:underline font-medium">
+            <Link href="/auth/signin" className="text-[#7366FF] hover:underline font-medium">
               Sign in
             </Link>
           </p>

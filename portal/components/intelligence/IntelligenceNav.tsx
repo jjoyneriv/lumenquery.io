@@ -90,7 +90,7 @@ export function IntelligenceNav({ unreadAlerts = 0 }: IntelligenceNavProps) {
             href={item.href}
             className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
               isActive
-                ? 'bg-[#2855FF] text-white'
+                ? 'bg-[#7366FF] text-white'
                 : 'text-[#6A6A6A] hover:bg-[#F5F6F7] hover:text-black'
             }`}
           >
@@ -98,7 +98,7 @@ export function IntelligenceNav({ unreadAlerts = 0 }: IntelligenceNavProps) {
             <span className="flex-1">{item.name}</span>
             {item.badge === 'unreadCount' && unreadAlerts > 0 && (
               <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                isActive ? 'bg-white text-[#2855FF]' : 'bg-red-500 text-white'
+                isActive ? 'bg-white text-[#7366FF]' : 'bg-red-500 text-white'
               }`}>
                 {unreadAlerts > 99 ? '99+' : unreadAlerts}
               </span>

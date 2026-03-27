@@ -62,7 +62,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="text-[#6A6A6A] hover:text-[#2855FF] transition-colors"
+      className="text-[#6A6A6A] hover:text-[#7366FF] transition-colors"
       title="Copy"
     >
       {copied ? (
@@ -140,7 +140,7 @@ export function TrustlineMonitor({
             onClick={() => setFilter('all')}
             className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
               filter === 'all'
-                ? 'bg-[#2855FF] text-white'
+                ? 'bg-[#7366FF] text-white'
                 : 'bg-[#F5F6F7] text-[#6A6A6A] hover:text-black'
             }`}
           >
@@ -227,7 +227,7 @@ export function TrustlineMonitor({
                       </td>
                       <td className="px-4 sm:px-6 py-4">
                         <div className="flex items-center gap-2">
-                          <code className="text-sm font-mono text-[#2855FF]">
+                          <code className="text-sm font-mono text-[#7366FF]">
                             {change.account}
                           </code>
                           {hasFullAccess && change.fullAccount && (

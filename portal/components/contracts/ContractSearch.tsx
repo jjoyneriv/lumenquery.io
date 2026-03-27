@@ -84,11 +84,11 @@ export function ContractSearch() {
             }}
             onFocus={() => setIsOpen(true)}
             placeholder="Search by contract ID (C...) or name"
-            className="w-full pl-12 pr-4 py-3 bg-white text-gray-900 placeholder-gray-500 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2855FF] focus:border-transparent text-base"
+            className="w-full pl-12 pr-4 py-3 bg-white text-gray-900 placeholder-gray-500 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent text-base"
           />
           {loading && (
             <div className="absolute right-4 top-1/2 -translate-y-1/2">
-              <div className="w-5 h-5 border-2 border-[#2855FF] border-t-transparent rounded-full animate-spin" />
+              <div className="w-5 h-5 border-2 border-[#7366FF] border-t-transparent rounded-full animate-spin" />
             </div>
           )}
         </div>
@@ -102,7 +102,7 @@ export function ContractSearch() {
               onClick={() => handleSelect(contract.contractId)}
               className="w-full px-4 py-3 text-left hover:bg-[#F5F6F7] transition-colors border-b border-[#E6E7E9] last:border-b-0"
             >
-              <div className="font-mono text-sm text-[#2855FF]">
+              <div className="font-mono text-sm text-[#7366FF]">
                 {contract.contractId.slice(0, 10)}...{contract.contractId.slice(-6)}
               </div>
               {contract.name && (

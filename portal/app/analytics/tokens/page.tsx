@@ -141,14 +141,14 @@ export default function TokenAnalyticsPage() {
           <div className="h-64">
             {loading ? (
               <div className="h-full flex items-center justify-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF]" />
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF]" />
               </div>
             ) : chartData.length > 0 ? (
               <BarChart
                 data={chartData}
                 dataKey="payments"
                 xAxisKey="timestamp"
-                color="#2855FF"
+                color="#7366FF"
               />
             ) : (
               <div className="h-full flex items-center justify-center text-[#6A6A6A]">
@@ -175,7 +175,7 @@ export default function TokenAnalyticsPage() {
             <div className="p-4 sm:p-6">
               {loading ? (
                 <div className="flex items-center justify-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF]" />
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF]" />
                 </div>
               ) : data?.velocity.topTokensByVolume.length ? (
                 <div className="space-y-3">
@@ -220,7 +220,7 @@ export default function TokenAnalyticsPage() {
             <div className="overflow-x-auto">
               {loading ? (
                 <div className="flex items-center justify-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF]" />
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF]" />
                 </div>
               ) : data?.issuerRisk.topTokens.length ? (
                 <table className="w-full">
@@ -269,7 +269,7 @@ export default function TokenAnalyticsPage() {
         </h2>
         {loading ? (
           <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF]" />
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF]" />
           </div>
         ) : (
           <WhaleTable

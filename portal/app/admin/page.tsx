@@ -53,7 +53,7 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin w-8 h-8 border-2 border-[#2855FF] border-t-transparent rounded-full" />
+        <div className="animate-spin w-8 h-8 border-2 border-[#7366FF] border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -107,7 +107,7 @@ export default function AdminDashboard() {
               <p className="text-2xl font-bold text-black">{stats.overview.totalOrganizations}</p>
             </div>
           </div>
-          <Link href="/admin/users" className="text-sm text-[#2855FF] hover:underline">
+          <Link href="/admin/users" className="text-sm text-[#7366FF] hover:underline">
             View all →
           </Link>
         </div>
@@ -205,7 +205,7 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Link
             href="/admin/users"
-            className="flex items-center gap-3 p-4 border border-[#E6E7E9] rounded-lg hover:border-[#2855FF] transition-colors"
+            className="flex items-center gap-3 p-4 border border-[#E6E7E9] rounded-lg hover:border-[#7366FF] transition-colors"
           >
             <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
               <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -220,7 +220,7 @@ export default function AdminDashboard() {
 
           <Link
             href="/admin/usage"
-            className="flex items-center gap-3 p-4 border border-[#E6E7E9] rounded-lg hover:border-[#2855FF] transition-colors"
+            className="flex items-center gap-3 p-4 border border-[#E6E7E9] rounded-lg hover:border-[#7366FF] transition-colors"
           >
             <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
               <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -235,7 +235,7 @@ export default function AdminDashboard() {
 
           <Link
             href="/admin/audit"
-            className="flex items-center gap-3 p-4 border border-[#E6E7E9] rounded-lg hover:border-[#2855FF] transition-colors"
+            className="flex items-center gap-3 p-4 border border-[#E6E7E9] rounded-lg hover:border-[#7366FF] transition-colors"
           >
             <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
               <svg className="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">

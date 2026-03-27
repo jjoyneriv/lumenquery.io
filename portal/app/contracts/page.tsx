@@ -60,7 +60,7 @@ export default function ContractsPage() {
           </div>
           <Link
             href="/contracts/deploy"
-            className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white text-xs sm:text-sm font-medium transition-colors flex items-center gap-1.5"
+            className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-[#7366FF] hover:bg-[#5A4FCF] text-white text-xs sm:text-sm font-medium transition-colors flex items-center gap-1.5"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -76,7 +76,7 @@ export default function ContractsPage() {
             </svg>
             Live Transactions
           </Link>
-          <Link href="/contracts" className="px-3 py-1.5 rounded-lg text-sm font-medium text-[#2855FF] bg-[#2855FF]/10 hover:bg-[#2855FF]/20 transition-colors whitespace-nowrap">
+          <Link href="/contracts" className="px-3 py-1.5 rounded-lg text-sm font-medium text-[#7366FF] bg-[#7366FF]/10 hover:bg-[#7366FF]/20 transition-colors whitespace-nowrap">
             Contracts
           </Link>
           <Link href="/analytics" className="px-3 py-1.5 rounded-lg text-sm font-medium text-[#6A6A6A] hover:bg-[#F5F6F7] hover:text-black transition-colors whitespace-nowrap">
@@ -119,8 +119,8 @@ export default function ContractsPage() {
         <section className="mb-6 sm:mb-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
             <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
-              <div className="w-10 h-10 bg-[#2855FF]/10 rounded-lg flex items-center justify-center mb-3">
-                <svg className="w-5 h-5 text-[#2855FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="w-10 h-10 bg-[#7366FF]/10 rounded-lg flex items-center justify-center mb-3">
+                <svg className="w-5 h-5 text-[#7366FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
@@ -154,7 +154,7 @@ export default function ContractsPage() {
               </p>
             </div>
 
-            <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#2855FF] text-white">
+            <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#7366FF] text-white">
               <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center mb-3">
                 <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />

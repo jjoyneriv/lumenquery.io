@@ -92,7 +92,7 @@ export default function WatchlistDetailPage() {
   if (status === 'loading' || status === 'unauthenticated') {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF]" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF]" />
       </div>
     );
   }
@@ -112,14 +112,14 @@ export default function WatchlistDetailPage() {
         <div className="flex-1 space-y-6">
           {loading ? (
             <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF] mx-auto" />
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF] mx-auto" />
             </div>
           ) : error ? (
             <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 text-center">
               <p className="text-red-600 mb-4">{error}</p>
               <Link
                 href="/intelligence/watchlists"
-                className="text-[#2855FF] hover:text-[#1E44CC]"
+                className="text-[#7366FF] hover:text-[#5A4FCF]"
               >
                 &larr; Back to Watchlists
               </Link>
@@ -142,14 +142,14 @@ export default function WatchlistDetailPage() {
                 <div className="flex items-center gap-3">
                   <Link
                     href="/intelligence/watchlists"
-                    className="text-[#2855FF] hover:text-[#1E44CC] text-sm"
+                    className="text-[#7366FF] hover:text-[#5A4FCF] text-sm"
                   >
                     &larr; Back to Watchlists
                   </Link>
                   {!showAddForm && (
                     <button
                       onClick={() => setShowAddForm(true)}
-                      className="px-4 py-2 bg-[#2855FF] text-white rounded-lg font-medium hover:bg-[#1E44CC] transition-colors"
+                      className="px-4 py-2 bg-[#7366FF] text-white rounded-lg font-medium hover:bg-[#5A4FCF] transition-colors"
                     >
                       Add Account
                     </button>

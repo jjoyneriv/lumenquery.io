@@ -71,7 +71,7 @@ export default function AdminNav() {
                 href={item.href}
                 className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
                   isActive
-                    ? 'bg-[rgba(40,85,255,0.1)] text-[#2855FF]'
+                    ? 'bg-[rgba(40,85,255,0.1)] text-[#7366FF]'
                     : 'text-[#6A6A6A] hover:bg-gray-50 hover:text-black'
                 }`}
               >

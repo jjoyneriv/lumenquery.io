@@ -37,7 +37,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="ml-2 text-[#6A6A6A] hover:text-[#2855FF] transition-colors"
+      className="ml-2 text-[#6A6A6A] hover:text-[#7366FF] transition-colors"
       title="Copy address"
     >
       {copied ? (
@@ -100,7 +100,7 @@ export function WhaleTable({ whales, movements }: WhaleTableProps) {
                   <tr key={index} className="hover:bg-gray-50">
                     <td className="px-4 sm:px-6 py-4">
                       <div className="flex items-center">
-                        <code className="text-sm font-mono text-[#2855FF]">{whale.address}</code>
+                        <code className="text-sm font-mono text-[#7366FF]">{whale.address}</code>
                         <CopyButton text={whale.address} />
                       </div>
                     </td>
@@ -163,7 +163,7 @@ export function WhaleTable({ whales, movements }: WhaleTableProps) {
                       <code className="text-sm font-mono text-[#6A6A6A]">{movement.from}</code>
                     </td>
                     <td className="px-4 sm:px-6 py-4 text-center">
-                      <svg className="w-4 h-4 text-[#2855FF] inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 text-[#7366FF] inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                       </svg>
                     </td>

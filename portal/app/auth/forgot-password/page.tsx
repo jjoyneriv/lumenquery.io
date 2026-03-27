@@ -71,7 +71,7 @@ export default function ForgotPasswordPage() {
                   setSuccess(false);
                   setEmail('');
                 }}
-                className="text-[#2855FF] hover:underline"
+                className="text-[#7366FF] hover:underline"
               >
                 try again
               </button>
@@ -79,7 +79,7 @@ export default function ForgotPasswordPage() {
             </p>
             <Link
               href="/auth/signin"
-              className="text-[#2855FF] hover:underline text-sm font-medium"
+              className="text-[#7366FF] hover:underline text-sm font-medium"
             >
               Back to sign in
             </Link>
@@ -125,7 +125,7 @@ export default function ForgotPasswordPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] focus:border-[#2855FF] focus:ring-2 focus:ring-[#2855FF]/20 outline-none transition-all text-base"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] focus:border-[#7366FF] focus:ring-2 focus:ring-[#7366FF]/20 outline-none transition-all text-base"
                 placeholder="you@example.com"
                 required
                 autoComplete="email"
@@ -135,14 +135,14 @@ export default function ForgotPasswordPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 sm:py-3 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base"
+              className="w-full py-2.5 sm:py-3 rounded-lg bg-[#7366FF] hover:bg-[#5A4FCF] text-white font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base"
             >
               {loading ? 'Sending...' : 'Send reset link'}
             </button>
           </form>
 
           <div className="mt-6 text-center">
-            <Link href="/auth/signin" className="text-[#6A6A6A] hover:text-[#2855FF] text-sm">
+            <Link href="/auth/signin" className="text-[#6A6A6A] hover:text-[#7366FF] text-sm">
               <span className="mr-1">←</span> Back to sign in
             </Link>
           </div>

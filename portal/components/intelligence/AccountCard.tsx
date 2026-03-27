@@ -65,7 +65,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="text-[#6A6A6A] hover:text-[#2855FF] transition-colors"
+      className="text-[#6A6A6A] hover:text-[#7366FF] transition-colors"
       title="Copy address"
     >
       {copied ? (
@@ -100,7 +100,7 @@ export function AccountCard({ profile, hasFullAccess, showLink = true }: Account
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <code className="font-mono text-sm text-[#2855FF]">
+              <code className="font-mono text-sm text-[#7366FF]">
                 {hasFullAccess ? profile.accountId : profile.truncatedId}
               </code>
               {hasFullAccess && <CopyButton text={profile.accountId} />}
@@ -109,7 +109,7 @@ export function AccountCard({ profile, hasFullAccess, showLink = true }: Account
           {showLink && (
             <Link
               href={`/intelligence/accounts/${profile.accountId}`}
-              className="text-[#2855FF] hover:text-[#1E44CC] transition-colors"
+              className="text-[#7366FF] hover:text-[#5A4FCF] transition-colors"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />

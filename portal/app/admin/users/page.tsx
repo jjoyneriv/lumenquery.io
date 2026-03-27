@@ -113,7 +113,7 @@ export default function UsersPage() {
               placeholder="Search by email or name..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:border-[#2855FF]"
+              className="w-full px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:border-[#7366FF]"
             />
           </div>
 
@@ -123,7 +123,7 @@ export default function UsersPage() {
               setRoleFilter(e.target.value);
               setPagination(prev => ({ ...prev, page: 1 }));
             }}
-            className="px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:border-[#2855FF] bg-white"
+            className="px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:border-[#7366FF] bg-white"
           >
             <option value="">All Roles</option>
             <option value="SUPER_ADMIN">Super Admin</option>
@@ -137,7 +137,7 @@ export default function UsersPage() {
               setTierFilter(e.target.value);
               setPagination(prev => ({ ...prev, page: 1 }));
             }}
-            className="px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:border-[#2855FF] bg-white"
+            className="px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:border-[#7366FF] bg-white"
           >
             <option value="">All Tiers</option>
             <option value="ENTERPRISE">Enterprise</option>
@@ -155,14 +155,14 @@ export default function UsersPage() {
                 setActiveOnly(e.target.checked);
                 setPagination(prev => ({ ...prev, page: 1 }));
               }}
-              className="w-4 h-4 rounded border-[#E6E7E9] text-[#2855FF] focus:ring-[#2855FF]"
+              className="w-4 h-4 rounded border-[#E6E7E9] text-[#7366FF] focus:ring-[#7366FF]"
             />
             <span className="text-sm text-[#6A6A6A]">Online only</span>
           </label>
 
           <button
             type="submit"
-            className="px-4 py-2 bg-[#2855FF] text-white rounded-lg font-medium hover:bg-[#1e40af] transition-colors"
+            className="px-4 py-2 bg-[#7366FF] text-white rounded-lg font-medium hover:bg-[#1e40af] transition-colors"
           >
             Search
           </button>
@@ -179,7 +179,7 @@ export default function UsersPage() {
       {/* Loading */}
       {loading ? (
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin w-8 h-8 border-2 border-[#2855FF] border-t-transparent rounded-full" />
+          <div className="animate-spin w-8 h-8 border-2 border-[#7366FF] border-t-transparent rounded-full" />
         </div>
       ) : (
         <>

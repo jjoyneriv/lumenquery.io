@@ -90,7 +90,7 @@ export function AlertTable({ alerts, onMarkRead, onMarkAllRead, onDelete }: Aler
           </span>
           <button
             onClick={onMarkAllRead}
-            className="text-sm text-[#2855FF] hover:text-[#1E44CC] transition-colors"
+            className="text-sm text-[#7366FF] hover:text-[#5A4FCF] transition-colors"
           >
             Mark all as read
           </button>
@@ -119,7 +119,7 @@ export function AlertTable({ alerts, onMarkRead, onMarkAllRead, onDelete }: Aler
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 pt-0.5">
                     {!alert.isRead && (
-                      <span className="block w-2 h-2 rounded-full bg-[#2855FF]" />
+                      <span className="block w-2 h-2 rounded-full bg-[#7366FF]" />
                     )}
                   </div>
 
@@ -193,7 +193,7 @@ export function AlertTable({ alerts, onMarkRead, onMarkAllRead, onDelete }: Aler
                     {alert.sourceId && (
                       <div className="flex items-center gap-2">
                         <span className="text-sm text-[#6A6A6A]">Source:</span>
-                        <code className="text-sm font-mono text-[#2855FF]">
+                        <code className="text-sm font-mono text-[#7366FF]">
                           {alert.sourceId.length > 20
                             ? `${alert.sourceId.slice(0, 10)}...${alert.sourceId.slice(-8)}`
                             : alert.sourceId}

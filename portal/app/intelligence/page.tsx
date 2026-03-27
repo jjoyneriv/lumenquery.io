@@ -69,7 +69,7 @@ export default function IntelligenceDashboard() {
   if (status === 'loading' || status === 'unauthenticated') {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF]" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF]" />
       </div>
     );
   }
@@ -121,7 +121,7 @@ export default function IntelligenceDashboard() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <Link
               href="/intelligence/stream"
-              className="bg-white rounded-xl border border-[#E6E7E9] p-6 hover:border-[#2855FF] transition-colors group"
+              className="bg-white rounded-xl border border-[#E6E7E9] p-6 hover:border-[#7366FF] transition-colors group"
             >
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-blue-100 rounded-lg text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
@@ -138,7 +138,7 @@ export default function IntelligenceDashboard() {
 
             <Link
               href="/intelligence/accounts"
-              className="bg-white rounded-xl border border-[#E6E7E9] p-6 hover:border-[#2855FF] transition-colors group"
+              className="bg-white rounded-xl border border-[#E6E7E9] p-6 hover:border-[#7366FF] transition-colors group"
             >
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-green-100 rounded-lg text-green-600 group-hover:bg-green-600 group-hover:text-white transition-colors">
@@ -155,7 +155,7 @@ export default function IntelligenceDashboard() {
 
             <Link
               href="/intelligence/watchlists"
-              className="bg-white rounded-xl border border-[#E6E7E9] p-6 hover:border-[#2855FF] transition-colors group"
+              className="bg-white rounded-xl border border-[#E6E7E9] p-6 hover:border-[#7366FF] transition-colors group"
             >
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-purple-100 rounded-lg text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-colors">
@@ -173,7 +173,7 @@ export default function IntelligenceDashboard() {
 
             <Link
               href="/intelligence/alerts"
-              className="bg-white rounded-xl border border-[#E6E7E9] p-6 hover:border-[#2855FF] transition-colors group"
+              className="bg-white rounded-xl border border-[#E6E7E9] p-6 hover:border-[#7366FF] transition-colors group"
             >
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-orange-100 rounded-lg text-orange-600 group-hover:bg-orange-600 group-hover:text-white transition-colors">
@@ -194,7 +194,7 @@ export default function IntelligenceDashboard() {
 
             <Link
               href="/intelligence/trustlines"
-              className="bg-white rounded-xl border border-[#E6E7E9] p-6 hover:border-[#2855FF] transition-colors group"
+              className="bg-white rounded-xl border border-[#E6E7E9] p-6 hover:border-[#7366FF] transition-colors group"
             >
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-yellow-100 rounded-lg text-yellow-600 group-hover:bg-yellow-600 group-hover:text-white transition-colors">
@@ -211,7 +211,7 @@ export default function IntelligenceDashboard() {
 
             <Link
               href="/intelligence/contracts"
-              className="bg-white rounded-xl border border-[#E6E7E9] p-6 hover:border-[#2855FF] transition-colors group"
+              className="bg-white rounded-xl border border-[#E6E7E9] p-6 hover:border-[#7366FF] transition-colors group"
             >
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-indigo-100 rounded-lg text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
@@ -228,7 +228,7 @@ export default function IntelligenceDashboard() {
           </div>
 
           {/* Getting Started */}
-          <div className="bg-gradient-to-r from-[#2855FF] to-[#1E44CC] rounded-xl p-6 text-white">
+          <div className="bg-gradient-to-r from-[#7366FF] to-[#5A4FCF] rounded-xl p-6 text-white">
             <h3 className="text-lg font-semibold mb-2">Getting Started</h3>
             <p className="text-white/80 mb-4">
               Set up your first alert or watchlist to start monitoring Stellar network activity.
@@ -236,7 +236,7 @@ export default function IntelligenceDashboard() {
             <div className="flex flex-wrap gap-3">
               <Link
                 href="/intelligence/alerts/configs"
-                className="px-4 py-2 bg-white text-[#2855FF] rounded-lg font-medium hover:bg-white/90 transition-colors"
+                className="px-4 py-2 bg-white text-[#7366FF] rounded-lg font-medium hover:bg-white/90 transition-colors"
               >
                 Create Alert
               </Link>

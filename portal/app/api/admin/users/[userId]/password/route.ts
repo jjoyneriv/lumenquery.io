@@ -76,7 +76,7 @@ export async function POST(
         subject: 'Password Reset Request - LumenQuery',
         html: `
           <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h1 style="color: #2855FF; margin-bottom: 24px;">Password Reset</h1>
+            <h1 style="color: #7366FF; margin-bottom: 24px;">Password Reset</h1>
             <p style="color: #333; font-size: 16px; line-height: 1.6;">
               Hi${user.name ? ` ${user.name}` : ''},
             </p>
@@ -88,7 +88,7 @@ export async function POST(
             </p>
             <div style="text-align: center; margin: 32px 0;">
               <a href="${resetUrl}"
-                 style="background-color: #2855FF; color: white; padding: 12px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block;">
+                 style="background-color: #7366FF; color: white; padding: 12px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block;">
                 Reset Password
               </a>
             </div>

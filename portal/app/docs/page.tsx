@@ -16,7 +16,7 @@ export default function DocsPage() {
           </div>
           <Link
             href="/auth/signup"
-            className="px-4 py-2 rounded-lg bg-[#2855FF] text-white font-medium hover:bg-[#1E44CC] text-center whitespace-nowrap"
+            className="px-4 py-2 rounded-lg bg-[#7366FF] text-white font-medium hover:bg-[#5A4FCF] text-center whitespace-nowrap"
           >
             Get API Key
           </Link>
@@ -49,9 +49,9 @@ export default function DocsPage() {
         <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
           <h2 className="text-lg font-bold mb-4">Authentication</h2>
           <p className="text-[#6A6A6A] mb-4 text-sm">
-            Include your API key in the <code className="mx-1 px-2 py-1 rounded bg-[#F5F6F7] text-[#2855FF] border border-[#E6E7E9] text-xs">X-API-Key</code> header.
+            Include your API key in the <code className="mx-1 px-2 py-1 rounded bg-[#F5F6F7] text-[#7366FF] border border-[#E6E7E9] text-xs">X-API-Key</code> header.
           </p>
-          <div className="bg-[#0D0D0D] rounded-lg p-3 overflow-x-auto">
+          <div className="bg-[#1D1E26] rounded-lg p-3 overflow-x-auto">
             <pre className="text-xs text-gray-300">
 {`X-API-Key: lq_your_api_key_here`}
             </pre>
@@ -65,11 +65,11 @@ export default function DocsPage() {
         <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
           <h2 className="text-lg font-bold mb-4">Quick Start</h2>
           <ol className="list-decimal list-inside space-y-2 text-[#6A6A6A] text-sm mb-4">
-            <li><strong className="text-black">Create an account</strong> at <Link href="/auth/signup" className="text-[#2855FF] hover:underline">lumenquery.io/auth/signup</Link></li>
-            <li><strong className="text-black">Generate an API key</strong> from your <Link href="/dashboard" className="text-[#2855FF] hover:underline">dashboard</Link></li>
+            <li><strong className="text-black">Create an account</strong> at <Link href="/auth/signup" className="text-[#7366FF] hover:underline">lumenquery.io/auth/signup</Link></li>
+            <li><strong className="text-black">Generate an API key</strong> from your <Link href="/dashboard" className="text-[#7366FF] hover:underline">dashboard</Link></li>
             <li><strong className="text-black">Make your first request:</strong></li>
           </ol>
-          <div className="bg-[#0D0D0D] rounded-lg p-3 overflow-x-auto">
+          <div className="bg-[#1D1E26] rounded-lg p-3 overflow-x-auto">
             <pre className="text-xs text-gray-300">
 {`curl -H "X-API-Key: lq_your_api_key" \\
   https://api.lumenquery.io/ledgers?limit=1`}
@@ -119,7 +119,7 @@ export default function DocsPage() {
                 <code className="text-[#6A6A6A]">/transactions</code>
               </div>
               <div className="flex items-center gap-2">
-                <span className="px-1.5 py-0.5 rounded bg-[#2855FF]/20 text-[#2855FF] font-mono text-[10px]">POST</span>
+                <span className="px-1.5 py-0.5 rounded bg-[#7366FF]/20 text-[#7366FF] font-mono text-[10px]">POST</span>
                 <code className="text-[#6A6A6A]">/transactions</code>
               </div>
             </div>
@@ -162,7 +162,7 @@ export default function DocsPage() {
 
         {/* Example */}
         <h3 className="font-semibold mb-2 text-sm">Example: Get Latest Ledger</h3>
-        <div className="bg-[#0D0D0D] rounded-lg p-3 overflow-x-auto">
+        <div className="bg-[#1D1E26] rounded-lg p-3 overflow-x-auto">
           <pre className="text-xs text-gray-300">
 {`curl -X POST -H "X-API-Key: lq_your_api_key" \\
   -H "Content-Type: application/json" \\
@@ -256,7 +256,7 @@ export default function DocsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div>
             <h3 className="font-semibold mb-2 text-sm">Horizon API (JavaScript)</h3>
-            <div className="bg-[#0D0D0D] rounded-lg p-3 overflow-x-auto">
+            <div className="bg-[#1D1E26] rounded-lg p-3 overflow-x-auto">
               <pre className="text-xs text-gray-300">
 {`import { Horizon } from '@stellar/stellar-sdk';
 
@@ -269,7 +269,7 @@ const server = new Horizon.Server(
           </div>
           <div>
             <h3 className="font-semibold mb-2 text-sm">Soroban RPC (JavaScript)</h3>
-            <div className="bg-[#0D0D0D] rounded-lg p-3 overflow-x-auto">
+            <div className="bg-[#1D1E26] rounded-lg p-3 overflow-x-auto">
               <pre className="text-xs text-gray-300">
 {`import { SorobanRpc } from '@stellar/stellar-sdk';
 
@@ -285,7 +285,7 @@ const server = new SorobanRpc.Server(
 
       {/* Feature Documentation Links */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <Link href="/docs/analytics" className="p-4 rounded-xl bg-white border border-[#E6E7E9] hover:border-[#2855FF] transition-colors group">
+        <Link href="/docs/analytics" className="p-4 rounded-xl bg-white border border-[#E6E7E9] hover:border-[#7366FF] transition-colors group">
           <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-blue-600 transition-colors">
             <svg className="w-5 h-5 text-blue-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -294,7 +294,7 @@ const server = new SorobanRpc.Server(
           <h3 className="font-semibold text-sm mb-1">Analytics</h3>
           <p className="text-xs text-[#6A6A6A]">Network metrics & charts</p>
         </Link>
-        <Link href="/docs/intelligence" className="p-4 rounded-xl bg-white border border-[#E6E7E9] hover:border-[#2855FF] transition-colors group">
+        <Link href="/docs/intelligence" className="p-4 rounded-xl bg-white border border-[#E6E7E9] hover:border-[#7366FF] transition-colors group">
           <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-orange-600 transition-colors">
             <svg className="w-5 h-5 text-orange-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -303,7 +303,7 @@ const server = new SorobanRpc.Server(
           <h3 className="font-semibold text-sm mb-1">Intelligence</h3>
           <p className="text-xs text-[#6A6A6A]">Alerts & monitoring</p>
         </Link>
-        <Link href="/docs/contracts" className="p-4 rounded-xl bg-white border border-[#E6E7E9] hover:border-[#2855FF] transition-colors group">
+        <Link href="/docs/contracts" className="p-4 rounded-xl bg-white border border-[#E6E7E9] hover:border-[#7366FF] transition-colors group">
           <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-purple-600 transition-colors">
             <svg className="w-5 h-5 text-purple-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
@@ -312,7 +312,7 @@ const server = new SorobanRpc.Server(
           <h3 className="font-semibold text-sm mb-1">Contracts</h3>
           <p className="text-xs text-[#6A6A6A]">Soroban explorer</p>
         </Link>
-        <Link href="/docs/portfolio" className="p-4 rounded-xl bg-white border border-[#E6E7E9] hover:border-[#2855FF] transition-colors group">
+        <Link href="/docs/portfolio" className="p-4 rounded-xl bg-white border border-[#E6E7E9] hover:border-[#7366FF] transition-colors group">
           <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-indigo-600 transition-colors">
             <svg className="w-5 h-5 text-indigo-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
@@ -324,11 +324,11 @@ const server = new SorobanRpc.Server(
       </div>
 
       {/* Support CTA */}
-      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#2855FF] text-white">
+      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#7366FF] text-white">
         <h2 className="text-lg font-bold mb-2">Need Help?</h2>
         <p className="text-white/80 mb-4 text-sm">Have questions or need assistance? We&apos;re here to help.</p>
         <div className="flex flex-wrap gap-3">
-          <a href="mailto:support@lumenquery.io" className="px-4 py-2 rounded-lg bg-white text-[#2855FF] text-sm font-medium hover:bg-gray-100 transition-colors">
+          <a href="mailto:support@lumenquery.io" className="px-4 py-2 rounded-lg bg-white text-[#7366FF] text-sm font-medium hover:bg-gray-100 transition-colors">
             Contact Support
           </a>
           <Link href="/dashboard" className="px-4 py-2 rounded-lg bg-white/20 text-white text-sm font-medium hover:bg-white/30 transition-colors">

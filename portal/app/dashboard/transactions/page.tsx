@@ -162,9 +162,9 @@ export default function TransactionViewerPage() {
   if (!session) return null;
 
   return (
-    <div className="min-h-screen bg-[#0D0D0D] text-white">
+    <div className="min-h-screen bg-[#1D1E26] text-white">
       {/* Header */}
-      <header className="bg-[#1A1A1A] border-b border-[#333]">
+      <header className="bg-[#262932] border-b border-[#333]">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/dashboard" className="flex items-center gap-2">
@@ -231,7 +231,7 @@ export default function TransactionViewerPage() {
 
         {transactions.length === 0 ? (
           <div className="text-center py-20">
-            <div className="w-16 h-16 bg-[#1A1A1A] rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-[#262932] rounded-full flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-[#555]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
@@ -247,7 +247,7 @@ export default function TransactionViewerPage() {
                 className={`rounded-xl overflow-hidden transition-all ${
                   hasSorobanOperations(tx)
                     ? 'bg-blue-950/40 border-2 border-white'
-                    : 'bg-[#1A1A1A] border border-[#333]'
+                    : 'bg-[#262932] border border-[#333]'
                 }`}
               >
                 {/* Transaction Header */}
@@ -259,7 +259,7 @@ export default function TransactionViewerPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2">
                         <span className={`w-2 h-2 rounded-full ${tx.successful ? 'bg-green-500' : 'bg-red-500'}`} />
-                        <code className="text-[#2855FF] text-sm font-mono">{tx.hash?.slice(0, 16)}...</code>
+                        <code className="text-[#7366FF] text-sm font-mono">{tx.hash?.slice(0, 16)}...</code>
                         {hasSorobanOperations(tx) && (
                           <span className="px-2 py-0.5 rounded-full bg-white text-blue-900 text-xs font-bold animate-pulse">
                             SOROBAN
@@ -347,7 +347,7 @@ export default function TransactionViewerPage() {
                       <h4 className="text-sm font-semibold text-[#888] mb-2">Operations ({tx.operations?.length})</h4>
                       <div className="space-y-2">
                         {tx.operations?.map((op, i) => (
-                          <div key={i} className="bg-[#1A1A1A] rounded-lg p-3 border border-[#333]">
+                          <div key={i} className="bg-[#262932] rounded-lg p-3 border border-[#333]">
                             <div className="flex items-start justify-between gap-2">
                               <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-1">
@@ -363,13 +363,13 @@ export default function TransactionViewerPage() {
                                   e.stopPropagation();
                                   setShowRawJson(showRawJson === `${tx.hash}-${i}` ? null : `${tx.hash}-${i}`);
                                 }}
-                                className="text-xs text-[#2855FF] hover:underline"
+                                className="text-xs text-[#7366FF] hover:underline"
                               >
                                 {showRawJson === `${tx.hash}-${i}` ? 'Hide' : 'JSON'}
                               </button>
                             </div>
                             {showRawJson === `${tx.hash}-${i}` && (
-                              <pre className="mt-2 p-2 bg-[#0D0D0D] rounded text-xs text-[#888] overflow-x-auto">
+                              <pre className="mt-2 p-2 bg-[#1D1E26] rounded text-xs text-[#888] overflow-x-auto">
                                 {JSON.stringify(op.raw, null, 2)}
                               </pre>
                             )}
@@ -381,7 +381,7 @@ export default function TransactionViewerPage() {
                     {/* XDR */}
                     <div>
                       <h4 className="text-sm font-semibold text-[#888] mb-2">Envelope XDR</h4>
-                      <pre className="p-3 bg-[#0D0D0D] rounded-lg text-xs text-[#555] overflow-x-auto break-all whitespace-pre-wrap">
+                      <pre className="p-3 bg-[#1D1E26] rounded-lg text-xs text-[#555] overflow-x-auto break-all whitespace-pre-wrap">
                         {tx.envelope_xdr}
                       </pre>
                     </div>

@@ -67,7 +67,7 @@ function SignInForm() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] text-black focus:outline-none focus:ring-2 focus:ring-[#2855FF] focus:border-transparent text-sm sm:text-base"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] text-black focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent text-sm sm:text-base"
                 placeholder="you@example.com"
                 required
               />
@@ -76,7 +76,7 @@ function SignInForm() {
             <div>
               <div className="flex items-center justify-between mb-1.5 sm:mb-2">
                 <label className="block text-sm font-medium text-black">Password</label>
-                <Link href="/auth/forgot-password" className="text-sm text-[#2855FF] hover:underline">
+                <Link href="/auth/forgot-password" className="text-sm text-[#7366FF] hover:underline">
                   Forgot password?
                 </Link>
               </div>
@@ -84,7 +84,7 @@ function SignInForm() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] text-black focus:outline-none focus:ring-2 focus:ring-[#2855FF] focus:border-transparent text-sm sm:text-base"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] text-black focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent text-sm sm:text-base"
                 placeholder="••••••••"
                 required
               />
@@ -93,7 +93,7 @@ function SignInForm() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 sm:py-3 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white font-semibold disabled:opacity-50 transition-colors text-sm sm:text-base"
+              className="w-full py-2.5 sm:py-3 rounded-lg bg-[#7366FF] hover:bg-[#5A4FCF] text-white font-semibold disabled:opacity-50 transition-colors text-sm sm:text-base"
             >
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
@@ -101,7 +101,7 @@ function SignInForm() {
 
           <p className="text-center text-[#6A6A6A] mt-4 sm:mt-6 text-sm">
             Don&apos;t have an account?{' '}
-            <Link href="/auth/signup" className="text-[#2855FF] hover:underline font-medium">
+            <Link href="/auth/signup" className="text-[#7366FF] hover:underline font-medium">
               Sign up
             </Link>
           </p>

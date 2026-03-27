@@ -114,7 +114,7 @@ export function StorageTable({ entries, snapshot }: StorageTableProps) {
                     onClick={() => setExpandedId(expandedId === entry.id ? null : entry.id)}
                   >
                     <td className="px-4 py-3">
-                      <code className="text-sm font-mono text-[#2855FF]">
+                      <code className="text-sm font-mono text-[#7366FF]">
                         {entry.keyDecoded || entry.key.slice(0, 20)}
                         {!entry.keyDecoded && entry.key.length > 20 && '...'}
                       </code>
@@ -147,7 +147,7 @@ export function StorageTable({ entries, snapshot }: StorageTableProps) {
                               </h4>
                               <button
                                 onClick={() => copyToClipboard(entry.key, `key-${entry.id}`)}
-                                className="text-xs text-[#2855FF] hover:underline"
+                                className="text-xs text-[#7366FF] hover:underline"
                               >
                                 {copied === `key-${entry.id}` ? 'Copied!' : 'Copy'}
                               </button>
@@ -168,7 +168,7 @@ export function StorageTable({ entries, snapshot }: StorageTableProps) {
                                     : entry.value,
                                   `value-${entry.id}`
                                 )}
-                                className="text-xs text-[#2855FF] hover:underline"
+                                className="text-xs text-[#7366FF] hover:underline"
                               >
                                 {copied === `value-${entry.id}` ? 'Copied!' : 'Copy'}
                               </button>

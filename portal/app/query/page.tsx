@@ -165,7 +165,7 @@ export default function QueryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0D0D0D] text-white">
+    <div className="min-h-screen bg-[#1D1E26] text-white">
       {/* Header */}
       <header className="border-b border-white/10">
         <nav className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
@@ -180,7 +180,7 @@ export default function QueryPage() {
             <span className="text-lg font-semibold">LumenQuery</span>
           </Link>
           <div className="flex items-center gap-4 sm:gap-6">
-            <Link href="/query" className="text-sm text-[#2855FF] font-medium">
+            <Link href="/query" className="text-sm text-[#7366FF] font-medium">
               Query
             </Link>
             <Link href="/contracts" className="hidden sm:block text-sm text-gray-400 hover:text-white transition-colors">
@@ -198,14 +198,14 @@ export default function QueryPage() {
             {session ? (
               <Link
                 href="/dashboard"
-                className="px-4 py-2 rounded-lg bg-[#2855FF] text-white text-sm font-medium hover:bg-[#1E44CC] transition-colors"
+                className="px-4 py-2 rounded-lg bg-[#7366FF] text-white text-sm font-medium hover:bg-[#5A4FCF] transition-colors"
               >
                 Dashboard
               </Link>
             ) : (
               <Link
                 href="/auth/signin"
-                className="px-4 py-2 rounded-lg bg-[#2855FF] text-white text-sm font-medium hover:bg-[#1E44CC] transition-colors"
+                className="px-4 py-2 rounded-lg bg-[#7366FF] text-white text-sm font-medium hover:bg-[#5A4FCF] transition-colors"
               >
                 Get Started
               </Link>
@@ -217,7 +217,7 @@ export default function QueryPage() {
       {/* Hero Section */}
       <section className="py-16 sm:py-24 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#2855FF]/10 border border-[#2855FF]/20 text-[#2855FF] text-sm mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#7366FF]/10 border border-[#7366FF]/20 text-[#7366FF] text-sm mb-6">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
@@ -226,7 +226,7 @@ export default function QueryPage() {
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight">
             Ask Questions.<br />
-            <span className="text-[#2855FF]">Get Answers.</span><br />
+            <span className="text-[#7366FF]">Get Answers.</span><br />
             No SQL Required.
           </h1>
 
@@ -243,13 +243,13 @@ export default function QueryPage() {
                 onChange={(e) => setQueryInput(e.target.value)}
                 onKeyDown={handleKeyPress}
                 placeholder="Ask anything about the Stellar blockchain..."
-                className="w-full px-5 py-4 rounded-xl bg-[#1A1A1A] border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-[#2855FF] focus:ring-1 focus:ring-[#2855FF] text-lg pr-24"
+                className="w-full px-5 py-4 rounded-xl bg-[#262932] border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-[#7366FF] focus:ring-1 focus:ring-[#7366FF] text-lg pr-24"
                 disabled={isLoading}
               />
               <button
                 onClick={() => executeQuery()}
                 disabled={isLoading || !queryInput.trim()}
-                className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 rounded-lg bg-[#2855FF] text-white text-sm font-medium hover:bg-[#1E44CC] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 rounded-lg bg-[#7366FF] text-white text-sm font-medium hover:bg-[#5A4FCF] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {isLoading ? (
                   <>
@@ -275,7 +275,7 @@ export default function QueryPage() {
               <button
                 key={example}
                 onClick={() => handleExampleClick(example)}
-                className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm text-gray-400 hover:text-white hover:border-[#2855FF]/50 transition-colors"
+                className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm text-gray-400 hover:text-white hover:border-[#7366FF]/50 transition-colors"
               >
                 {example}
               </button>
@@ -288,7 +288,7 @@ export default function QueryPage() {
       {showResults && (
         <section className="pb-16 px-4 sm:px-6">
           <div className="max-w-6xl mx-auto">
-            <div className="rounded-xl bg-[#1A1A1A] border border-white/10 overflow-hidden">
+            <div className="rounded-xl bg-[#262932] border border-white/10 overflow-hidden">
               {/* Results Header */}
               <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -373,13 +373,13 @@ export default function QueryPage() {
                               {isClickableAccount ? (
                                 <button
                                   onClick={() => handleExampleClick(`Account info for ${fullAccountId}`)}
-                                  className="font-mono text-[#2855FF] hover:underline cursor-pointer text-left"
+                                  className="font-mono text-[#7366FF] hover:underline cursor-pointer text-left"
                                   title={`View details for ${fullAccountId}`}
                                 >
                                   {cellValue}
                                 </button>
                               ) : col.includes('account') || col.includes('hash') || col.includes('issuer') ? (
-                                <span className="font-mono text-[#2855FF]">
+                                <span className="font-mono text-[#7366FF]">
                                   {cellValue}
                                 </span>
                               ) : col.includes('amount') || col.includes('balance') || col.includes('supply') ? (
@@ -420,7 +420,7 @@ export default function QueryPage() {
                     <span className="text-xs text-gray-500">Generated SQL</span>
                     <button
                       onClick={() => navigator.clipboard.writeText(result.sql || '')}
-                      className="text-xs text-[#2855FF] hover:underline"
+                      className="text-xs text-[#7366FF] hover:underline"
                     >
                       Copy
                     </button>
@@ -446,23 +446,23 @@ export default function QueryPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {/* Step 1 */}
             <div className="relative">
-              <div className="p-6 rounded-xl bg-[#1A1A1A] border border-white/10 h-full">
-                <div className="w-10 h-10 rounded-lg bg-[#2855FF]/10 flex items-center justify-center mb-4">
-                  <svg className="w-5 h-5 text-[#2855FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="p-6 rounded-xl bg-[#262932] border border-white/10 h-full">
+                <div className="w-10 h-10 rounded-lg bg-[#7366FF]/10 flex items-center justify-center mb-4">
+                  <svg className="w-5 h-5 text-[#7366FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
                 </div>
                 <h3 className="text-lg font-semibold mb-2">1. Ask a Question</h3>
                 <p className="text-gray-400 text-sm">Type your query in plain English. No need to know table schemas or SQL syntax.</p>
               </div>
-              <div className="hidden md:block absolute top-1/2 -right-3 w-6 h-0.5 bg-gradient-to-r from-[#2855FF] to-transparent"></div>
+              <div className="hidden md:block absolute top-1/2 -right-3 w-6 h-0.5 bg-gradient-to-r from-[#7366FF] to-transparent"></div>
             </div>
 
             {/* Step 2 */}
             <div className="relative">
-              <div className="p-6 rounded-xl bg-[#1A1A1A] border border-white/10 h-full">
-                <div className="w-10 h-10 rounded-lg bg-[#2855FF]/10 flex items-center justify-center mb-4">
-                  <svg className="w-5 h-5 text-[#2855FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="p-6 rounded-xl bg-[#262932] border border-white/10 h-full">
+                <div className="w-10 h-10 rounded-lg bg-[#7366FF]/10 flex items-center justify-center mb-4">
+                  <svg className="w-5 h-5 text-[#7366FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
@@ -470,28 +470,28 @@ export default function QueryPage() {
                 <h3 className="text-lg font-semibold mb-2">2. We Translate</h3>
                 <p className="text-gray-400 text-sm">Our engine parses your intent and generates an optimized query against our real-time Stellar index.</p>
               </div>
-              <div className="hidden md:block absolute top-1/2 -right-3 w-6 h-0.5 bg-gradient-to-r from-[#2855FF] to-transparent"></div>
+              <div className="hidden md:block absolute top-1/2 -right-3 w-6 h-0.5 bg-gradient-to-r from-[#7366FF] to-transparent"></div>
             </div>
 
             {/* Step 3 */}
             <div className="relative">
-              <div className="p-6 rounded-xl bg-[#1A1A1A] border border-white/10 h-full">
-                <div className="w-10 h-10 rounded-lg bg-[#2855FF]/10 flex items-center justify-center mb-4">
-                  <svg className="w-5 h-5 text-[#2855FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="p-6 rounded-xl bg-[#262932] border border-white/10 h-full">
+                <div className="w-10 h-10 rounded-lg bg-[#7366FF]/10 flex items-center justify-center mb-4">
+                  <svg className="w-5 h-5 text-[#7366FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
                   </svg>
                 </div>
                 <h3 className="text-lg font-semibold mb-2">3. Query Blockchain</h3>
                 <p className="text-gray-400 text-sm">Execute against indexed Stellar data—transactions, accounts, assets, and more.</p>
               </div>
-              <div className="hidden md:block absolute top-1/2 -right-3 w-6 h-0.5 bg-gradient-to-r from-[#2855FF] to-transparent"></div>
+              <div className="hidden md:block absolute top-1/2 -right-3 w-6 h-0.5 bg-gradient-to-r from-[#7366FF] to-transparent"></div>
             </div>
 
             {/* Step 4 */}
             <div>
-              <div className="p-6 rounded-xl bg-[#1A1A1A] border border-white/10 h-full">
-                <div className="w-10 h-10 rounded-lg bg-[#2855FF]/10 flex items-center justify-center mb-4">
-                  <svg className="w-5 h-5 text-[#2855FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="p-6 rounded-xl bg-[#262932] border border-white/10 h-full">
+                <div className="w-10 h-10 rounded-lg bg-[#7366FF]/10 flex items-center justify-center mb-4">
+                  <svg className="w-5 h-5 text-[#7366FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                   </svg>
                 </div>
@@ -516,11 +516,11 @@ export default function QueryPage() {
               <button
                 key={index}
                 onClick={() => handleExampleClick(example.query)}
-                className="p-5 rounded-xl bg-[#1A1A1A] border border-white/10 hover:border-[#2855FF]/50 transition-colors text-left group"
+                className="p-5 rounded-xl bg-[#262932] border border-white/10 hover:border-[#7366FF]/50 transition-colors text-left group"
               >
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#2855FF]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[#2855FF]/20 transition-colors">
-                    <svg className="w-4 h-4 text-[#2855FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-8 h-8 rounded-lg bg-[#7366FF]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[#7366FF]/20 transition-colors">
+                    <svg className="w-4 h-4 text-[#7366FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                     </svg>
                   </div>
@@ -545,8 +545,8 @@ export default function QueryPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, index) => (
-              <div key={index} className="p-6 rounded-xl bg-[#1A1A1A] border border-white/10">
-                <div className="w-12 h-12 rounded-xl bg-[#2855FF]/10 flex items-center justify-center mb-4 text-[#2855FF]">
+              <div key={index} className="p-6 rounded-xl bg-[#262932] border border-white/10">
+                <div className="w-12 h-12 rounded-xl bg-[#7366FF]/10 flex items-center justify-center mb-4 text-[#7366FF]">
                   {feature.icon}
                 </div>
                 <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
@@ -569,8 +569,8 @@ export default function QueryPage() {
 
               <div className="space-y-6">
                 <div className="flex gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-[#2855FF]/10 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-5 h-5 text-[#2855FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-10 h-10 rounded-lg bg-[#7366FF]/10 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-5 h-5 text-[#7366FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                     </svg>
                   </div>
@@ -581,8 +581,8 @@ export default function QueryPage() {
                 </div>
 
                 <div className="flex gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-[#2855FF]/10 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-5 h-5 text-[#2855FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-10 h-10 rounded-lg bg-[#7366FF]/10 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-5 h-5 text-[#7366FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                   </div>
@@ -593,8 +593,8 @@ export default function QueryPage() {
                 </div>
 
                 <div className="flex gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-[#2855FF]/10 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-5 h-5 text-[#2855FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-10 h-10 rounded-lg bg-[#7366FF]/10 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-5 h-5 text-[#7366FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
                     </svg>
                   </div>
@@ -607,7 +607,7 @@ export default function QueryPage() {
             </div>
 
             {/* Code Example */}
-            <div className="rounded-xl bg-[#1A1A1A] border border-white/10 overflow-hidden">
+            <div className="rounded-xl bg-[#262932] border border-white/10 overflow-hidden">
               <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
                 <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
@@ -623,13 +623,13 @@ export default function QueryPage() {
 
 <span className="text-gray-500"># Response</span>
 {`{`}
-  <span className="text-[#2855FF]">&quot;success&quot;</span>: <span className="text-orange-400">true</span>,
-  <span className="text-[#2855FF]">&quot;data&quot;</span>: [{`{`}
-    <span className="text-[#2855FF]">&quot;account_id&quot;</span>: <span className="text-yellow-400">&quot;GAXJ...7K2F&quot;</span>,
-    <span className="text-[#2855FF]">&quot;balance_xlm&quot;</span>: <span className="text-yellow-400">&quot;125,430,000&quot;</span>,
-    <span className="text-[#2855FF]">&quot;last_active&quot;</span>: <span className="text-yellow-400">&quot;3/13/2026, 2:30 PM&quot;</span>
+  <span className="text-[#7366FF]">&quot;success&quot;</span>: <span className="text-orange-400">true</span>,
+  <span className="text-[#7366FF]">&quot;data&quot;</span>: [{`{`}
+    <span className="text-[#7366FF]">&quot;account_id&quot;</span>: <span className="text-yellow-400">&quot;GAXJ...7K2F&quot;</span>,
+    <span className="text-[#7366FF]">&quot;balance_xlm&quot;</span>: <span className="text-yellow-400">&quot;125,430,000&quot;</span>,
+    <span className="text-[#7366FF]">&quot;last_active&quot;</span>: <span className="text-yellow-400">&quot;3/13/2026, 2:30 PM&quot;</span>
   {`}`}, ...],
-  <span className="text-[#2855FF]">&quot;executionTimeMs&quot;</span>: <span className="text-orange-400">142</span>
+  <span className="text-[#7366FF]">&quot;executionTimeMs&quot;</span>: <span className="text-orange-400">142</span>
 {`}`}
                 </pre>
               </div>
@@ -648,7 +648,7 @@ export default function QueryPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {useCases.map((useCase, index) => (
-              <div key={index} className="p-6 rounded-xl bg-gradient-to-br from-[#1A1A1A] to-[#141414] border border-white/10">
+              <div key={index} className="p-6 rounded-xl bg-gradient-to-br from-[#262932] to-[#141414] border border-white/10">
                 <h3 className="text-lg font-semibold mb-2">{useCase.title}</h3>
                 <p className="text-gray-400 text-sm">{useCase.description}</p>
               </div>
@@ -673,7 +673,7 @@ export default function QueryPage() {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 document.querySelector('input')?.focus();
               }}
-              className="px-8 py-4 rounded-lg bg-[#2855FF] text-white font-medium hover:bg-[#1E44CC] transition-colors text-lg"
+              className="px-8 py-4 rounded-lg bg-[#7366FF] text-white font-medium hover:bg-[#5A4FCF] transition-colors text-lg"
             >
               Try a Query Now
             </button>
@@ -685,7 +685,7 @@ export default function QueryPage() {
             </Link>
           </div>
 
-          <Link href="/analytics" className="text-[#2855FF] hover:underline text-sm">
+          <Link href="/analytics" className="text-[#7366FF] hover:underline text-sm">
             Explore live analytics →
           </Link>
         </div>

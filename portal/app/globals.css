@@ -3,17 +3,29 @@
 @tailwind utilities;
 
 :root {
-  /* Core Colors */
-  --color-bg-primary: #FFFFFF;
-  --color-text-primary: #000000;
-  --color-text-secondary: #6A6A6A;
-  --color-border: #E6E7E9;
-  --color-bg-light: #F5F6F7;
-  
-  /* Accent Colors */
-  --color-accent: #2855FF;
-  --color-accent-hover: #1E44CC;
-  --color-accent-light: rgba(40, 85, 255, 0.1);
+  /* Cuba Theme - Dark Mode Colors */
+  --color-bg-primary: #1D1E26;
+  --color-bg-card: #262932;
+  --color-bg-card-inbox: #323846;
+  --color-text-primary: #BEBFC2;
+  --color-text-secondary: #A8A9AD;
+  --color-border: #374558;
+  --color-bg-light: #1D1E26;
+
+  /* Cuba Accent Colors */
+  --color-accent: #7366FF;
+  --color-accent-hover: #5A4FCF;
+  --color-accent-light: rgba(115, 102, 255, 0.1);
+
+  /* Cuba Status Colors */
+  --color-success: #65C15C;
+  --color-danger: #FC564A;
+  --color-info: #40B8F4;
+  --color-warning: #FFB829;
+
+  /* Cuba Gradients */
+  --gradient-primary: linear-gradient(26deg, #7366FF 0%, #a26cf8 100%);
+  --gradient-bg-primary: linear-gradient(103.75deg, #33b1ee -13.9%, #7366FF 79.68%);
 }
 
 body {
@@ -25,4 +37,20 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+/* Cuba-style scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(115, 102, 255, 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(115, 102, 255, 0.5);
 }

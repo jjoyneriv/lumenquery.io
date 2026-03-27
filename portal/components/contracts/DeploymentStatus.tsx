@@ -90,7 +90,7 @@ export function DeploymentStatus({
                   w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium
                   transition-all duration-300
                   ${isComplete ? 'bg-green-500 text-white' : ''}
-                  ${isActive ? 'bg-[#2855FF] text-white' : ''}
+                  ${isActive ? 'bg-[#7366FF] text-white' : ''}
                   ${isError && index === 0 ? 'bg-red-500 text-white' : ''}
                   ${!isComplete && !isActive && !isError ? 'bg-[#E6E7E9] text-[#6A6A6A]' : ''}
                 `}
@@ -115,13 +115,13 @@ export function DeploymentStatus({
           p-4 rounded-lg text-center
           ${step === 'ERROR' ? 'bg-red-50 border border-red-200' : ''}
           ${step === 'SUCCESS' ? 'bg-green-50 border border-green-200' : ''}
-          ${isProcessing ? 'bg-[#2855FF]/5 border border-[#2855FF]/20' : ''}
+          ${isProcessing ? 'bg-[#7366FF]/5 border border-[#7366FF]/20' : ''}
           ${step === 'IDLE' ? 'bg-gray-50 border border-[#E6E7E9]' : ''}
         `}
       >
         <div className="flex items-center justify-center gap-2">
           {isProcessing && (
-            <svg className="w-5 h-5 animate-spin text-[#2855FF]" fill="none" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 animate-spin text-[#7366FF]" fill="none" viewBox="0 0 24 24">
               <circle
                 className="opacity-25"
                 cx="12"
@@ -152,7 +152,7 @@ export function DeploymentStatus({
               font-medium
               ${step === 'ERROR' ? 'text-red-700' : ''}
               ${step === 'SUCCESS' ? 'text-green-700' : ''}
-              ${isProcessing ? 'text-[#2855FF]' : ''}
+              ${isProcessing ? 'text-[#7366FF]' : ''}
               ${step === 'IDLE' ? 'text-[#6A6A6A]' : ''}
             `}
           >
@@ -174,7 +174,7 @@ export function DeploymentStatus({
                 <span className="text-sm text-[#6A6A6A]">WASM Hash:</span>
                 <button
                   onClick={() => copyToClipboard(wasmHash)}
-                  className="text-xs text-[#2855FF] hover:underline"
+                  className="text-xs text-[#7366FF] hover:underline"
                 >
                   Copy
                 </button>
@@ -197,7 +197,7 @@ export function DeploymentStatus({
               <p className="font-mono text-sm mt-1 break-all text-green-800">{contractId}</p>
               <a
                 href={`/contracts/${contractId}`}
-                className="inline-flex items-center gap-1 mt-2 text-sm text-[#2855FF] hover:underline"
+                className="inline-flex items-center gap-1 mt-2 text-sm text-[#7366FF] hover:underline"
               >
                 View in Explorer
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -217,7 +217,7 @@ export function DeploymentStatus({
               href={`${explorerBaseUrl}/tx/${uploadTxHash}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[#2855FF] hover:underline"
+              className="inline-flex items-center gap-1 text-[#7366FF] hover:underline"
             >
               Upload TX
               <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -235,7 +235,7 @@ export function DeploymentStatus({
               href={`${explorerBaseUrl}/tx/${createTxHash}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[#2855FF] hover:underline"
+              className="inline-flex items-center gap-1 text-[#7366FF] hover:underline"
             >
               Create TX
               <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">

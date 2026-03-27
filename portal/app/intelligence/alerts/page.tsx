@@ -133,7 +133,7 @@ export default function AlertsPage() {
   if (status === 'loading' || status === 'unauthenticated') {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF]" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF]" />
       </div>
     );
   }
@@ -153,7 +153,7 @@ export default function AlertsPage() {
         </div>
         <Link
           href="/intelligence/alerts/configs"
-          className="px-4 py-2 bg-[#2855FF] text-white rounded-lg font-medium hover:bg-[#1E44CC] transition-colors"
+          className="px-4 py-2 bg-[#7366FF] text-white rounded-lg font-medium hover:bg-[#5A4FCF] transition-colors"
         >
           Manage Configs
         </Link>
@@ -168,7 +168,7 @@ export default function AlertsPage() {
               onClick={() => setFilter('all')}
               className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
                 filter === 'all'
-                  ? 'bg-[#2855FF] text-white'
+                  ? 'bg-[#7366FF] text-white'
                   : 'bg-[#F5F6F7] text-[#6A6A6A] hover:text-black'
               }`}
             >
@@ -178,7 +178,7 @@ export default function AlertsPage() {
               onClick={() => setFilter('unread')}
               className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
                 filter === 'unread'
-                  ? 'bg-[#2855FF] text-white'
+                  ? 'bg-[#7366FF] text-white'
                   : 'bg-[#F5F6F7] text-[#6A6A6A] hover:text-black'
               }`}
             >
@@ -191,7 +191,7 @@ export default function AlertsPage() {
             <select
               value={severityFilter}
               onChange={(e) => setSeverityFilter(e.target.value)}
-              className="px-3 py-1.5 border border-[#E6E7E9] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#2855FF]"
+              className="px-3 py-1.5 border border-[#E6E7E9] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#7366FF]"
             >
               <option value="">All</option>
               <option value="INFO">Info</option>
@@ -205,7 +205,7 @@ export default function AlertsPage() {
       {/* Alerts Table */}
       {loading ? (
         <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2855FF] mx-auto" />
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF] mx-auto" />
         </div>
       ) : (
         <AlertTable

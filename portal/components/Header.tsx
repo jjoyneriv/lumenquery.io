@@ -16,11 +16,11 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
 
   const navLinkClass = (page: string) =>
     activePage === page
-      ? 'text-[#2855FF] font-medium'
+      ? 'text-[#7366FF] font-medium'
       : 'text-gray-400 hover:text-white font-medium';
 
   return (
-    <header className="border-b border-white/10 bg-[#0D0D0D]">
+    <header className="border-b border-white/10 bg-[#1D1E26]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <Image
@@ -51,7 +51,7 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
             </Link>
           )}
           <Link href="/auth/signin" className="text-gray-400 hover:text-white font-medium">Sign In</Link>
-          <Link href="/auth/signup" className="px-4 py-2 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white text-sm font-medium transition-colors">
+          <Link href="/auth/signup" className="px-4 py-2 rounded-lg bg-[#7366FF] hover:bg-[#5A4FCF] text-white text-sm font-medium transition-colors">
             Get Started
           </Link>
         </nav>
@@ -76,7 +76,7 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
 
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-white/10 bg-[#0D0D0D]">
+        <div className="md:hidden border-t border-white/10 bg-[#1D1E26]">
           <nav className="flex flex-col px-4 py-4 space-y-3">
             <Link
               href="/query"
@@ -148,7 +148,7 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
             </Link>
             <Link
               href="/auth/signup"
-              className="py-3 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white text-sm font-medium text-center transition-colors"
+              className="py-3 rounded-lg bg-[#7366FF] hover:bg-[#5A4FCF] text-white text-sm font-medium text-center transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
               Get Started

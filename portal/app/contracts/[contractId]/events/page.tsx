@@ -71,7 +71,7 @@ export default function ContractEventsPage() {
               setSelectedType(e.target.value || null);
               setPagination(prev => ({ ...prev, page: 1 }));
             }}
-            className="px-3 py-2 border border-[#E6E7E9] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#2855FF]"
+            className="px-3 py-2 border border-[#E6E7E9] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#7366FF]"
           >
             <option value="">All Types</option>
             <option value="system">System</option>
@@ -90,7 +90,7 @@ export default function ContractEventsPage() {
       {loading ? (
         <div className="bg-white border border-[#E6E7E9] rounded-lg p-8">
           <div className="flex items-center justify-center">
-            <div className="w-8 h-8 border-4 border-[#2855FF] border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-4 border-[#7366FF] border-t-transparent rounded-full animate-spin" />
           </div>
         </div>
       ) : (
@@ -109,7 +109,7 @@ export default function ContractEventsPage() {
             <button
               onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
               disabled={pagination.page === 1}
-              className="px-3 py-1 border border-[#E6E7E9] rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:border-[#2855FF]"
+              className="px-3 py-1 border border-[#E6E7E9] rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:border-[#7366FF]"
             >
               Previous
             </button>
@@ -119,7 +119,7 @@ export default function ContractEventsPage() {
             <button
               onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
               disabled={pagination.page === pagination.totalPages}
-              className="px-3 py-1 border border-[#E6E7E9] rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:border-[#2855FF]"
+              className="px-3 py-1 border border-[#E6E7E9] rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:border-[#7366FF]"
             >
               Next
             </button>

@@ -92,7 +92,7 @@ export async function POST(req: Request) {
         </head>
         <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; margin-bottom: 30px;">
-            <div style="display: inline-block; width: 48px; height: 48px; background-color: #2855FF; border-radius: 12px; line-height: 48px;">
+            <div style="display: inline-block; width: 48px; height: 48px; background-color: #7366FF; border-radius: 12px; line-height: 48px;">
               <span style="color: white; font-weight: bold; font-size: 20px;">LQ</span>
             </div>
           </div>
@@ -104,13 +104,13 @@ export async function POST(req: Request) {
           <p style="margin-bottom: 20px;">We received a request to reset the password for your LumenQuery account. Click the button below to create a new password:</p>
 
           <div style="text-align: center; margin: 30px 0;">
-            <a href="${resetUrl}" style="display: inline-block; background-color: #2855FF; color: white; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 16px;">Reset Password</a>
+            <a href="${resetUrl}" style="display: inline-block; background-color: #7366FF; color: white; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 16px;">Reset Password</a>
           </div>
 
           <p style="margin-bottom: 20px; color: #666; font-size: 14px;">This link will expire in 1 hour. If you didn't request a password reset, you can safely ignore this email.</p>
 
           <p style="margin-bottom: 20px; color: #666; font-size: 14px;">If the button doesn't work, copy and paste this URL into your browser:</p>
-          <p style="margin-bottom: 20px; word-break: break-all; color: #2855FF; font-size: 14px;">${resetUrl}</p>
+          <p style="margin-bottom: 20px; word-break: break-all; color: #7366FF; font-size: 14px;">${resetUrl}</p>
 
           <hr style="border: none; border-top: 1px solid #E6E7E9; margin: 30px 0;">
 

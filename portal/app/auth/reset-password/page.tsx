@@ -86,7 +86,7 @@ function ResetPasswordForm() {
     return (
       <main className="min-h-screen bg-[#F5F6F7] flex items-center justify-center px-4 py-8">
         <div className="text-center">
-          <div className="w-10 h-10 border-4 border-[#2855FF] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="w-10 h-10 border-4 border-[#7366FF] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-[#6A6A6A]">Validating reset link...</p>
         </div>
       </main>
@@ -107,7 +107,7 @@ function ResetPasswordForm() {
           <p className="text-[#6A6A6A] mb-6">No reset token was provided. Please request a new password reset.</p>
           <Link
             href="/auth/forgot-password"
-            className="inline-block px-6 py-3 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white font-semibold transition-colors"
+            className="inline-block px-6 py-3 rounded-lg bg-[#7366FF] hover:bg-[#5A4FCF] text-white font-semibold transition-colors"
           >
             Request New Reset Link
           </Link>
@@ -130,7 +130,7 @@ function ResetPasswordForm() {
           <p className="text-[#6A6A6A] mb-6">{error || 'This password reset link has expired or is invalid.'}</p>
           <Link
             href="/auth/forgot-password"
-            className="inline-block px-6 py-3 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white font-semibold transition-colors"
+            className="inline-block px-6 py-3 rounded-lg bg-[#7366FF] hover:bg-[#5A4FCF] text-white font-semibold transition-colors"
           >
             Request New Reset Link
           </Link>
@@ -153,7 +153,7 @@ function ResetPasswordForm() {
           <p className="text-[#6A6A6A] mb-6">Your password has been updated. You can now sign in with your new password.</p>
           <Link
             href="/auth/signin"
-            className="inline-block px-6 py-3 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white font-semibold transition-colors"
+            className="inline-block px-6 py-3 rounded-lg bg-[#7366FF] hover:bg-[#5A4FCF] text-white font-semibold transition-colors"
           >
             Sign In
           </Link>
@@ -199,7 +199,7 @@ function ResetPasswordForm() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] focus:border-[#2855FF] focus:ring-2 focus:ring-[#2855FF]/20 outline-none transition-all text-base"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] focus:border-[#7366FF] focus:ring-2 focus:ring-[#7366FF]/20 outline-none transition-all text-base"
                 placeholder="Enter new password"
                 required
                 minLength={8}
@@ -219,7 +219,7 @@ function ResetPasswordForm() {
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] focus:border-[#2855FF] focus:ring-2 focus:ring-[#2855FF]/20 outline-none transition-all text-base"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] focus:border-[#7366FF] focus:ring-2 focus:ring-[#7366FF]/20 outline-none transition-all text-base"
                 placeholder="Confirm new password"
                 required
                 minLength={8}
@@ -230,7 +230,7 @@ function ResetPasswordForm() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 sm:py-3 rounded-lg bg-[#2855FF] hover:bg-[#1E44CC] text-white font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base"
+              className="w-full py-2.5 sm:py-3 rounded-lg bg-[#7366FF] hover:bg-[#5A4FCF] text-white font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base"
             >
               {loading ? 'Resetting...' : 'Reset password'}
             </button>
@@ -246,7 +246,7 @@ export default function ResetPasswordPage() {
     <Suspense fallback={
       <main className="min-h-screen bg-[#F5F6F7] flex items-center justify-center px-4 py-8">
         <div className="text-center">
-          <div className="w-10 h-10 border-4 border-[#2855FF] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="w-10 h-10 border-4 border-[#7366FF] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-[#6A6A6A]">Loading...</p>
         </div>
       </main>

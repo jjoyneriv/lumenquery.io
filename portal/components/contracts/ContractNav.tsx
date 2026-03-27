@@ -62,7 +62,7 @@ export function ContractNav({ contractId }: ContractNavProps) {
                 href={href}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                   isActive
-                    ? 'bg-[#2855FF] text-white'
+                    ? 'bg-[#7366FF] text-white'
                     : 'text-[#6A6A6A] hover:bg-[#F5F6F7] hover:text-black'
                 }`}
                 aria-current={isActive ? 'page' : undefined}
@@ -88,8 +88,8 @@ export function ContractNav({ contractId }: ContractNavProps) {
                 href={href}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors whitespace-nowrap ${
                   isActive
-                    ? 'bg-[#2855FF] text-white'
-                    : 'bg-white border border-[#E6E7E9] text-[#6A6A6A] hover:border-[#2855FF]'
+                    ? 'bg-[#7366FF] text-white'
+                    : 'bg-white border border-[#E6E7E9] text-[#6A6A6A] hover:border-[#7366FF]'
                 }`}
                 aria-current={isActive ? 'page' : undefined}
               >
