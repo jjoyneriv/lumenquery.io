@@ -87,25 +87,25 @@ export default function UsersPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-black">User Management</h1>
-        <p className="text-[#6A6A6A]">View and manage user accounts</p>
+        <h1 className="text-2xl font-bold text-white">User Management</h1>
+        <p className="text-gray-400">View and manage user accounts</p>
       </div>
 
       {/* Stats Bar */}
       <div className="flex items-center gap-6 mb-6 text-sm">
         <div className="flex items-center gap-2">
-          <span className="text-[#6A6A6A]">Total Users:</span>
-          <span className="font-semibold text-black">{stats.totalUsers}</span>
+          <span className="text-gray-400">Total Users:</span>
+          <span className="font-semibold text-white">{stats.totalUsers}</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-green-500" />
-          <span className="text-[#6A6A6A]">Online:</span>
-          <span className="font-semibold text-black">{stats.activeUsers}</span>
+          <span className="text-gray-400">Online:</span>
+          <span className="font-semibold text-white">{stats.activeUsers}</span>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl border border-[#E6E7E9] p-4 mb-6">
+      <div className="bg-[#262932] rounded-xl border border-white/10 p-4 mb-6">
         <form onSubmit={handleSearch} className="flex flex-wrap items-center gap-4">
           <div className="flex-1 min-w-[200px]">
             <input
@@ -113,7 +113,7 @@ export default function UsersPage() {
               placeholder="Search by email or name..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:border-[#7366FF]"
+              className="w-full px-4 py-2 border border-white/10 rounded-lg focus:outline-none focus:border-[#7366FF]"
             />
           </div>
 
@@ -123,7 +123,7 @@ export default function UsersPage() {
               setRoleFilter(e.target.value);
               setPagination(prev => ({ ...prev, page: 1 }));
             }}
-            className="px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:border-[#7366FF] bg-white"
+            className="px-4 py-2 border border-white/10 rounded-lg focus:outline-none focus:border-[#7366FF] bg-[#262932]"
           >
             <option value="">All Roles</option>
             <option value="SUPER_ADMIN">Super Admin</option>
@@ -137,7 +137,7 @@ export default function UsersPage() {
               setTierFilter(e.target.value);
               setPagination(prev => ({ ...prev, page: 1 }));
             }}
-            className="px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:border-[#7366FF] bg-white"
+            className="px-4 py-2 border border-white/10 rounded-lg focus:outline-none focus:border-[#7366FF] bg-[#262932]"
           >
             <option value="">All Tiers</option>
             <option value="ENTERPRISE">Enterprise</option>
@@ -155,9 +155,9 @@ export default function UsersPage() {
                 setActiveOnly(e.target.checked);
                 setPagination(prev => ({ ...prev, page: 1 }));
               }}
-              className="w-4 h-4 rounded border-[#E6E7E9] text-[#7366FF] focus:ring-[#7366FF]"
+              className="w-4 h-4 rounded border-white/10 text-[#7366FF] focus:ring-[#7366FF]"
             />
-            <span className="text-sm text-[#6A6A6A]">Online only</span>
+            <span className="text-sm text-gray-400">Online only</span>
           </label>
 
           <button
@@ -188,7 +188,7 @@ export default function UsersPage() {
           {/* Pagination */}
           {pagination.totalPages > 1 && (
             <div className="flex items-center justify-between mt-6">
-              <p className="text-sm text-[#6A6A6A]">
+              <p className="text-sm text-gray-400">
                 Showing {(pagination.page - 1) * pagination.limit + 1} to{' '}
                 {Math.min(pagination.page * pagination.limit, pagination.total)} of{' '}
                 {pagination.total} users
@@ -197,17 +197,17 @@ export default function UsersPage() {
                 <button
                   onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
                   disabled={pagination.page <= 1}
-                  className="px-3 py-1 border border-[#E6E7E9] rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                  className="px-3 py-1 border border-white/10 rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/5"
                 >
                   Previous
                 </button>
-                <span className="px-3 py-1 text-sm text-[#6A6A6A]">
+                <span className="px-3 py-1 text-sm text-gray-400">
                   Page {pagination.page} of {pagination.totalPages}
                 </span>
                 <button
                   onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
                   disabled={pagination.page >= pagination.totalPages}
-                  className="px-3 py-1 border border-[#E6E7E9] rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                  className="px-3 py-1 border border-white/10 rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/5"
                 >
                   Next
                 </button>

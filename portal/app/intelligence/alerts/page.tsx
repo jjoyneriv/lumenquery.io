@@ -142,10 +142,10 @@ export default function AlertsPage() {
     <div className="space-y-6">
       <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-black">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">
             Alert Inbox
           </h1>
-          <p className="text-[#6A6A6A] mt-1">
+          <p className="text-gray-400 mt-1">
             {unreadCount > 0
               ? `${unreadCount} unread alert${unreadCount > 1 ? 's' : ''}`
               : 'All caught up!'}
@@ -160,16 +160,16 @@ export default function AlertsPage() {
       </header>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl border border-[#E6E7E9] p-4">
+      <div className="bg-[#262932] rounded-xl border border-white/10 p-4">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-sm text-[#6A6A6A]">Status:</span>
+            <span className="text-sm text-gray-400">Status:</span>
             <button
               onClick={() => setFilter('all')}
               className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
                 filter === 'all'
                   ? 'bg-[#7366FF] text-white'
-                  : 'bg-[#F5F6F7] text-[#6A6A6A] hover:text-black'
+                  : 'bg-[#1D1E26] text-gray-400 hover:text-white'
               }`}
             >
               All
@@ -179,7 +179,7 @@ export default function AlertsPage() {
               className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
                 filter === 'unread'
                   ? 'bg-[#7366FF] text-white'
-                  : 'bg-[#F5F6F7] text-[#6A6A6A] hover:text-black'
+                  : 'bg-[#1D1E26] text-gray-400 hover:text-white'
               }`}
             >
               Unread
@@ -187,11 +187,11 @@ export default function AlertsPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-sm text-[#6A6A6A]">Severity:</span>
+            <span className="text-sm text-gray-400">Severity:</span>
             <select
               value={severityFilter}
               onChange={(e) => setSeverityFilter(e.target.value)}
-              className="px-3 py-1.5 border border-[#E6E7E9] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#7366FF]"
+              className="px-3 py-1.5 border border-white/10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#7366FF]"
             >
               <option value="">All</option>
               <option value="INFO">Info</option>
@@ -204,7 +204,7 @@ export default function AlertsPage() {
 
       {/* Alerts Table */}
       {loading ? (
-        <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 text-center">
+        <div className="bg-[#262932] rounded-xl border border-white/10 p-8 text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF] mx-auto" />
         </div>
       ) : (
@@ -224,11 +224,11 @@ export default function AlertsPage() {
               setPagination((p) => ({ ...p, offset: Math.max(0, p.offset - p.limit) }))
             }
             disabled={pagination.offset === 0}
-            className="px-3 py-1.5 bg-[#F5F6F7] text-[#6A6A6A] rounded-lg text-sm disabled:opacity-50"
+            className="px-3 py-1.5 bg-[#1D1E26] text-gray-400 rounded-lg text-sm disabled:opacity-50"
           >
             Previous
           </button>
-          <span className="text-sm text-[#6A6A6A]">
+          <span className="text-sm text-gray-400">
             {pagination.offset + 1}-{Math.min(pagination.offset + pagination.limit, pagination.total)} of {pagination.total}
           </span>
           <button
@@ -239,7 +239,7 @@ export default function AlertsPage() {
               }))
             }
             disabled={pagination.offset + pagination.limit >= pagination.total}
-            className="px-3 py-1.5 bg-[#F5F6F7] text-[#6A6A6A] rounded-lg text-sm disabled:opacity-50"
+            className="px-3 py-1.5 bg-[#1D1E26] text-gray-400 rounded-lg text-sm disabled:opacity-50"
           >
             Next
           </button>

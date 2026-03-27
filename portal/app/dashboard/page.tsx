@@ -119,8 +119,8 @@ export default function DashboardPage() {
 
   if (status === 'loading' || loading) {
     return (
-      <div className="min-h-screen bg-[#F5F6F7] flex items-center justify-center">
-        <div className="text-[#6A6A6A]">Loading...</div>
+      <div className="min-h-screen bg-[#1D1E26] flex items-center justify-center">
+        <div className="text-gray-400">Loading...</div>
       </div>
     );
   }
@@ -128,9 +128,9 @@ export default function DashboardPage() {
   if (!session) return null;
 
   return (
-    <div className="min-h-screen bg-[#F5F6F7] text-black">
+    <div className="min-h-screen bg-[#1D1E26] text-white">
       {/* Header */}
-      <header className="bg-white border-b border-[#E6E7E9]">
+      <header className="bg-[#262932] border-b border-white/10">
         <nav className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
           <div className="flex items-center gap-3 sm:gap-4">
             <Link href="/" className="flex items-center gap-2" aria-label="LumenQuery home">
@@ -144,14 +144,14 @@ export default function DashboardPage() {
             </Link>
             <div className="min-w-0">
               <h1 className="text-lg sm:text-2xl font-bold">Dashboard</h1>
-              <p className="text-[#6A6A6A] text-xs sm:text-sm truncate max-w-[150px] sm:max-w-none">
+              <p className="text-gray-400 text-xs sm:text-sm truncate max-w-[150px] sm:max-w-none">
                 Welcome, {session.user?.name || session.user?.email}
               </p>
             </div>
           </div>
           <button
             onClick={() => signOut({ callbackUrl: '/' })}
-            className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-[#E6E7E9] hover:border-[#7366FF] hover:text-[#7366FF] text-xs sm:text-sm font-medium transition-colors"
+            className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-white/10 hover:border-[#7366FF] hover:text-[#7366FF] text-xs sm:text-sm font-medium transition-colors"
           >
             Sign Out
           </button>
@@ -164,19 +164,19 @@ export default function DashboardPage() {
             </svg>
             Live Transactions
           </Link>
-          <Link href="/contracts" className="px-3 py-1.5 rounded-lg text-sm font-medium text-[#6A6A6A] hover:bg-[#F5F6F7] hover:text-black transition-colors whitespace-nowrap">
+          <Link href="/contracts" className="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-400 hover:bg-[#1D1E26] hover:text-white transition-colors whitespace-nowrap">
             Contracts
           </Link>
-          <Link href="/analytics" className="px-3 py-1.5 rounded-lg text-sm font-medium text-[#6A6A6A] hover:bg-[#F5F6F7] hover:text-black transition-colors whitespace-nowrap">
+          <Link href="/analytics" className="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-400 hover:bg-[#1D1E26] hover:text-white transition-colors whitespace-nowrap">
             Analytics
           </Link>
-          <Link href="/intelligence" className="px-3 py-1.5 rounded-lg text-sm font-medium text-[#6A6A6A] hover:bg-[#F5F6F7] hover:text-black transition-colors whitespace-nowrap">
+          <Link href="/intelligence" className="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-400 hover:bg-[#1D1E26] hover:text-white transition-colors whitespace-nowrap">
             Intelligence
           </Link>
-          <Link href="/portfolio" className="px-3 py-1.5 rounded-lg text-sm font-medium text-[#6A6A6A] hover:bg-[#F5F6F7] hover:text-black transition-colors whitespace-nowrap">
+          <Link href="/portfolio" className="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-400 hover:bg-[#1D1E26] hover:text-white transition-colors whitespace-nowrap">
             Portfolio
           </Link>
-          <Link href="/docs" className="px-3 py-1.5 rounded-lg text-sm font-medium text-[#6A6A6A] hover:bg-[#F5F6F7] hover:text-black transition-colors whitespace-nowrap">
+          <Link href="/docs" className="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-400 hover:bg-[#1D1E26] hover:text-white transition-colors whitespace-nowrap">
             Docs
           </Link>
           {(session.user as any)?.role === 'SUPER_ADMIN' ? (
@@ -195,13 +195,13 @@ export default function DashboardPage() {
         <section aria-labelledby="stats-heading" className="mb-6 sm:mb-8">
           <h2 id="stats-heading" className="sr-only">Usage Statistics</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-          <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
-            <p className="text-[#6A6A6A] text-xs sm:text-sm mb-1">Requests Today</p>
+          <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#262932] border border-white/10">
+            <p className="text-gray-400 text-xs sm:text-sm mb-1">Requests Today</p>
             <p className="text-xl sm:text-2xl md:text-3xl font-bold">{formatNumber(usage?.today.requests || 0)}</p>
-            <p className="text-[#6A6A6A] text-xs sm:text-sm mt-1">{usage?.today.avgResponseTime || 0}ms avg</p>
+            <p className="text-gray-400 text-xs sm:text-sm mt-1">{usage?.today.avgResponseTime || 0}ms avg</p>
           </div>
-          <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
-            <p className="text-[#6A6A6A] text-xs sm:text-sm mb-1">Monthly Usage</p>
+          <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#262932] border border-white/10">
+            <p className="text-gray-400 text-xs sm:text-sm mb-1">Monthly Usage</p>
             <p className="text-xl sm:text-2xl md:text-3xl font-bold">{formatNumber(usage?.month.requests || 0)}</p>
             <div className="mt-2">
               <div className="w-full h-1.5 sm:h-2 bg-[#E6E7E9] rounded-full overflow-hidden">
@@ -210,11 +210,11 @@ export default function DashboardPage() {
                   style={{ width: `${Math.min(usage?.month.percentUsed || 0, 100)}%` }}
                 />
               </div>
-              <p className="text-[#6A6A6A] text-[10px] sm:text-xs mt-1">{usage?.month.percentUsed || 0}% of {formatNumber(usage?.month.limit || 10000)}</p>
+              <p className="text-gray-400 text-[10px] sm:text-xs mt-1">{usage?.month.percentUsed || 0}% of {formatNumber(usage?.month.limit || 10000)}</p>
             </div>
           </div>
-          <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
-            <p className="text-[#6A6A6A] text-xs sm:text-sm mb-1">API Keys</p>
+          <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#262932] border border-white/10">
+            <p className="text-gray-400 text-xs sm:text-sm mb-1">API Keys</p>
             <p className="text-xl sm:text-2xl md:text-3xl font-bold">{apiKeys.length}</p>
           </div>
           <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#7366FF] text-white">
@@ -226,7 +226,7 @@ export default function DashboardPage() {
         </section>
 
         {/* Quick Start */}
-        <section className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9] mb-6 sm:mb-8" aria-labelledby="quickstart-heading">
+        <section className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#262932] border border-white/10 mb-6 sm:mb-8" aria-labelledby="quickstart-heading">
           <h2 id="quickstart-heading" className="text-lg sm:text-xl font-bold mb-4">Quick Start</h2>
 
           {/* Horizon API */}
@@ -236,11 +236,11 @@ export default function DashboardPage() {
               Horizon API
             </h3>
             <div className="bg-[#1D1E26] rounded-lg p-3 sm:p-4 mb-3 overflow-x-auto">
-              <p className="text-[#6A6A6A] text-xs sm:text-sm mb-2">Endpoint:</p>
+              <p className="text-gray-400 text-xs sm:text-sm mb-2">Endpoint:</p>
               <code className="text-[#7366FF] text-sm sm:text-base">https://api.lumenquery.io</code>
             </div>
             <div className="bg-[#1D1E26] rounded-lg p-3 sm:p-4 overflow-x-auto">
-              <p className="text-[#6A6A6A] text-xs sm:text-sm mb-2">Example Request:</p>
+              <p className="text-gray-400 text-xs sm:text-sm mb-2">Example Request:</p>
               <pre className="text-xs sm:text-sm text-gray-300 whitespace-pre-wrap">
 {`curl -H "X-API-Key: YOUR_API_KEY" \\
   https://api.lumenquery.io/ledgers?limit=1`}
@@ -255,11 +255,11 @@ export default function DashboardPage() {
               Soroban RPC
             </h3>
             <div className="bg-[#1D1E26] rounded-lg p-3 sm:p-4 mb-3 overflow-x-auto">
-              <p className="text-[#6A6A6A] text-xs sm:text-sm mb-2">Endpoint:</p>
+              <p className="text-gray-400 text-xs sm:text-sm mb-2">Endpoint:</p>
               <code className="text-[#7366FF] text-sm sm:text-base">https://rpc.lumenquery.io</code>
             </div>
             <div className="bg-[#1D1E26] rounded-lg p-3 sm:p-4 overflow-x-auto">
-              <p className="text-[#6A6A6A] text-xs sm:text-sm mb-2">Example Request:</p>
+              <p className="text-gray-400 text-xs sm:text-sm mb-2">Example Request:</p>
               <pre className="text-xs sm:text-sm text-gray-300 whitespace-pre-wrap">
 {`curl -X POST -H "X-API-Key: YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
@@ -271,7 +271,7 @@ export default function DashboardPage() {
         </section>
 
         {/* API Keys Section */}
-        <section className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]" aria-labelledby="apikeys-heading">
+        <section className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#262932] border border-white/10" aria-labelledby="apikeys-heading">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
             <h2 id="apikeys-heading" className="text-lg sm:text-xl font-bold">API Keys</h2>
             <button
@@ -283,14 +283,14 @@ export default function DashboardPage() {
           </div>
 
           {apiKeys.length === 0 ? (
-            <p className="text-[#6A6A6A] text-sm sm:text-base">You haven&apos;t created any API keys yet.</p>
+            <p className="text-gray-400 text-sm sm:text-base">You haven&apos;t created any API keys yet.</p>
           ) : (
             <div className="space-y-3">
               {apiKeys.map((key) => (
-                <div key={key.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 sm:p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
+                <div key={key.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 sm:p-4 rounded-lg bg-[#1D1E26] border border-white/10">
                   <div className="min-w-0">
                     <p className="font-medium text-sm sm:text-base">{key.name}</p>
-                    <p className="text-xs sm:text-sm text-[#6A6A6A] flex flex-wrap items-center gap-1 sm:gap-2">
+                    <p className="text-xs sm:text-sm text-gray-400 flex flex-wrap items-center gap-1 sm:gap-2">
                       <code className="bg-[#E6E7E9] px-1.5 sm:px-2 py-0.5 rounded text-xs">{key.keyPrefix}••••••••</code>
                       <span className="hidden sm:inline">•</span>
                       <span>Created {new Date(key.createdAt).toLocaleDateString()}</span>
@@ -312,22 +312,22 @@ export default function DashboardPage() {
       {/* Create API Key Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 w-full max-w-md shadow-xl border border-[#E6E7E9]">
+          <div className="bg-[#262932] rounded-xl sm:rounded-2xl p-4 sm:p-6 w-full max-w-md shadow-xl border border-white/10">
             {!newSecretKey ? (
               <>
                 <h3 className="text-lg sm:text-xl font-bold mb-4">Create API Key</h3>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-black mb-2">Key Name</label>
+                  <label className="block text-sm font-medium text-white mb-2">Key Name</label>
                   <input
                     type="text"
                     value={newKeyName}
                     onChange={(e) => setNewKeyName(e.target.value)}
                     placeholder="e.g., Production, Development"
-                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] focus:outline-none focus:ring-2 focus:ring-[#7366FF] text-sm sm:text-base"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#7366FF] text-sm sm:text-base"
                   />
                 </div>
                 <div className="flex gap-3">
-                  <button onClick={closeModal} className="flex-1 px-4 py-2 rounded-lg border border-[#E6E7E9] hover:bg-[#F5F6F7] transition-colors text-sm sm:text-base">
+                  <button onClick={closeModal} className="flex-1 px-4 py-2 rounded-lg border border-white/10 hover:bg-[#1D1E26] transition-colors text-sm sm:text-base">
                     Cancel
                   </button>
                   <button
@@ -342,13 +342,13 @@ export default function DashboardPage() {
             ) : (
               <>
                 <h3 className="text-lg sm:text-xl font-bold mb-2">API Key Created!</h3>
-                <p className="text-[#6A6A6A] text-xs sm:text-sm mb-4">Copy your API key now. You won&apos;t be able to see it again.</p>
+                <p className="text-gray-400 text-xs sm:text-sm mb-4">Copy your API key now. You won&apos;t be able to see it again.</p>
                 <div className="mb-4">
                   <div className="flex items-center gap-2">
-                    <code className="flex-1 p-2 sm:p-3 rounded-lg bg-[#F5F6F7] text-[#7366FF] text-xs sm:text-sm break-all border border-[#E6E7E9]">
+                    <code className="flex-1 p-2 sm:p-3 rounded-lg bg-[#1D1E26] text-[#7366FF] text-xs sm:text-sm break-all border border-white/10">
                       {newSecretKey}
                     </code>
-                    <button onClick={() => copyToClipboard(newSecretKey)} className="px-2 sm:px-3 py-2 sm:py-3 rounded-lg bg-[#F5F6F7] hover:bg-[#E6E7E9] border border-[#E6E7E9] transition-colors flex-shrink-0">
+                    <button onClick={() => copyToClipboard(newSecretKey)} className="px-2 sm:px-3 py-2 sm:py-3 rounded-lg bg-[#1D1E26] hover:bg-white/10 border border-white/10 transition-colors flex-shrink-0">
                       {copied ? '✓' : '📋'}
                     </button>
                   </div>

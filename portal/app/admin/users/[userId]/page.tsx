@@ -182,7 +182,7 @@ export default function UserDetailPage() {
   return (
     <div>
       <div className="mb-6">
-        <Link href="/admin/users" className="text-[#6A6A6A] hover:text-black text-sm mb-2 inline-block">
+        <Link href="/admin/users" className="text-gray-400 hover:text-white text-sm mb-2 inline-block">
           ← Back to Users
         </Link>
         <div className="flex items-center justify-between">
@@ -191,14 +191,14 @@ export default function UserDetailPage() {
               {(user.name || user.email).charAt(0).toUpperCase()}
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-black">{user.name || 'No name'}</h1>
-              <p className="text-[#6A6A6A]">{user.email}</p>
+              <h1 className="text-2xl font-bold text-white">{user.name || 'No name'}</h1>
+              <p className="text-gray-400">{user.email}</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsPasswordModalOpen(true)}
-              className="px-4 py-2 border border-[#E6E7E9] rounded-lg font-medium text-[#6A6A6A] hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 border border-white/10 rounded-lg font-medium text-gray-400 hover:bg-white/5 transition-colors"
             >
               Reset Password
             </button>
@@ -218,17 +218,17 @@ export default function UserDetailPage() {
         {/* User Info */}
         <div className="lg:col-span-2 space-y-6">
           {/* Basic Info */}
-          <div className="bg-white rounded-xl border border-[#E6E7E9] p-6">
-            <h2 className="text-lg font-bold text-black mb-4">Account Information</h2>
+          <div className="bg-[#262932] rounded-xl border border-white/10 p-6">
+            <h2 className="text-lg font-bold text-white mb-4">Account Information</h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-[#6A6A6A]">Role</p>
+                <p className="text-sm text-gray-400">Role</p>
                 {editingRole ? (
                   <div className="flex items-center gap-2 mt-1">
                     <select
                       value={newRole}
                       onChange={(e) => setNewRole(e.target.value)}
-                      className="px-3 py-1 border border-[#E6E7E9] rounded-lg focus:outline-none focus:border-[#7366FF] bg-white text-sm"
+                      className="px-3 py-1 border border-white/10 rounded-lg focus:outline-none focus:border-[#7366FF] bg-[#262932] text-sm"
                     >
                       <option value="USER">User</option>
                       <option value="ADMIN">Admin</option>
@@ -246,7 +246,7 @@ export default function UserDetailPage() {
                         setEditingRole(false);
                         setNewRole(user.role);
                       }}
-                      className="px-3 py-1 border border-[#E6E7E9] rounded-lg text-sm"
+                      className="px-3 py-1 border border-white/10 rounded-lg text-sm"
                     >
                       Cancel
                     </button>
@@ -270,44 +270,44 @@ export default function UserDetailPage() {
                 )}
               </div>
               <div>
-                <p className="text-sm text-[#6A6A6A]">Status</p>
+                <p className="text-sm text-gray-400">Status</p>
                 <div className="flex items-center gap-2 mt-1">
                   <span className={`w-2 h-2 rounded-full ${isOnline(user.lastActiveAt) ? 'bg-green-500' : 'bg-gray-300'}`} />
-                  <span className="font-medium text-black">
+                  <span className="font-medium text-white">
                     {isOnline(user.lastActiveAt) ? 'Online' : 'Offline'}
                   </span>
                 </div>
               </div>
               <div>
-                <p className="text-sm text-[#6A6A6A]">Created</p>
-                <p className="font-medium text-black mt-1">{formatDate(user.createdAt)}</p>
+                <p className="text-sm text-gray-400">Created</p>
+                <p className="font-medium text-white mt-1">{formatDate(user.createdAt)}</p>
               </div>
               <div>
-                <p className="text-sm text-[#6A6A6A]">Last Login</p>
-                <p className="font-medium text-black mt-1">{formatDate(user.lastLoginAt)}</p>
+                <p className="text-sm text-gray-400">Last Login</p>
+                <p className="font-medium text-white mt-1">{formatDate(user.lastLoginAt)}</p>
               </div>
               <div>
-                <p className="text-sm text-[#6A6A6A]">Session Duration</p>
-                <p className="font-medium text-black mt-1">{formatDuration(user.sessionDurationSeconds)}</p>
+                <p className="text-sm text-gray-400">Session Duration</p>
+                <p className="font-medium text-white mt-1">{formatDuration(user.sessionDurationSeconds)}</p>
               </div>
               <div>
-                <p className="text-sm text-[#6A6A6A]">Active Sessions</p>
-                <p className="font-medium text-black mt-1">{user.activeSessions}</p>
+                <p className="text-sm text-gray-400">Active Sessions</p>
+                <p className="font-medium text-white mt-1">{user.activeSessions}</p>
               </div>
             </div>
           </div>
 
           {/* Organization & Subscription */}
           {user.organization && (
-            <div className="bg-white rounded-xl border border-[#E6E7E9] p-6">
-              <h2 className="text-lg font-bold text-black mb-4">Subscription</h2>
+            <div className="bg-[#262932] rounded-xl border border-white/10 p-6">
+              <h2 className="text-lg font-bold text-white mb-4">Subscription</h2>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-[#6A6A6A]">Organization</p>
-                  <p className="font-medium text-black mt-1">{user.organization.name}</p>
+                  <p className="text-sm text-gray-400">Organization</p>
+                  <p className="font-medium text-white mt-1">{user.organization.name}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-[#6A6A6A]">Subscription Tier</p>
+                  <p className="text-sm text-gray-400">Subscription Tier</p>
                   <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium mt-1 ${
                     user.organization.tier === 'ENTERPRISE' ? 'bg-yellow-100 text-yellow-800' :
                     user.organization.tier === 'TEAM' ? 'bg-blue-100 text-blue-700' :
@@ -318,11 +318,11 @@ export default function UserDetailPage() {
                   </span>
                 </div>
                 <div>
-                  <p className="text-sm text-[#6A6A6A]">Monthly Requests</p>
-                  <p className="font-medium text-black mt-1">{user.organization.monthlyRequestLimit.toLocaleString()}</p>
+                  <p className="text-sm text-gray-400">Monthly Requests</p>
+                  <p className="font-medium text-white mt-1">{user.organization.monthlyRequestLimit.toLocaleString()}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-[#6A6A6A]">Features Enabled</p>
+                  <p className="text-sm text-gray-400">Features Enabled</p>
                   <div className="flex flex-wrap gap-1 mt-1">
                     {user.organization.sorobanProEnabled && (
                       <span className="px-2 py-0.5 bg-purple-100 text-purple-700 rounded text-xs">Soroban Pro</span>
@@ -341,15 +341,15 @@ export default function UserDetailPage() {
 
           {/* Usage Stats */}
           {usage && usage.topEndpoints.length > 0 && (
-            <div className="bg-white rounded-xl border border-[#E6E7E9] p-6">
-              <h2 className="text-lg font-bold text-black mb-4">API Usage (Last 30 Days)</h2>
+            <div className="bg-[#262932] rounded-xl border border-white/10 p-6">
+              <h2 className="text-lg font-bold text-white mb-4">API Usage (Last 30 Days)</h2>
               <div className="space-y-3">
                 {usage.topEndpoints.map((endpoint, i) => (
-                  <div key={i} className="flex items-center justify-between py-2 border-b border-[#E6E7E9] last:border-0">
-                    <span className="text-sm font-mono text-black truncate max-w-[60%]">{endpoint.endpoint}</span>
+                  <div key={i} className="flex items-center justify-between py-2 border-b border-white/10 last:border-0">
+                    <span className="text-sm font-mono text-white truncate max-w-[60%]">{endpoint.endpoint}</span>
                     <div className="flex items-center gap-4 text-sm">
-                      <span className="text-[#6A6A6A]">{endpoint.count} calls</span>
-                      <span className="text-[#6A6A6A]">{endpoint.avgResponseTime}ms avg</span>
+                      <span className="text-gray-400">{endpoint.count} calls</span>
+                      <span className="text-gray-400">{endpoint.avgResponseTime}ms avg</span>
                     </div>
                   </div>
                 ))}
@@ -360,22 +360,22 @@ export default function UserDetailPage() {
 
         {/* API Keys */}
         <div className="space-y-6">
-          <div className="bg-white rounded-xl border border-[#E6E7E9] p-6">
-            <h2 className="text-lg font-bold text-black mb-4">API Keys</h2>
+          <div className="bg-[#262932] rounded-xl border border-white/10 p-6">
+            <h2 className="text-lg font-bold text-white mb-4">API Keys</h2>
             {user.apiKeys.length > 0 ? (
               <div className="space-y-3">
                 {user.apiKeys.map((key) => (
-                  <div key={key.id} className="p-3 border border-[#E6E7E9] rounded-lg">
+                  <div key={key.id} className="p-3 border border-white/10 rounded-lg">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="font-medium text-black">{key.name}</span>
+                      <span className="font-medium text-white">{key.name}</span>
                       {key.revokedAt ? (
                         <span className="px-2 py-0.5 bg-red-100 text-red-700 rounded text-xs">Revoked</span>
                       ) : (
                         <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs">Active</span>
                       )}
                     </div>
-                    <p className="text-sm font-mono text-[#6A6A6A] mb-2">{key.keyPrefix}...</p>
-                    <div className="flex items-center gap-2 text-xs text-[#6A6A6A]">
+                    <p className="text-sm font-mono text-gray-400 mb-2">{key.keyPrefix}...</p>
+                    <div className="flex items-center gap-2 text-xs text-gray-400">
                       <span>Created: {new Date(key.createdAt).toLocaleDateString()}</span>
                       {key.lastUsedAt && (
                         <>
@@ -388,7 +388,7 @@ export default function UserDetailPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-[#6A6A6A]">No API keys created</p>
+              <p className="text-sm text-gray-400">No API keys created</p>
             )}
           </div>
         </div>

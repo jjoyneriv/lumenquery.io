@@ -40,7 +40,7 @@ export default function ForgotPasswordPage() {
 
   if (success) {
     return (
-      <main className="min-h-screen bg-[#F5F6F7] flex items-center justify-center px-4 py-8 sm:py-12">
+      <main className="min-h-screen bg-[#1D1E26] flex items-center justify-center px-4 py-8 sm:py-12">
         <div className="w-full max-w-md">
           <header className="text-center mb-6 sm:mb-8">
             <Link href="/" className="inline-flex items-center gap-2 mb-4 sm:mb-6" aria-label="LumenQuery home">
@@ -54,17 +54,17 @@ export default function ForgotPasswordPage() {
             </Link>
           </header>
 
-          <section className="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-8 shadow-sm border border-[#E6E7E9] text-center">
+          <section className="bg-[#262932] rounded-xl sm:rounded-2xl p-5 sm:p-8 shadow-sm border border-white/10 text-center">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
               <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
-            <h1 className="text-xl sm:text-2xl font-bold text-black mb-2">Check your email</h1>
-            <p className="text-[#6A6A6A] mb-6 text-sm sm:text-base">
+            <h1 className="text-xl sm:text-2xl font-bold text-white mb-2">Check your email</h1>
+            <p className="text-gray-400 mb-6 text-sm sm:text-base">
               If an account exists for <strong>{email}</strong>, we&apos;ve sent a password reset link. The link will expire in 1 hour.
             </p>
-            <p className="text-[#6A6A6A] text-sm mb-6">
+            <p className="text-gray-400 text-sm mb-6">
               Didn&apos;t receive the email? Check your spam folder or{' '}
               <button
                 onClick={() => {
@@ -90,7 +90,7 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F5F6F7] flex items-center justify-center px-4 py-8 sm:py-12">
+    <main className="min-h-screen bg-[#1D1E26] flex items-center justify-center px-4 py-8 sm:py-12">
       <div className="w-full max-w-md">
         <header className="text-center mb-6 sm:mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-4 sm:mb-6" aria-label="LumenQuery home">
@@ -102,13 +102,13 @@ export default function ForgotPasswordPage() {
               className="w-10 h-10 sm:w-12 sm:h-12"
             />
           </Link>
-          <h1 className="text-2xl sm:text-3xl font-bold text-black">Forgot password?</h1>
-          <p className="text-[#6A6A6A] mt-2 text-sm sm:text-base">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">Forgot password?</h1>
+          <p className="text-gray-400 mt-2 text-sm sm:text-base">
             Enter your email and we&apos;ll send you a reset link
           </p>
         </header>
 
-        <section className="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-8 shadow-sm border border-[#E6E7E9]">
+        <section className="bg-[#262932] rounded-xl sm:rounded-2xl p-5 sm:p-8 shadow-sm border border-white/10">
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             {error && (
               <div className="p-4 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
@@ -117,7 +117,7 @@ export default function ForgotPasswordPage() {
             )}
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-black mb-1.5 sm:mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-white mb-1.5 sm:mb-2">
                 Email address
               </label>
               <input
@@ -125,7 +125,7 @@ export default function ForgotPasswordPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] focus:border-[#7366FF] focus:ring-2 focus:ring-[#7366FF]/20 outline-none transition-all text-base"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-white/10 focus:border-[#7366FF] focus:ring-2 focus:ring-[#7366FF]/20 outline-none transition-all text-base"
                 placeholder="you@example.com"
                 required
                 autoComplete="email"
@@ -142,7 +142,7 @@ export default function ForgotPasswordPage() {
           </form>
 
           <div className="mt-6 text-center">
-            <Link href="/auth/signin" className="text-[#6A6A6A] hover:text-[#7366FF] text-sm">
+            <Link href="/auth/signin" className="text-gray-400 hover:text-[#7366FF] text-sm">
               <span className="mr-1">←</span> Back to sign in
             </Link>
           </div>

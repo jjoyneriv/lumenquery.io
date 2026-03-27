@@ -106,10 +106,10 @@ export default function WatchlistsPage() {
     <div className="space-y-6">
       <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-black">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">
             Watchlists
           </h1>
-          <p className="text-[#6A6A6A] mt-1">
+          <p className="text-gray-400 mt-1">
             Monitor specific Stellar accounts for activity
             {limits && (
               <span className="ml-2 text-sm">
@@ -150,7 +150,7 @@ export default function WatchlistsPage() {
 
       {/* Watchlists Table */}
       {loading ? (
-        <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 text-center">
+        <div className="bg-[#262932] rounded-xl border border-white/10 p-8 text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF] mx-auto" />
         </div>
       ) : (

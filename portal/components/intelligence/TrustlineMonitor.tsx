@@ -62,7 +62,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="text-[#6A6A6A] hover:text-[#7366FF] transition-colors"
+      className="text-gray-400 hover:text-[#7366FF] transition-colors"
       title="Copy"
     >
       {copied ? (
@@ -97,36 +97,36 @@ export function TrustlineMonitor({
     <div className="space-y-6">
       {/* Summary Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl border border-[#E6E7E9] p-4">
-          <p className="text-xs text-[#6A6A6A] mb-1">Total Changes</p>
-          <p className="text-2xl font-bold text-black">{summary.total}</p>
+        <div className="bg-[#262932] rounded-xl border border-white/10 p-4">
+          <p className="text-xs text-gray-400 mb-1">Total Changes</p>
+          <p className="text-2xl font-bold text-white">{summary.total}</p>
         </div>
-        <div className="bg-white rounded-xl border border-[#E6E7E9] p-4">
-          <p className="text-xs text-[#6A6A6A] mb-1">Created</p>
+        <div className="bg-[#262932] rounded-xl border border-white/10 p-4">
+          <p className="text-xs text-gray-400 mb-1">Created</p>
           <p className="text-2xl font-bold text-green-600">{summary.created}</p>
         </div>
-        <div className="bg-white rounded-xl border border-[#E6E7E9] p-4">
-          <p className="text-xs text-[#6A6A6A] mb-1">Removed</p>
+        <div className="bg-[#262932] rounded-xl border border-white/10 p-4">
+          <p className="text-xs text-gray-400 mb-1">Removed</p>
           <p className="text-2xl font-bold text-red-600">{summary.removed}</p>
         </div>
-        <div className="bg-white rounded-xl border border-[#E6E7E9] p-4">
-          <p className="text-xs text-[#6A6A6A] mb-1">Updated</p>
+        <div className="bg-[#262932] rounded-xl border border-white/10 p-4">
+          <p className="text-xs text-gray-400 mb-1">Updated</p>
           <p className="text-2xl font-bold text-blue-600">{summary.updated}</p>
         </div>
       </div>
 
       {/* Top Assets */}
       {topAssets.length > 0 && (
-        <div className="bg-white rounded-xl border border-[#E6E7E9] p-4">
-          <h3 className="text-sm font-medium text-black mb-3">Most Active Assets</h3>
+        <div className="bg-[#262932] rounded-xl border border-white/10 p-4">
+          <h3 className="text-sm font-medium text-white mb-3">Most Active Assets</h3>
           <div className="flex flex-wrap gap-2">
             {topAssets.map(({ code, count }) => (
               <span
                 key={code}
-                className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-[#F5F6F7] text-black"
+                className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-[#1D1E26] text-white"
               >
                 {code}
-                <span className="ml-2 text-[#6A6A6A]">{count}</span>
+                <span className="ml-2 text-gray-400">{count}</span>
               </span>
             ))}
           </div>
@@ -141,7 +141,7 @@ export function TrustlineMonitor({
             className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
               filter === 'all'
                 ? 'bg-[#7366FF] text-white'
-                : 'bg-[#F5F6F7] text-[#6A6A6A] hover:text-black'
+                : 'bg-[#1D1E26] text-gray-400 hover:text-white'
             }`}
           >
             All
@@ -151,7 +151,7 @@ export function TrustlineMonitor({
             className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
               filter === 'created'
                 ? 'bg-green-500 text-white'
-                : 'bg-[#F5F6F7] text-[#6A6A6A] hover:text-black'
+                : 'bg-[#1D1E26] text-gray-400 hover:text-white'
             }`}
           >
             Created
@@ -161,7 +161,7 @@ export function TrustlineMonitor({
             className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
               filter === 'removed'
                 ? 'bg-red-500 text-white'
-                : 'bg-[#F5F6F7] text-[#6A6A6A] hover:text-black'
+                : 'bg-[#1D1E26] text-gray-400 hover:text-white'
             }`}
           >
             Removed
@@ -172,7 +172,7 @@ export function TrustlineMonitor({
           <button
             onClick={onRefresh}
             disabled={isLoading}
-            className="p-2 rounded-lg bg-[#F5F6F7] text-[#6A6A6A] hover:text-black transition-colors disabled:opacity-50"
+            className="p-2 rounded-lg bg-[#1D1E26] text-gray-400 hover:text-white transition-colors disabled:opacity-50"
           >
             <svg
               className={`w-5 h-5 ${isLoading ? 'animate-spin' : ''}`}
@@ -187,29 +187,29 @@ export function TrustlineMonitor({
       </div>
 
       {/* Trustline Table */}
-      <div className="bg-white rounded-xl border border-[#E6E7E9] overflow-hidden">
+      <div className="bg-[#262932] rounded-xl border border-white/10 overflow-hidden">
         {filteredTrustlines.length === 0 ? (
-          <div className="p-8 text-center text-[#6A6A6A]">
+          <div className="p-8 text-center text-gray-400">
             No trustline changes found
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-white/5">
                 <tr>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                     Type
                   </th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                     Account
                   </th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                     Asset
                   </th>
-                  <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+                  <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
                     Limit
                   </th>
-                  <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+                  <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
                     Time
                   </th>
                 </tr>
@@ -219,7 +219,7 @@ export function TrustlineMonitor({
                   const colors = typeColors[change.type];
 
                   return (
-                    <tr key={change.id} className="hover:bg-gray-50">
+                    <tr key={change.id} className="hover:bg-white/5">
                       <td className="px-4 sm:px-6 py-4">
                         <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${colors.bg} ${colors.text}`}>
                           {change.type}
@@ -237,18 +237,18 @@ export function TrustlineMonitor({
                       </td>
                       <td className="px-4 sm:px-6 py-4">
                         <div>
-                          <span className="font-medium text-black">{change.assetCode}</span>
+                          <span className="font-medium text-white">{change.assetCode}</span>
                           {change.assetIssuer && (
-                            <p className="text-xs text-[#6A6A6A] font-mono mt-0.5">
+                            <p className="text-xs text-gray-400 font-mono mt-0.5">
                               {change.assetIssuer}
                             </p>
                           )}
                         </div>
                       </td>
-                      <td className="px-4 sm:px-6 py-4 text-right text-sm text-[#6A6A6A]">
+                      <td className="px-4 sm:px-6 py-4 text-right text-sm text-gray-400">
                         {change.limit ? parseFloat(change.limit).toLocaleString() : '-'}
                       </td>
-                      <td className="px-4 sm:px-6 py-4 text-right text-sm text-[#6A6A6A]">
+                      <td className="px-4 sm:px-6 py-4 text-right text-sm text-gray-400">
                         {formatTimeAgo(change.createdAt)}
                       </td>
                     </tr>

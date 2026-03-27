@@ -95,7 +95,7 @@ export function WasmUploader({ file, onFileSelect, disabled, error }: WasmUpload
         className={`
           relative border-2 border-dashed rounded-lg p-8 text-center cursor-pointer
           transition-all duration-200
-          ${isDragging ? 'border-[#7366FF] bg-[#7366FF]/5' : 'border-[#E6E7E9] hover:border-[#7366FF]/50'}
+          ${isDragging ? 'border-[#7366FF] bg-[#7366FF]/5' : 'border-white/10 hover:border-[#7366FF]/50'}
           ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
           ${error ? 'border-red-300 bg-red-50' : ''}
           ${file ? 'border-green-300 bg-green-50' : ''}
@@ -111,7 +111,7 @@ export function WasmUploader({ file, onFileSelect, disabled, error }: WasmUpload
             </div>
             <div>
               <p className="font-medium text-gray-900">{file.name}</p>
-              <p className="text-sm text-[#6A6A6A]">{formatFileSize(file.size)}</p>
+              <p className="text-sm text-gray-400">{formatFileSize(file.size)}</p>
             </div>
             <button
               onClick={handleRemove}
@@ -137,7 +137,7 @@ export function WasmUploader({ file, onFileSelect, disabled, error }: WasmUpload
               <p className="font-medium text-gray-900">
                 Drop your WASM file here
               </p>
-              <p className="text-sm text-[#6A6A6A]">
+              <p className="text-sm text-gray-400">
                 or click to browse (max 256 KB)
               </p>
             </div>

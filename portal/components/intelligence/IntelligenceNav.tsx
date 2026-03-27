@@ -91,7 +91,7 @@ export function IntelligenceNav({ unreadAlerts = 0 }: IntelligenceNavProps) {
             className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
               isActive
                 ? 'bg-[#7366FF] text-white'
-                : 'text-[#6A6A6A] hover:bg-[#F5F6F7] hover:text-black'
+                : 'text-gray-400 hover:bg-[#1D1E26] hover:text-white'
             }`}
           >
             {item.icon}

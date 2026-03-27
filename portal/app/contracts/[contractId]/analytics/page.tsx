@@ -73,18 +73,18 @@ export default function ContractAnalyticsPage() {
       <div className="space-y-6 animate-pulse">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-white border border-[#E6E7E9] rounded-lg p-4 h-24" />
+            <div key={i} className="bg-[#262932] border border-white/10 rounded-lg p-4 h-24" />
           ))}
         </div>
-        <div className="bg-white border border-[#E6E7E9] rounded-lg p-4 h-64" />
+        <div className="bg-[#262932] border border-white/10 rounded-lg p-4 h-64" />
       </div>
     );
   }
 
   if (!analytics) {
     return (
-      <div className="bg-white border border-[#E6E7E9] rounded-lg p-8 text-center">
-        <p className="text-[#6A6A6A]">No analytics data available</p>
+      <div className="bg-[#262932] border border-white/10 rounded-lg p-8 text-center">
+        <p className="text-gray-400">No analytics data available</p>
       </div>
     );
   }
@@ -125,8 +125,8 @@ export default function ContractAnalyticsPage() {
       </div>
 
       {/* Call Volume Chart */}
-      <div className="bg-white border border-[#E6E7E9] rounded-lg p-6">
-        <h3 className="text-sm font-medium text-[#6A6A6A] mb-4">Call Volume</h3>
+      <div className="bg-[#262932] border border-white/10 rounded-lg p-6">
+        <h3 className="text-sm font-medium text-gray-400 mb-4">Call Volume</h3>
         {analytics.callVolume.history.length > 0 ? (
           <AreaChart
             data={analytics.callVolume.history}
@@ -136,15 +136,15 @@ export default function ContractAnalyticsPage() {
             height={200}
           />
         ) : (
-          <div className="h-48 flex items-center justify-center text-[#6A6A6A]">
+          <div className="h-48 flex items-center justify-center text-gray-400">
             No call history data
           </div>
         )}
       </div>
 
       {/* Gas Usage Chart */}
-      <div className="bg-white border border-[#E6E7E9] rounded-lg p-6">
-        <h3 className="text-sm font-medium text-[#6A6A6A] mb-4">Average Gas Usage</h3>
+      <div className="bg-[#262932] border border-white/10 rounded-lg p-6">
+        <h3 className="text-sm font-medium text-gray-400 mb-4">Average Gas Usage</h3>
         {analytics.callVolume.history.length > 0 ? (
           <AreaChart
             data={analytics.callVolume.history}
@@ -155,7 +155,7 @@ export default function ContractAnalyticsPage() {
             valueFormatter={(v) => formatGas(v)}
           />
         ) : (
-          <div className="h-48 flex items-center justify-center text-[#6A6A6A]">
+          <div className="h-48 flex items-center justify-center text-gray-400">
             No gas usage data
           </div>
         )}
@@ -163,16 +163,16 @@ export default function ContractAnalyticsPage() {
 
       {/* Error Breakdown */}
       {analytics.errorAnalysis.errorBreakdown.length > 0 && (
-        <div className="bg-white border border-[#E6E7E9] rounded-lg p-6">
-          <h3 className="text-sm font-medium text-[#6A6A6A] mb-4">Error Breakdown</h3>
+        <div className="bg-[#262932] border border-white/10 rounded-lg p-6">
+          <h3 className="text-sm font-medium text-gray-400 mb-4">Error Breakdown</h3>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-[#F5F6F7]">
+              <thead className="bg-[#1D1E26]">
                 <tr>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-[#6A6A6A] uppercase">
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-400 uppercase">
                     Error Code
                   </th>
-                  <th className="px-4 py-2 text-right text-xs font-medium text-[#6A6A6A] uppercase">
+                  <th className="px-4 py-2 text-right text-xs font-medium text-gray-400 uppercase">
                     Count
                   </th>
                 </tr>
@@ -196,8 +196,8 @@ export default function ContractAnalyticsPage() {
 
       {/* Storage Growth */}
       {analytics.storageGrowth.length > 0 && (
-        <div className="bg-white border border-[#E6E7E9] rounded-lg p-6">
-          <h3 className="text-sm font-medium text-[#6A6A6A] mb-4">Storage Growth</h3>
+        <div className="bg-[#262932] border border-white/10 rounded-lg p-6">
+          <h3 className="text-sm font-medium text-gray-400 mb-4">Storage Growth</h3>
           <AreaChart
             data={analytics.storageGrowth}
             dataKey="entries"

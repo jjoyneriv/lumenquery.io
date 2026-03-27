@@ -16,7 +16,7 @@ export default function AnalyticsNav() {
   return (
     <>
       {/* Sidebar - Desktop */}
-      <aside className="hidden lg:block w-64 bg-white border-r border-[#E6E7E9] p-4" aria-label="Analytics navigation">
+      <aside className="hidden lg:block w-64 bg-[#262932] border-r border-white/10 p-4" aria-label="Analytics navigation">
         <nav className="space-y-1">
           {navItems.map((item) => {
             const isActive = pathname === item.href ||
@@ -28,7 +28,7 @@ export default function AnalyticsNav() {
                 className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                   isActive
                     ? 'bg-[#7366FF] text-white'
-                    : 'text-[#6A6A6A] hover:bg-[#F5F6F7] hover:text-black'
+                    : 'text-gray-400 hover:bg-[#1D1E26] hover:text-white'
                 }`}
                 aria-current={isActive ? 'page' : undefined}
               >
@@ -43,7 +43,7 @@ export default function AnalyticsNav() {
       </aside>
 
       {/* Mobile Navigation */}
-      <div className="lg:hidden w-full bg-white border-b border-[#E6E7E9] px-4 py-2 overflow-x-auto">
+      <div className="lg:hidden w-full bg-[#262932] border-b border-white/10 px-4 py-2 overflow-x-auto">
         <nav className="flex gap-2 min-w-max" aria-label="Analytics navigation">
           {navItems.map((item) => {
             const isActive = pathname === item.href ||
@@ -55,7 +55,7 @@ export default function AnalyticsNav() {
                 className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
                   isActive
                     ? 'bg-[#7366FF] text-white'
-                    : 'text-[#6A6A6A] hover:bg-[#F5F6F7]'
+                    : 'text-gray-400 hover:bg-[#1D1E26]'
                 }`}
                 aria-current={isActive ? 'page' : undefined}
               >

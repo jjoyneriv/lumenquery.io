@@ -62,7 +62,7 @@ export function ContractSearch() {
       <form onSubmit={handleSubmit}>
         <div className="relative">
           <svg
-            className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#6A6A6A]"
+            className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -84,7 +84,7 @@ export function ContractSearch() {
             }}
             onFocus={() => setIsOpen(true)}
             placeholder="Search by contract ID (C...) or name"
-            className="w-full pl-12 pr-4 py-3 bg-white text-gray-900 placeholder-gray-500 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent text-base"
+            className="w-full pl-12 pr-4 py-3 bg-[#262932] text-gray-900 placeholder-gray-500 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent text-base"
           />
           {loading && (
             <div className="absolute right-4 top-1/2 -translate-y-1/2">
@@ -95,20 +95,20 @@ export function ContractSearch() {
       </form>
 
       {isOpen && results.length > 0 && (
-        <div className="absolute z-50 w-full mt-2 bg-white border border-[#E6E7E9] rounded-lg shadow-lg overflow-hidden">
+        <div className="absolute z-50 w-full mt-2 bg-[#262932] border border-white/10 rounded-lg shadow-lg overflow-hidden">
           {results.map((contract) => (
             <button
               key={contract.id}
               onClick={() => handleSelect(contract.contractId)}
-              className="w-full px-4 py-3 text-left hover:bg-[#F5F6F7] transition-colors border-b border-[#E6E7E9] last:border-b-0"
+              className="w-full px-4 py-3 text-left hover:bg-[#1D1E26] transition-colors border-b border-white/10 last:border-b-0"
             >
               <div className="font-mono text-sm text-[#7366FF]">
                 {contract.contractId.slice(0, 10)}...{contract.contractId.slice(-6)}
               </div>
               {contract.name && (
-                <div className="text-sm text-[#6A6A6A]">{contract.name}</div>
+                <div className="text-sm text-gray-400">{contract.name}</div>
               )}
-              <div className="text-xs text-[#6A6A6A] mt-1">
+              <div className="text-xs text-gray-400 mt-1">
                 {contract.totalCalls.toLocaleString()} calls
               </div>
             </button>
@@ -117,7 +117,7 @@ export function ContractSearch() {
       )}
 
       {isOpen && query.length >= 2 && results.length === 0 && !loading && (
-        <div className="absolute z-50 w-full mt-2 bg-white border border-[#E6E7E9] rounded-lg shadow-lg p-4 text-center text-[#6A6A6A]">
+        <div className="absolute z-50 w-full mt-2 bg-[#262932] border border-white/10 rounded-lg shadow-lg p-4 text-center text-gray-400">
           No contracts found. Try entering a full contract ID.
         </div>
       )}

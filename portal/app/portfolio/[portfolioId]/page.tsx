@@ -80,10 +80,10 @@ export default function PortfolioDashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-[#262932] flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
-          <p className="mt-4 text-[#6A6A6A]">Loading portfolio...</p>
+          <p className="mt-4 text-gray-400">Loading portfolio...</p>
         </div>
       </div>
     );
@@ -91,7 +91,7 @@ export default function PortfolioDashboardPage() {
 
   if (error || !portfolio) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-[#262932]">
         <Header activePage="portfolio" />
         <div className="max-w-6xl mx-auto px-4 py-12 text-center">
           <h1 className="text-2xl font-bold text-red-600 mb-4">{error || 'Portfolio not found'}</h1>
@@ -104,7 +104,7 @@ export default function PortfolioDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-black">
+    <div className="min-h-screen bg-[#262932] text-white">
       <Header activePage="portfolio" />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
@@ -114,7 +114,7 @@ export default function PortfolioDashboardPage() {
             <div className="sticky top-8">
               <Link
                 href="/portfolio"
-                className="flex items-center gap-2 text-sm text-[#6A6A6A] hover:text-indigo-600 mb-4"
+                className="flex items-center gap-2 text-sm text-gray-400 hover:text-indigo-600 mb-4"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -131,7 +131,7 @@ export default function PortfolioDashboardPage() {
               <div>
                 <h1 className="text-2xl sm:text-3xl font-bold">{portfolio.name}</h1>
                 {portfolio.description && (
-                  <p className="text-[#6A6A6A] mt-1">{portfolio.description}</p>
+                  <p className="text-gray-400 mt-1">{portfolio.description}</p>
                 )}
               </div>
               <Link
@@ -160,20 +160,20 @@ export default function PortfolioDashboardPage() {
 
             {/* Quick Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
-              <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
-                <div className="text-sm text-[#6A6A6A]">Accounts</div>
+              <div className="p-4 rounded-lg bg-[#1D1E26] border border-white/10">
+                <div className="text-sm text-gray-400">Accounts</div>
                 <div className="text-xl font-bold">{portfolio.stats.accountCount}</div>
               </div>
-              <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
-                <div className="text-sm text-[#6A6A6A]">Positions</div>
+              <div className="p-4 rounded-lg bg-[#1D1E26] border border-white/10">
+                <div className="text-sm text-gray-400">Positions</div>
                 <div className="text-xl font-bold">{portfolio.stats.positionCount}</div>
               </div>
-              <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
-                <div className="text-sm text-[#6A6A6A]">Trades</div>
+              <div className="p-4 rounded-lg bg-[#1D1E26] border border-white/10">
+                <div className="text-sm text-gray-400">Trades</div>
                 <div className="text-xl font-bold">{portfolio.stats.tradeCount}</div>
               </div>
-              <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
-                <div className="text-sm text-[#6A6A6A]">Yield Sources</div>
+              <div className="p-4 rounded-lg bg-[#1D1E26] border border-white/10">
+                <div className="text-sm text-gray-400">Yield Sources</div>
                 <div className="text-xl font-bold">{portfolio.stats.yieldSourceCount}</div>
               </div>
             </div>
@@ -190,7 +190,7 @@ export default function PortfolioDashboardPage() {
                     View All
                   </Link>
                 </div>
-                <div className="rounded-xl bg-[#F5F6F7] border border-[#E6E7E9] overflow-hidden">
+                <div className="rounded-xl bg-[#1D1E26] border border-white/10 overflow-hidden">
                   <AssetTable
                     assets={portfolio.topPositions.map((p) => ({
                       assetCode: p.assetCode,
@@ -209,14 +209,14 @@ export default function PortfolioDashboardPage() {
             {Object.keys(portfolio.assetAllocation).length > 0 && (
               <div className="mt-8">
                 <h2 className="text-lg font-bold mb-4">Asset Allocation</h2>
-                <div className="p-4 rounded-xl bg-[#F5F6F7] border border-[#E6E7E9]">
+                <div className="p-4 rounded-xl bg-[#1D1E26] border border-white/10">
                   <div className="flex flex-wrap gap-3">
                     {Object.entries(portfolio.assetAllocation)
                       .sort((a, b) => b[1] - a[1])
                       .map(([asset, percentage]) => (
                         <div
                           key={asset}
-                          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white border border-[#E6E7E9]"
+                          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#262932] border border-white/10"
                         >
                           <div className="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center">
                             <span className="text-xs font-bold text-indigo-600">
@@ -224,7 +224,7 @@ export default function PortfolioDashboardPage() {
                             </span>
                           </div>
                           <span className="font-medium">{asset}</span>
-                          <span className="text-[#6A6A6A]">{percentage.toFixed(1)}%</span>
+                          <span className="text-gray-400">{percentage.toFixed(1)}%</span>
                         </div>
                       ))}
                   </div>
@@ -248,13 +248,13 @@ export default function PortfolioDashboardPage() {
                   {portfolio.accounts.map((account) => (
                     <div
                       key={account.id}
-                      className="p-4 rounded-xl bg-[#F5F6F7] border border-[#E6E7E9] flex items-center justify-between"
+                      className="p-4 rounded-xl bg-[#1D1E26] border border-white/10 flex items-center justify-between"
                     >
                       <div>
                         <div className="font-medium">
                           {account.label || `Account ${account.accountId.slice(0, 8)}...`}
                         </div>
-                        <div className="text-sm text-[#6A6A6A] font-mono">
+                        <div className="text-sm text-gray-400 font-mono">
                           {account.accountId.slice(0, 12)}...{account.accountId.slice(-8)}
                         </div>
                       </div>
@@ -262,7 +262,7 @@ export default function PortfolioDashboardPage() {
                         <div className="font-bold">
                           ${account.totalValueUsd.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                         </div>
-                        <div className="text-sm text-[#6A6A6A]">
+                        <div className="text-sm text-gray-400">
                           {account.positionCount} positions
                         </div>
                       </div>
@@ -274,10 +274,10 @@ export default function PortfolioDashboardPage() {
 
             {/* Empty State */}
             {portfolio.accounts.length === 0 && (
-              <div className="mt-8 text-center py-12 px-4 rounded-xl bg-[#F5F6F7] border border-[#E6E7E9]">
+              <div className="mt-8 text-center py-12 px-4 rounded-xl bg-[#1D1E26] border border-white/10">
                 <div className="text-4xl mb-4">+</div>
                 <h2 className="text-xl font-bold mb-2">Add Your First Account</h2>
-                <p className="text-[#6A6A6A] mb-6">
+                <p className="text-gray-400 mb-6">
                   Link a Stellar account to start tracking your portfolio.
                 </p>
                 <Link

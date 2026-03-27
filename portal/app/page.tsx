@@ -165,7 +165,7 @@ export default function Home() {
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {/* Free */}
-            <div className="p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl border border-white/10 bg-white">
+            <div className="p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl border border-white/10 bg-[#262932]">
               <h3 className="text-lg sm:text-xl font-bold mb-2">Free</h3>
               <div className="text-3xl sm:text-4xl font-bold mb-3 sm:mb-4">$0</div>
               <p className="text-gray-400 mb-4 sm:mb-6 text-sm sm:text-base">Perfect for getting started</p>
@@ -186,7 +186,7 @@ export default function Home() {
             </div>
 
             {/* Starter */}
-            <div className="p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl border border-white/10 bg-white">
+            <div className="p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl border border-white/10 bg-[#262932]">
               <h3 className="text-lg sm:text-xl font-bold mb-2">Starter</h3>
               <div className="text-3xl sm:text-4xl font-bold mb-3 sm:mb-4">$29<span className="text-base sm:text-lg font-normal text-gray-400">/mo</span></div>
               <p className="text-gray-400 mb-4 sm:mb-6 text-sm sm:text-base">For small applications</p>
@@ -207,7 +207,7 @@ export default function Home() {
             </div>
 
             {/* Professional */}
-            <div className="p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl border-2 border-[#7366FF] bg-white relative">
+            <div className="p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl border-2 border-[#7366FF] bg-[#262932] relative">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-[#7366FF] text-white text-xs font-bold rounded-full">
                 POPULAR
               </div>
@@ -234,7 +234,7 @@ export default function Home() {
             </div>
 
             {/* Enterprise */}
-            <div className="p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl border border-white/10 bg-white">
+            <div className="p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl border border-white/10 bg-[#262932]">
               <h3 className="text-lg sm:text-xl font-bold mb-2">Enterprise</h3>
               <div className="text-3xl sm:text-4xl font-bold mb-3 sm:mb-4">Custom</div>
               <p className="text-gray-400 mb-4 sm:mb-6 text-sm sm:text-base">For large organizations</p>

@@ -28,7 +28,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="ml-2 text-[#6A6A6A] hover:text-[#7366FF] transition-colors"
+      className="ml-2 text-gray-400 hover:text-[#7366FF] transition-colors"
       title="Copy address"
     >
       {copied ? (
@@ -46,9 +46,9 @@ function CopyButton({ text }: { text: string }) {
 
 export function ContractTable({ contracts }: ContractTableProps) {
   return (
-    <div className="bg-white rounded-xl border border-[#E6E7E9] overflow-hidden">
-      <div className="px-4 sm:px-6 py-4 border-b border-[#E6E7E9]">
-        <h3 className="font-semibold text-black flex items-center gap-2">
+    <div className="bg-[#262932] rounded-xl border border-white/10 overflow-hidden">
+      <div className="px-4 sm:px-6 py-4 border-b border-white/10">
+        <h3 className="font-semibold text-white flex items-center gap-2">
           <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
           </svg>
@@ -57,15 +57,15 @@ export function ContractTable({ contracts }: ContractTableProps) {
       </div>
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-white/5">
             <tr>
-              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Contract / Account
               </th>
-              <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+              <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Invocations (24h)
               </th>
-              <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+              <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Last Activity
               </th>
             </tr>
@@ -73,24 +73,24 @@ export function ContractTable({ contracts }: ContractTableProps) {
           <tbody className="divide-y divide-[#E6E7E9]">
             {contracts.length > 0 ? (
               contracts.map((contract, index) => (
-                <tr key={index} className="hover:bg-gray-50">
+                <tr key={index} className="hover:bg-white/5">
                   <td className="px-4 sm:px-6 py-4">
                     <div className="flex items-center">
                       <code className="text-sm font-mono text-[#7366FF]">{contract.contractId}</code>
                       <CopyButton text={contract.contractId} />
                     </div>
                   </td>
-                  <td className="px-4 sm:px-6 py-4 text-right text-sm font-medium text-black">
+                  <td className="px-4 sm:px-6 py-4 text-right text-sm font-medium text-white">
                     {contract.invocations.toLocaleString()}
                   </td>
-                  <td className="px-4 sm:px-6 py-4 text-right text-sm text-[#6A6A6A]">
+                  <td className="px-4 sm:px-6 py-4 text-right text-sm text-gray-400">
                     {contract.lastActivity}
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={3} className="px-4 sm:px-6 py-8 text-center text-[#6A6A6A]">
+                <td colSpan={3} className="px-4 sm:px-6 py-8 text-center text-gray-400">
                   No contract invocations found
                 </td>
               </tr>

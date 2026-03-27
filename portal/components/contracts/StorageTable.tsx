@@ -41,9 +41,9 @@ export function StorageTable({ entries, snapshot }: StorageTableProps) {
 
   if (entries.length === 0) {
     return (
-      <div className="bg-white border border-[#E6E7E9] rounded-lg p-8 text-center">
+      <div className="bg-[#262932] border border-white/10 rounded-lg p-8 text-center">
         <svg
-          className="w-12 h-12 mx-auto text-[#6A6A6A] mb-4"
+          className="w-12 h-12 mx-auto text-gray-400 mb-4"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -55,7 +55,7 @@ export function StorageTable({ entries, snapshot }: StorageTableProps) {
             d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"
           />
         </svg>
-        <p className="text-[#6A6A6A]">No storage entries found for this contract</p>
+        <p className="text-gray-400">No storage entries found for this contract</p>
       </div>
     );
   }
@@ -63,44 +63,44 @@ export function StorageTable({ entries, snapshot }: StorageTableProps) {
   return (
     <div className="space-y-4">
       {snapshot && (
-        <div className="bg-white border border-[#E6E7E9] rounded-lg p-4">
-          <h3 className="text-sm font-medium text-[#6A6A6A] mb-3">Storage Snapshot</h3>
+        <div className="bg-[#262932] border border-white/10 rounded-lg p-4">
+          <h3 className="text-sm font-medium text-gray-400 mb-3">Storage Snapshot</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
-              <p className="text-xs text-[#6A6A6A]">Total Entries</p>
+              <p className="text-xs text-gray-400">Total Entries</p>
               <p className="text-lg font-semibold">{snapshot.totalEntries.toLocaleString()}</p>
             </div>
             <div>
-              <p className="text-xs text-[#6A6A6A]">Total Size</p>
+              <p className="text-xs text-gray-400">Total Size</p>
               <p className="text-lg font-semibold">{formatBytes(snapshot.totalSizeBytes)}</p>
             </div>
             <div>
-              <p className="text-xs text-[#6A6A6A]">Ledger</p>
+              <p className="text-xs text-gray-400">Ledger</p>
               <p className="text-lg font-semibold">#{formatLedger(snapshot.ledger)}</p>
             </div>
             <div>
-              <p className="text-xs text-[#6A6A6A]">Updated</p>
+              <p className="text-xs text-gray-400">Updated</p>
               <p className="text-lg font-semibold">{formatRelativeTime(snapshot.timestamp)}</p>
             </div>
           </div>
         </div>
       )}
 
-      <div className="bg-white border border-[#E6E7E9] rounded-lg overflow-hidden">
+      <div className="bg-[#262932] border border-white/10 rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-[#F5F6F7] border-b border-[#E6E7E9]">
+            <thead className="bg-[#1D1E26] border-b border-white/10">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Key
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Value Preview
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Ledger
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Updated
                 </th>
               </tr>
@@ -110,7 +110,7 @@ export function StorageTable({ entries, snapshot }: StorageTableProps) {
                 <>
                   <tr
                     key={entry.id}
-                    className="hover:bg-[#F5F6F7] transition-colors cursor-pointer"
+                    className="hover:bg-[#1D1E26] transition-colors cursor-pointer"
                     onClick={() => setExpandedId(expandedId === entry.id ? null : entry.id)}
                   >
                     <td className="px-4 py-3">
@@ -120,7 +120,7 @@ export function StorageTable({ entries, snapshot }: StorageTableProps) {
                       </code>
                     </td>
                     <td className="px-4 py-3">
-                      <code className="text-sm font-mono text-[#6A6A6A]">
+                      <code className="text-sm font-mono text-gray-400">
                         {entry.valueDecoded
                           ? JSON.stringify(entry.valueDecoded).slice(0, 40)
                           : entry.value.slice(0, 40)}
@@ -129,20 +129,20 @@ export function StorageTable({ entries, snapshot }: StorageTableProps) {
                           : entry.value.length > 40) && '...'}
                       </code>
                     </td>
-                    <td className="px-4 py-3 text-sm text-[#6A6A6A]">
+                    <td className="px-4 py-3 text-sm text-gray-400">
                       #{formatLedger(entry.ledger)}
                     </td>
-                    <td className="px-4 py-3 text-sm text-[#6A6A6A]">
+                    <td className="px-4 py-3 text-sm text-gray-400">
                       {formatRelativeTime(entry.timestamp)}
                     </td>
                   </tr>
                   {expandedId === entry.id && (
                     <tr key={`${entry.id}-expanded`}>
-                      <td colSpan={4} className="px-4 py-4 bg-[#F5F6F7]">
+                      <td colSpan={4} className="px-4 py-4 bg-[#1D1E26]">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
                             <div className="flex items-center justify-between mb-2">
-                              <h4 className="text-xs font-medium text-[#6A6A6A] uppercase">
+                              <h4 className="text-xs font-medium text-gray-400 uppercase">
                                 Full Key
                               </h4>
                               <button
@@ -152,13 +152,13 @@ export function StorageTable({ entries, snapshot }: StorageTableProps) {
                                 {copied === `key-${entry.id}` ? 'Copied!' : 'Copy'}
                               </button>
                             </div>
-                            <pre className="text-xs font-mono bg-white p-3 rounded border border-[#E6E7E9] overflow-x-auto">
+                            <pre className="text-xs font-mono bg-[#262932] p-3 rounded border border-white/10 overflow-x-auto">
                               {entry.keyDecoded || entry.key}
                             </pre>
                           </div>
                           <div>
                             <div className="flex items-center justify-between mb-2">
-                              <h4 className="text-xs font-medium text-[#6A6A6A] uppercase">
+                              <h4 className="text-xs font-medium text-gray-400 uppercase">
                                 Full Value
                               </h4>
                               <button
@@ -173,7 +173,7 @@ export function StorageTable({ entries, snapshot }: StorageTableProps) {
                                 {copied === `value-${entry.id}` ? 'Copied!' : 'Copy'}
                               </button>
                             </div>
-                            <pre className="text-xs font-mono bg-white p-3 rounded border border-[#E6E7E9] overflow-x-auto max-h-48">
+                            <pre className="text-xs font-mono bg-[#262932] p-3 rounded border border-white/10 overflow-x-auto max-h-48">
                               {entry.valueDecoded
                                 ? JSON.stringify(entry.valueDecoded, null, 2)
                                 : entry.value}

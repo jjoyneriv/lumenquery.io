@@ -69,7 +69,7 @@ export default function PortfolioSummary({
 
       {/* P&L */}
       <div className={`p-4 rounded-xl ${pnlBg} border ${totalPnlUsd >= 0 ? 'border-green-200' : 'border-red-200'}`}>
-        <div className="text-sm text-[#6A6A6A] mb-1">Total P&L</div>
+        <div className="text-sm text-gray-400 mb-1">Total P&L</div>
         <div className={`text-2xl font-bold ${pnlColor}`}>
           {totalPnlUsd >= 0 ? '+' : ''}{formatCurrency(totalPnlUsd)}
         </div>
@@ -79,17 +79,17 @@ export default function PortfolioSummary({
       </div>
 
       {/* Accounts & Positions */}
-      <div className="p-4 rounded-xl bg-[#F5F6F7] border border-[#E6E7E9]">
-        <div className="text-sm text-[#6A6A6A] mb-1">Portfolio</div>
+      <div className="p-4 rounded-xl bg-[#1D1E26] border border-white/10">
+        <div className="text-sm text-gray-400 mb-1">Portfolio</div>
         <div className="text-2xl font-bold">{accountCount}</div>
-        <div className="text-sm text-[#6A6A6A] mt-1">
+        <div className="text-sm text-gray-400 mt-1">
           {accountCount === 1 ? 'account' : 'accounts'} / {positionCount} positions
         </div>
       </div>
 
       {/* Sync Status */}
-      <div className="p-4 rounded-xl bg-[#F5F6F7] border border-[#E6E7E9]">
-        <div className="text-sm text-[#6A6A6A] mb-1">Last Synced</div>
+      <div className="p-4 rounded-xl bg-[#1D1E26] border border-white/10">
+        <div className="text-sm text-gray-400 mb-1">Last Synced</div>
         <div className="text-lg font-medium">{formatTime(lastSyncedAt)}</div>
         {onSync && (
           <button

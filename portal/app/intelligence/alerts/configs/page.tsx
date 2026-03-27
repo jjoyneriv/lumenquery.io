@@ -138,8 +138,8 @@ export default function AlertConfigsPage() {
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Sidebar */}
         <aside className="w-full lg:w-64 flex-shrink-0">
-          <div className="bg-white rounded-xl border border-[#E6E7E9] p-4 sticky top-8">
-            <h2 className="font-semibold text-black mb-4">Intelligence</h2>
+          <div className="bg-[#262932] rounded-xl border border-white/10 p-4 sticky top-8">
+            <h2 className="font-semibold text-white mb-4">Intelligence</h2>
             <IntelligenceNav />
           </div>
         </aside>
@@ -148,10 +148,10 @@ export default function AlertConfigsPage() {
         <div className="flex-1 space-y-6">
           <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-black">
+              <h1 className="text-2xl sm:text-3xl font-bold text-white">
                 Alert Configurations
               </h1>
-              <p className="text-[#6A6A6A] mt-1">
+              <p className="text-gray-400 mt-1">
                 Create and manage alert rules
                 {limits && (
                   <span className="ml-2 text-sm">
@@ -189,13 +189,13 @@ export default function AlertConfigsPage() {
 
           {/* Configs List */}
           {loading ? (
-            <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 text-center">
+            <div className="bg-[#262932] rounded-xl border border-white/10 p-8 text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF] mx-auto" />
             </div>
           ) : configs.length === 0 ? (
-            <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 text-center">
+            <div className="bg-[#262932] rounded-xl border border-white/10 p-8 text-center">
               <svg
-                className="w-12 h-12 mx-auto text-[#6A6A6A] mb-4"
+                className="w-12 h-12 mx-auto text-gray-400 mb-4"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -213,7 +213,7 @@ export default function AlertConfigsPage() {
                   d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
                 />
               </svg>
-              <p className="text-[#6A6A6A] mb-4">No alert configurations yet</p>
+              <p className="text-gray-400 mb-4">No alert configurations yet</p>
               <button
                 onClick={() => setShowCreateForm(true)}
                 className="px-4 py-2 bg-[#7366FF] text-white rounded-lg font-medium hover:bg-[#5A4FCF] transition-colors"
@@ -222,14 +222,14 @@ export default function AlertConfigsPage() {
               </button>
             </div>
           ) : (
-            <div className="bg-white rounded-xl border border-[#E6E7E9] overflow-hidden">
+            <div className="bg-[#262932] rounded-xl border border-white/10 overflow-hidden">
               <div className="divide-y divide-[#E6E7E9]">
                 {configs.map((config) => (
-                  <div key={config.id} className="p-4 hover:bg-[#F5F6F7] transition-colors">
+                  <div key={config.id} className="p-4 hover:bg-[#1D1E26] transition-colors">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-medium text-black">{config.name}</h3>
+                          <h3 className="font-medium text-white">{config.name}</h3>
                           <span className={`px-2 py-0.5 rounded text-xs font-medium ${
                             config.enabled
                               ? 'bg-green-100 text-green-800'
@@ -238,7 +238,7 @@ export default function AlertConfigsPage() {
                             {config.enabled ? 'Active' : 'Paused'}
                           </span>
                         </div>
-                        <div className="flex items-center gap-2 flex-wrap text-sm text-[#6A6A6A]">
+                        <div className="flex items-center gap-2 flex-wrap text-sm text-gray-400">
                           <span className="inline-flex items-center px-2 py-0.5 rounded bg-gray-100 text-gray-800 text-xs">
                             {alertTypeLabels[config.alertType] || config.alertType}
                           </span>
@@ -250,9 +250,9 @@ export default function AlertConfigsPage() {
                           )}
                         </div>
                         {config.description && (
-                          <p className="text-sm text-[#6A6A6A] mt-1">{config.description}</p>
+                          <p className="text-sm text-gray-400 mt-1">{config.description}</p>
                         )}
-                        <div className="flex items-center gap-3 mt-2 text-xs text-[#6A6A6A]">
+                        <div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
                           {config.notifyEmail && (
                             <span className="flex items-center gap-1">
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -295,7 +295,7 @@ export default function AlertConfigsPage() {
                         </button>
                         <button
                           onClick={() => handleDelete(config.id)}
-                          className="p-2 text-[#6A6A6A] hover:text-red-500 transition-colors"
+                          className="p-2 text-gray-400 hover:text-red-500 transition-colors"
                           title="Delete"
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

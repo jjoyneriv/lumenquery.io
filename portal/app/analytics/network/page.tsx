@@ -56,7 +56,7 @@ export default function NetworkAnalyticsPage() {
   if (loading && !metrics) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-[#6A6A6A]">Loading network metrics...</div>
+        <div className="text-gray-400">Loading network metrics...</div>
       </div>
     );
   }
@@ -65,23 +65,23 @@ export default function NetworkAnalyticsPage() {
     <div className="max-w-7xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-black">Network Metrics</h1>
-          <p className="text-[#6A6A6A] text-sm mt-1">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">Network Metrics</h1>
+          <p className="text-gray-400 text-sm mt-1">
             Detailed ledger and transaction analytics
           </p>
         </div>
       </div>
 
       {/* Ledger Info */}
-      <div className="bg-white rounded-2xl border border-[#E6E7E9] p-6 mb-6">
+      <div className="bg-[#262932] rounded-2xl border border-white/10 p-6 mb-6">
         <h2 className="text-lg font-semibold mb-4">Current Ledger</h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <p className="text-[#6A6A6A] text-sm">Sequence</p>
+            <p className="text-gray-400 text-sm">Sequence</p>
             <p className="text-2xl font-bold">{formatNumber(metrics?.ledger.sequence || 0)}</p>
           </div>
           <div>
-            <p className="text-[#6A6A6A] text-sm">Closed At</p>
+            <p className="text-gray-400 text-sm">Closed At</p>
             <p className="text-lg font-medium">
               {metrics?.ledger.closedAt
                 ? new Date(metrics.ledger.closedAt).toLocaleString()
@@ -89,7 +89,7 @@ export default function NetworkAnalyticsPage() {
             </p>
           </div>
           <div>
-            <p className="text-[#6A6A6A] text-sm">Protocol Version</p>
+            <p className="text-gray-400 text-sm">Protocol Version</p>
             <p className="text-2xl font-bold">v{metrics?.ledger.protocolVersion || 0}</p>
           </div>
         </div>
@@ -124,7 +124,7 @@ export default function NetworkAnalyticsPage() {
 
       {/* Charts */}
       <div className="grid grid-cols-1 gap-6">
-        <div className="bg-white rounded-2xl border border-[#E6E7E9] p-6">
+        <div className="bg-[#262932] rounded-2xl border border-white/10 p-6">
           <h3 className="text-lg font-semibold mb-4">Transaction Volume Over Time</h3>
           <AreaChart
             data={metrics?.history || []}
@@ -135,7 +135,7 @@ export default function NetworkAnalyticsPage() {
           />
         </div>
 
-        <div className="bg-white rounded-2xl border border-[#E6E7E9] p-6">
+        <div className="bg-[#262932] rounded-2xl border border-white/10 p-6">
           <h3 className="text-lg font-semibold mb-4">Success Rate Over Time</h3>
           <AreaChart
             data={metrics?.history || []}

@@ -114,7 +114,7 @@ export function AlertBanner({ alerts, onDismiss, maxVisible = 3 }: AlertBannerPr
       {alerts.length > maxVisible && (
         <Link
           href="/intelligence/alerts"
-          className="block text-center text-sm text-[#7366FF] hover:text-[#5A4FCF] bg-white rounded-lg p-2 shadow-lg border border-[#E6E7E9]"
+          className="block text-center text-sm text-[#7366FF] hover:text-[#5A4FCF] bg-[#262932] rounded-lg p-2 shadow-lg border border-white/10"
         >
           +{alerts.length - maxVisible} more alerts
         </Link>

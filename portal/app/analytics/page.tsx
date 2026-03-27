@@ -65,7 +65,7 @@ export default function AnalyticsPage() {
   if (loading && !metrics) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-[#6A6A6A]">Loading analytics...</div>
+        <div className="text-gray-400">Loading analytics...</div>
       </div>
     );
   }
@@ -83,7 +83,7 @@ export default function AnalyticsPage() {
       {/* Last Update Indicator */}
       {lastUpdate && (
         <div className="flex items-center justify-end mb-4">
-          <span className="text-xs text-[#6A6A6A]">
+          <span className="text-xs text-gray-400">
             Updated {lastUpdate.toLocaleTimeString()}
           </span>
         </div>
@@ -121,10 +121,10 @@ export default function AnalyticsPage() {
 
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <div className="bg-white rounded-2xl border border-[#E6E7E9] p-6">
+        <div className="bg-[#262932] rounded-2xl border border-white/10 p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold">Transaction Volume</h3>
-            {loading && <span className="text-xs text-[#6A6A6A]">Loading...</span>}
+            {loading && <span className="text-xs text-gray-400">Loading...</span>}
           </div>
           <AreaChart
             data={metrics?.history || []}
@@ -135,10 +135,10 @@ export default function AnalyticsPage() {
             chartId="transactions-24h"
           />
         </div>
-        <div className="bg-white rounded-2xl border border-[#E6E7E9] p-6">
+        <div className="bg-[#262932] rounded-2xl border border-white/10 p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold">Success Rate</h3>
-            {loading && <span className="text-xs text-[#6A6A6A]">Loading...</span>}
+            {loading && <span className="text-xs text-gray-400">Loading...</span>}
           </div>
           <AreaChart
             data={metrics?.history || []}
@@ -156,7 +156,7 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Link
           href="/analytics/network"
-          className="bg-white rounded-2xl border border-[#E6E7E9] p-6 hover:border-[#7366FF] transition-colors group"
+          className="bg-[#262932] rounded-2xl border border-white/10 p-6 hover:border-[#7366FF] transition-colors group"
         >
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
@@ -166,12 +166,12 @@ export default function AnalyticsPage() {
             </div>
             <h3 className="font-semibold group-hover:text-[#7366FF]">Network Metrics</h3>
           </div>
-          <p className="text-sm text-[#6A6A6A]">Detailed ledger and transaction analysis</p>
+          <p className="text-sm text-gray-400">Detailed ledger and transaction analysis</p>
         </Link>
 
         <Link
           href="/analytics/tokens"
-          className="bg-white rounded-2xl border border-[#E6E7E9] p-6 hover:border-[#7366FF] transition-colors group"
+          className="bg-[#262932] rounded-2xl border border-white/10 p-6 hover:border-[#7366FF] transition-colors group"
         >
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
@@ -181,12 +181,12 @@ export default function AnalyticsPage() {
             </div>
             <h3 className="font-semibold group-hover:text-[#7366FF]">Token Analytics</h3>
           </div>
-          <p className="text-sm text-[#6A6A6A]">Velocity, whale tracking, issuer risk</p>
+          <p className="text-sm text-gray-400">Velocity, whale tracking, issuer risk</p>
         </Link>
 
         <Link
           href="/analytics/contracts"
-          className="bg-white rounded-2xl border border-[#E6E7E9] p-6 hover:border-[#7366FF] transition-colors group"
+          className="bg-[#262932] rounded-2xl border border-white/10 p-6 hover:border-[#7366FF] transition-colors group"
         >
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
@@ -196,7 +196,7 @@ export default function AnalyticsPage() {
             </div>
             <h3 className="font-semibold group-hover:text-[#7366FF]">Smart Contracts</h3>
           </div>
-          <p className="text-sm text-[#6A6A6A]">Soroban contract calls and gas usage</p>
+          <p className="text-sm text-gray-400">Soroban contract calls and gas usage</p>
         </Link>
       </div>
     </div>

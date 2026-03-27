@@ -50,37 +50,37 @@ export default function AuditLogTable({ logs }: AuditLogTableProps) {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-[#E6E7E9] overflow-hidden">
+    <div className="bg-[#262932] rounded-xl border border-white/10 overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-[#E6E7E9] bg-gray-50">
+            <tr className="border-b border-white/10 bg-white/5">
               <th className="text-left py-3 px-4">
-                <span className="font-medium text-sm text-[#6A6A6A]">Time</span>
+                <span className="font-medium text-sm text-gray-400">Time</span>
               </th>
               <th className="text-left py-3 px-4">
-                <span className="font-medium text-sm text-[#6A6A6A]">Action</span>
+                <span className="font-medium text-sm text-gray-400">Action</span>
               </th>
               <th className="text-left py-3 px-4">
-                <span className="font-medium text-sm text-[#6A6A6A]">Admin</span>
+                <span className="font-medium text-sm text-gray-400">Admin</span>
               </th>
               <th className="text-left py-3 px-4">
-                <span className="font-medium text-sm text-[#6A6A6A]">Target User</span>
+                <span className="font-medium text-sm text-gray-400">Target User</span>
               </th>
               <th className="text-left py-3 px-4">
-                <span className="font-medium text-sm text-[#6A6A6A]">IP Address</span>
+                <span className="font-medium text-sm text-gray-400">IP Address</span>
               </th>
               <th className="text-right py-3 px-4">
-                <span className="font-medium text-sm text-[#6A6A6A]">Details</span>
+                <span className="font-medium text-sm text-gray-400">Details</span>
               </th>
             </tr>
           </thead>
           <tbody>
             {logs.map((log) => (
               <>
-                <tr key={log.id} className="border-b border-[#E6E7E9] hover:bg-gray-50">
+                <tr key={log.id} className="border-b border-white/10 hover:bg-white/5">
                   <td className="py-3 px-4">
-                    <span className="text-sm text-[#6A6A6A]">
+                    <span className="text-sm text-gray-400">
                       {formatDate(log.createdAt)}
                     </span>
                   </td>
@@ -89,22 +89,22 @@ export default function AuditLogTable({ logs }: AuditLogTableProps) {
                   </td>
                   <td className="py-3 px-4">
                     <div>
-                      <p className="text-sm font-medium text-black">{log.admin.name || 'No name'}</p>
-                      <p className="text-xs text-[#6A6A6A]">{log.admin.email}</p>
+                      <p className="text-sm font-medium text-white">{log.admin.name || 'No name'}</p>
+                      <p className="text-xs text-gray-400">{log.admin.email}</p>
                     </div>
                   </td>
                   <td className="py-3 px-4">
                     {log.targetUser ? (
                       <div>
-                        <p className="text-sm font-medium text-black">{log.targetUser.name || 'No name'}</p>
-                        <p className="text-xs text-[#6A6A6A]">{log.targetUser.email}</p>
+                        <p className="text-sm font-medium text-white">{log.targetUser.name || 'No name'}</p>
+                        <p className="text-xs text-gray-400">{log.targetUser.email}</p>
                       </div>
                     ) : (
-                      <span className="text-sm text-[#6A6A6A]">-</span>
+                      <span className="text-sm text-gray-400">-</span>
                     )}
                   </td>
                   <td className="py-3 px-4">
-                    <span className="text-sm text-[#6A6A6A] font-mono">
+                    <span className="text-sm text-gray-400 font-mono">
                       {log.ipAddress || '-'}
                     </span>
                   </td>
@@ -120,17 +120,17 @@ export default function AuditLogTable({ logs }: AuditLogTableProps) {
                   </td>
                 </tr>
                 {expandedId === log.id && log.details && (
-                  <tr key={`${log.id}-details`} className="border-b border-[#E6E7E9] bg-gray-50">
+                  <tr key={`${log.id}-details`} className="border-b border-white/10 bg-white/5">
                     <td colSpan={6} className="py-3 px-4">
-                      <div className="bg-white rounded-lg border border-[#E6E7E9] p-4">
-                        <h4 className="text-sm font-medium text-black mb-2">Details</h4>
-                        <pre className="text-xs text-[#6A6A6A] overflow-auto">
+                      <div className="bg-[#262932] rounded-lg border border-white/10 p-4">
+                        <h4 className="text-sm font-medium text-white mb-2">Details</h4>
+                        <pre className="text-xs text-gray-400 overflow-auto">
                           {JSON.stringify(log.details, null, 2)}
                         </pre>
                         {log.userAgent && (
-                          <div className="mt-3 pt-3 border-t border-[#E6E7E9]">
-                            <h4 className="text-sm font-medium text-black mb-1">User Agent</h4>
-                            <p className="text-xs text-[#6A6A6A] break-all">{log.userAgent}</p>
+                          <div className="mt-3 pt-3 border-t border-white/10">
+                            <h4 className="text-sm font-medium text-white mb-1">User Agent</h4>
+                            <p className="text-xs text-gray-400 break-all">{log.userAgent}</p>
                           </div>
                         )}
                       </div>

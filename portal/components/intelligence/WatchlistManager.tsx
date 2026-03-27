@@ -45,14 +45,14 @@ export function WatchlistManager({
   };
 
   return (
-    <div className="bg-white rounded-xl border border-[#E6E7E9] p-6">
-      <h3 className="font-semibold text-black mb-4">
+    <div className="bg-[#262932] rounded-xl border border-white/10 p-6">
+      <h3 className="font-semibold text-white mb-4">
         {isEdit ? 'Edit Watchlist' : 'Create Watchlist'}
       </h3>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-[#6A6A6A] mb-1">
+          <label htmlFor="name" className="block text-sm font-medium text-gray-400 mb-1">
             Name *
           </label>
           <input
@@ -60,13 +60,13 @@ export function WatchlistManager({
             id="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
+            className="w-full px-4 py-2 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
             placeholder="e.g., Top Exchanges"
           />
         </div>
 
         <div>
-          <label htmlFor="description" className="block text-sm font-medium text-[#6A6A6A] mb-1">
+          <label htmlFor="description" className="block text-sm font-medium text-gray-400 mb-1">
             Description
           </label>
           <textarea
@@ -74,7 +74,7 @@ export function WatchlistManager({
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
-            className="w-full px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent resize-none"
+            className="w-full px-4 py-2 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent resize-none"
             placeholder="Optional description for this watchlist"
           />
         </div>
@@ -89,7 +89,7 @@ export function WatchlistManager({
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 text-[#6A6A6A] hover:text-black transition-colors"
+            className="px-4 py-2 text-gray-400 hover:text-white transition-colors"
           >
             Cancel
           </button>
@@ -148,12 +148,12 @@ export function AddAccountForm({ onSubmit, onCancel }: AddAccountFormProps) {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-[#E6E7E9] p-6">
-      <h3 className="font-semibold text-black mb-4">Add Account to Watchlist</h3>
+    <div className="bg-[#262932] rounded-xl border border-white/10 p-6">
+      <h3 className="font-semibold text-white mb-4">Add Account to Watchlist</h3>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="accountId" className="block text-sm font-medium text-[#6A6A6A] mb-1">
+          <label htmlFor="accountId" className="block text-sm font-medium text-gray-400 mb-1">
             Account ID *
           </label>
           <input
@@ -161,13 +161,13 @@ export function AddAccountForm({ onSubmit, onCancel }: AddAccountFormProps) {
             id="accountId"
             value={accountId}
             onChange={(e) => setAccountId(e.target.value)}
-            className="w-full px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent font-mono text-sm"
+            className="w-full px-4 py-2 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent font-mono text-sm"
             placeholder="G..."
           />
         </div>
 
         <div>
-          <label htmlFor="label" className="block text-sm font-medium text-[#6A6A6A] mb-1">
+          <label htmlFor="label" className="block text-sm font-medium text-gray-400 mb-1">
             Label (optional)
           </label>
           <input
@@ -175,7 +175,7 @@ export function AddAccountForm({ onSubmit, onCancel }: AddAccountFormProps) {
             id="label"
             value={label}
             onChange={(e) => setLabel(e.target.value)}
-            className="w-full px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
+            className="w-full px-4 py-2 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
             placeholder="e.g., Binance Hot Wallet"
           />
         </div>
@@ -190,7 +190,7 @@ export function AddAccountForm({ onSubmit, onCancel }: AddAccountFormProps) {
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 text-[#6A6A6A] hover:text-black transition-colors"
+            className="px-4 py-2 text-gray-400 hover:text-white transition-colors"
           >
             Cancel
           </button>

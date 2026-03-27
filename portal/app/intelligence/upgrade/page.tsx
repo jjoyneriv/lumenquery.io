@@ -89,8 +89,8 @@ export default function UpgradePage() {
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Sidebar */}
         <aside className="w-full lg:w-64 flex-shrink-0">
-          <div className="bg-white rounded-xl border border-[#E6E7E9] p-4 sticky top-8">
-            <h2 className="font-semibold text-black mb-4">Intelligence</h2>
+          <div className="bg-[#262932] rounded-xl border border-white/10 p-4 sticky top-8">
+            <h2 className="font-semibold text-white mb-4">Intelligence</h2>
             <IntelligenceNav />
           </div>
         </aside>
@@ -98,10 +98,10 @@ export default function UpgradePage() {
         {/* Main Content */}
         <div className="flex-1 space-y-8">
           <header className="text-center">
-            <h1 className="text-2xl sm:text-3xl font-bold text-black">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white">
               Upgrade Your Intelligence
             </h1>
-            <p className="text-[#6A6A6A] mt-2 max-w-2xl mx-auto">
+            <p className="text-gray-400 mt-2 max-w-2xl mx-auto">
               Choose the plan that fits your needs. All plans include access to
               real-time transaction streaming, account profiling, and custom alerts.
             </p>
@@ -112,10 +112,10 @@ export default function UpgradePage() {
             {tiers.map((tier) => (
               <div
                 key={tier.name}
-                className={`bg-white rounded-xl border p-6 relative ${
+                className={`bg-[#262932] rounded-xl border p-6 relative ${
                   tier.popular
                     ? 'border-[#7366FF] shadow-lg'
-                    : 'border-[#E6E7E9]'
+                    : 'border-white/10'
                 }`}
               >
                 {tier.popular && (
@@ -127,14 +127,14 @@ export default function UpgradePage() {
                 )}
 
                 <div className="text-center mb-6">
-                  <h3 className="text-lg font-semibold text-black mb-2">
+                  <h3 className="text-lg font-semibold text-white mb-2">
                     {tier.name}
                   </h3>
                   <div className="flex items-baseline justify-center gap-1">
-                    <span className="text-3xl font-bold text-black">{tier.price}</span>
-                    <span className="text-[#6A6A6A]">{tier.period}</span>
+                    <span className="text-3xl font-bold text-white">{tier.price}</span>
+                    <span className="text-gray-400">{tier.period}</span>
                   </div>
-                  <p className="text-sm text-[#6A6A6A] mt-2">{tier.description}</p>
+                  <p className="text-sm text-gray-400 mt-2">{tier.description}</p>
                 </div>
 
                 <ul className="space-y-3 mb-6">
@@ -153,7 +153,7 @@ export default function UpgradePage() {
                           d="M5 13l4 4L19 7"
                         />
                       </svg>
-                      <span className="text-[#6A6A6A]">{feature}</span>
+                      <span className="text-gray-400">{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -162,7 +162,7 @@ export default function UpgradePage() {
                   className={`w-full py-3 rounded-lg font-medium transition-colors ${
                     tier.popular
                       ? 'bg-[#7366FF] text-white hover:bg-[#5A4FCF]'
-                      : 'bg-[#F5F6F7] text-black hover:bg-[#E6E7E9]'
+                      : 'bg-[#1D1E26] text-white hover:bg-white/10'
                   }`}
                 >
                   {tier.cta}
@@ -172,34 +172,34 @@ export default function UpgradePage() {
           </div>
 
           {/* FAQ */}
-          <div className="bg-white rounded-xl border border-[#E6E7E9] p-6">
-            <h2 className="text-lg font-semibold text-black mb-4">
+          <div className="bg-[#262932] rounded-xl border border-white/10 p-6">
+            <h2 className="text-lg font-semibold text-white mb-4">
               Frequently Asked Questions
             </h2>
             <div className="space-y-4">
               <div>
-                <h3 className="font-medium text-black">
+                <h3 className="font-medium text-white">
                   What counts as a concurrent stream?
                 </h3>
-                <p className="text-sm text-[#6A6A6A] mt-1">
+                <p className="text-sm text-gray-400 mt-1">
                   Each active SSE connection to the live transaction stream counts as one
                   concurrent stream. Multiple browser tabs each count separately.
                 </p>
               </div>
               <div>
-                <h3 className="font-medium text-black">
+                <h3 className="font-medium text-white">
                   How does the whale threshold work?
                 </h3>
-                <p className="text-sm text-[#6A6A6A] mt-1">
+                <p className="text-sm text-gray-400 mt-1">
                   Whale alerts trigger for XLM transfers exceeding your threshold.
                   Lower thresholds (Teams/Enterprise) help you catch more significant movements.
                 </p>
               </div>
               <div>
-                <h3 className="font-medium text-black">
+                <h3 className="font-medium text-white">
                   Can I upgrade or downgrade at any time?
                 </h3>
-                <p className="text-sm text-[#6A6A6A] mt-1">
+                <p className="text-sm text-gray-400 mt-1">
                   Yes, you can change your plan at any time. Upgrades take effect immediately,
                   and downgrades apply at the end of your billing cycle.
                 </p>
@@ -208,7 +208,7 @@ export default function UpgradePage() {
           </div>
 
           {/* Contact */}
-          <div className="text-center text-[#6A6A6A]">
+          <div className="text-center text-gray-400">
             <p>
               Have questions? {' '}
               <a

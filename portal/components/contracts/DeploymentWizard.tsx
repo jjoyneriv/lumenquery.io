@@ -106,12 +106,12 @@ export function DeploymentWizard() {
       </div>
 
       {/* Wizard Content */}
-      <div className="bg-white border border-[#E6E7E9] rounded-lg p-6">
+      <div className="bg-[#262932] border border-white/10 rounded-lg p-6">
         {/* Step 1: Connect Wallet */}
         {!isWalletConnected && (
           <div className="text-center py-8">
             <h3 className="text-lg font-semibold mb-4">Connect Your Wallet</h3>
-            <p className="text-[#6A6A6A] mb-6">
+            <p className="text-gray-400 mb-6">
               Connect your Freighter wallet to deploy a smart contract
             </p>
             <WalletConnect
@@ -166,16 +166,16 @@ export function DeploymentWizard() {
             <h3 className="text-lg font-semibold mb-4">Review & Upload WASM</h3>
 
             <div className="space-y-4 mb-6">
-              <div className="p-4 bg-gray-50 rounded-lg">
+              <div className="p-4 bg-white/5 rounded-lg">
                 <div className="flex justify-between items-center">
-                  <span className="text-[#6A6A6A]">File</span>
+                  <span className="text-gray-400">File</span>
                   <span className="font-medium">{deploy.state.wasmFile?.name}</span>
                 </div>
               </div>
 
-              <div className="p-4 bg-gray-50 rounded-lg">
+              <div className="p-4 bg-white/5 rounded-lg">
                 <div className="flex justify-between items-center">
-                  <span className="text-[#6A6A6A]">Size</span>
+                  <span className="text-gray-400">Size</span>
                   <span className="font-medium">
                     {deploy.state.wasmFile
                       ? `${(deploy.state.wasmFile.size / 1024).toFixed(1)} KB`
@@ -186,7 +186,7 @@ export function DeploymentWizard() {
 
               <div className="p-4 bg-[#7366FF]/5 rounded-lg border border-[#7366FF]/20">
                 <div className="flex justify-between items-center">
-                  <span className="text-[#6A6A6A]">Estimated Fee</span>
+                  <span className="text-gray-400">Estimated Fee</span>
                   <span className="font-medium text-[#7366FF]">
                     {estimatedUploadFee || 'Calculating...'}
                   </span>
@@ -197,7 +197,7 @@ export function DeploymentWizard() {
             <div className="flex gap-3">
               <button
                 onClick={() => setWizardStep('upload')}
-                className="flex-1 py-3 border border-[#E6E7E9] text-[#6A6A6A] rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex-1 py-3 border border-white/10 text-gray-400 rounded-lg hover:bg-white/5 transition-colors"
               >
                 Back
               </button>
@@ -216,7 +216,7 @@ export function DeploymentWizard() {
         {isWalletConnected && wizardStep === 'deploy' && (
           <div>
             <h3 className="text-lg font-semibold mb-4">Create Contract Instance</h3>
-            <p className="text-[#6A6A6A] mb-4">
+            <p className="text-gray-400 mb-4">
               WASM uploaded successfully! Now create your contract instance.
             </p>
 
@@ -232,7 +232,7 @@ export function DeploymentWizard() {
 
               <div className="p-4 bg-[#7366FF]/5 rounded-lg border border-[#7366FF]/20">
                 <div className="flex justify-between items-center">
-                  <span className="text-[#6A6A6A]">Estimated Fee</span>
+                  <span className="text-gray-400">Estimated Fee</span>
                   <span className="font-medium text-[#7366FF]">
                     {estimatedCreateFee || 'Calculating...'}
                   </span>
@@ -264,7 +264,7 @@ export function DeploymentWizard() {
               </svg>
             </div>
             <h3 className="text-xl font-semibold mb-2">Contract Deployed!</h3>
-            <p className="text-[#6A6A6A] mb-6">
+            <p className="text-gray-400 mb-6">
               Your smart contract is now live on the Stellar network.
             </p>
 
@@ -277,7 +277,7 @@ export function DeploymentWizard() {
               </a>
               <button
                 onClick={handleReset}
-                className="px-6 py-3 border border-[#E6E7E9] text-[#6A6A6A] rounded-lg hover:bg-gray-50 transition-colors"
+                className="px-6 py-3 border border-white/10 text-gray-400 rounded-lg hover:bg-white/5 transition-colors"
               >
                 Deploy Another
               </button>
@@ -304,7 +304,7 @@ export function DeploymentWizard() {
               </svg>
             </div>
             <h3 className="text-xl font-semibold mb-2 text-red-700">Deployment Failed</h3>
-            <p className="text-[#6A6A6A] mb-6">{deploy.state.error}</p>
+            <p className="text-gray-400 mb-6">{deploy.state.error}</p>
             <button
               onClick={handleReset}
               className="px-6 py-3 bg-[#7366FF] text-white rounded-lg hover:bg-[#1e44cc] transition-colors"

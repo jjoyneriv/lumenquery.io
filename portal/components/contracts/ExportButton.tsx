@@ -76,7 +76,7 @@ export function ExportButton({ contractId, type, canExport }: ExportButtonProps)
       <button
         onClick={() => setIsOpen(!isOpen)}
         disabled={loading}
-        className="flex items-center gap-2 px-3 py-2 bg-white border border-[#E6E7E9] rounded-lg text-sm hover:border-[#7366FF] transition-colors"
+        className="flex items-center gap-2 px-3 py-2 bg-[#262932] border border-white/10 rounded-lg text-sm hover:border-[#7366FF] transition-colors"
       >
         {loading ? (
           <div className="w-4 h-4 border-2 border-[#7366FF] border-t-transparent rounded-full animate-spin" />
@@ -107,12 +107,12 @@ export function ExportButton({ contractId, type, canExport }: ExportButtonProps)
             className="fixed inset-0 z-10"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute right-0 mt-2 w-40 bg-white border border-[#E6E7E9] rounded-lg shadow-lg z-20 overflow-hidden">
+          <div className="absolute right-0 mt-2 w-40 bg-[#262932] border border-white/10 rounded-lg shadow-lg z-20 overflow-hidden">
             <button
               onClick={() => handleExport('json')}
-              className="w-full px-4 py-2 text-left text-sm hover:bg-[#F5F6F7] transition-colors flex items-center gap-2"
+              className="w-full px-4 py-2 text-left text-sm hover:bg-[#1D1E26] transition-colors flex items-center gap-2"
             >
-              <svg className="w-4 h-4 text-[#6A6A6A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -124,9 +124,9 @@ export function ExportButton({ contractId, type, canExport }: ExportButtonProps)
             </button>
             <button
               onClick={() => handleExport('csv')}
-              className="w-full px-4 py-2 text-left text-sm hover:bg-[#F5F6F7] transition-colors flex items-center gap-2"
+              className="w-full px-4 py-2 text-left text-sm hover:bg-[#1D1E26] transition-colors flex items-center gap-2"
             >
-              <svg className="w-4 h-4 text-[#6A6A6A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"

@@ -2051,7 +2051,7 @@ export function TransactionList() {
           </thead>
           <tbody>
             {transactions.map((tx) => (
-              <tr key={tx.id} className="border-b hover:bg-gray-50">
+              <tr key={tx.id} className="border-b hover:bg-white/5">
                 <td className="py-2 font-mono text-sm">
                   {tx.hash.slice(0, 8)}...{tx.hash.slice(-8)}
                 </td>
@@ -2415,7 +2415,7 @@ export function LedgerDashboard() {
           </thead>
           <tbody>
             {ledgers.map((ledger) => (
-              <tr key={ledger.id} className="border-b hover:bg-gray-50">
+              <tr key={ledger.id} className="border-b hover:bg-white/5">
                 <td className="py-2 font-mono">{ledger.sequence}</td>
                 <td className="py-2">{ledger.transaction_count}</td>
                 <td className="py-2">{ledger.operation_count}</td>
@@ -5074,15 +5074,15 @@ export function NetworkStatus() {
 
   return (
     <div className="grid grid-cols-3 gap-4">
-      <div className="p-4 bg-white rounded-lg shadow">
+      <div className="p-4 bg-[#262932] rounded-lg shadow">
         <div className="text-sm text-gray-500">Latest Ledger</div>
         <div className="text-2xl font-bold">{state.ledger.toLocaleString()}</div>
       </div>
-      <div className="p-4 bg-white rounded-lg shadow">
+      <div className="p-4 bg-[#262932] rounded-lg shadow">
         <div className="text-sm text-gray-500">Protocol</div>
         <div className="text-2xl font-bold">v{state.protocolVersion}</div>
       </div>
-      <div className="p-4 bg-white rounded-lg shadow">
+      <div className="p-4 bg-[#262932] rounded-lg shadow">
         <div className="text-sm text-gray-500">Updated</div>
         <div className="text-2xl font-bold">
           {new Date(state.timestamp).toLocaleTimeString()}
@@ -7045,7 +7045,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
       const boldParts = part.split(/(\*\*[^*]+\*\*)/g);
       return boldParts.map((bp, j) => {
         if (bp.startsWith('**') && bp.endsWith('**')) {
-          return <strong key={`${i}-${j}`} className="font-semibold text-black">{bp.slice(2, -2)}</strong>;
+          return <strong key={`${i}-${j}`} className="font-semibold text-white">{bp.slice(2, -2)}</strong>;
         }
         const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
         const linkParts = bp.split(linkRegex);
@@ -7108,7 +7108,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
             <p className="text-white/80 mb-4 sm:mb-6 text-sm sm:text-base">
               Sign up for free and start building on Stellar with LumenQuery today.
             </p>
-            <Link href="/auth/signup" className="inline-block px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg bg-white text-[#7366FF] font-medium hover:bg-gray-100 transition-colors text-sm sm:text-base">
+            <Link href="/auth/signup" className="inline-block px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg bg-white text-[#7366FF] font-medium hover:bg-white/10 transition-colors text-sm sm:text-base">
               Create Free Account
             </Link>
           </aside>

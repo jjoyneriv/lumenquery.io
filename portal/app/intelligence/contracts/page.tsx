@@ -26,16 +26,16 @@ export default function ContractsPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl sm:text-3xl font-bold text-black">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white">
           Contract Intelligence
         </h1>
-        <p className="text-[#6A6A6A] mt-1">
+        <p className="text-gray-400 mt-1">
           Advanced Soroban contract analytics and monitoring
         </p>
       </header>
 
       {/* Coming Soon Card */}
-      <div className="bg-white rounded-xl border border-[#E6E7E9] p-12 text-center">
+      <div className="bg-[#262932] rounded-xl border border-white/10 p-12 text-center">
         <div className="max-w-md mx-auto">
           <div className="w-20 h-20 mx-auto mb-6 bg-indigo-100 rounded-2xl flex items-center justify-center">
             <svg
@@ -52,30 +52,30 @@ export default function ContractsPage() {
               />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-black mb-4">
+          <h2 className="text-2xl font-bold text-white mb-4">
             Coming Soon
           </h2>
-          <p className="text-[#6A6A6A] mb-6">
+          <p className="text-gray-400 mb-6">
             Advanced Soroban contract analytics are on the way. Track contract calls,
             analyze gas usage, monitor events, and identify anomalies in contract behavior.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left mb-8">
-            <div className="p-4 bg-[#F5F6F7] rounded-lg">
-              <h3 className="font-semibold text-black mb-1">Call Frequency</h3>
-              <p className="text-sm text-[#6A6A6A]">Track contract invocation patterns</p>
+            <div className="p-4 bg-[#1D1E26] rounded-lg">
+              <h3 className="font-semibold text-white mb-1">Call Frequency</h3>
+              <p className="text-sm text-gray-400">Track contract invocation patterns</p>
             </div>
-            <div className="p-4 bg-[#F5F6F7] rounded-lg">
-              <h3 className="font-semibold text-black mb-1">Gas Analytics</h3>
-              <p className="text-sm text-[#6A6A6A]">Monitor gas usage and costs</p>
+            <div className="p-4 bg-[#1D1E26] rounded-lg">
+              <h3 className="font-semibold text-white mb-1">Gas Analytics</h3>
+              <p className="text-sm text-gray-400">Monitor gas usage and costs</p>
             </div>
-            <div className="p-4 bg-[#F5F6F7] rounded-lg">
-              <h3 className="font-semibold text-black mb-1">Event Monitoring</h3>
-              <p className="text-sm text-[#6A6A6A]">Real-time contract event streaming</p>
+            <div className="p-4 bg-[#1D1E26] rounded-lg">
+              <h3 className="font-semibold text-white mb-1">Event Monitoring</h3>
+              <p className="text-sm text-gray-400">Real-time contract event streaming</p>
             </div>
-            <div className="p-4 bg-[#F5F6F7] rounded-lg">
-              <h3 className="font-semibold text-black mb-1">Caller Profiling</h3>
-              <p className="text-sm text-[#6A6A6A]">Identify top contract users</p>
+            <div className="p-4 bg-[#1D1E26] rounded-lg">
+              <h3 className="font-semibold text-white mb-1">Caller Profiling</h3>
+              <p className="text-sm text-gray-400">Identify top contract users</p>
             </div>
           </div>
 

@@ -153,8 +153,8 @@ export default function TransactionViewerPage() {
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-[#F5F6F7] flex items-center justify-center">
-        <div className="text-[#6A6A6A]">Loading...</div>
+      <div className="min-h-screen bg-[#1D1E26] flex items-center justify-center">
+        <div className="text-gray-400">Loading...</div>
       </div>
     );
   }

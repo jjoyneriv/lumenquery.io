@@ -65,7 +65,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="text-[#6A6A6A] hover:text-[#7366FF] transition-colors"
+      className="text-gray-400 hover:text-[#7366FF] transition-colors"
       title="Copy address"
     >
       {copied ? (
@@ -87,8 +87,8 @@ export function AccountCard({ profile, hasFullAccess, showLink = true }: Account
   const riskStyle = riskColors[riskLevel];
 
   return (
-    <div className="bg-white rounded-xl border border-[#E6E7E9] overflow-hidden">
-      <div className="px-4 sm:px-6 py-4 border-b border-[#E6E7E9]">
+    <div className="bg-[#262932] rounded-xl border border-white/10 overflow-hidden">
+      <div className="px-4 sm:px-6 py-4 border-b border-white/10">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-2 flex-wrap">
@@ -122,41 +122,41 @@ export function AccountCard({ profile, hasFullAccess, showLink = true }: Account
       <div className="p-4 sm:p-6">
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           <div>
-            <p className="text-xs text-[#6A6A6A] mb-1">Balance</p>
-            <p className="font-semibold text-black">{profile.nativeBalance} XLM</p>
+            <p className="text-xs text-gray-400 mb-1">Balance</p>
+            <p className="font-semibold text-white">{profile.nativeBalance} XLM</p>
           </div>
           <div>
-            <p className="text-xs text-[#6A6A6A] mb-1">Total Volume</p>
-            <p className="font-semibold text-black">{profile.totalVolume}</p>
+            <p className="text-xs text-gray-400 mb-1">Total Volume</p>
+            <p className="font-semibold text-white">{profile.totalVolume}</p>
           </div>
           <div>
-            <p className="text-xs text-[#6A6A6A] mb-1">Transactions</p>
-            <p className="font-semibold text-black">{profile.totalTransactions.toLocaleString()}</p>
+            <p className="text-xs text-gray-400 mb-1">Transactions</p>
+            <p className="font-semibold text-white">{profile.totalTransactions.toLocaleString()}</p>
           </div>
           <div>
-            <p className="text-xs text-[#6A6A6A] mb-1">Avg TX/Day</p>
-            <p className="font-semibold text-black">{profile.avgTxPerDay.toFixed(1)}</p>
+            <p className="text-xs text-gray-400 mb-1">Avg TX/Day</p>
+            <p className="font-semibold text-white">{profile.avgTxPerDay.toFixed(1)}</p>
           </div>
           <div>
-            <p className="text-xs text-[#6A6A6A] mb-1">Avg TX Size</p>
-            <p className="font-semibold text-black">{profile.avgTransactionSize}</p>
+            <p className="text-xs text-gray-400 mb-1">Avg TX Size</p>
+            <p className="font-semibold text-white">{profile.avgTransactionSize}</p>
           </div>
           <div>
-            <p className="text-xs text-[#6A6A6A] mb-1">Counterparties</p>
-            <p className="font-semibold text-black">{profile.uniqueCounterparties.toLocaleString()}</p>
+            <p className="text-xs text-gray-400 mb-1">Counterparties</p>
+            <p className="font-semibold text-white">{profile.uniqueCounterparties.toLocaleString()}</p>
           </div>
           <div>
-            <p className="text-xs text-[#6A6A6A] mb-1">Trustlines</p>
-            <p className="font-semibold text-black">{profile.trustlineCount}</p>
+            <p className="text-xs text-gray-400 mb-1">Trustlines</p>
+            <p className="font-semibold text-white">{profile.trustlineCount}</p>
           </div>
           <div>
-            <p className="text-xs text-[#6A6A6A] mb-1">Sub-entries</p>
-            <p className="font-semibold text-black">{profile.subentryCount}</p>
+            <p className="text-xs text-gray-400 mb-1">Sub-entries</p>
+            <p className="font-semibold text-white">{profile.subentryCount}</p>
           </div>
         </div>
 
         {(profile.firstSeen || profile.lastSeen) && (
-          <div className="mt-4 pt-4 border-t border-[#E6E7E9] flex flex-wrap gap-4 text-sm text-[#6A6A6A]">
+          <div className="mt-4 pt-4 border-t border-white/10 flex flex-wrap gap-4 text-sm text-gray-400">
             {profile.firstSeen && (
               <span>First seen: {new Date(profile.firstSeen).toLocaleDateString()}</span>
             )}

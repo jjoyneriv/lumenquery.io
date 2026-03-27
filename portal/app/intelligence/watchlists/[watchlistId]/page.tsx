@@ -102,8 +102,8 @@ export default function WatchlistDetailPage() {
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Sidebar */}
         <aside className="w-full lg:w-64 flex-shrink-0">
-          <div className="bg-white rounded-xl border border-[#E6E7E9] p-4 sticky top-8">
-            <h2 className="font-semibold text-black mb-4">Intelligence</h2>
+          <div className="bg-[#262932] rounded-xl border border-white/10 p-4 sticky top-8">
+            <h2 className="font-semibold text-white mb-4">Intelligence</h2>
             <IntelligenceNav />
           </div>
         </aside>
@@ -111,11 +111,11 @@ export default function WatchlistDetailPage() {
         {/* Main Content */}
         <div className="flex-1 space-y-6">
           {loading ? (
-            <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 text-center">
+            <div className="bg-[#262932] rounded-xl border border-white/10 p-8 text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF] mx-auto" />
             </div>
           ) : error ? (
-            <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 text-center">
+            <div className="bg-[#262932] rounded-xl border border-white/10 p-8 text-center">
               <p className="text-red-600 mb-4">{error}</p>
               <Link
                 href="/intelligence/watchlists"
@@ -128,13 +128,13 @@ export default function WatchlistDetailPage() {
             <>
               <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                  <h1 className="text-2xl sm:text-3xl font-bold text-black">
+                  <h1 className="text-2xl sm:text-3xl font-bold text-white">
                     {watchlist.name}
                   </h1>
                   {watchlist.description && (
-                    <p className="text-[#6A6A6A] mt-1">{watchlist.description}</p>
+                    <p className="text-gray-400 mt-1">{watchlist.description}</p>
                   )}
-                  <p className="text-sm text-[#6A6A6A] mt-2">
+                  <p className="text-sm text-gray-400 mt-2">
                     {watchlist.accounts.length} account{watchlist.accounts.length !== 1 ? 's' : ''} •
                     Created {new Date(watchlist.createdAt).toLocaleDateString()}
                   </p>

@@ -37,7 +37,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="ml-2 text-[#6A6A6A] hover:text-[#7366FF] transition-colors"
+      className="ml-2 text-gray-400 hover:text-[#7366FF] transition-colors"
       title="Copy address"
     >
       {copied ? (
@@ -70,9 +70,9 @@ export function WhaleTable({ whales, movements }: WhaleTableProps) {
   return (
     <div className="space-y-6">
       {/* Top Whales Table */}
-      <div className="bg-white rounded-xl border border-[#E6E7E9] overflow-hidden">
-        <div className="px-4 sm:px-6 py-4 border-b border-[#E6E7E9]">
-          <h3 className="font-semibold text-black flex items-center gap-2">
+      <div className="bg-[#262932] rounded-xl border border-white/10 overflow-hidden">
+        <div className="px-4 sm:px-6 py-4 border-b border-white/10">
+          <h3 className="font-semibold text-white flex items-center gap-2">
             <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
@@ -81,15 +81,15 @@ export function WhaleTable({ whales, movements }: WhaleTableProps) {
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50">
+            <thead className="bg-white/5">
               <tr>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Address
                 </th>
-                <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Balance (XLM)
                 </th>
-                <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Last Activity
                 </th>
               </tr>
@@ -97,24 +97,24 @@ export function WhaleTable({ whales, movements }: WhaleTableProps) {
             <tbody className="divide-y divide-[#E6E7E9]">
               {whales.length > 0 ? (
                 whales.map((whale, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
+                  <tr key={index} className="hover:bg-white/5">
                     <td className="px-4 sm:px-6 py-4">
                       <div className="flex items-center">
                         <code className="text-sm font-mono text-[#7366FF]">{whale.address}</code>
                         <CopyButton text={whale.address} />
                       </div>
                     </td>
-                    <td className="px-4 sm:px-6 py-4 text-right text-sm font-medium text-black">
+                    <td className="px-4 sm:px-6 py-4 text-right text-sm font-medium text-white">
                       {whale.balance}
                     </td>
-                    <td className="px-4 sm:px-6 py-4 text-right text-sm text-[#6A6A6A]">
+                    <td className="px-4 sm:px-6 py-4 text-right text-sm text-gray-400">
                       {formatTimeAgo(whale.lastActivity)}
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={3} className="px-4 sm:px-6 py-8 text-center text-[#6A6A6A]">
+                  <td colSpan={3} className="px-4 sm:px-6 py-8 text-center text-gray-400">
                     No whale accounts found in recent activity
                   </td>
                 </tr>
@@ -125,9 +125,9 @@ export function WhaleTable({ whales, movements }: WhaleTableProps) {
       </div>
 
       {/* Large Movements Table */}
-      <div className="bg-white rounded-xl border border-[#E6E7E9] overflow-hidden">
-        <div className="px-4 sm:px-6 py-4 border-b border-[#E6E7E9]">
-          <h3 className="font-semibold text-black flex items-center gap-2">
+      <div className="bg-[#262932] rounded-xl border border-white/10 overflow-hidden">
+        <div className="px-4 sm:px-6 py-4 border-b border-white/10">
+          <h3 className="font-semibold text-white flex items-center gap-2">
             <svg className="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
             </svg>
@@ -136,21 +136,21 @@ export function WhaleTable({ whales, movements }: WhaleTableProps) {
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50">
+            <thead className="bg-white/5">
               <tr>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   From
                 </th>
-                <th className="px-4 sm:px-6 py-3 text-center text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-3 text-center text-xs font-medium text-gray-400 uppercase tracking-wider">
 
                 </th>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   To
                 </th>
-                <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Amount (XLM)
                 </th>
-                <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Time
                 </th>
               </tr>
@@ -158,9 +158,9 @@ export function WhaleTable({ whales, movements }: WhaleTableProps) {
             <tbody className="divide-y divide-[#E6E7E9]">
               {movements.length > 0 ? (
                 movements.map((movement, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
+                  <tr key={index} className="hover:bg-white/5">
                     <td className="px-4 sm:px-6 py-4">
-                      <code className="text-sm font-mono text-[#6A6A6A]">{movement.from}</code>
+                      <code className="text-sm font-mono text-gray-400">{movement.from}</code>
                     </td>
                     <td className="px-4 sm:px-6 py-4 text-center">
                       <svg className="w-4 h-4 text-[#7366FF] inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -168,19 +168,19 @@ export function WhaleTable({ whales, movements }: WhaleTableProps) {
                       </svg>
                     </td>
                     <td className="px-4 sm:px-6 py-4">
-                      <code className="text-sm font-mono text-[#6A6A6A]">{movement.to}</code>
+                      <code className="text-sm font-mono text-gray-400">{movement.to}</code>
                     </td>
-                    <td className="px-4 sm:px-6 py-4 text-right text-sm font-medium text-black">
+                    <td className="px-4 sm:px-6 py-4 text-right text-sm font-medium text-white">
                       {movement.amount}
                     </td>
-                    <td className="px-4 sm:px-6 py-4 text-right text-sm text-[#6A6A6A]">
+                    <td className="px-4 sm:px-6 py-4 text-right text-sm text-gray-400">
                       {formatTimeAgo(movement.timestamp)}
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="px-4 sm:px-6 py-8 text-center text-[#6A6A6A]">
+                  <td colSpan={5} className="px-4 sm:px-6 py-8 text-center text-gray-400">
                     No large movements detected recently
                   </td>
                 </tr>

@@ -111,7 +111,7 @@ export default function AssetTable({ assets, showPnL = true, showRisk = false }:
 
   if (assets.length === 0) {
     return (
-      <div className="text-center py-8 text-[#6A6A6A]">
+      <div className="text-center py-8 text-gray-400">
         <p>No assets found</p>
       </div>
     );
@@ -121,17 +121,17 @@ export default function AssetTable({ assets, showPnL = true, showRisk = false }:
     <div className="overflow-x-auto">
       <table className="w-full min-w-[600px]">
         <thead>
-          <tr className="border-b border-[#E6E7E9]">
-            <th className="text-left py-3 px-4 text-sm font-semibold text-[#6A6A6A]">Asset</th>
+          <tr className="border-b border-white/10">
+            <th className="text-left py-3 px-4 text-sm font-semibold text-gray-400">Asset</th>
             <th
-              className="text-right py-3 px-4 text-sm font-semibold text-[#6A6A6A] cursor-pointer hover:text-black"
+              className="text-right py-3 px-4 text-sm font-semibold text-gray-400 cursor-pointer hover:text-white"
               onClick={() => handleSort('balance')}
             >
               Balance
               <SortIcon column="balance" />
             </th>
             <th
-              className="text-right py-3 px-4 text-sm font-semibold text-[#6A6A6A] cursor-pointer hover:text-black"
+              className="text-right py-3 px-4 text-sm font-semibold text-gray-400 cursor-pointer hover:text-white"
               onClick={() => handleSort('value')}
             >
               Value
@@ -139,7 +139,7 @@ export default function AssetTable({ assets, showPnL = true, showRisk = false }:
             </th>
             {showPnL && (
               <th
-                className="text-right py-3 px-4 text-sm font-semibold text-[#6A6A6A] cursor-pointer hover:text-black"
+                className="text-right py-3 px-4 text-sm font-semibold text-gray-400 cursor-pointer hover:text-white"
                 onClick={() => handleSort('pnl')}
               >
                 P&L
@@ -147,7 +147,7 @@ export default function AssetTable({ assets, showPnL = true, showRisk = false }:
               </th>
             )}
             {showRisk && (
-              <th className="text-right py-3 px-4 text-sm font-semibold text-[#6A6A6A]">Risk</th>
+              <th className="text-right py-3 px-4 text-sm font-semibold text-gray-400">Risk</th>
             )}
           </tr>
         </thead>
@@ -157,7 +157,7 @@ export default function AssetTable({ assets, showPnL = true, showRisk = false }:
             return (
               <tr
                 key={`${asset.assetCode}-${asset.assetIssuer || 'native'}-${index}`}
-                className="border-b border-[#E6E7E9] hover:bg-[#F5F6F7]"
+                className="border-b border-white/10 hover:bg-[#1D1E26]"
               >
                 <td className="py-3 px-4">
                   <div className="flex items-center gap-2">
@@ -169,7 +169,7 @@ export default function AssetTable({ assets, showPnL = true, showRisk = false }:
                     <div>
                       <div className="font-medium">{asset.assetCode}</div>
                       {asset.assetIssuer && (
-                        <div className="text-xs text-[#6A6A6A]">{truncateIssuer(asset.assetIssuer)}</div>
+                        <div className="text-xs text-gray-400">{truncateIssuer(asset.assetIssuer)}</div>
                       )}
                     </div>
                   </div>

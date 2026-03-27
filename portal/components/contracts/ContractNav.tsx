@@ -51,7 +51,7 @@ export function ContractNav({ contractId }: ContractNavProps) {
     <>
       {/* Desktop sidebar */}
       <nav className="hidden lg:block w-64 flex-shrink-0" aria-label="Contract navigation">
-        <div className="sticky top-24 bg-white border border-[#E6E7E9] rounded-lg p-2">
+        <div className="sticky top-24 bg-[#262932] border border-white/10 rounded-lg p-2">
           {navItems.map((item) => {
             const href = basePath + item.href;
             const isActive = pathname === href || (item.href === '' && pathname === basePath);
@@ -63,7 +63,7 @@ export function ContractNav({ contractId }: ContractNavProps) {
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                   isActive
                     ? 'bg-[#7366FF] text-white'
-                    : 'text-[#6A6A6A] hover:bg-[#F5F6F7] hover:text-black'
+                    : 'text-gray-400 hover:bg-[#1D1E26] hover:text-white'
                 }`}
                 aria-current={isActive ? 'page' : undefined}
               >
@@ -89,7 +89,7 @@ export function ContractNav({ contractId }: ContractNavProps) {
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors whitespace-nowrap ${
                   isActive
                     ? 'bg-[#7366FF] text-white'
-                    : 'bg-white border border-[#E6E7E9] text-[#6A6A6A] hover:border-[#7366FF]'
+                    : 'bg-[#262932] border border-white/10 text-gray-400 hover:border-[#7366FF]'
                 }`}
                 aria-current={isActive ? 'page' : undefined}
               >

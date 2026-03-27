@@ -72,17 +72,17 @@ export default function AccountsPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl sm:text-3xl font-bold text-black">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white">
           Account Lookup
         </h1>
-        <p className="text-[#6A6A6A] mt-1">
+        <p className="text-gray-400 mt-1">
           Analyze Stellar account behavior and profiles
         </p>
       </header>
 
       {/* Search Form */}
-      <form onSubmit={handleSearch} className="bg-white rounded-xl border border-[#E6E7E9] p-6">
-        <label htmlFor="accountSearch" className="block text-sm font-medium text-[#6A6A6A] mb-2">
+      <form onSubmit={handleSearch} className="bg-[#262932] rounded-xl border border-white/10 p-6">
+        <label htmlFor="accountSearch" className="block text-sm font-medium text-gray-400 mb-2">
           Enter Stellar Account ID
         </label>
         <div className="flex gap-3">
@@ -92,7 +92,7 @@ export default function AccountsPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="G... or C..."
-            className="flex-1 px-4 py-3 border border-[#E6E7E9] rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
+            className="flex-1 px-4 py-3 border border-white/10 rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
           />
           <button
             type="submit"
@@ -132,7 +132,7 @@ export default function AccountsPage() {
                 // Add to watchlist logic
                 alert('Add to watchlist functionality coming soon');
               }}
-              className="px-4 py-2 border border-[#E6E7E9] text-[#6A6A6A] rounded-lg text-sm font-medium hover:text-black hover:border-[#7366FF] transition-colors"
+              className="px-4 py-2 border border-white/10 text-gray-400 rounded-lg text-sm font-medium hover:text-white hover:border-[#7366FF] transition-colors"
             >
               Add to Watchlist
             </button>
@@ -142,9 +142,9 @@ export default function AccountsPage() {
 
       {/* Empty State */}
       {!profile && !loading && !error && (
-        <div className="bg-white rounded-xl border border-[#E6E7E9] p-12 text-center">
+        <div className="bg-[#262932] rounded-xl border border-white/10 p-12 text-center">
           <svg
-            className="w-16 h-16 mx-auto text-[#6A6A6A] mb-4"
+            className="w-16 h-16 mx-auto text-gray-400 mb-4"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -156,10 +156,10 @@ export default function AccountsPage() {
               d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
             />
           </svg>
-          <h3 className="text-lg font-semibold text-black mb-2">
+          <h3 className="text-lg font-semibold text-white mb-2">
             Search for an Account
           </h3>
-          <p className="text-[#6A6A6A] max-w-md mx-auto">
+          <p className="text-gray-400 max-w-md mx-auto">
             Enter a Stellar account ID (starting with G) or contract ID (starting with C) to view its behavior profile and analytics.
           </p>
         </div>

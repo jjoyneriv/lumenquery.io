@@ -40,19 +40,19 @@ export default function StreamPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl sm:text-3xl font-bold text-black">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white">
           Live Transaction Stream
         </h1>
-        <p className="text-[#6A6A6A] mt-1">
+        <p className="text-gray-400 mt-1">
           Real-time feed of Stellar network activity
         </p>
       </header>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl border border-[#E6E7E9] p-4">
+      <div className="bg-[#262932] rounded-xl border border-white/10 p-4">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
-            <label className="block text-sm text-[#6A6A6A] mb-2">Filter by Type</label>
+            <label className="block text-sm text-gray-400 mb-2">Filter by Type</label>
             <div className="flex flex-wrap gap-2">
               {filterOptions.map((option) => (
                 <button
@@ -61,7 +61,7 @@ export default function StreamPage() {
                   className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
                     filter === option.value
                       ? 'bg-[#7366FF] text-white'
-                      : 'bg-[#F5F6F7] text-[#6A6A6A] hover:text-black'
+                      : 'bg-[#1D1E26] text-gray-400 hover:text-white'
                   }`}
                 >
                   {option.label}
@@ -71,7 +71,7 @@ export default function StreamPage() {
           </div>
 
           <div className="sm:w-48">
-            <label htmlFor="assetFilter" className="block text-sm text-[#6A6A6A] mb-2">
+            <label htmlFor="assetFilter" className="block text-sm text-gray-400 mb-2">
               Filter by Asset
             </label>
             <input
@@ -80,7 +80,7 @@ export default function StreamPage() {
               value={assetFilter}
               onChange={(e) => setAssetFilter(e.target.value)}
               placeholder="e.g., USDC"
-              className="w-full px-3 py-2 border border-[#E6E7E9] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
+              className="w-full px-3 py-2 border border-white/10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
             />
           </div>
         </div>

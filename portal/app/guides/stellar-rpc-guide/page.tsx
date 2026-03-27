@@ -262,7 +262,7 @@ if (simResult.error) {
         <aside className="mt-10 sm:mt-16 p-5 sm:p-8 rounded-xl sm:rounded-2xl bg-[#7366FF] text-white text-center">
           <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3">Start Using the Stellar RPC API</h2>
           <p className="text-white/80 mb-4 sm:mb-6 text-sm sm:text-base">Free tier includes 10,000 requests/month. No credit card required.</p>
-          <Link href="/auth/signup" className="inline-block px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg bg-white text-[#7366FF] font-medium hover:bg-gray-100 transition-colors text-sm sm:text-base">
+          <Link href="/auth/signup" className="inline-block px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg bg-white text-[#7366FF] font-medium hover:bg-white/10 transition-colors text-sm sm:text-base">
             Get Free API Key
           </Link>
         </aside>

@@ -88,18 +88,18 @@ export default function TrustlinesPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl sm:text-3xl font-bold text-black">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white">
           Trustline Monitor
         </h1>
-        <p className="text-[#6A6A6A] mt-1">
+        <p className="text-gray-400 mt-1">
           Track trustline creation and removal across the network
         </p>
       </header>
 
       {/* Asset Filter */}
-      <div className="bg-white rounded-xl border border-[#E6E7E9] p-4">
+      <div className="bg-[#262932] rounded-xl border border-white/10 p-4">
         <div className="flex items-center gap-4">
-          <label htmlFor="assetFilter" className="text-sm text-[#6A6A6A]">
+          <label htmlFor="assetFilter" className="text-sm text-gray-400">
             Filter by Asset:
           </label>
           <input
@@ -108,12 +108,12 @@ export default function TrustlinesPage() {
             value={assetFilter}
             onChange={(e) => setAssetFilter(e.target.value)}
             placeholder="e.g., USDC"
-            className="px-3 py-2 border border-[#E6E7E9] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#7366FF] w-32"
+            className="px-3 py-2 border border-white/10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#7366FF] w-32"
           />
           {assetFilter && (
             <button
               onClick={() => setAssetFilter('')}
-              className="text-sm text-[#6A6A6A] hover:text-black"
+              className="text-sm text-gray-400 hover:text-white"
             >
               Clear
             </button>
@@ -123,7 +123,7 @@ export default function TrustlinesPage() {
 
       {/* Trustline Monitor */}
       {loading ? (
-        <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 text-center">
+        <div className="bg-[#262932] rounded-xl border border-white/10 p-8 text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF] mx-auto" />
         </div>
       ) : (

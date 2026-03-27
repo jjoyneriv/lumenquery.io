@@ -178,7 +178,7 @@ export default function PricingPage() {
       </div>
 
       {/* Soroban Pro Section */}
-      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
+      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#262932] border border-white/10">
         <div className="flex items-center gap-2 mb-6">
           <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
             <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -187,7 +187,7 @@ export default function PricingPage() {
           </div>
           <div>
             <h2 className="text-lg font-bold">Soroban Pro</h2>
-            <p className="text-xs text-[#6A6A6A]">Smart contract explorer</p>
+            <p className="text-xs text-gray-400">Smart contract explorer</p>
           </div>
         </div>
 
@@ -198,8 +198,8 @@ export default function PricingPage() {
               className={`rounded-xl border-2 ${
                 tier.highlighted
                   ? 'border-[#7366FF] shadow-lg shadow-[#7366FF]/10'
-                  : 'border-[#E6E7E9]'
-              } p-4 flex flex-col bg-white`}
+                  : 'border-white/10'
+              } p-4 flex flex-col bg-[#262932]`}
             >
               {tier.highlighted && (
                 <div className="text-center mb-3">
@@ -212,9 +212,9 @@ export default function PricingPage() {
               <h3 className="text-lg font-bold mb-1">{tier.name}</h3>
               <div className="mb-3">
                 <span className="text-2xl font-bold">{tier.price}</span>
-                <span className="text-[#6A6A6A] text-sm">{tier.period}</span>
+                <span className="text-gray-400 text-sm">{tier.period}</span>
               </div>
-              <p className="text-xs text-[#6A6A6A] mb-4">{tier.description}</p>
+              <p className="text-xs text-gray-400 mb-4">{tier.description}</p>
 
               <ul className="space-y-2 mb-4 flex-1 text-xs">
                 {tier.features.map((feature) => (
@@ -226,7 +226,7 @@ export default function PricingPage() {
                   </li>
                 ))}
                 {tier.notIncluded.map((feature) => (
-                  <li key={feature} className="flex items-start gap-2 text-[#6A6A6A]">
+                  <li key={feature} className="flex items-start gap-2 text-gray-400">
                     <svg className="w-4 h-4 text-gray-300 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -240,7 +240,7 @@ export default function PricingPage() {
                 className={`w-full py-2 rounded-lg text-center font-medium text-sm transition-colors ${
                   tier.highlighted
                     ? 'bg-[#7366FF] text-white hover:bg-[#1e44cc]'
-                    : 'bg-[#F5F6F7] text-black hover:bg-[#E6E7E9]'
+                    : 'bg-[#1D1E26] text-white hover:bg-white/10'
                 }`}
               >
                 {tier.cta}
@@ -251,7 +251,7 @@ export default function PricingPage() {
       </div>
 
       {/* Transaction Intelligence Section */}
-      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
+      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#262932] border border-white/10">
         <div className="flex items-center gap-2 mb-6">
           <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
             <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -260,7 +260,7 @@ export default function PricingPage() {
           </div>
           <div>
             <h2 className="text-lg font-bold">Transaction Intelligence</h2>
-            <p className="text-xs text-[#6A6A6A]">Real-time monitoring & alerts</p>
+            <p className="text-xs text-gray-400">Real-time monitoring & alerts</p>
           </div>
         </div>
 
@@ -271,8 +271,8 @@ export default function PricingPage() {
               className={`rounded-xl border-2 ${
                 tier.highlighted
                   ? 'border-[#7366FF] shadow-lg shadow-[#7366FF]/10'
-                  : 'border-[#E6E7E9]'
-              } p-4 flex flex-col bg-white`}
+                  : 'border-white/10'
+              } p-4 flex flex-col bg-[#262932]`}
             >
               {tier.highlighted && (
                 <div className="text-center mb-3">
@@ -285,9 +285,9 @@ export default function PricingPage() {
               <h3 className="text-lg font-bold mb-1">{tier.name}</h3>
               <div className="mb-3">
                 <span className="text-2xl font-bold">{tier.price}</span>
-                {tier.period && <span className="text-[#6A6A6A] text-sm">{tier.period}</span>}
+                {tier.period && <span className="text-gray-400 text-sm">{tier.period}</span>}
               </div>
-              <p className="text-xs text-[#6A6A6A] mb-4">{tier.description}</p>
+              <p className="text-xs text-gray-400 mb-4">{tier.description}</p>
 
               <ul className="space-y-2 mb-4 flex-1 text-xs">
                 {tier.features.map((feature) => (
@@ -299,7 +299,7 @@ export default function PricingPage() {
                   </li>
                 ))}
                 {tier.notIncluded.map((feature) => (
-                  <li key={feature} className="flex items-start gap-2 text-[#6A6A6A]">
+                  <li key={feature} className="flex items-start gap-2 text-gray-400">
                     <svg className="w-4 h-4 text-gray-300 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -313,7 +313,7 @@ export default function PricingPage() {
                 className={`w-full py-2 rounded-lg text-center font-medium text-sm transition-colors ${
                   tier.highlighted
                     ? 'bg-[#7366FF] text-white hover:bg-[#1e44cc]'
-                    : 'bg-[#F5F6F7] text-black hover:bg-[#E6E7E9]'
+                    : 'bg-[#1D1E26] text-white hover:bg-white/10'
                 }`}
               >
                 {tier.cta}
@@ -324,13 +324,13 @@ export default function PricingPage() {
       </div>
 
       {/* FAQ Section */}
-      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-[#E6E7E9]">
+      <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[#262932] border border-white/10">
         <h2 className="text-lg font-bold mb-6">Frequently Asked Questions</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {faqs.map((faq) => (
-            <div key={faq.question} className="p-4 rounded-lg bg-[#F5F6F7]">
+            <div key={faq.question} className="p-4 rounded-lg bg-[#1D1E26]">
               <h3 className="font-semibold text-sm mb-2">{faq.question}</h3>
-              <p className="text-xs text-[#6A6A6A]">{faq.answer}</p>
+              <p className="text-xs text-gray-400">{faq.answer}</p>
             </div>
           ))}
         </div>
@@ -344,7 +344,7 @@ export default function PricingPage() {
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link
               href="/contracts"
-              className="px-6 py-2 bg-white text-[#7366FF] rounded-lg font-medium text-sm hover:bg-gray-100 transition-colors"
+              className="px-6 py-2 bg-white text-[#7366FF] rounded-lg font-medium text-sm hover:bg-white/10 transition-colors"
             >
               Start Exploring
             </Link>

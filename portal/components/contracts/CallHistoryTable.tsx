@@ -29,9 +29,9 @@ export function CallHistoryTable({
 
   if (calls.length === 0) {
     return (
-      <div className="bg-white border border-[#E6E7E9] rounded-lg p-8 text-center">
+      <div className="bg-[#262932] border border-white/10 rounded-lg p-8 text-center">
         <svg
-          className="w-12 h-12 mx-auto text-[#6A6A6A] mb-4"
+          className="w-12 h-12 mx-auto text-gray-400 mb-4"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -43,33 +43,33 @@ export function CallHistoryTable({
             d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
           />
         </svg>
-        <p className="text-[#6A6A6A]">No calls found for this contract</p>
+        <p className="text-gray-400">No calls found for this contract</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white border border-[#E6E7E9] rounded-lg overflow-hidden">
+    <div className="bg-[#262932] border border-white/10 rounded-lg overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-[#F5F6F7] border-b border-[#E6E7E9]">
+          <thead className="bg-[#1D1E26] border-b border-white/10">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Function
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Status
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Gas
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Time
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 TX Hash
               </th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+              <th className="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
@@ -79,7 +79,7 @@ export function CallHistoryTable({
               <>
                 <tr
                   key={call.id}
-                  className="hover:bg-[#F5F6F7] transition-colors cursor-pointer"
+                  className="hover:bg-[#1D1E26] transition-colors cursor-pointer"
                   onClick={() => setExpandedId(expandedId === call.id ? null : call.id)}
                 >
                   <td className="px-4 py-3">
@@ -98,14 +98,14 @@ export function CallHistoryTable({
                       {call.status === 'success' ? 'Success' : 'Failed'}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-sm text-[#6A6A6A]">
+                  <td className="px-4 py-3 text-sm text-gray-400">
                     {formatGas(call.gasUsed)}
                   </td>
-                  <td className="px-4 py-3 text-sm text-[#6A6A6A]">
+                  <td className="px-4 py-3 text-sm text-gray-400">
                     {formatRelativeTime(call.timestamp)}
                   </td>
                   <td className="px-4 py-3">
-                    <code className="text-xs font-mono text-[#6A6A6A]">
+                    <code className="text-xs font-mono text-gray-400">
                       {formatTxHash(call.txHash)}
                     </code>
                   </td>
@@ -115,7 +115,7 @@ export function CallHistoryTable({
                         e.stopPropagation();
                         onViewDetails?.(call);
                       }}
-                      className="p-1.5 text-[#6A6A6A] hover:text-[#7366FF] transition-colors"
+                      className="p-1.5 text-gray-400 hover:text-[#7366FF] transition-colors"
                       title="View Details"
                     >
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -127,21 +127,21 @@ export function CallHistoryTable({
                 </tr>
                 {expandedId === call.id && (
                   <tr key={`${call.id}-expanded`}>
-                    <td colSpan={6} className="px-4 py-4 bg-[#F5F6F7]">
+                    <td colSpan={6} className="px-4 py-4 bg-[#1D1E26]">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <h4 className="text-xs font-medium text-[#6A6A6A] uppercase mb-2">
+                          <h4 className="text-xs font-medium text-gray-400 uppercase mb-2">
                             Input Parameters
                           </h4>
-                          <pre className="text-xs font-mono bg-white p-3 rounded border border-[#E6E7E9] overflow-x-auto">
+                          <pre className="text-xs font-mono bg-[#262932] p-3 rounded border border-white/10 overflow-x-auto">
                             {JSON.stringify(call.inputsDecoded, null, 2) || 'No inputs'}
                           </pre>
                         </div>
                         <div>
-                          <h4 className="text-xs font-medium text-[#6A6A6A] uppercase mb-2">
+                          <h4 className="text-xs font-medium text-gray-400 uppercase mb-2">
                             Output
                           </h4>
-                          <pre className="text-xs font-mono bg-white p-3 rounded border border-[#E6E7E9] overflow-x-auto">
+                          <pre className="text-xs font-mono bg-[#262932] p-3 rounded border border-white/10 overflow-x-auto">
                             {JSON.stringify(call.outputsDecoded, null, 2) || 'No output'}
                           </pre>
                         </div>

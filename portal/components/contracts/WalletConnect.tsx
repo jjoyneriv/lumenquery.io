@@ -24,7 +24,7 @@ export function WalletConnect({ onConnect, className = '' }: WalletConnectProps)
     return (
       <div className={`flex flex-col items-center gap-3 ${className}`}>
         <div className="text-center">
-          <p className="text-[#6A6A6A] mb-2">Freighter wallet required</p>
+          <p className="text-gray-400 mb-2">Freighter wallet required</p>
           <a
             href="https://www.freighter.app/"
             target="_blank"
@@ -50,7 +50,7 @@ export function WalletConnect({ onConnect, className = '' }: WalletConnectProps)
   if (loading) {
     return (
       <div className={`flex items-center justify-center ${className}`}>
-        <div className="flex items-center gap-2 text-[#6A6A6A]">
+        <div className="flex items-center gap-2 text-gray-400">
           <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
             <circle
               className="opacity-25"
@@ -87,7 +87,7 @@ export function WalletConnect({ onConnect, className = '' }: WalletConnectProps)
         </div>
         <button
           onClick={disconnect}
-          className="text-sm text-[#6A6A6A] hover:text-red-500 transition-colors"
+          className="text-sm text-gray-400 hover:text-red-500 transition-colors"
         >
           Disconnect
         </button>

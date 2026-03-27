@@ -65,7 +65,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="text-[#6A6A6A] hover:text-[#7366FF] transition-colors"
+      className="text-gray-400 hover:text-[#7366FF] transition-colors"
       title="Copy"
     >
       {copied ? (
@@ -86,9 +86,9 @@ export function TransactionRow({ transaction, hasFullAccess }: TransactionRowPro
   const colors = typeColors[transaction.type] || typeColors.default;
 
   return (
-    <div className="border-b border-[#E6E7E9] last:border-0">
+    <div className="border-b border-white/10 last:border-0">
       <div
-        className="p-4 hover:bg-[#F5F6F7] cursor-pointer transition-colors"
+        className="p-4 hover:bg-[#1D1E26] cursor-pointer transition-colors"
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-start justify-between gap-4">
@@ -97,16 +97,16 @@ export function TransactionRow({ transaction, hasFullAccess }: TransactionRowPro
               <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${colors.bg} ${colors.text}`}>
                 {transaction.type.replace(/_/g, ' ')}
               </span>
-              <span className="text-xs text-[#6A6A6A]">
+              <span className="text-xs text-gray-400">
                 #{transaction.ledger.toLocaleString()}
               </span>
-              <span className="text-xs text-[#6A6A6A]">
+              <span className="text-xs text-gray-400">
                 {formatTimeAgo(transaction.timestamp)}
               </span>
             </div>
 
             <div className="flex items-center gap-2 text-sm">
-              <span className="text-[#6A6A6A]">From:</span>
+              <span className="text-gray-400">From:</span>
               <code className="font-mono text-[#7366FF]">{transaction.sourceAccount}</code>
               {hasFullAccess && transaction.fullSourceAccount && (
                 <CopyButton text={transaction.fullSourceAccount} />
@@ -114,10 +114,10 @@ export function TransactionRow({ transaction, hasFullAccess }: TransactionRowPro
 
               {transaction.destinationAccount && (
                 <>
-                  <svg className="w-4 h-4 text-[#6A6A6A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
-                  <span className="text-[#6A6A6A]">To:</span>
+                  <span className="text-gray-400">To:</span>
                   <code className="font-mono text-[#7366FF]">{transaction.destinationAccount}</code>
                   {hasFullAccess && transaction.fullDestinationAccount && (
                     <CopyButton text={transaction.fullDestinationAccount} />
@@ -128,15 +128,15 @@ export function TransactionRow({ transaction, hasFullAccess }: TransactionRowPro
 
             {transaction.amount && (
               <div className="mt-2 text-sm">
-                <span className="font-semibold text-black">{transaction.amount}</span>
-                <span className="text-[#6A6A6A] ml-1">{transaction.assetCode || 'XLM'}</span>
+                <span className="font-semibold text-white">{transaction.amount}</span>
+                <span className="text-gray-400 ml-1">{transaction.assetCode || 'XLM'}</span>
               </div>
             )}
           </div>
 
           <div className="flex items-center gap-2">
             <svg
-              className={`w-5 h-5 text-[#6A6A6A] transition-transform ${expanded ? 'rotate-180' : ''}`}
+              className={`w-5 h-5 text-gray-400 transition-transform ${expanded ? 'rotate-180' : ''}`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -148,18 +148,18 @@ export function TransactionRow({ transaction, hasFullAccess }: TransactionRowPro
       </div>
 
       {expanded && (
-        <div className="px-4 pb-4 bg-[#F5F6F7]">
-          <div className="bg-white rounded-lg p-4 space-y-3">
+        <div className="px-4 pb-4 bg-[#1D1E26]">
+          <div className="bg-[#262932] rounded-lg p-4 space-y-3">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-[#6A6A6A]">Transaction Hash:</span>
+              <span className="text-sm text-gray-400">Transaction Hash:</span>
               <code className="text-sm font-mono text-[#7366FF]">{transaction.txHash}</code>
               <CopyButton text={transaction.txHash} />
             </div>
 
             {transaction.details && Object.keys(transaction.details).length > 0 && (
               <div>
-                <p className="text-sm text-[#6A6A6A] mb-2">Details:</p>
-                <pre className="text-xs font-mono bg-[#F5F6F7] p-3 rounded overflow-x-auto">
+                <p className="text-sm text-gray-400 mb-2">Details:</p>
+                <pre className="text-xs font-mono bg-[#1D1E26] p-3 rounded overflow-x-auto">
                   {JSON.stringify(transaction.details, null, 2)}
                 </pre>
               </div>

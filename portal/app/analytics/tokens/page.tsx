@@ -93,8 +93,8 @@ export default function TokenAnalyticsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-black">Token Analytics</h1>
-          <p className="text-[#6A6A6A] text-sm mt-1">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">Token Analytics</h1>
+          <p className="text-gray-400 text-sm mt-1">
             Token velocity, whale tracking, and issuer risk analysis
           </p>
         </div>
@@ -134,8 +134,8 @@ export default function TokenAnalyticsPage() {
 
       {/* Velocity Chart */}
       <section aria-labelledby="velocity-chart-heading" className="mb-8">
-        <div className="bg-white rounded-2xl border border-[#E6E7E9] p-4 sm:p-6">
-          <h2 id="velocity-chart-heading" className="text-lg font-semibold text-black mb-4">
+        <div className="bg-[#262932] rounded-2xl border border-white/10 p-4 sm:p-6">
+          <h2 id="velocity-chart-heading" className="text-lg font-semibold text-white mb-4">
             Payment Activity
           </h2>
           <div className="h-64">
@@ -151,7 +151,7 @@ export default function TokenAnalyticsPage() {
                 color="#7366FF"
               />
             ) : (
-              <div className="h-full flex items-center justify-center text-[#6A6A6A]">
+              <div className="h-full flex items-center justify-center text-gray-400">
                 No activity data available
               </div>
             )}
@@ -163,9 +163,9 @@ export default function TokenAnalyticsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Top Tokens by Volume */}
         <section aria-labelledby="top-tokens-heading">
-          <div className="bg-white rounded-2xl border border-[#E6E7E9] overflow-hidden h-full">
-            <div className="px-4 sm:px-6 py-4 border-b border-[#E6E7E9]">
-              <h2 id="top-tokens-heading" className="font-semibold text-black flex items-center gap-2">
+          <div className="bg-[#262932] rounded-2xl border border-white/10 overflow-hidden h-full">
+            <div className="px-4 sm:px-6 py-4 border-b border-white/10">
+              <h2 id="top-tokens-heading" className="font-semibold text-white flex items-center gap-2">
                 <svg className="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                 </svg>
@@ -182,17 +182,17 @@ export default function TokenAnalyticsPage() {
                   {data.velocity.topTokensByVolume.map((token, index) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
+                      className="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-white/10 transition-colors"
                     >
                       <div>
-                        <span className="font-medium text-black">{token.code}</span>
-                        <span className="text-xs text-[#6A6A6A] ml-2">
+                        <span className="font-medium text-white">{token.code}</span>
+                        <span className="text-xs text-gray-400 ml-2">
                           {token.issuer}
                         </span>
                       </div>
                       <div className="text-right">
-                        <div className="font-medium text-black">{token.volume24h} XLM</div>
-                        <div className="text-xs text-[#6A6A6A]">
+                        <div className="font-medium text-white">{token.volume24h} XLM</div>
+                        <div className="text-xs text-gray-400">
                           {token.paymentCount.toLocaleString()} payments
                         </div>
                       </div>
@@ -200,7 +200,7 @@ export default function TokenAnalyticsPage() {
                   ))}
                 </div>
               ) : (
-                <p className="text-center text-[#6A6A6A] py-8">No token data available</p>
+                <p className="text-center text-gray-400 py-8">No token data available</p>
               )}
             </div>
           </div>
@@ -208,9 +208,9 @@ export default function TokenAnalyticsPage() {
 
         {/* Issuer Risk Analysis */}
         <section aria-labelledby="issuer-risk-heading">
-          <div className="bg-white rounded-2xl border border-[#E6E7E9] overflow-hidden h-full">
-            <div className="px-4 sm:px-6 py-4 border-b border-[#E6E7E9]">
-              <h2 id="issuer-risk-heading" className="font-semibold text-black flex items-center gap-2">
+          <div className="bg-[#262932] rounded-2xl border border-white/10 overflow-hidden h-full">
+            <div className="px-4 sm:px-6 py-4 border-b border-white/10">
+              <h2 id="issuer-risk-heading" className="font-semibold text-white flex items-center gap-2">
                 <svg className="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
@@ -226,25 +226,25 @@ export default function TokenAnalyticsPage() {
                 <table className="w-full">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-[#6A6A6A] uppercase">
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase">
                         Token
                       </th>
-                      <th className="px-4 py-3 text-right text-xs font-medium text-[#6A6A6A] uppercase">
+                      <th className="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase">
                         Holders
                       </th>
-                      <th className="px-4 py-3 text-center text-xs font-medium text-[#6A6A6A] uppercase">
+                      <th className="px-4 py-3 text-center text-xs font-medium text-gray-400 uppercase">
                         Risk
                       </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#E6E7E9]">
                     {data.issuerRisk.topTokens.map((token, index) => (
-                      <tr key={index} className="hover:bg-gray-50">
+                      <tr key={index} className="hover:bg-white/5">
                         <td className="px-4 py-3">
-                          <div className="font-medium text-black">{token.code}</div>
-                          <div className="text-xs text-[#6A6A6A]">{token.issuer}</div>
+                          <div className="font-medium text-white">{token.code}</div>
+                          <div className="text-xs text-gray-400">{token.issuer}</div>
                         </td>
-                        <td className="px-4 py-3 text-right text-sm text-black">
+                        <td className="px-4 py-3 text-right text-sm text-white">
                           {token.holderCount.toLocaleString()}
                         </td>
                         <td className="px-4 py-3 text-center">
@@ -255,7 +255,7 @@ export default function TokenAnalyticsPage() {
                   </tbody>
                 </table>
               ) : (
-                <p className="text-center text-[#6A6A6A] py-8">No issuer data available</p>
+                <p className="text-center text-gray-400 py-8">No issuer data available</p>
               )}
             </div>
           </div>
@@ -264,11 +264,11 @@ export default function TokenAnalyticsPage() {
 
       {/* Whale Tracking */}
       <section aria-labelledby="whale-heading" className="mb-8">
-        <h2 id="whale-heading" className="text-lg font-semibold text-black mb-4">
+        <h2 id="whale-heading" className="text-lg font-semibold text-white mb-4">
           Whale Tracking
         </h2>
         {loading ? (
-          <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 flex items-center justify-center">
+          <div className="bg-[#262932] rounded-xl border border-white/10 p-8 flex items-center justify-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF]" />
           </div>
         ) : (
@@ -281,7 +281,7 @@ export default function TokenAnalyticsPage() {
 
       {/* Last Updated */}
       {data?.updatedAt && (
-        <p className="text-xs text-[#6A6A6A] text-center">
+        <p className="text-xs text-gray-400 text-center">
           Last updated: {new Date(data.updatedAt).toLocaleString()}
         </p>
       )}

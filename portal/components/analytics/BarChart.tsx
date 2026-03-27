@@ -33,10 +33,10 @@ export default function BarChart({
   if (!data || data.length === 0) {
     return (
       <div
-        className="flex items-center justify-center bg-[#F5F6F7] rounded-lg"
+        className="flex items-center justify-center bg-[#1D1E26] rounded-lg"
         style={{ height }}
       >
-        <p className="text-[#6A6A6A] text-sm">No data available</p>
+        <p className="text-gray-400 text-sm">No data available</p>
       </div>
     );
   }

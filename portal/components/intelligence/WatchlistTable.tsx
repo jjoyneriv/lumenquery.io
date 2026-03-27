@@ -53,9 +53,9 @@ export function WatchlistTable({ watchlists, onDelete, onEdit }: WatchlistTableP
 
   if (watchlists.length === 0) {
     return (
-      <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 text-center">
+      <div className="bg-[#262932] rounded-xl border border-white/10 p-8 text-center">
         <svg
-          className="w-12 h-12 mx-auto text-[#6A6A6A] mb-4"
+          className="w-12 h-12 mx-auto text-gray-400 mb-4"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -73,8 +73,8 @@ export function WatchlistTable({ watchlists, onDelete, onEdit }: WatchlistTableP
             d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
           />
         </svg>
-        <p className="text-[#6A6A6A] mb-4">No watchlists created yet</p>
-        <p className="text-sm text-[#6A6A6A]">
+        <p className="text-gray-400 mb-4">No watchlists created yet</p>
+        <p className="text-sm text-gray-400">
           Create a watchlist to monitor specific Stellar accounts
         </p>
       </div>
@@ -82,28 +82,28 @@ export function WatchlistTable({ watchlists, onDelete, onEdit }: WatchlistTableP
   }
 
   return (
-    <div className="bg-white rounded-xl border border-[#E6E7E9] overflow-hidden">
+    <div className="bg-[#262932] rounded-xl border border-white/10 overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-white/5">
             <tr>
-              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Watchlist
               </th>
-              <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+              <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Accounts
               </th>
-              <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+              <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Last Updated
               </th>
-              <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+              <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#E6E7E9]">
             {watchlists.map((watchlist) => (
-              <tr key={watchlist.id} className="hover:bg-gray-50">
+              <tr key={watchlist.id} className="hover:bg-white/5">
                 <td className="px-4 sm:px-6 py-4">
                   <Link
                     href={`/intelligence/watchlists/${watchlist.id}`}
@@ -113,7 +113,7 @@ export function WatchlistTable({ watchlists, onDelete, onEdit }: WatchlistTableP
                       {watchlist.name}
                     </p>
                     {watchlist.description && (
-                      <p className="text-sm text-[#6A6A6A] mt-1 truncate max-w-xs">
+                      <p className="text-sm text-gray-400 mt-1 truncate max-w-xs">
                         {watchlist.description}
                       </p>
                     )}
@@ -124,7 +124,7 @@ export function WatchlistTable({ watchlists, onDelete, onEdit }: WatchlistTableP
                     {watchlist.accountCount}
                   </span>
                 </td>
-                <td className="px-4 sm:px-6 py-4 text-right text-sm text-[#6A6A6A]">
+                <td className="px-4 sm:px-6 py-4 text-right text-sm text-gray-400">
                   {formatTimeAgo(watchlist.updatedAt)}
                 </td>
                 <td className="px-4 sm:px-6 py-4 text-right">
@@ -132,7 +132,7 @@ export function WatchlistTable({ watchlists, onDelete, onEdit }: WatchlistTableP
                     {onEdit && (
                       <button
                         onClick={() => onEdit(watchlist)}
-                        className="p-1.5 text-[#6A6A6A] hover:text-[#7366FF] transition-colors"
+                        className="p-1.5 text-gray-400 hover:text-[#7366FF] transition-colors"
                         title="Edit"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -144,7 +144,7 @@ export function WatchlistTable({ watchlists, onDelete, onEdit }: WatchlistTableP
                       <button
                         onClick={() => handleDelete(watchlist.id)}
                         disabled={deletingId === watchlist.id}
-                        className="p-1.5 text-[#6A6A6A] hover:text-red-500 transition-colors disabled:opacity-50"
+                        className="p-1.5 text-gray-400 hover:text-red-500 transition-colors disabled:opacity-50"
                         title="Delete"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -184,35 +184,35 @@ export function WatchlistAccountsTable({ accounts, onRemove }: WatchlistAccounts
 
   if (accounts.length === 0) {
     return (
-      <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 text-center">
-        <p className="text-[#6A6A6A]">No accounts in this watchlist</p>
+      <div className="bg-[#262932] rounded-xl border border-white/10 p-8 text-center">
+        <p className="text-gray-400">No accounts in this watchlist</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-xl border border-[#E6E7E9] overflow-hidden">
+    <div className="bg-[#262932] rounded-xl border border-white/10 overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-white/5">
             <tr>
-              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Account
               </th>
-              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Label
               </th>
-              <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+              <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Added
               </th>
-              <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-[#6A6A6A] uppercase tracking-wider">
+              <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#E6E7E9]">
             {accounts.map((account) => (
-              <tr key={account.id} className="hover:bg-gray-50">
+              <tr key={account.id} className="hover:bg-white/5">
                 <td className="px-4 sm:px-6 py-4">
                   <Link
                     href={`/intelligence/accounts/${account.accountId}`}
@@ -221,17 +221,17 @@ export function WatchlistAccountsTable({ accounts, onRemove }: WatchlistAccounts
                     {account.accountId.slice(0, 8)}...{account.accountId.slice(-8)}
                   </Link>
                 </td>
-                <td className="px-4 sm:px-6 py-4 text-sm text-[#6A6A6A]">
+                <td className="px-4 sm:px-6 py-4 text-sm text-gray-400">
                   {account.label || '-'}
                 </td>
-                <td className="px-4 sm:px-6 py-4 text-right text-sm text-[#6A6A6A]">
+                <td className="px-4 sm:px-6 py-4 text-right text-sm text-gray-400">
                   {formatTimeAgo(account.addedAt)}
                 </td>
                 <td className="px-4 sm:px-6 py-4 text-right">
                   <div className="flex items-center justify-end gap-2">
                     <Link
                       href={`/intelligence/accounts/${account.accountId}`}
-                      className="p-1.5 text-[#6A6A6A] hover:text-[#7366FF] transition-colors"
+                      className="p-1.5 text-gray-400 hover:text-[#7366FF] transition-colors"
                       title="View Profile"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -242,7 +242,7 @@ export function WatchlistAccountsTable({ accounts, onRemove }: WatchlistAccounts
                       <button
                         onClick={() => handleRemove(account.accountId)}
                         disabled={removingId === account.accountId}
-                        className="p-1.5 text-[#6A6A6A] hover:text-red-500 transition-colors disabled:opacity-50"
+                        className="p-1.5 text-gray-400 hover:text-red-500 transition-colors disabled:opacity-50"
                         title="Remove"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -53,13 +53,13 @@ export default function PasswordResetModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl max-w-md w-full mx-4 overflow-hidden">
-        <div className="p-6 border-b border-[#E6E7E9]">
+      <div className="bg-[#262932] rounded-2xl max-w-md w-full mx-4 overflow-hidden">
+        <div className="p-6 border-b border-white/10">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-black">Reset Password</h2>
+            <h2 className="text-lg font-bold text-white">Reset Password</h2>
             <button
               onClick={handleClose}
-              className="text-[#6A6A6A] hover:text-black"
+              className="text-gray-400 hover:text-white"
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -76,8 +76,8 @@ export default function PasswordResetModal({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-black mb-2">Email Sent!</h3>
-              <p className="text-[#6A6A6A] mb-6">
+              <h3 className="text-lg font-semibold text-white mb-2">Email Sent!</h3>
+              <p className="text-gray-400 mb-6">
                 A password reset link has been sent to <span className="font-medium">{userEmail}</span>.
                 The link will expire in 1 hour.
               </p>
@@ -95,8 +95,8 @@ export default function PasswordResetModal({
                   {(userName || userEmail).charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <p className="font-medium text-black">{userName || 'No name'}</p>
-                  <p className="text-sm text-[#6A6A6A]">{userEmail}</p>
+                  <p className="font-medium text-white">{userName || 'No name'}</p>
+                  <p className="text-sm text-gray-400">{userEmail}</p>
                 </div>
               </div>
 
@@ -124,7 +124,7 @@ export default function PasswordResetModal({
               <div className="flex justify-end gap-3">
                 <button
                   onClick={handleClose}
-                  className="px-4 py-2 border border-[#E6E7E9] rounded-lg font-medium text-[#6A6A6A] hover:bg-gray-50 transition-colors"
+                  className="px-4 py-2 border border-white/10 rounded-lg font-medium text-gray-400 hover:bg-white/5 transition-colors"
                   disabled={isLoading}
                 >
                   Cancel

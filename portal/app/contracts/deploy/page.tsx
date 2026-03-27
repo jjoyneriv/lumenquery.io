@@ -7,13 +7,13 @@ import { DeploymentWizard } from '@/components/contracts';
 
 export default function DeployContractPage() {
   return (
-    <div className="min-h-screen bg-[#F5F6F7] flex flex-col">
+    <div className="min-h-screen bg-[#1D1E26] flex flex-col">
       <Header activePage="contracts" />
 
       <main className="flex-1 py-8 px-4">
         <div className="max-w-4xl mx-auto">
           {/* Breadcrumb */}
-          <div className="flex items-center gap-2 text-sm text-[#6A6A6A] mb-6">
+          <div className="flex items-center gap-2 text-sm text-gray-400 mb-6">
             <Link href="/contracts" className="hover:text-[#7366FF]">
               Contracts
             </Link>
@@ -34,7 +34,7 @@ export default function DeployContractPage() {
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
               Deploy Smart Contract
             </h1>
-            <p className="text-[#6A6A6A] max-w-lg mx-auto">
+            <p className="text-gray-400 max-w-lg mx-auto">
               Upload your compiled WASM file and deploy it to the Stellar network
               using your Freighter wallet.
             </p>
@@ -70,14 +70,14 @@ export default function DeployContractPage() {
           <DeploymentWizard />
 
           {/* Help Section */}
-          <div className="mt-12 bg-white border border-[#E6E7E9] rounded-lg p-6">
+          <div className="mt-12 bg-[#262932] border border-white/10 rounded-lg p-6">
             <h2 className="text-lg font-semibold mb-4">Need Help?</h2>
             <div className="grid sm:grid-cols-2 gap-4">
               <a
                 href="https://developers.stellar.org/docs/build/smart-contracts"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 p-4 border border-[#E6E7E9] rounded-lg hover:border-[#7366FF]/50 transition-colors"
+                className="flex items-center gap-3 p-4 border border-white/10 rounded-lg hover:border-[#7366FF]/50 transition-colors"
               >
                 <div className="w-10 h-10 bg-[#7366FF]/10 rounded-lg flex items-center justify-center">
                   <svg className="w-5 h-5 text-[#7366FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -91,7 +91,7 @@ export default function DeployContractPage() {
                 </div>
                 <div>
                   <p className="font-medium">Soroban Docs</p>
-                  <p className="text-sm text-[#6A6A6A]">Learn how to build contracts</p>
+                  <p className="text-sm text-gray-400">Learn how to build contracts</p>
                 </div>
               </a>
 
@@ -99,7 +99,7 @@ export default function DeployContractPage() {
                 href="https://github.com/stellar/soroban-examples"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 p-4 border border-[#E6E7E9] rounded-lg hover:border-[#7366FF]/50 transition-colors"
+                className="flex items-center gap-3 p-4 border border-white/10 rounded-lg hover:border-[#7366FF]/50 transition-colors"
               >
                 <div className="w-10 h-10 bg-[#7366FF]/10 rounded-lg flex items-center justify-center">
                   <svg className="w-5 h-5 text-[#7366FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -113,7 +113,7 @@ export default function DeployContractPage() {
                 </div>
                 <div>
                   <p className="font-medium">Example Contracts</p>
-                  <p className="text-sm text-[#6A6A6A]">Browse sample WASM files</p>
+                  <p className="text-sm text-gray-400">Browse sample WASM files</p>
                 </div>
               </a>
             </div>

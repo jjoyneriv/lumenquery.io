@@ -121,7 +121,7 @@ export default function IntelligenceDashboard() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <Link
               href="/intelligence/stream"
-              className="bg-white rounded-xl border border-[#E6E7E9] p-6 hover:border-[#7366FF] transition-colors group"
+              className="bg-[#262932] rounded-xl border border-white/10 p-6 hover:border-[#7366FF] transition-colors group"
             >
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-blue-100 rounded-lg text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
@@ -130,15 +130,15 @@ export default function IntelligenceDashboard() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-black">Live Stream</h3>
-                  <p className="text-sm text-[#6A6A6A]">Watch transactions in real-time</p>
+                  <h3 className="font-semibold text-white">Live Stream</h3>
+                  <p className="text-sm text-gray-400">Watch transactions in real-time</p>
                 </div>
               </div>
             </Link>
 
             <Link
               href="/intelligence/accounts"
-              className="bg-white rounded-xl border border-[#E6E7E9] p-6 hover:border-[#7366FF] transition-colors group"
+              className="bg-[#262932] rounded-xl border border-white/10 p-6 hover:border-[#7366FF] transition-colors group"
             >
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-green-100 rounded-lg text-green-600 group-hover:bg-green-600 group-hover:text-white transition-colors">
@@ -147,15 +147,15 @@ export default function IntelligenceDashboard() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-black">Account Lookup</h3>
-                  <p className="text-sm text-[#6A6A6A]">Analyze account behavior</p>
+                  <h3 className="font-semibold text-white">Account Lookup</h3>
+                  <p className="text-sm text-gray-400">Analyze account behavior</p>
                 </div>
               </div>
             </Link>
 
             <Link
               href="/intelligence/watchlists"
-              className="bg-white rounded-xl border border-[#E6E7E9] p-6 hover:border-[#7366FF] transition-colors group"
+              className="bg-[#262932] rounded-xl border border-white/10 p-6 hover:border-[#7366FF] transition-colors group"
             >
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-purple-100 rounded-lg text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-colors">
@@ -165,15 +165,15 @@ export default function IntelligenceDashboard() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-black">Watchlists</h3>
-                  <p className="text-sm text-[#6A6A6A]">Monitor specific accounts</p>
+                  <h3 className="font-semibold text-white">Watchlists</h3>
+                  <p className="text-sm text-gray-400">Monitor specific accounts</p>
                 </div>
               </div>
             </Link>
 
             <Link
               href="/intelligence/alerts"
-              className="bg-white rounded-xl border border-[#E6E7E9] p-6 hover:border-[#7366FF] transition-colors group"
+              className="bg-[#262932] rounded-xl border border-white/10 p-6 hover:border-[#7366FF] transition-colors group"
             >
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-orange-100 rounded-lg text-orange-600 group-hover:bg-orange-600 group-hover:text-white transition-colors">
@@ -182,8 +182,8 @@ export default function IntelligenceDashboard() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-black">Alerts</h3>
-                  <p className="text-sm text-[#6A6A6A]">
+                  <h3 className="font-semibold text-white">Alerts</h3>
+                  <p className="text-sm text-gray-400">
                     {stats.unreadAlerts > 0
                       ? `${stats.unreadAlerts} unread alert${stats.unreadAlerts > 1 ? 's' : ''}`
                       : 'Configure custom alerts'}
@@ -194,7 +194,7 @@ export default function IntelligenceDashboard() {
 
             <Link
               href="/intelligence/trustlines"
-              className="bg-white rounded-xl border border-[#E6E7E9] p-6 hover:border-[#7366FF] transition-colors group"
+              className="bg-[#262932] rounded-xl border border-white/10 p-6 hover:border-[#7366FF] transition-colors group"
             >
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-yellow-100 rounded-lg text-yellow-600 group-hover:bg-yellow-600 group-hover:text-white transition-colors">
@@ -203,15 +203,15 @@ export default function IntelligenceDashboard() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-black">Trustlines</h3>
-                  <p className="text-sm text-[#6A6A6A]">Track trustline changes</p>
+                  <h3 className="font-semibold text-white">Trustlines</h3>
+                  <p className="text-sm text-gray-400">Track trustline changes</p>
                 </div>
               </div>
             </Link>
 
             <Link
               href="/intelligence/contracts"
-              className="bg-white rounded-xl border border-[#E6E7E9] p-6 hover:border-[#7366FF] transition-colors group"
+              className="bg-[#262932] rounded-xl border border-white/10 p-6 hover:border-[#7366FF] transition-colors group"
             >
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-indigo-100 rounded-lg text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
@@ -220,8 +220,8 @@ export default function IntelligenceDashboard() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-black">Contracts</h3>
-                  <p className="text-sm text-[#6A6A6A]">Soroban contract analytics</p>
+                  <h3 className="font-semibold text-white">Contracts</h3>
+                  <p className="text-sm text-gray-400">Soroban contract analytics</p>
                 </div>
               </div>
             </Link>

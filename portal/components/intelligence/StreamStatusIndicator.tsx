@@ -17,7 +17,7 @@ const statusConfig = {
     pulse: true,
   },
   disconnected: {
-    color: 'bg-gray-500',
+    color: 'bg-white/50',
     text: 'Disconnected',
     pulse: false,
   },
@@ -39,9 +39,9 @@ export function StreamStatusIndicator({ status, lastUpdate }: StreamStatusIndica
         )}
         <span className={`relative inline-flex rounded-full h-3 w-3 ${config.color}`} />
       </span>
-      <span className="text-[#6A6A6A]">{config.text}</span>
+      <span className="text-gray-400">{config.text}</span>
       {lastUpdate && status === 'connected' && (
-        <span className="text-xs text-[#6A6A6A]">
+        <span className="text-xs text-gray-400">
           Last: {lastUpdate.toLocaleTimeString()}
         </span>
       )}

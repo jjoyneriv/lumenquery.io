@@ -92,7 +92,7 @@ export function DeploymentStatus({
                   ${isComplete ? 'bg-green-500 text-white' : ''}
                   ${isActive ? 'bg-[#7366FF] text-white' : ''}
                   ${isError && index === 0 ? 'bg-red-500 text-white' : ''}
-                  ${!isComplete && !isActive && !isError ? 'bg-[#E6E7E9] text-[#6A6A6A]' : ''}
+                  ${!isComplete && !isActive && !isError ? 'bg-[#E6E7E9] text-gray-400' : ''}
                 `}
               >
                 {isComplete ? (
@@ -103,7 +103,7 @@ export function DeploymentStatus({
                   index + 1
                 )}
               </div>
-              <span className="text-xs mt-1 text-[#6A6A6A]">{label}</span>
+              <span className="text-xs mt-1 text-gray-400">{label}</span>
             </div>
           );
         })}
@@ -116,7 +116,7 @@ export function DeploymentStatus({
           ${step === 'ERROR' ? 'bg-red-50 border border-red-200' : ''}
           ${step === 'SUCCESS' ? 'bg-green-50 border border-green-200' : ''}
           ${isProcessing ? 'bg-[#7366FF]/5 border border-[#7366FF]/20' : ''}
-          ${step === 'IDLE' ? 'bg-gray-50 border border-[#E6E7E9]' : ''}
+          ${step === 'IDLE' ? 'bg-white/5 border border-white/10' : ''}
         `}
       >
         <div className="flex items-center justify-center gap-2">
@@ -153,7 +153,7 @@ export function DeploymentStatus({
               ${step === 'ERROR' ? 'text-red-700' : ''}
               ${step === 'SUCCESS' ? 'text-green-700' : ''}
               ${isProcessing ? 'text-[#7366FF]' : ''}
-              ${step === 'IDLE' ? 'text-[#6A6A6A]' : ''}
+              ${step === 'IDLE' ? 'text-gray-400' : ''}
             `}
           >
             {STEP_LABELS[step]}
@@ -169,9 +169,9 @@ export function DeploymentStatus({
       {(wasmHash || contractId) && (
         <div className="mt-4 space-y-3">
           {wasmHash && (
-            <div className="p-3 bg-gray-50 rounded-lg">
+            <div className="p-3 bg-white/5 rounded-lg">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-[#6A6A6A]">WASM Hash:</span>
+                <span className="text-sm text-gray-400">WASM Hash:</span>
                 <button
                   onClick={() => copyToClipboard(wasmHash)}
                   className="text-xs text-[#7366FF] hover:underline"

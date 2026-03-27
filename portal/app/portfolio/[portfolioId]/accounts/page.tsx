@@ -98,7 +98,7 @@ export default function PortfolioAccountsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-black">
+    <div className="min-h-screen bg-[#262932] text-white">
       <Header activePage="portfolio" />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
@@ -108,7 +108,7 @@ export default function PortfolioAccountsPage() {
             <div className="sticky top-8">
               <Link
                 href="/portfolio"
-                className="flex items-center gap-2 text-sm text-[#6A6A6A] hover:text-indigo-600 mb-4"
+                className="flex items-center gap-2 text-sm text-gray-400 hover:text-indigo-600 mb-4"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -124,7 +124,7 @@ export default function PortfolioAccountsPage() {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h1 className="text-2xl sm:text-3xl font-bold">Accounts</h1>
-                <p className="text-[#6A6A6A] mt-1">
+                <p className="text-gray-400 mt-1">
                   {accounts.length} / {maxAccounts} accounts linked
                 </p>
               </div>
@@ -144,13 +144,13 @@ export default function PortfolioAccountsPage() {
             {loading ? (
               <div className="text-center py-12">
                 <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
-                <p className="mt-4 text-[#6A6A6A]">Loading accounts...</p>
+                <p className="mt-4 text-gray-400">Loading accounts...</p>
               </div>
             ) : accounts.length === 0 ? (
-              <div className="text-center py-12 px-4 rounded-xl bg-[#F5F6F7] border border-[#E6E7E9]">
+              <div className="text-center py-12 px-4 rounded-xl bg-[#1D1E26] border border-white/10">
                 <div className="text-4xl mb-4">+</div>
                 <h2 className="text-xl font-bold mb-2">No Accounts Yet</h2>
-                <p className="text-[#6A6A6A] mb-6">
+                <p className="text-gray-400 mb-6">
                   Add a Stellar account to start tracking your portfolio.
                 </p>
                 <button
@@ -165,7 +165,7 @@ export default function PortfolioAccountsPage() {
                 {accounts.map((account) => (
                   <div
                     key={account.id}
-                    className="p-6 rounded-xl bg-[#F5F6F7] border border-[#E6E7E9]"
+                    className="p-6 rounded-xl bg-[#1D1E26] border border-white/10"
                   >
                     <div className="flex items-start justify-between mb-4">
                       <div>
@@ -174,10 +174,10 @@ export default function PortfolioAccountsPage() {
                             {account.label || 'Unnamed Account'}
                           </h3>
                         </div>
-                        <div className="text-sm text-[#6A6A6A] font-mono mt-1">
+                        <div className="text-sm text-gray-400 font-mono mt-1">
                           {account.accountId}
                         </div>
-                        <div className="text-xs text-[#6A6A6A] mt-2">
+                        <div className="text-xs text-gray-400 mt-2">
                           Added {new Date(account.addedAt).toLocaleDateString()}
                         </div>
                       </div>
@@ -185,25 +185,25 @@ export default function PortfolioAccountsPage() {
                         <div className="text-xl font-bold">
                           {formatCurrency(account.totalValueUsd)}
                         </div>
-                        <div className="text-sm text-[#6A6A6A]">
+                        <div className="text-sm text-gray-400">
                           {formatXlm(account.xlmBalance)} XLM
                         </div>
                       </div>
                     </div>
 
                     {account.positions.length > 0 && (
-                      <div className="mt-4 pt-4 border-t border-[#E6E7E9]">
-                        <div className="text-sm text-[#6A6A6A] mb-2">
+                      <div className="mt-4 pt-4 border-t border-white/10">
+                        <div className="text-sm text-gray-400 mb-2">
                           {account.positionCount} positions
                         </div>
                         <div className="flex flex-wrap gap-2">
                           {account.positions.map((pos, index) => (
                             <div
                               key={index}
-                              className="px-3 py-1.5 rounded-lg bg-white border border-[#E6E7E9] text-sm"
+                              className="px-3 py-1.5 rounded-lg bg-[#262932] border border-white/10 text-sm"
                             >
                               <span className="font-medium">{pos.assetCode}</span>
-                              <span className="text-[#6A6A6A] ml-2">
+                              <span className="text-gray-400 ml-2">
                                 {formatCurrency(pos.valueUsd)}
                               </span>
                             </div>
@@ -222,7 +222,7 @@ export default function PortfolioAccountsPage() {
       {/* Add Account Modal */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+          <div className="bg-[#262932] rounded-xl p-6 w-full max-w-md mx-4">
             <h2 className="text-xl font-bold mb-4">Add Stellar Account</h2>
 
             {addError && (
@@ -239,9 +239,9 @@ export default function PortfolioAccountsPage() {
                   placeholder="G..."
                   value={newAccountId}
                   onChange={(e) => setNewAccountId(e.target.value)}
-                  className="w-full px-4 py-2 rounded-lg border border-[#E6E7E9] focus:outline-none focus:border-indigo-500 font-mono text-sm"
+                  className="w-full px-4 py-2 rounded-lg border border-white/10 focus:outline-none focus:border-indigo-500 font-mono text-sm"
                 />
-                <p className="text-xs text-[#6A6A6A] mt-1">
+                <p className="text-xs text-gray-400 mt-1">
                   Enter a Stellar account address (starts with G)
                 </p>
               </div>
@@ -253,7 +253,7 @@ export default function PortfolioAccountsPage() {
                   placeholder="e.g., Trading, Savings, DAO Treasury"
                   value={newAccountLabel}
                   onChange={(e) => setNewAccountLabel(e.target.value)}
-                  className="w-full px-4 py-2 rounded-lg border border-[#E6E7E9] focus:outline-none focus:border-indigo-500"
+                  className="w-full px-4 py-2 rounded-lg border border-white/10 focus:outline-none focus:border-indigo-500"
                 />
               </div>
             </div>
@@ -266,7 +266,7 @@ export default function PortfolioAccountsPage() {
                   setNewAccountId('');
                   setNewAccountLabel('');
                 }}
-                className="flex-1 px-4 py-2 rounded-lg border border-[#E6E7E9] font-medium hover:bg-[#F5F6F7]"
+                className="flex-1 px-4 py-2 rounded-lg border border-white/10 font-medium hover:bg-[#1D1E26]"
               >
                 Cancel
               </button>

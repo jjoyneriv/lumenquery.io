@@ -85,8 +85,8 @@ export default function UsagePage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-black">Usage Analytics</h1>
-          <p className="text-[#6A6A6A]">Platform usage statistics and trends</p>
+          <h1 className="text-2xl font-bold text-white">Usage Analytics</h1>
+          <p className="text-gray-400">Platform usage statistics and trends</p>
         </div>
         <div className="flex items-center gap-2">
           {['24h', '7d', '30d'].map((p) => (
@@ -96,7 +96,7 @@ export default function UsagePage() {
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 period === p
                   ? 'bg-[#7366FF] text-white'
-                  : 'bg-white border border-[#E6E7E9] text-[#6A6A6A] hover:bg-gray-50'
+                  : 'bg-[#262932] border border-white/10 text-gray-400 hover:bg-white/5'
               }`}
             >
               {p}
@@ -107,32 +107,32 @@ export default function UsagePage() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white rounded-xl border border-[#E6E7E9] p-6">
-          <p className="text-sm text-[#6A6A6A] mb-1">Total Requests</p>
-          <p className="text-3xl font-bold text-black">{stats.usage.totalRequests.toLocaleString()}</p>
-          <p className="text-sm text-[#6A6A6A] mt-2">{period} period</p>
+        <div className="bg-[#262932] rounded-xl border border-white/10 p-6">
+          <p className="text-sm text-gray-400 mb-1">Total Requests</p>
+          <p className="text-3xl font-bold text-white">{stats.usage.totalRequests.toLocaleString()}</p>
+          <p className="text-sm text-gray-400 mt-2">{period} period</p>
         </div>
-        <div className="bg-white rounded-xl border border-[#E6E7E9] p-6">
-          <p className="text-sm text-[#6A6A6A] mb-1">Successful</p>
+        <div className="bg-[#262932] rounded-xl border border-white/10 p-6">
+          <p className="text-sm text-gray-400 mb-1">Successful</p>
           <p className="text-3xl font-bold text-green-600">{stats.usage.successfulRequests.toLocaleString()}</p>
           <p className="text-sm text-green-600 mt-2">{stats.usage.successRate}% success rate</p>
         </div>
-        <div className="bg-white rounded-xl border border-[#E6E7E9] p-6">
-          <p className="text-sm text-[#6A6A6A] mb-1">Failed</p>
+        <div className="bg-[#262932] rounded-xl border border-white/10 p-6">
+          <p className="text-sm text-gray-400 mb-1">Failed</p>
           <p className="text-3xl font-bold text-red-600">{stats.usage.failedRequests.toLocaleString()}</p>
           <p className="text-sm text-red-600 mt-2">{(100 - stats.usage.successRate).toFixed(2)}% error rate</p>
         </div>
-        <div className="bg-white rounded-xl border border-[#E6E7E9] p-6">
-          <p className="text-sm text-[#6A6A6A] mb-1">Active Users</p>
+        <div className="bg-[#262932] rounded-xl border border-white/10 p-6">
+          <p className="text-sm text-gray-400 mb-1">Active Users</p>
           <p className="text-3xl font-bold text-[#7366FF]">{stats.overview.activeUsers}</p>
-          <p className="text-sm text-[#6A6A6A] mt-2">of {stats.overview.totalUsers} total</p>
+          <p className="text-sm text-gray-400 mt-2">of {stats.overview.totalUsers} total</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Daily Usage Chart */}
-        <div className="bg-white rounded-xl border border-[#E6E7E9] p-6">
-          <h2 className="text-lg font-bold text-black mb-4">Daily Requests</h2>
+        <div className="bg-[#262932] rounded-xl border border-white/10 p-6">
+          <h2 className="text-lg font-bold text-white mb-4">Daily Requests</h2>
           <div className="h-64">
             <div className="flex items-end justify-between h-48 gap-1">
               {stats.dailyUsage.map((day, i) => (
@@ -150,7 +150,7 @@ export default function UsagePage() {
                 </div>
               ))}
             </div>
-            <div className="flex justify-between mt-2 text-xs text-[#6A6A6A]">
+            <div className="flex justify-between mt-2 text-xs text-gray-400">
               {stats.dailyUsage.map((day, i) => (
                 <span key={i} className="flex-1 text-center">
                   {formatDate(day.date)}
@@ -161,24 +161,24 @@ export default function UsagePage() {
           <div className="flex items-center justify-center gap-6 mt-4">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded bg-green-500" />
-              <span className="text-sm text-[#6A6A6A]">Successful</span>
+              <span className="text-sm text-gray-400">Successful</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded bg-red-500" />
-              <span className="text-sm text-[#6A6A6A]">Failed</span>
+              <span className="text-sm text-gray-400">Failed</span>
             </div>
           </div>
         </div>
 
         {/* Top Endpoints */}
-        <div className="bg-white rounded-xl border border-[#E6E7E9] p-6">
-          <h2 className="text-lg font-bold text-black mb-4">Top Endpoints</h2>
+        <div className="bg-[#262932] rounded-xl border border-white/10 p-6">
+          <h2 className="text-lg font-bold text-white mb-4">Top Endpoints</h2>
           <div className="space-y-4">
             {stats.topEndpoints.map((endpoint, i) => (
               <div key={i}>
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm font-mono text-black truncate max-w-[60%]">{endpoint.endpoint}</span>
-                  <span className="text-sm text-[#6A6A6A]">{endpoint.requests.toLocaleString()}</span>
+                  <span className="text-sm font-mono text-white truncate max-w-[60%]">{endpoint.endpoint}</span>
+                  <span className="text-sm text-gray-400">{endpoint.requests.toLocaleString()}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -187,7 +187,7 @@ export default function UsagePage() {
                       style={{ width: `${(endpoint.requests / stats.topEndpoints[0].requests) * 100}%` }}
                     />
                   </div>
-                  <span className="text-xs text-[#6A6A6A] w-16 text-right">{endpoint.avgResponseTime}ms</span>
+                  <span className="text-xs text-gray-400 w-16 text-right">{endpoint.avgResponseTime}ms</span>
                 </div>
               </div>
             ))}

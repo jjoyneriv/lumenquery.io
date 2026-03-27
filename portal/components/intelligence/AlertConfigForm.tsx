@@ -96,8 +96,8 @@ export function AlertConfigForm({
   const selectedType = alertTypes.find((t) => t.value === alertType);
 
   return (
-    <div className="bg-white rounded-xl border border-[#E6E7E9] p-6">
-      <h3 className="font-semibold text-black mb-4">
+    <div className="bg-[#262932] rounded-xl border border-white/10 p-6">
+      <h3 className="font-semibold text-white mb-4">
         {isEdit ? 'Edit Alert Configuration' : 'Create Alert Configuration'}
       </h3>
 
@@ -105,7 +105,7 @@ export function AlertConfigForm({
         {/* Basic Info */}
         <div className="space-y-4">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-[#6A6A6A] mb-1">
+            <label htmlFor="name" className="block text-sm font-medium text-gray-400 mb-1">
               Name *
             </label>
             <input
@@ -113,13 +113,13 @@ export function AlertConfigForm({
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
+              className="w-full px-4 py-2 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
               placeholder="e.g., Large XLM Transfer Alert"
             />
           </div>
 
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-[#6A6A6A] mb-1">
+            <label htmlFor="description" className="block text-sm font-medium text-gray-400 mb-1">
               Description
             </label>
             <input
@@ -127,7 +127,7 @@ export function AlertConfigForm({
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
+              className="w-full px-4 py-2 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
               placeholder="Optional description"
             />
           </div>
@@ -135,7 +135,7 @@ export function AlertConfigForm({
 
         {/* Alert Type */}
         <div>
-          <label className="block text-sm font-medium text-[#6A6A6A] mb-2">
+          <label className="block text-sm font-medium text-gray-400 mb-2">
             Alert Type *
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -150,11 +150,11 @@ export function AlertConfigForm({
                 className={`p-3 rounded-lg border text-left transition-colors ${
                   alertType === type.value
                     ? 'border-[#7366FF] bg-blue-50'
-                    : 'border-[#E6E7E9] hover:border-[#7366FF]'
+                    : 'border-white/10 hover:border-[#7366FF]'
                 }`}
               >
-                <p className="font-medium text-black">{type.label}</p>
-                <p className="text-xs text-[#6A6A6A] mt-0.5">{type.description}</p>
+                <p className="font-medium text-white">{type.label}</p>
+                <p className="text-xs text-gray-400 mt-0.5">{type.description}</p>
               </button>
             ))}
           </div>
@@ -162,11 +162,11 @@ export function AlertConfigForm({
 
         {/* Conditions based on type */}
         <div className="space-y-4">
-          <h4 className="text-sm font-medium text-black">Conditions</h4>
+          <h4 className="text-sm font-medium text-white">Conditions</h4>
 
           {alertType === 'WHALE_MOVEMENT' && (
             <div>
-              <label htmlFor="threshold" className="block text-sm text-[#6A6A6A] mb-1">
+              <label htmlFor="threshold" className="block text-sm text-gray-400 mb-1">
                 Amount Threshold (XLM)
               </label>
               <input
@@ -174,7 +174,7 @@ export function AlertConfigForm({
                 id="threshold"
                 value={conditions.threshold || ''}
                 onChange={(e) => updateCondition('threshold', parseInt(e.target.value) || undefined)}
-                className="w-full px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
+                className="w-full px-4 py-2 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
                 placeholder="100000"
                 min="0"
               />
@@ -184,7 +184,7 @@ export function AlertConfigForm({
           {alertType === 'TRUSTLINE_CHANGE' && (
             <>
               <div>
-                <label htmlFor="assetCode" className="block text-sm text-[#6A6A6A] mb-1">
+                <label htmlFor="assetCode" className="block text-sm text-gray-400 mb-1">
                   Asset Code (optional)
                 </label>
                 <input
@@ -192,16 +192,16 @@ export function AlertConfigForm({
                   id="assetCode"
                   value={conditions.assetCode || ''}
                   onChange={(e) => updateCondition('assetCode', e.target.value || undefined)}
-                  className="w-full px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
+                  className="w-full px-4 py-2 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
                   placeholder="e.g., USDC"
                 />
               </div>
               <div>
-                <label className="block text-sm text-[#6A6A6A] mb-1">Change Type</label>
+                <label className="block text-sm text-gray-400 mb-1">Change Type</label>
                 <select
                   value={conditions.changeType || 'all'}
                   onChange={(e) => updateCondition('changeType', e.target.value as AlertConditions['changeType'])}
-                  className="w-full px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
+                  className="w-full px-4 py-2 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
                 >
                   <option value="all">All Changes</option>
                   <option value="created">Created Only</option>
@@ -213,7 +213,7 @@ export function AlertConfigForm({
 
           {alertType === 'ACCOUNT_ACTIVITY' && (
             <div>
-              <label htmlFor="accountId" className="block text-sm text-[#6A6A6A] mb-1">
+              <label htmlFor="accountId" className="block text-sm text-gray-400 mb-1">
                 Account ID
               </label>
               <input
@@ -221,7 +221,7 @@ export function AlertConfigForm({
                 id="accountId"
                 value={conditions.accountId || ''}
                 onChange={(e) => updateCondition('accountId', e.target.value || undefined)}
-                className="w-full px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent font-mono text-sm"
+                className="w-full px-4 py-2 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent font-mono text-sm"
                 placeholder="G..."
               />
             </div>
@@ -229,7 +229,7 @@ export function AlertConfigForm({
 
           {alertType === 'CONTRACT_CALL' && (
             <div>
-              <label htmlFor="contractId" className="block text-sm text-[#6A6A6A] mb-1">
+              <label htmlFor="contractId" className="block text-sm text-gray-400 mb-1">
                 Contract ID
               </label>
               <input
@@ -237,7 +237,7 @@ export function AlertConfigForm({
                 id="contractId"
                 value={conditions.contractId || ''}
                 onChange={(e) => updateCondition('contractId', e.target.value || undefined)}
-                className="w-full px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent font-mono text-sm"
+                className="w-full px-4 py-2 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent font-mono text-sm"
                 placeholder="C..."
               />
             </div>
@@ -246,16 +246,16 @@ export function AlertConfigForm({
 
         {/* Notifications */}
         <div className="space-y-4">
-          <h4 className="text-sm font-medium text-black">Notifications</h4>
+          <h4 className="text-sm font-medium text-white">Notifications</h4>
 
           <label className="flex items-center gap-3 cursor-pointer">
             <input
               type="checkbox"
               checked={notifyEmail}
               onChange={(e) => setNotifyEmail(e.target.checked)}
-              className="w-4 h-4 text-[#7366FF] border-[#E6E7E9] rounded focus:ring-[#7366FF]"
+              className="w-4 h-4 text-[#7366FF] border-white/10 rounded focus:ring-[#7366FF]"
             />
-            <span className="text-sm text-[#6A6A6A]">Send email notifications</span>
+            <span className="text-sm text-gray-400">Send email notifications</span>
           </label>
 
           <div>
@@ -265,9 +265,9 @@ export function AlertConfigForm({
                 checked={notifyWebhook}
                 onChange={(e) => setNotifyWebhook(e.target.checked)}
                 disabled={!webhooksEnabled}
-                className="w-4 h-4 text-[#7366FF] border-[#E6E7E9] rounded focus:ring-[#7366FF] disabled:opacity-50"
+                className="w-4 h-4 text-[#7366FF] border-white/10 rounded focus:ring-[#7366FF] disabled:opacity-50"
               />
-              <span className={`text-sm ${webhooksEnabled ? 'text-[#6A6A6A]' : 'text-[#6A6A6A] opacity-50'}`}>
+              <span className={`text-sm ${webhooksEnabled ? 'text-gray-400' : 'text-gray-400 opacity-50'}`}>
                 Send webhook notifications
                 {!webhooksEnabled && ' (Teams tier required)'}
               </span>
@@ -279,7 +279,7 @@ export function AlertConfigForm({
                   type="url"
                   value={webhookUrl}
                   onChange={(e) => setWebhookUrl(e.target.value)}
-                  className="w-full px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent text-sm"
+                  className="w-full px-4 py-2 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent text-sm"
                   placeholder="https://example.com/webhook"
                 />
               </div>
@@ -287,7 +287,7 @@ export function AlertConfigForm({
           </div>
 
           <div>
-            <label htmlFor="cooldown" className="block text-sm text-[#6A6A6A] mb-1">
+            <label htmlFor="cooldown" className="block text-sm text-gray-400 mb-1">
               Cooldown Period (minutes)
             </label>
             <input
@@ -295,11 +295,11 @@ export function AlertConfigForm({
               id="cooldown"
               value={cooldownMinutes}
               onChange={(e) => setCooldownMinutes(parseInt(e.target.value) || 5)}
-              className="w-32 px-4 py-2 border border-[#E6E7E9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
+              className="w-32 px-4 py-2 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent"
               min="1"
               max="1440"
             />
-            <p className="text-xs text-[#6A6A6A] mt-1">
+            <p className="text-xs text-gray-400 mt-1">
               Minimum time between repeated alerts for the same trigger
             </p>
           </div>
@@ -315,7 +315,7 @@ export function AlertConfigForm({
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 text-[#6A6A6A] hover:text-black transition-colors"
+            className="px-4 py-2 text-gray-400 hover:text-white transition-colors"
           >
             Cancel
           </button>

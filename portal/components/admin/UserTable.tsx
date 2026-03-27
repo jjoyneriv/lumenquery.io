@@ -110,63 +110,63 @@ export default function UserTable({ users, onRefresh }: UserTableProps) {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-[#E6E7E9] overflow-hidden">
+    <div className="bg-[#262932] rounded-xl border border-white/10 overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-[#E6E7E9] bg-gray-50">
+            <tr className="border-b border-white/10 bg-white/5">
               <th className="text-left py-3 px-4">
                 <button
                   onClick={() => handleSort('email')}
-                  className="flex items-center gap-1 font-medium text-sm text-[#6A6A6A] hover:text-black"
+                  className="flex items-center gap-1 font-medium text-sm text-gray-400 hover:text-white"
                 >
                   User
                   <SortIcon field="email" />
                 </button>
               </th>
               <th className="text-left py-3 px-4">
-                <span className="font-medium text-sm text-[#6A6A6A]">Role</span>
+                <span className="font-medium text-sm text-gray-400">Role</span>
               </th>
               <th className="text-left py-3 px-4">
-                <span className="font-medium text-sm text-[#6A6A6A]">Subscription</span>
+                <span className="font-medium text-sm text-gray-400">Subscription</span>
               </th>
               <th className="text-left py-3 px-4">
                 <button
                   onClick={() => handleSort('lastLoginAt')}
-                  className="flex items-center gap-1 font-medium text-sm text-[#6A6A6A] hover:text-black"
+                  className="flex items-center gap-1 font-medium text-sm text-gray-400 hover:text-white"
                 >
                   Last Login
                   <SortIcon field="lastLoginAt" />
                 </button>
               </th>
               <th className="text-left py-3 px-4">
-                <span className="font-medium text-sm text-[#6A6A6A]">Status</span>
+                <span className="font-medium text-sm text-gray-400">Status</span>
               </th>
               <th className="text-left py-3 px-4">
                 <button
                   onClick={() => handleSort('createdAt')}
-                  className="flex items-center gap-1 font-medium text-sm text-[#6A6A6A] hover:text-black"
+                  className="flex items-center gap-1 font-medium text-sm text-gray-400 hover:text-white"
                 >
                   Created
                   <SortIcon field="createdAt" />
                 </button>
               </th>
               <th className="text-right py-3 px-4">
-                <span className="font-medium text-sm text-[#6A6A6A]">Actions</span>
+                <span className="font-medium text-sm text-gray-400">Actions</span>
               </th>
             </tr>
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user.id} className="border-b border-[#E6E7E9] hover:bg-gray-50">
+              <tr key={user.id} className="border-b border-white/10 hover:bg-white/5">
                 <td className="py-3 px-4">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-[#7366FF] flex items-center justify-center text-white text-sm font-medium">
                       {(user.name || user.email).charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <p className="font-medium text-black">{user.name || 'No name'}</p>
-                      <p className="text-sm text-[#6A6A6A]">{user.email}</p>
+                      <p className="font-medium text-white">{user.name || 'No name'}</p>
+                      <p className="text-sm text-gray-400">{user.email}</p>
                     </div>
                   </div>
                 </td>
@@ -177,27 +177,27 @@ export default function UserTable({ users, onRefresh }: UserTableProps) {
                   {user.organization ? (
                     <div className="space-y-1">
                       {getTierBadge(user.organization.tier)}
-                      <p className="text-xs text-[#6A6A6A]">{user.organization.name}</p>
+                      <p className="text-xs text-gray-400">{user.organization.name}</p>
                     </div>
                   ) : (
-                    <span className="text-sm text-[#6A6A6A]">No org</span>
+                    <span className="text-sm text-gray-400">No org</span>
                   )}
                 </td>
                 <td className="py-3 px-4">
-                  <span className="text-sm text-[#6A6A6A]">
+                  <span className="text-sm text-gray-400">
                     {formatRelativeTime(user.lastLoginAt)}
                   </span>
                 </td>
                 <td className="py-3 px-4">
                   <div className="flex items-center gap-2">
                     <span className={`w-2 h-2 rounded-full ${isOnline(user.lastActiveAt) ? 'bg-green-500' : 'bg-gray-300'}`} />
-                    <span className="text-sm text-[#6A6A6A]">
+                    <span className="text-sm text-gray-400">
                       {isOnline(user.lastActiveAt) ? 'Online' : 'Offline'}
                     </span>
                   </div>
                 </td>
                 <td className="py-3 px-4">
-                  <span className="text-sm text-[#6A6A6A]">
+                  <span className="text-sm text-gray-400">
                     {formatDate(user.createdAt).split(',')[0]}
                   </span>
                 </td>

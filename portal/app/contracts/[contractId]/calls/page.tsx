@@ -67,17 +67,17 @@ export default function ContractCallsPage() {
   return (
     <div className="space-y-6">
       {/* Filters */}
-      <div className="bg-white border border-[#E6E7E9] rounded-lg p-4">
+      <div className="bg-[#262932] border border-white/10 rounded-lg p-4">
         <div className="flex flex-wrap items-center gap-4">
           <div>
-            <label className="block text-sm text-[#6A6A6A] mb-1">Function</label>
+            <label className="block text-sm text-gray-400 mb-1">Function</label>
             <select
               value={selectedFunction || ''}
               onChange={(e) => {
                 setSelectedFunction(e.target.value || null);
                 setPagination(prev => ({ ...prev, page: 1 }));
               }}
-              className="px-3 py-2 border border-[#E6E7E9] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#7366FF]"
+              className="px-3 py-2 border border-white/10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#7366FF]"
             >
               <option value="">All Functions</option>
               {functions.map((fn) => (
@@ -89,14 +89,14 @@ export default function ContractCallsPage() {
           </div>
 
           <div>
-            <label className="block text-sm text-[#6A6A6A] mb-1">Status</label>
+            <label className="block text-sm text-gray-400 mb-1">Status</label>
             <select
               value={selectedStatus || ''}
               onChange={(e) => {
                 setSelectedStatus(e.target.value || null);
                 setPagination(prev => ({ ...prev, page: 1 }));
               }}
-              className="px-3 py-2 border border-[#E6E7E9] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#7366FF]"
+              className="px-3 py-2 border border-white/10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#7366FF]"
             >
               <option value="">All Status</option>
               <option value="success">Success</option>
@@ -116,7 +116,7 @@ export default function ContractCallsPage() {
 
       {/* Calls Table */}
       {loading ? (
-        <div className="bg-white border border-[#E6E7E9] rounded-lg p-8">
+        <div className="bg-[#262932] border border-white/10 rounded-lg p-8">
           <div className="flex items-center justify-center">
             <div className="w-8 h-8 border-4 border-[#7366FF] border-t-transparent rounded-full animate-spin" />
           </div>
@@ -127,8 +127,8 @@ export default function ContractCallsPage() {
 
       {/* Pagination */}
       {pagination.totalPages > 1 && (
-        <div className="flex items-center justify-between bg-white border border-[#E6E7E9] rounded-lg p-4">
-          <p className="text-sm text-[#6A6A6A]">
+        <div className="flex items-center justify-between bg-[#262932] border border-white/10 rounded-lg p-4">
+          <p className="text-sm text-gray-400">
             Showing {(pagination.page - 1) * pagination.limit + 1} to{' '}
             {Math.min(pagination.page * pagination.limit, pagination.total)} of{' '}
             {pagination.total} calls
@@ -137,17 +137,17 @@ export default function ContractCallsPage() {
             <button
               onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
               disabled={pagination.page === 1}
-              className="px-3 py-1 border border-[#E6E7E9] rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:border-[#7366FF]"
+              className="px-3 py-1 border border-white/10 rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:border-[#7366FF]"
             >
               Previous
             </button>
-            <span className="text-sm text-[#6A6A6A]">
+            <span className="text-sm text-gray-400">
               Page {pagination.page} of {pagination.totalPages}
             </span>
             <button
               onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
               disabled={pagination.page === pagination.totalPages}
-              className="px-3 py-1 border border-[#E6E7E9] rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:border-[#7366FF]"
+              className="px-3 py-1 border border-white/10 rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:border-[#7366FF]"
             >
               Next
             </button>

@@ -89,7 +89,7 @@ export default function PortfolioNav({ portfolioId }: PortfolioNavProps) {
             className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
               isActive
                 ? 'bg-indigo-100 text-indigo-700'
-                : 'text-[#6A6A6A] hover:bg-[#F5F6F7] hover:text-black'
+                : 'text-gray-400 hover:bg-[#1D1E26] hover:text-white'
             }`}
           >
             {getIcon(link.icon)}

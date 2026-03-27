@@ -281,7 +281,7 @@ export default function BlogPage() {
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link
               href="/auth/signup"
-              className="px-6 py-2 bg-white text-[#7366FF] rounded-lg font-medium text-sm hover:bg-gray-100 transition-colors"
+              className="px-6 py-2 bg-white text-[#7366FF] rounded-lg font-medium text-sm hover:bg-white/10 transition-colors"
             >
               Get API Key
             </Link>

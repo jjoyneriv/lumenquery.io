@@ -65,7 +65,7 @@ export default function ContractOverviewPage() {
   if (loading) {
     return (
       <div className="space-y-6 animate-pulse">
-        <div className="bg-white border border-[#E6E7E9] rounded-lg p-6">
+        <div className="bg-[#262932] border border-white/10 rounded-lg p-6">
           <div className="h-6 bg-gray-200 rounded w-1/4 mb-4" />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[1, 2, 3, 4].map((i) => (
@@ -79,7 +79,7 @@ export default function ContractOverviewPage() {
 
   if (error || !contract) {
     return (
-      <div className="bg-white border border-[#E6E7E9] rounded-lg p-8 text-center">
+      <div className="bg-[#262932] border border-white/10 rounded-lg p-8 text-center">
         <svg
           className="w-16 h-16 mx-auto text-red-400 mb-4"
           fill="none"
@@ -107,61 +107,61 @@ export default function ContractOverviewPage() {
   return (
     <div className="space-y-6">
       {/* Stats Overview */}
-      <div className="bg-white border border-[#E6E7E9] rounded-lg p-6">
+      <div className="bg-[#262932] border border-white/10 rounded-lg p-6">
         <h2 className="text-lg font-semibold mb-4">Overview</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="p-4 bg-[#F5F6F7] rounded-lg">
-            <p className="text-sm text-[#6A6A6A]">Total Calls</p>
+          <div className="p-4 bg-[#1D1E26] rounded-lg">
+            <p className="text-sm text-gray-400">Total Calls</p>
             <p className="text-2xl font-bold">{formatNumber(contract.stats.calls)}</p>
           </div>
-          <div className="p-4 bg-[#F5F6F7] rounded-lg">
-            <p className="text-sm text-[#6A6A6A]">Events</p>
+          <div className="p-4 bg-[#1D1E26] rounded-lg">
+            <p className="text-sm text-gray-400">Events</p>
             <p className="text-2xl font-bold">{formatNumber(contract.stats.events)}</p>
           </div>
-          <div className="p-4 bg-[#F5F6F7] rounded-lg">
-            <p className="text-sm text-[#6A6A6A]">Storage Entries</p>
+          <div className="p-4 bg-[#1D1E26] rounded-lg">
+            <p className="text-sm text-gray-400">Storage Entries</p>
             <p className="text-2xl font-bold">{formatNumber(contract.stats.storageEntries)}</p>
           </div>
-          <div className="p-4 bg-[#F5F6F7] rounded-lg">
-            <p className="text-sm text-[#6A6A6A]">Last Activity</p>
+          <div className="p-4 bg-[#1D1E26] rounded-lg">
+            <p className="text-sm text-gray-400">Last Activity</p>
             <p className="text-2xl font-bold">#{formatLedger(contract.lastSeenLedger)}</p>
           </div>
         </div>
       </div>
 
       {/* Contract Details */}
-      <div className="bg-white border border-[#E6E7E9] rounded-lg p-6">
+      <div className="bg-[#262932] border border-white/10 rounded-lg p-6">
         <h2 className="text-lg font-semibold mb-4">Contract Details</h2>
         <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {contract.name && (
             <div>
-              <dt className="text-sm text-[#6A6A6A]">Name</dt>
+              <dt className="text-sm text-gray-400">Name</dt>
               <dd className="font-medium">{contract.name}</dd>
             </div>
           )}
           {contract.version && (
             <div>
-              <dt className="text-sm text-[#6A6A6A]">Version</dt>
+              <dt className="text-sm text-gray-400">Version</dt>
               <dd className="font-medium">{contract.version}</dd>
             </div>
           )}
           <div>
-            <dt className="text-sm text-[#6A6A6A]">Created Ledger</dt>
+            <dt className="text-sm text-gray-400">Created Ledger</dt>
             <dd className="font-medium">#{formatLedger(contract.createdLedger)}</dd>
           </div>
           <div>
-            <dt className="text-sm text-[#6A6A6A]">Indexed</dt>
+            <dt className="text-sm text-gray-400">Indexed</dt>
             <dd className="font-medium">{formatRelativeTime(contract.createdAt)}</dd>
           </div>
           {contract.wasmHash && (
             <div className="md:col-span-2">
-              <dt className="text-sm text-[#6A6A6A]">WASM Hash</dt>
+              <dt className="text-sm text-gray-400">WASM Hash</dt>
               <dd className="font-mono text-sm break-all">{contract.wasmHash}</dd>
             </div>
           )}
           {contract.sourceUrl && (
             <div className="md:col-span-2">
-              <dt className="text-sm text-[#6A6A6A]">Source Code</dt>
+              <dt className="text-sm text-gray-400">Source Code</dt>
               <dd>
                 <a
                   href={contract.sourceUrl}
@@ -180,7 +180,7 @@ export default function ContractOverviewPage() {
       {/* Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Calls */}
-        <div className="bg-white border border-[#E6E7E9] rounded-lg p-6">
+        <div className="bg-[#262932] border border-white/10 rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Recent Calls</h2>
             <Link
@@ -195,13 +195,13 @@ export default function ContractOverviewPage() {
               {contract.recentCalls.map((call) => (
                 <div
                   key={call.id}
-                  className="flex items-center justify-between p-3 bg-[#F5F6F7] rounded-lg"
+                  className="flex items-center justify-between p-3 bg-[#1D1E26] rounded-lg"
                 >
                   <div>
                     <code className="text-sm font-mono text-[#7366FF]">
                       {call.functionName}
                     </code>
-                    <p className="text-xs text-[#6A6A6A] mt-1">
+                    <p className="text-xs text-gray-400 mt-1">
                       {formatRelativeTime(call.timestamp)}
                     </p>
                   </div>
@@ -218,12 +218,12 @@ export default function ContractOverviewPage() {
               ))}
             </div>
           ) : (
-            <p className="text-[#6A6A6A] text-center py-4">No recent calls</p>
+            <p className="text-gray-400 text-center py-4">No recent calls</p>
           )}
         </div>
 
         {/* Recent Events */}
-        <div className="bg-white border border-[#E6E7E9] rounded-lg p-6">
+        <div className="bg-[#262932] border border-white/10 rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Recent Events</h2>
             <Link
@@ -238,7 +238,7 @@ export default function ContractOverviewPage() {
               {contract.recentEvents.map((event) => (
                 <div
                   key={event.id}
-                  className="p-3 bg-[#F5F6F7] rounded-lg"
+                  className="p-3 bg-[#1D1E26] rounded-lg"
                 >
                   <div className="flex items-center gap-2 mb-1">
                     <span
@@ -252,7 +252,7 @@ export default function ContractOverviewPage() {
                     >
                       {event.eventType}
                     </span>
-                    <span className="text-xs text-[#6A6A6A]">
+                    <span className="text-xs text-gray-400">
                       {formatRelativeTime(event.timestamp)}
                     </span>
                   </div>
@@ -260,7 +260,7 @@ export default function ContractOverviewPage() {
               ))}
             </div>
           ) : (
-            <p className="text-[#6A6A6A] text-center py-4">No recent events</p>
+            <p className="text-gray-400 text-center py-4">No recent events</p>
           )}
         </div>
       </div>

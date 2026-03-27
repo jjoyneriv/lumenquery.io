@@ -66,7 +66,7 @@ export default function SignUpPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#F5F6F7] flex items-center justify-center px-4 py-8 sm:py-12">
+    <main className="min-h-screen bg-[#1D1E26] flex items-center justify-center px-4 py-8 sm:py-12">
       <div className="w-full max-w-md">
         <header className="text-center mb-6 sm:mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-4 sm:mb-6" aria-label="LumenQuery home">
@@ -78,11 +78,11 @@ export default function SignUpPage() {
               className="w-10 h-10 sm:w-12 sm:h-12"
             />
           </Link>
-          <h1 className="text-2xl sm:text-3xl font-bold text-black">Create your account</h1>
-          <p className="text-[#6A6A6A] mt-2 text-sm sm:text-base">Start building on Stellar with LumenQuery</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">Create your account</h1>
+          <p className="text-gray-400 mt-2 text-sm sm:text-base">Start building on Stellar with LumenQuery</p>
         </header>
 
-        <section className="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-8 shadow-sm border border-[#E6E7E9]" aria-labelledby="signup-heading">
+        <section className="bg-[#262932] rounded-xl sm:rounded-2xl p-5 sm:p-8 shadow-sm border border-white/10" aria-labelledby="signup-heading">
           <h2 id="signup-heading" className="sr-only">Create account form</h2>
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
             {error && (
@@ -92,48 +92,48 @@ export default function SignUpPage() {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-black mb-1.5 sm:mb-2">Name</label>
+              <label className="block text-sm font-medium text-white mb-1.5 sm:mb-2">Name</label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] text-black focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent text-sm sm:text-base"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent text-sm sm:text-base"
                 placeholder="John Doe"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-black mb-1.5 sm:mb-2">Email</label>
+              <label className="block text-sm font-medium text-white mb-1.5 sm:mb-2">Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] text-black focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent text-sm sm:text-base"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent text-sm sm:text-base"
                 placeholder="you@example.com"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-black mb-1.5 sm:mb-2">Password</label>
+              <label className="block text-sm font-medium text-white mb-1.5 sm:mb-2">Password</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] text-black focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent text-sm sm:text-base"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent text-sm sm:text-base"
                 placeholder="••••••••"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-black mb-1.5 sm:mb-2">Confirm Password</label>
+              <label className="block text-sm font-medium text-white mb-1.5 sm:mb-2">Confirm Password</label>
               <input
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-[#E6E7E9] text-black focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent text-sm sm:text-base"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[#7366FF] focus:border-transparent text-sm sm:text-base"
                 placeholder="••••••••"
                 required
               />
@@ -148,7 +148,7 @@ export default function SignUpPage() {
             </button>
           </form>
 
-          <p className="text-center text-[#6A6A6A] mt-4 sm:mt-6 text-sm">
+          <p className="text-center text-gray-400 mt-4 sm:mt-6 text-sm">
             Already have an account?{' '}
             <Link href="/auth/signin" className="text-[#7366FF] hover:underline font-medium">
               Sign in
@@ -156,7 +156,7 @@ export default function SignUpPage() {
           </p>
         </section>
 
-        <p className="text-center text-[#6A6A6A] text-xs sm:text-sm mt-4 sm:mt-6 px-4">
+        <p className="text-center text-gray-400 text-xs sm:text-sm mt-4 sm:mt-6 px-4">
           By signing up, you agree to our Terms of Service and Privacy Policy
         </p>
       </div>

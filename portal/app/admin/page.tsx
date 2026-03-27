@@ -71,13 +71,13 @@ export default function AdminDashboard() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-black">Admin Dashboard</h1>
-        <p className="text-[#6A6A6A]">System overview and statistics</p>
+        <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
+        <p className="text-gray-400">System overview and statistics</p>
       </div>
 
       {/* Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white rounded-xl border border-[#E6E7E9] p-6">
+        <div className="bg-[#262932] rounded-xl border border-white/10 p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
               <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -85,17 +85,17 @@ export default function AdminDashboard() {
               </svg>
             </div>
             <div>
-              <p className="text-sm text-[#6A6A6A]">Total Users</p>
-              <p className="text-2xl font-bold text-black">{stats.overview.totalUsers}</p>
+              <p className="text-sm text-gray-400">Total Users</p>
+              <p className="text-2xl font-bold text-white">{stats.overview.totalUsers}</p>
             </div>
           </div>
           <div className="flex items-center gap-2 text-sm">
             <span className="w-2 h-2 rounded-full bg-green-500" />
-            <span className="text-[#6A6A6A]">{stats.overview.activeUsers} online now</span>
+            <span className="text-gray-400">{stats.overview.activeUsers} online now</span>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-[#E6E7E9] p-6">
+        <div className="bg-[#262932] rounded-xl border border-white/10 p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
               <svg className="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -103,8 +103,8 @@ export default function AdminDashboard() {
               </svg>
             </div>
             <div>
-              <p className="text-sm text-[#6A6A6A]">Organizations</p>
-              <p className="text-2xl font-bold text-black">{stats.overview.totalOrganizations}</p>
+              <p className="text-sm text-gray-400">Organizations</p>
+              <p className="text-2xl font-bold text-white">{stats.overview.totalOrganizations}</p>
             </div>
           </div>
           <Link href="/admin/users" className="text-sm text-[#7366FF] hover:underline">
@@ -112,7 +112,7 @@ export default function AdminDashboard() {
           </Link>
         </div>
 
-        <div className="bg-white rounded-xl border border-[#E6E7E9] p-6">
+        <div className="bg-[#262932] rounded-xl border border-white/10 p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
               <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -120,14 +120,14 @@ export default function AdminDashboard() {
               </svg>
             </div>
             <div>
-              <p className="text-sm text-[#6A6A6A]">Active API Keys</p>
-              <p className="text-2xl font-bold text-black">{stats.overview.totalApiKeys}</p>
+              <p className="text-sm text-gray-400">Active API Keys</p>
+              <p className="text-2xl font-bold text-white">{stats.overview.totalApiKeys}</p>
             </div>
           </div>
-          <p className="text-sm text-[#6A6A6A]">Non-revoked keys</p>
+          <p className="text-sm text-gray-400">Non-revoked keys</p>
         </div>
 
-        <div className="bg-white rounded-xl border border-[#E6E7E9] p-6">
+        <div className="bg-[#262932] rounded-xl border border-white/10 p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center">
               <svg className="w-5 h-5 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -135,8 +135,8 @@ export default function AdminDashboard() {
               </svg>
             </div>
             <div>
-              <p className="text-sm text-[#6A6A6A]">Requests (7d)</p>
-              <p className="text-2xl font-bold text-black">{stats.usage.totalRequests.toLocaleString()}</p>
+              <p className="text-sm text-gray-400">Requests (7d)</p>
+              <p className="text-2xl font-bold text-white">{stats.usage.totalRequests.toLocaleString()}</p>
             </div>
           </div>
           <div className="text-sm">
@@ -149,8 +149,8 @@ export default function AdminDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Tier Distribution */}
-        <div className="bg-white rounded-xl border border-[#E6E7E9] p-6">
-          <h2 className="text-lg font-bold text-black mb-4">Subscription Tiers</h2>
+        <div className="bg-[#262932] rounded-xl border border-white/10 p-6">
+          <h2 className="text-lg font-bold text-white mb-4">Subscription Tiers</h2>
           <div className="space-y-4">
             {stats.tierDistribution.map((tier) => (
               <div key={tier.tier} className="flex items-center justify-between">
@@ -162,37 +162,37 @@ export default function AdminDashboard() {
                     tier.tier === 'AUDITOR' ? 'bg-purple-500' :
                     'bg-gray-400'
                   }`} />
-                  <span className="text-sm font-medium text-black">{tier.tier}</span>
+                  <span className="text-sm font-medium text-white">{tier.tier}</span>
                 </div>
-                <span className="text-sm text-[#6A6A6A]">{tier.count} organizations</span>
+                <span className="text-sm text-gray-400">{tier.count} organizations</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Feature Usage */}
-        <div className="bg-white rounded-xl border border-[#E6E7E9] p-6">
-          <h2 className="text-lg font-bold text-black mb-4">Feature Adoption</h2>
+        <div className="bg-[#262932] rounded-xl border border-white/10 p-6">
+          <h2 className="text-lg font-bold text-white mb-4">Feature Adoption</h2>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-black">Soroban Pro</span>
+              <span className="text-sm text-white">Soroban Pro</span>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-black">{stats.featureUsage.sorobanPro}</span>
-                <span className="text-xs text-[#6A6A6A]">orgs</span>
+                <span className="text-sm font-medium text-white">{stats.featureUsage.sorobanPro}</span>
+                <span className="text-xs text-gray-400">orgs</span>
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-black">Transaction Intelligence</span>
+              <span className="text-sm text-white">Transaction Intelligence</span>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-black">{stats.featureUsage.intelligence}</span>
-                <span className="text-xs text-[#6A6A6A]">orgs</span>
+                <span className="text-sm font-medium text-white">{stats.featureUsage.intelligence}</span>
+                <span className="text-xs text-gray-400">orgs</span>
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-black">Portfolio Intelligence</span>
+              <span className="text-sm text-white">Portfolio Intelligence</span>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-black">{stats.featureUsage.portfolio}</span>
-                <span className="text-xs text-[#6A6A6A]">orgs</span>
+                <span className="text-sm font-medium text-white">{stats.featureUsage.portfolio}</span>
+                <span className="text-xs text-gray-400">orgs</span>
               </div>
             </div>
           </div>
@@ -200,12 +200,12 @@ export default function AdminDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="bg-white rounded-xl border border-[#E6E7E9] p-6">
-        <h2 className="text-lg font-bold text-black mb-4">Quick Actions</h2>
+      <div className="bg-[#262932] rounded-xl border border-white/10 p-6">
+        <h2 className="text-lg font-bold text-white mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Link
             href="/admin/users"
-            className="flex items-center gap-3 p-4 border border-[#E6E7E9] rounded-lg hover:border-[#7366FF] transition-colors"
+            className="flex items-center gap-3 p-4 border border-white/10 rounded-lg hover:border-[#7366FF] transition-colors"
           >
             <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
               <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -213,14 +213,14 @@ export default function AdminDashboard() {
               </svg>
             </div>
             <div>
-              <p className="font-medium text-black">Manage Users</p>
-              <p className="text-sm text-[#6A6A6A]">View and edit user accounts</p>
+              <p className="font-medium text-white">Manage Users</p>
+              <p className="text-sm text-gray-400">View and edit user accounts</p>
             </div>
           </Link>
 
           <Link
             href="/admin/usage"
-            className="flex items-center gap-3 p-4 border border-[#E6E7E9] rounded-lg hover:border-[#7366FF] transition-colors"
+            className="flex items-center gap-3 p-4 border border-white/10 rounded-lg hover:border-[#7366FF] transition-colors"
           >
             <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
               <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -228,14 +228,14 @@ export default function AdminDashboard() {
               </svg>
             </div>
             <div>
-              <p className="font-medium text-black">Usage Analytics</p>
-              <p className="text-sm text-[#6A6A6A]">View platform usage stats</p>
+              <p className="font-medium text-white">Usage Analytics</p>
+              <p className="text-sm text-gray-400">View platform usage stats</p>
             </div>
           </Link>
 
           <Link
             href="/admin/audit"
-            className="flex items-center gap-3 p-4 border border-[#E6E7E9] rounded-lg hover:border-[#7366FF] transition-colors"
+            className="flex items-center gap-3 p-4 border border-white/10 rounded-lg hover:border-[#7366FF] transition-colors"
           >
             <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
               <svg className="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -243,8 +243,8 @@ export default function AdminDashboard() {
               </svg>
             </div>
             <div>
-              <p className="font-medium text-black">Audit Log</p>
-              <p className="text-sm text-[#6A6A6A]">Review admin actions</p>
+              <p className="font-medium text-white">Audit Log</p>
+              <p className="text-sm text-gray-400">Review admin actions</p>
             </div>
           </Link>
         </div>

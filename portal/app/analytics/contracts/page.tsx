@@ -87,8 +87,8 @@ export default function ContractAnalyticsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-black">Smart Contract Analytics</h1>
-          <p className="text-[#6A6A6A] text-sm mt-1">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">Smart Contract Analytics</h1>
+          <p className="text-gray-400 text-sm mt-1">
             Soroban contract activity, gas usage, and event tracking
           </p>
         </div>
@@ -124,8 +124,8 @@ export default function ContractAnalyticsPage() {
 
       {/* Activity Chart */}
       <section aria-labelledby="activity-chart-heading" className="mb-8">
-        <div className="bg-white rounded-2xl border border-[#E6E7E9] p-4 sm:p-6">
-          <h2 id="activity-chart-heading" className="text-lg font-semibold text-black mb-4">
+        <div className="bg-[#262932] rounded-2xl border border-white/10 p-4 sm:p-6">
+          <h2 id="activity-chart-heading" className="text-lg font-semibold text-white mb-4">
             Contract Invocations
           </h2>
           <div className="h-64">
@@ -141,7 +141,7 @@ export default function ContractAnalyticsPage() {
                 color="#10B981"
               />
             ) : (
-              <div className="h-full flex items-center justify-center text-[#6A6A6A]">
+              <div className="h-full flex items-center justify-center text-gray-400">
                 No activity data available
               </div>
             )}
@@ -153,9 +153,9 @@ export default function ContractAnalyticsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Gas Usage Summary */}
         <section aria-labelledby="gas-heading">
-          <div className="bg-white rounded-2xl border border-[#E6E7E9] overflow-hidden h-full">
-            <div className="px-4 sm:px-6 py-4 border-b border-[#E6E7E9]">
-              <h2 id="gas-heading" className="font-semibold text-black flex items-center gap-2">
+          <div className="bg-[#262932] rounded-2xl border border-white/10 overflow-hidden h-full">
+            <div className="px-4 sm:px-6 py-4 border-b border-white/10">
+              <h2 id="gas-heading" className="font-semibold text-white flex items-center gap-2">
                 <svg className="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
@@ -170,12 +170,12 @@ export default function ContractAnalyticsPage() {
               ) : (
                 <div className="space-y-4">
                   <div className="flex justify-between items-center p-3 rounded-lg bg-gray-50">
-                    <span className="text-[#6A6A6A]">Current Fee (Mode)</span>
-                    <span className="font-medium text-black">{formatFee(data?.gasUsage.currentFee || 0)}</span>
+                    <span className="text-gray-400">Current Fee (Mode)</span>
+                    <span className="font-medium text-white">{formatFee(data?.gasUsage.currentFee || 0)}</span>
                   </div>
                   <div className="flex justify-between items-center p-3 rounded-lg bg-gray-50">
-                    <span className="text-[#6A6A6A]">Average Fee</span>
-                    <span className="font-medium text-black">{formatFee(data?.gasUsage.avgFee || 0)}</span>
+                    <span className="text-gray-400">Average Fee</span>
+                    <span className="font-medium text-white">{formatFee(data?.gasUsage.avgFee || 0)}</span>
                   </div>
                 </div>
               )}
@@ -185,9 +185,9 @@ export default function ContractAnalyticsPage() {
 
         {/* Fee Percentiles */}
         <section aria-labelledby="percentiles-heading">
-          <div className="bg-white rounded-2xl border border-[#E6E7E9] overflow-hidden h-full">
-            <div className="px-4 sm:px-6 py-4 border-b border-[#E6E7E9]">
-              <h2 id="percentiles-heading" className="font-semibold text-black flex items-center gap-2">
+          <div className="bg-[#262932] rounded-2xl border border-white/10 overflow-hidden h-full">
+            <div className="px-4 sm:px-6 py-4 border-b border-white/10">
+              <h2 id="percentiles-heading" className="font-semibold text-white flex items-center gap-2">
                 <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
@@ -224,7 +224,7 @@ export default function ContractAnalyticsPage() {
       <section aria-labelledby="contracts-heading" className="mb-8">
         <h2 id="contracts-heading" className="sr-only">Top Contracts</h2>
         {loading ? (
-          <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 flex items-center justify-center">
+          <div className="bg-[#262932] rounded-xl border border-white/10 p-8 flex items-center justify-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF]" />
           </div>
         ) : (
@@ -236,7 +236,7 @@ export default function ContractAnalyticsPage() {
       <section aria-labelledby="events-heading" className="mb-8">
         <h2 id="events-heading" className="sr-only">Recent Events</h2>
         {loading ? (
-          <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 flex items-center justify-center">
+          <div className="bg-[#262932] rounded-xl border border-white/10 p-8 flex items-center justify-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF]" />
           </div>
         ) : (
@@ -246,7 +246,7 @@ export default function ContractAnalyticsPage() {
 
       {/* Last Updated */}
       {data?.updatedAt && (
-        <p className="text-xs text-[#6A6A6A] text-center">
+        <p className="text-xs text-gray-400 text-center">
           Last updated: {new Date(data.updatedAt).toLocaleString()}
         </p>
       )}

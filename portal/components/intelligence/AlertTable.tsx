@@ -59,9 +59,9 @@ export function AlertTable({ alerts, onMarkRead, onMarkAllRead, onDelete }: Aler
 
   if (alerts.length === 0) {
     return (
-      <div className="bg-white rounded-xl border border-[#E6E7E9] p-8 text-center">
+      <div className="bg-[#262932] rounded-xl border border-white/10 p-8 text-center">
         <svg
-          className="w-12 h-12 mx-auto text-[#6A6A6A] mb-4"
+          className="w-12 h-12 mx-auto text-gray-400 mb-4"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -73,8 +73,8 @@ export function AlertTable({ alerts, onMarkRead, onMarkAllRead, onDelete }: Aler
             d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
           />
         </svg>
-        <p className="text-[#6A6A6A] mb-4">No alerts yet</p>
-        <p className="text-sm text-[#6A6A6A]">
+        <p className="text-gray-400 mb-4">No alerts yet</p>
+        <p className="text-sm text-gray-400">
           Alerts will appear here when your configured rules are triggered
         </p>
       </div>
@@ -82,10 +82,10 @@ export function AlertTable({ alerts, onMarkRead, onMarkAllRead, onDelete }: Aler
   }
 
   return (
-    <div className="bg-white rounded-xl border border-[#E6E7E9] overflow-hidden">
+    <div className="bg-[#262932] rounded-xl border border-white/10 overflow-hidden">
       {unreadCount > 0 && onMarkAllRead && (
-        <div className="px-4 sm:px-6 py-3 border-b border-[#E6E7E9] bg-gray-50 flex items-center justify-between">
-          <span className="text-sm text-[#6A6A6A]">
+        <div className="px-4 sm:px-6 py-3 border-b border-white/10 bg-white/5 flex items-center justify-between">
+          <span className="text-sm text-gray-400">
             {unreadCount} unread alert{unreadCount > 1 ? 's' : ''}
           </span>
           <button
@@ -108,7 +108,7 @@ export function AlertTable({ alerts, onMarkRead, onMarkAllRead, onDelete }: Aler
               className={`${!alert.isRead ? 'bg-blue-50/30' : ''}`}
             >
               <div
-                className="p-4 hover:bg-[#F5F6F7] cursor-pointer transition-colors"
+                className="p-4 hover:bg-[#1D1E26] cursor-pointer transition-colors"
                 onClick={() => {
                   setExpandedId(isExpanded ? null : alert.id);
                   if (!alert.isRead && onMarkRead) {
@@ -131,17 +131,17 @@ export function AlertTable({ alerts, onMarkRead, onMarkAllRead, onDelete }: Aler
                       <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
                         {alertTypeLabels[alert.alertType] || alert.alertType}
                       </span>
-                      <span className="text-xs text-[#6A6A6A]">
+                      <span className="text-xs text-gray-400">
                         {formatTimeAgo(alert.createdAt)}
                       </span>
                     </div>
 
-                    <h4 className="font-medium text-black">{alert.title}</h4>
-                    <p className="text-sm text-[#6A6A6A] mt-1 line-clamp-2">
+                    <h4 className="font-medium text-white">{alert.title}</h4>
+                    <p className="text-sm text-gray-400 mt-1 line-clamp-2">
                       {alert.message}
                     </p>
 
-                    <p className="text-xs text-[#6A6A6A] mt-2">
+                    <p className="text-xs text-gray-400 mt-2">
                       From: {alert.configName}
                     </p>
                   </div>
@@ -153,7 +153,7 @@ export function AlertTable({ alerts, onMarkRead, onMarkAllRead, onDelete }: Aler
                           e.stopPropagation();
                           onDelete(alert.id);
                         }}
-                        className="p-1.5 text-[#6A6A6A] hover:text-red-500 transition-colors"
+                        className="p-1.5 text-gray-400 hover:text-red-500 transition-colors"
                         title="Delete"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -162,7 +162,7 @@ export function AlertTable({ alerts, onMarkRead, onMarkAllRead, onDelete }: Aler
                       </button>
                     )}
                     <svg
-                      className={`w-5 h-5 text-[#6A6A6A] transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                      className={`w-5 h-5 text-gray-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -174,17 +174,17 @@ export function AlertTable({ alerts, onMarkRead, onMarkAllRead, onDelete }: Aler
               </div>
 
               {isExpanded && (
-                <div className="px-4 pb-4 bg-[#F5F6F7]">
-                  <div className="bg-white rounded-lg p-4 space-y-3">
+                <div className="px-4 pb-4 bg-[#1D1E26]">
+                  <div className="bg-[#262932] rounded-lg p-4 space-y-3">
                     <div>
-                      <p className="text-sm text-[#6A6A6A] mb-1">Full Message:</p>
-                      <p className="text-sm text-black">{alert.message}</p>
+                      <p className="text-sm text-gray-400 mb-1">Full Message:</p>
+                      <p className="text-sm text-white">{alert.message}</p>
                     </div>
 
                     {alert.data && Object.keys(alert.data).length > 0 && (
                       <div>
-                        <p className="text-sm text-[#6A6A6A] mb-1">Details:</p>
-                        <pre className="text-xs font-mono bg-[#F5F6F7] p-3 rounded overflow-x-auto">
+                        <p className="text-sm text-gray-400 mb-1">Details:</p>
+                        <pre className="text-xs font-mono bg-[#1D1E26] p-3 rounded overflow-x-auto">
                           {JSON.stringify(alert.data, null, 2)}
                         </pre>
                       </div>
@@ -192,7 +192,7 @@ export function AlertTable({ alerts, onMarkRead, onMarkAllRead, onDelete }: Aler
 
                     {alert.sourceId && (
                       <div className="flex items-center gap-2">
-                        <span className="text-sm text-[#6A6A6A]">Source:</span>
+                        <span className="text-sm text-gray-400">Source:</span>
                         <code className="text-sm font-mono text-[#7366FF]">
                           {alert.sourceId.length > 20
                             ? `${alert.sourceId.slice(0, 10)}...${alert.sourceId.slice(-8)}`

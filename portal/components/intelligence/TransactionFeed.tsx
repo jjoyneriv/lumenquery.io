@@ -120,10 +120,10 @@ export function TransactionFeed({
   };
 
   return (
-    <div className="bg-white rounded-xl border border-[#E6E7E9] overflow-hidden h-full flex flex-col">
-      <div className="px-4 sm:px-6 py-4 border-b border-[#E6E7E9] flex items-center justify-between">
+    <div className="bg-[#262932] rounded-xl border border-white/10 overflow-hidden h-full flex flex-col">
+      <div className="px-4 sm:px-6 py-4 border-b border-white/10 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <h3 className="font-semibold text-black">Live Transaction Stream</h3>
+          <h3 className="font-semibold text-white">Live Transaction Stream</h3>
           <StreamStatusIndicator status={status} lastUpdate={lastUpdate} />
         </div>
         <div className="flex items-center gap-2">
@@ -165,7 +165,7 @@ export function TransactionFeed({
         style={{ maxHeight: 'calc(100vh - 300px)' }}
       >
         {transactions.length === 0 ? (
-          <div className="p-8 text-center text-[#6A6A6A]">
+          <div className="p-8 text-center text-gray-400">
             {status === 'connected' ? (
               <>
                 <svg
@@ -197,7 +197,7 @@ export function TransactionFeed({
         )}
       </div>
 
-      <div className="px-4 py-2 border-t border-[#E6E7E9] bg-[#F5F6F7] text-xs text-[#6A6A6A]">
+      <div className="px-4 py-2 border-t border-white/10 bg-[#1D1E26] text-xs text-gray-400">
         {transactions.length} transactions • Filter: {filter}
         {accountId && ` • Account: ${accountId.slice(0, 8)}...`}
         {assetCode && ` • Asset: ${assetCode}`}

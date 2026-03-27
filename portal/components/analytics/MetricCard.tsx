@@ -36,7 +36,7 @@ const icons = {
 const trendColors = {
   up: 'text-green-500',
   down: 'text-red-500',
-  neutral: 'text-[#6A6A6A]',
+  neutral: 'text-gray-400',
 };
 
 const trendIcons = {
@@ -64,9 +64,9 @@ export default function MetricCard({
   const IconComponent = icon === 'custom' ? customIcon : icons[icon];
 
   return (
-    <div className="bg-white rounded-xl sm:rounded-2xl border border-[#E6E7E9] p-4 sm:p-6">
+    <div className="bg-[#262932] rounded-xl sm:rounded-2xl border border-white/10 p-4 sm:p-6">
       <div className="flex items-start justify-between mb-2">
-        <p className="text-[#6A6A6A] text-xs sm:text-sm">{title}</p>
+        <p className="text-gray-400 text-xs sm:text-sm">{title}</p>
         {IconComponent && (
           <div className="text-[#7366FF]">
             {IconComponent}
@@ -74,7 +74,7 @@ export default function MetricCard({
         )}
       </div>
       <div className="flex items-end gap-2">
-        <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-black">{value}</p>
+        <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{value}</p>
         {trend !== 'neutral' && trendIcons[trend] && (
           <span className={trendColors[trend]}>
             {trendIcons[trend]}
@@ -82,7 +82,7 @@ export default function MetricCard({
         )}
       </div>
       {subtitle && (
-        <p className="text-[#6A6A6A] text-xs sm:text-sm mt-1">{subtitle}</p>
+        <p className="text-gray-400 text-xs sm:text-sm mt-1">{subtitle}</p>
       )}
     </div>
   );

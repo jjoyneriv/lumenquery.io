@@ -9,27 +9,27 @@ export default function AnalyticsDocsPage() {
   const sidebarContent = (
     <div className="space-y-6">
       <div>
-        <h3 className="text-sm font-semibold text-[#6A6A6A] uppercase tracking-wider mb-3">Overview</h3>
+        <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Overview</h3>
         <ul className="space-y-2">
-          <li><a href="#introduction" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Introduction</a></li>
-          <li><a href="#dashboard" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Dashboard</a></li>
-          <li><a href="#time-ranges" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Time Ranges</a></li>
+          <li><a href="#introduction" className="text-gray-400 hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Introduction</a></li>
+          <li><a href="#dashboard" className="text-gray-400 hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Dashboard</a></li>
+          <li><a href="#time-ranges" className="text-gray-400 hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Time Ranges</a></li>
         </ul>
       </div>
       <div>
-        <h3 className="text-sm font-semibold text-[#6A6A6A] uppercase tracking-wider mb-3">Sections</h3>
+        <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Sections</h3>
         <ul className="space-y-2">
-          <li><a href="#network" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Network Metrics</a></li>
-          <li><a href="#tokens" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Token Analytics</a></li>
-          <li><a href="#contracts" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Smart Contracts</a></li>
+          <li><a href="#network" className="text-gray-400 hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Network Metrics</a></li>
+          <li><a href="#tokens" className="text-gray-400 hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Token Analytics</a></li>
+          <li><a href="#contracts" className="text-gray-400 hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Smart Contracts</a></li>
         </ul>
       </div>
       <div>
-        <h3 className="text-sm font-semibold text-[#6A6A6A] uppercase tracking-wider mb-3">Reference</h3>
+        <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Reference</h3>
         <ul className="space-y-2">
-          <li><a href="#stroops" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Understanding Stroops</a></li>
-          <li><a href="#api-reference" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>API Reference</a></li>
-          <li><a href="#data-sources" className="text-[#6A6A6A] hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Data Sources</a></li>
+          <li><a href="#stroops" className="text-gray-400 hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Understanding Stroops</a></li>
+          <li><a href="#api-reference" className="text-gray-400 hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>API Reference</a></li>
+          <li><a href="#data-sources" className="text-gray-400 hover:text-[#7366FF]" onClick={() => setSidebarOpen(false)}>Data Sources</a></li>
         </ul>
       </div>
       <div>
@@ -44,12 +44,12 @@ export default function AnalyticsDocsPage() {
   );
 
   return (
-    <div className="bg-white text-black">
+    <div className="bg-[#262932] text-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
         {/* Mobile sidebar toggle */}
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="lg:hidden mb-4 flex items-center gap-2 px-4 py-2 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9] text-sm font-medium"
+          className="lg:hidden mb-4 flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1D1E26] border border-white/10 text-sm font-medium"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -61,12 +61,12 @@ export default function AnalyticsDocsPage() {
         {sidebarOpen && (
           <div className="lg:hidden fixed inset-0 z-50 bg-black/50" onClick={() => setSidebarOpen(false)}>
             <div
-              className="absolute left-0 top-0 bottom-0 w-72 bg-white p-6 overflow-y-auto"
+              className="absolute left-0 top-0 bottom-0 w-72 bg-[#262932] p-6 overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 onClick={() => setSidebarOpen(false)}
-                className="absolute top-4 right-4 p-2 rounded-lg hover:bg-[#F5F6F7]"
+                className="absolute top-4 right-4 p-2 rounded-lg hover:bg-[#1D1E26]"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -93,15 +93,15 @@ export default function AnalyticsDocsPage() {
                 <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-medium">Real-Time</span>
               </div>
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">Stellar Network Analytics</h1>
-              <p className="text-base sm:text-lg md:text-xl text-[#6A6A6A]">
+              <p className="text-base sm:text-lg md:text-xl text-gray-400">
                 Real-time blockchain metrics, token analytics, and smart contract insights for the Stellar network.
               </p>
             </header>
 
             {/* Introduction */}
             <section id="introduction" className="mb-10 sm:mb-16">
-              <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-[#E6E7E9]">Introduction</h2>
-              <p className="text-[#6A6A6A] mb-4 text-sm sm:text-base">
+              <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-white/10">Introduction</h2>
+              <p className="text-gray-400 mb-4 text-sm sm:text-base">
                 Stellar Network Analytics provides a comprehensive, real-time view of the Stellar blockchain.
                 Monitor ledger sequences, transaction throughput, token activity, and Soroban smart contract
                 interactions—all without requiring authentication.
@@ -114,7 +114,7 @@ export default function AnalyticsDocsPage() {
                     </svg>
                   </div>
                   <h3 className="font-semibold mb-1 text-sm">Network</h3>
-                  <p className="text-xs text-[#6A6A6A]">Ledgers, TPS, fees</p>
+                  <p className="text-xs text-gray-400">Ledgers, TPS, fees</p>
                 </div>
                 <div className="p-4 rounded-lg bg-green-50 border border-green-200">
                   <div className="text-green-600 text-xl mb-2">
@@ -123,7 +123,7 @@ export default function AnalyticsDocsPage() {
                     </svg>
                   </div>
                   <h3 className="font-semibold mb-1 text-sm">Tokens</h3>
-                  <p className="text-xs text-[#6A6A6A]">Volume, whales, risk</p>
+                  <p className="text-xs text-gray-400">Volume, whales, risk</p>
                 </div>
                 <div className="p-4 rounded-lg bg-purple-50 border border-purple-200">
                   <div className="text-purple-600 text-xl mb-2">
@@ -132,7 +132,7 @@ export default function AnalyticsDocsPage() {
                     </svg>
                   </div>
                   <h3 className="font-semibold mb-1 text-sm">Contracts</h3>
-                  <p className="text-xs text-[#6A6A6A]">Soroban activity</p>
+                  <p className="text-xs text-gray-400">Soroban activity</p>
                 </div>
                 <div className="p-4 rounded-lg bg-orange-50 border border-orange-200">
                   <div className="text-orange-600 text-xl mb-2">
@@ -141,7 +141,7 @@ export default function AnalyticsDocsPage() {
                     </svg>
                   </div>
                   <h3 className="font-semibold mb-1 text-sm">Real-Time</h3>
-                  <p className="text-xs text-[#6A6A6A]">30-60s refresh</p>
+                  <p className="text-xs text-gray-400">30-60s refresh</p>
                 </div>
               </div>
 
@@ -160,46 +160,46 @@ export default function AnalyticsDocsPage() {
 
             {/* Dashboard */}
             <section id="dashboard" className="mb-10 sm:mb-16">
-              <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-[#E6E7E9]">Dashboard Overview</h2>
-              <p className="text-[#6A6A6A] mb-4 text-sm sm:text-base">
-                The Analytics dashboard at <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#7366FF] text-xs">/analytics</code> provides
+              <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-white/10">Dashboard Overview</h2>
+              <p className="text-gray-400 mb-4 text-sm sm:text-base">
+                The Analytics dashboard at <code className="px-2 py-1 rounded bg-[#1D1E26] text-[#7366FF] text-xs">/analytics</code> provides
                 a high-level view of Stellar network health and activity.
               </p>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Key Metrics</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
+                <div className="p-4 rounded-lg bg-[#1D1E26] border border-white/10">
                   <h4 className="font-semibold mb-2 text-sm flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-blue-500"></span>
                     Current Ledger
                   </h4>
-                  <p className="text-xs text-[#6A6A6A]">Latest ledger sequence number and protocol version. Updates every ~5 seconds as new ledgers close.</p>
+                  <p className="text-xs text-gray-400">Latest ledger sequence number and protocol version. Updates every ~5 seconds as new ledgers close.</p>
                 </div>
-                <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
+                <div className="p-4 rounded-lg bg-[#1D1E26] border border-white/10">
                   <h4 className="font-semibold mb-2 text-sm flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-green-500"></span>
                     Transactions (24h)
                   </h4>
-                  <p className="text-xs text-[#6A6A6A]">Estimated total transactions in the last 24 hours, extrapolated from recent ledger data.</p>
+                  <p className="text-xs text-gray-400">Estimated total transactions in the last 24 hours, extrapolated from recent ledger data.</p>
                 </div>
-                <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
+                <div className="p-4 rounded-lg bg-[#1D1E26] border border-white/10">
                   <h4 className="font-semibold mb-2 text-sm flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-purple-500"></span>
                     Success Rate
                   </h4>
-                  <p className="text-xs text-[#6A6A6A]">Percentage of transactions that completed successfully. High rates indicate network health.</p>
+                  <p className="text-xs text-gray-400">Percentage of transactions that completed successfully. High rates indicate network health.</p>
                 </div>
-                <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
+                <div className="p-4 rounded-lg bg-[#1D1E26] border border-white/10">
                   <h4 className="font-semibold mb-2 text-sm flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-orange-500"></span>
                     Average Fee
                   </h4>
-                  <p className="text-xs text-[#6A6A6A]">Average transaction fee in stroops. Includes P95 percentile for fee estimation.</p>
+                  <p className="text-xs text-gray-400">Average transaction fee in stroops. Includes P95 percentile for fee estimation.</p>
                 </div>
               </div>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Historical Charts</h3>
-              <p className="text-[#6A6A6A] text-sm mb-4">
+              <p className="text-gray-400 text-sm mb-4">
                 Two side-by-side area charts visualize trends over your selected time range:
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -216,8 +216,8 @@ export default function AnalyticsDocsPage() {
 
             {/* Time Ranges */}
             <section id="time-ranges" className="mb-10 sm:mb-16">
-              <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-[#E6E7E9]">Time Ranges</h2>
-              <p className="text-[#6A6A6A] mb-4 text-sm sm:text-base">
+              <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-white/10">Time Ranges</h2>
+              <p className="text-gray-400 mb-4 text-sm sm:text-base">
                 Use the time range selector to view data across different periods. Each range uses appropriate
                 data aggregation for optimal visualization.
               </p>
@@ -225,7 +225,7 @@ export default function AnalyticsDocsPage() {
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[500px] text-sm">
                   <thead>
-                    <tr className="border-b border-[#E6E7E9] bg-[#F5F6F7]">
+                    <tr className="border-b border-white/10 bg-[#1D1E26]">
                       <th className="text-left py-3 px-4 font-medium">Range</th>
                       <th className="text-left py-3 px-4 font-medium">Data Points</th>
                       <th className="text-left py-3 px-4 font-medium">Bucket Size</th>
@@ -233,23 +233,23 @@ export default function AnalyticsDocsPage() {
                     </tr>
                   </thead>
                   <tbody className="text-xs sm:text-sm">
-                    <tr className="border-b border-[#E6E7E9]">
+                    <tr className="border-b border-white/10">
                       <td className="py-3 px-4"><span className="px-2 py-1 rounded bg-blue-100 text-blue-700 font-medium">24h</span></td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">~25 points</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">Hourly</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">30 seconds</td>
+                      <td className="py-3 px-4 text-gray-400">~25 points</td>
+                      <td className="py-3 px-4 text-gray-400">Hourly</td>
+                      <td className="py-3 px-4 text-gray-400">30 seconds</td>
                     </tr>
-                    <tr className="border-b border-[#E6E7E9]">
+                    <tr className="border-b border-white/10">
                       <td className="py-3 px-4"><span className="px-2 py-1 rounded bg-purple-100 text-purple-700 font-medium">7d</span></td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">~43 points</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">4-hour</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">5 minutes</td>
+                      <td className="py-3 px-4 text-gray-400">~43 points</td>
+                      <td className="py-3 px-4 text-gray-400">4-hour</td>
+                      <td className="py-3 px-4 text-gray-400">5 minutes</td>
                     </tr>
-                    <tr className="border-b border-[#E6E7E9]">
+                    <tr className="border-b border-white/10">
                       <td className="py-3 px-4"><span className="px-2 py-1 rounded bg-orange-100 text-orange-700 font-medium">30d</span></td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">~20 points</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">Daily</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">10 minutes</td>
+                      <td className="py-3 px-4 text-gray-400">~20 points</td>
+                      <td className="py-3 px-4 text-gray-400">Daily</td>
+                      <td className="py-3 px-4 text-gray-400">10 minutes</td>
                     </tr>
                   </tbody>
                 </table>
@@ -270,10 +270,10 @@ export default function AnalyticsDocsPage() {
 
             {/* Network Metrics */}
             <section id="network" className="mb-10 sm:mb-16">
-              <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-[#E6E7E9]">Network Metrics</h2>
-              <p className="text-[#6A6A6A] mb-4 text-sm sm:text-base">
+              <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-white/10">Network Metrics</h2>
+              <p className="text-gray-400 mb-4 text-sm sm:text-base">
                 Detailed ledger and transaction analysis available at{' '}
-                <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#7366FF] text-xs">/analytics/network</code>.
+                <code className="px-2 py-1 rounded bg-[#1D1E26] text-[#7366FF] text-xs">/analytics/network</code>.
               </p>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Current Ledger Information</h3>
@@ -293,32 +293,32 @@ export default function AnalyticsDocsPage() {
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[500px] text-sm">
                   <thead>
-                    <tr className="border-b border-[#E6E7E9] bg-[#F5F6F7]">
+                    <tr className="border-b border-white/10 bg-[#1D1E26]">
                       <th className="text-left py-3 px-4 font-medium">Metric</th>
                       <th className="text-left py-3 px-4 font-medium">Description</th>
                       <th className="text-left py-3 px-4 font-medium">Calculation</th>
                     </tr>
                   </thead>
                   <tbody className="text-xs sm:text-sm">
-                    <tr className="border-b border-[#E6E7E9]">
+                    <tr className="border-b border-white/10">
                       <td className="py-3 px-4 font-medium">Transactions (24h)</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">Estimated 24-hour transaction count</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]"><code className="text-xs">sample_txs × (86400 / sample_timespan)</code></td>
+                      <td className="py-3 px-4 text-gray-400">Estimated 24-hour transaction count</td>
+                      <td className="py-3 px-4 text-gray-400"><code className="text-xs">sample_txs × (86400 / sample_timespan)</code></td>
                     </tr>
-                    <tr className="border-b border-[#E6E7E9]">
+                    <tr className="border-b border-white/10">
                       <td className="py-3 px-4 font-medium">TPS</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">Transactions per second</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]"><code className="text-xs">txs_last_10_ledgers / timespan_seconds</code></td>
+                      <td className="py-3 px-4 text-gray-400">Transactions per second</td>
+                      <td className="py-3 px-4 text-gray-400"><code className="text-xs">txs_last_10_ledgers / timespan_seconds</code></td>
                     </tr>
-                    <tr className="border-b border-[#E6E7E9]">
+                    <tr className="border-b border-white/10">
                       <td className="py-3 px-4 font-medium">Success Rate</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">Percentage of successful transactions</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]"><code className="text-xs">successful_txs / total_txs × 100</code></td>
+                      <td className="py-3 px-4 text-gray-400">Percentage of successful transactions</td>
+                      <td className="py-3 px-4 text-gray-400"><code className="text-xs">successful_txs / total_txs × 100</code></td>
                     </tr>
-                    <tr className="border-b border-[#E6E7E9]">
+                    <tr className="border-b border-white/10">
                       <td className="py-3 px-4 font-medium">Average Fee</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">Mean base fee across ledgers</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]"><code className="text-xs">sum(base_fees) / ledger_count</code></td>
+                      <td className="py-3 px-4 text-gray-400">Mean base fee across ledgers</td>
+                      <td className="py-3 px-4 text-gray-400"><code className="text-xs">sum(base_fees) / ledger_count</code></td>
                     </tr>
                   </tbody>
                 </table>
@@ -326,27 +326,27 @@ export default function AnalyticsDocsPage() {
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Fee Statistics</h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
+                <div className="p-4 rounded-lg bg-[#1D1E26] border border-white/10">
                   <h4 className="font-semibold mb-1 text-sm">Current Fee</h4>
-                  <p className="text-xs text-[#6A6A6A]">Base fee from the latest ledger in stroops</p>
+                  <p className="text-xs text-gray-400">Base fee from the latest ledger in stroops</p>
                 </div>
-                <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
+                <div className="p-4 rounded-lg bg-[#1D1E26] border border-white/10">
                   <h4 className="font-semibold mb-1 text-sm">Average (24h)</h4>
-                  <p className="text-xs text-[#6A6A6A]">Mean fee calculated from sample ledgers</p>
+                  <p className="text-xs text-gray-400">Mean fee calculated from sample ledgers</p>
                 </div>
-                <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
+                <div className="p-4 rounded-lg bg-[#1D1E26] border border-white/10">
                   <h4 className="font-semibold mb-1 text-sm">P95 Percentile</h4>
-                  <p className="text-xs text-[#6A6A6A]">95th percentile fee for estimation</p>
+                  <p className="text-xs text-gray-400">95th percentile fee for estimation</p>
                 </div>
               </div>
             </section>
 
             {/* Token Analytics */}
             <section id="tokens" className="mb-10 sm:mb-16">
-              <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-[#E6E7E9]">Token Analytics</h2>
-              <p className="text-[#6A6A6A] mb-4 text-sm sm:text-base">
+              <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-white/10">Token Analytics</h2>
+              <p className="text-gray-400 mb-4 text-sm sm:text-base">
                 Token velocity, whale tracking, and issuer risk analysis at{' '}
-                <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#7366FF] text-xs">/analytics/tokens</code>.
+                <code className="px-2 py-1 rounded bg-[#1D1E26] text-[#7366FF] text-xs">/analytics/tokens</code>.
               </p>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Velocity Metrics</h3>
@@ -366,10 +366,10 @@ export default function AnalyticsDocsPage() {
               </div>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Top Tokens by Volume</h3>
-              <p className="text-[#6A6A6A] mb-4 text-sm">
+              <p className="text-gray-400 mb-4 text-sm">
                 Shows the top 5 assets by 24-hour trading volume, including:
               </p>
-              <ul className="list-disc list-inside space-y-2 text-[#6A6A6A] text-sm mb-6">
+              <ul className="list-disc list-inside space-y-2 text-gray-400 text-sm mb-6">
                 <li><strong>Token Code:</strong> Asset code (e.g., USDC, yXLM)</li>
                 <li><strong>Issuer:</strong> Truncated issuer address</li>
                 <li><strong>24h Volume:</strong> Total volume in XLM</li>
@@ -395,34 +395,34 @@ export default function AnalyticsDocsPage() {
               </div>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Issuer Risk Analysis</h3>
-              <p className="text-[#6A6A6A] mb-4 text-sm">
+              <p className="text-gray-400 mb-4 text-sm">
                 Evaluates token issuer trustworthiness based on account flags:
               </p>
 
               <div className="overflow-x-auto mb-6">
                 <table className="w-full min-w-[500px] text-sm">
                   <thead>
-                    <tr className="border-b border-[#E6E7E9] bg-[#F5F6F7]">
+                    <tr className="border-b border-white/10 bg-[#1D1E26]">
                       <th className="text-left py-3 px-4 font-medium">Risk Level</th>
                       <th className="text-left py-3 px-4 font-medium">Criteria</th>
                       <th className="text-left py-3 px-4 font-medium">Meaning</th>
                     </tr>
                   </thead>
                   <tbody className="text-xs sm:text-sm">
-                    <tr className="border-b border-[#E6E7E9]">
+                    <tr className="border-b border-white/10">
                       <td className="py-3 px-4"><span className="px-2 py-1 rounded bg-green-100 text-green-700 font-medium">Low</span></td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">Flags immutable OR no special flags</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">Issuer cannot change permissions</td>
+                      <td className="py-3 px-4 text-gray-400">Flags immutable OR no special flags</td>
+                      <td className="py-3 px-4 text-gray-400">Issuer cannot change permissions</td>
                     </tr>
-                    <tr className="border-b border-[#E6E7E9]">
+                    <tr className="border-b border-white/10">
                       <td className="py-3 px-4"><span className="px-2 py-1 rounded bg-yellow-100 text-yellow-700 font-medium">Medium</span></td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">Authorization required only</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">Issuer must approve trustlines</td>
+                      <td className="py-3 px-4 text-gray-400">Authorization required only</td>
+                      <td className="py-3 px-4 text-gray-400">Issuer must approve trustlines</td>
                     </tr>
-                    <tr className="border-b border-[#E6E7E9]">
+                    <tr className="border-b border-white/10">
                       <td className="py-3 px-4"><span className="px-2 py-1 rounded bg-red-100 text-red-700 font-medium">High</span></td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">Clawback OR revocable enabled</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">Issuer can freeze/reclaim assets</td>
+                      <td className="py-3 px-4 text-gray-400">Clawback OR revocable enabled</td>
+                      <td className="py-3 px-4 text-gray-400">Issuer can freeze/reclaim assets</td>
                     </tr>
                   </tbody>
                 </table>
@@ -430,27 +430,27 @@ export default function AnalyticsDocsPage() {
 
               <h4 className="text-sm font-semibold mb-3">Risk Factors Evaluated</h4>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="p-3 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9] text-center">
-                  <code className="text-xs text-[#6A6A6A]">authRequired</code>
+                <div className="p-3 rounded-lg bg-[#1D1E26] border border-white/10 text-center">
+                  <code className="text-xs text-gray-400">authRequired</code>
                 </div>
-                <div className="p-3 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9] text-center">
-                  <code className="text-xs text-[#6A6A6A]">authRevocable</code>
+                <div className="p-3 rounded-lg bg-[#1D1E26] border border-white/10 text-center">
+                  <code className="text-xs text-gray-400">authRevocable</code>
                 </div>
-                <div className="p-3 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9] text-center">
-                  <code className="text-xs text-[#6A6A6A]">authClawback</code>
+                <div className="p-3 rounded-lg bg-[#1D1E26] border border-white/10 text-center">
+                  <code className="text-xs text-gray-400">authClawback</code>
                 </div>
-                <div className="p-3 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9] text-center">
-                  <code className="text-xs text-[#6A6A6A]">authImmutable</code>
+                <div className="p-3 rounded-lg bg-[#1D1E26] border border-white/10 text-center">
+                  <code className="text-xs text-gray-400">authImmutable</code>
                 </div>
               </div>
             </section>
 
             {/* Smart Contracts */}
             <section id="contracts" className="mb-10 sm:mb-16">
-              <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-[#E6E7E9]">Smart Contracts (Soroban)</h2>
-              <p className="text-[#6A6A6A] mb-4 text-sm sm:text-base">
+              <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-white/10">Smart Contracts (Soroban)</h2>
+              <p className="text-gray-400 mb-4 text-sm sm:text-base">
                 Soroban smart contract activity and gas usage metrics at{' '}
-                <code className="px-2 py-1 rounded bg-[#F5F6F7] text-[#7366FF] text-xs">/analytics/contracts</code>.
+                <code className="px-2 py-1 rounded bg-[#1D1E26] text-[#7366FF] text-xs">/analytics/contracts</code>.
               </p>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Activity Metrics</h3>
@@ -470,13 +470,13 @@ export default function AnalyticsDocsPage() {
               </div>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Gas Usage & Fee Percentiles</h3>
-              <p className="text-[#6A6A6A] mb-4 text-sm">
+              <p className="text-gray-400 mb-4 text-sm">
                 Fee statistics from the Soroban RPC with percentile breakdowns:
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-                <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9] text-center">
+                <div className="p-4 rounded-lg bg-[#1D1E26] border border-white/10 text-center">
                   <div className="text-lg font-bold text-[#7366FF]">Mode</div>
-                  <div className="text-xs text-[#6A6A6A]">Most common fee</div>
+                  <div className="text-xs text-gray-400">Most common fee</div>
                 </div>
                 <div className="p-4 rounded-lg bg-green-50 border border-green-200 text-center">
                   <div className="text-lg font-bold text-green-600">P50</div>
@@ -493,17 +493,17 @@ export default function AnalyticsDocsPage() {
               </div>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Top Contracts</h3>
-              <p className="text-[#6A6A6A] mb-4 text-sm">
+              <p className="text-gray-400 mb-4 text-sm">
                 Most active contracts ranked by invocation count:
               </p>
-              <ul className="list-disc list-inside space-y-2 text-[#6A6A6A] text-sm mb-6">
+              <ul className="list-disc list-inside space-y-2 text-gray-400 text-sm mb-6">
                 <li><strong>Contract ID:</strong> Truncated contract address</li>
                 <li><strong>Invocations (24h):</strong> Extrapolated call count</li>
                 <li><strong>Last Activity:</strong> Time since last invocation</li>
               </ul>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Recent Events</h3>
-              <p className="text-[#6A6A6A] mb-4 text-sm">
+              <p className="text-gray-400 mb-4 text-sm">
                 Latest contract events from the network:
               </p>
               <div className="bg-[#1D1E26] rounded-lg p-4 overflow-x-auto">
@@ -525,8 +525,8 @@ export default function AnalyticsDocsPage() {
 
             {/* Understanding Stroops */}
             <section id="stroops" className="mb-10 sm:mb-16">
-              <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-[#E6E7E9]">Understanding Stroops</h2>
-              <p className="text-[#6A6A6A] mb-4 text-sm sm:text-base">
+              <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-white/10">Understanding Stroops</h2>
+              <p className="text-gray-400 mb-4 text-sm sm:text-base">
                 Stroops are the smallest unit of currency on the Stellar network, similar to how satoshis
                 are to Bitcoin or wei is to Ethereum.
               </p>
@@ -534,23 +534,23 @@ export default function AnalyticsDocsPage() {
               <div className="p-6 rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 mb-6">
                 <div className="text-center">
                   <div className="text-3xl sm:text-4xl font-bold text-[#7366FF] mb-2">1 XLM = 10,000,000 stroops</div>
-                  <div className="text-sm text-[#6A6A6A]">One XLM equals ten million stroops (10<sup>7</sup>)</div>
+                  <div className="text-sm text-gray-400">One XLM equals ten million stroops (10<sup>7</sup>)</div>
                 </div>
               </div>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Why Stroops?</h3>
               <div className="space-y-4 mb-6">
-                <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
+                <div className="p-4 rounded-lg bg-[#1D1E26] border border-white/10">
                   <h4 className="font-semibold mb-2 text-sm">Precision</h4>
-                  <p className="text-xs text-[#6A6A6A]">Stroops allow for highly precise transactions. The smallest possible payment on Stellar is 0.0000001 XLM (1 stroop).</p>
+                  <p className="text-xs text-gray-400">Stroops allow for highly precise transactions. The smallest possible payment on Stellar is 0.0000001 XLM (1 stroop).</p>
                 </div>
-                <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
+                <div className="p-4 rounded-lg bg-[#1D1E26] border border-white/10">
                   <h4 className="font-semibold mb-2 text-sm">Integer Math</h4>
-                  <p className="text-xs text-[#6A6A6A]">Using integers avoids floating-point precision issues that can cause rounding errors in financial calculations.</p>
+                  <p className="text-xs text-gray-400">Using integers avoids floating-point precision issues that can cause rounding errors in financial calculations.</p>
                 </div>
-                <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
+                <div className="p-4 rounded-lg bg-[#1D1E26] border border-white/10">
                   <h4 className="font-semibold mb-2 text-sm">Low Fees</h4>
-                  <p className="text-xs text-[#6A6A6A]">The base transaction fee is typically 100 stroops (0.00001 XLM), making Stellar extremely cost-effective.</p>
+                  <p className="text-xs text-gray-400">The base transaction fee is typically 100 stroops (0.00001 XLM), making Stellar extremely cost-effective.</p>
                 </div>
               </div>
 
@@ -558,42 +558,42 @@ export default function AnalyticsDocsPage() {
               <div className="overflow-x-auto mb-6">
                 <table className="w-full min-w-[400px] text-sm">
                   <thead>
-                    <tr className="border-b border-[#E6E7E9] bg-[#F5F6F7]">
+                    <tr className="border-b border-white/10 bg-[#1D1E26]">
                       <th className="text-left py-3 px-4 font-medium">Stroops</th>
                       <th className="text-left py-3 px-4 font-medium">XLM</th>
                       <th className="text-left py-3 px-4 font-medium">Common Use</th>
                     </tr>
                   </thead>
                   <tbody className="text-xs sm:text-sm">
-                    <tr className="border-b border-[#E6E7E9]">
+                    <tr className="border-b border-white/10">
                       <td className="py-3 px-4 font-mono">1</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">0.0000001 XLM</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">Minimum unit</td>
+                      <td className="py-3 px-4 text-gray-400">0.0000001 XLM</td>
+                      <td className="py-3 px-4 text-gray-400">Minimum unit</td>
                     </tr>
-                    <tr className="border-b border-[#E6E7E9]">
+                    <tr className="border-b border-white/10">
                       <td className="py-3 px-4 font-mono">100</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">0.00001 XLM</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">Base transaction fee</td>
+                      <td className="py-3 px-4 text-gray-400">0.00001 XLM</td>
+                      <td className="py-3 px-4 text-gray-400">Base transaction fee</td>
                     </tr>
-                    <tr className="border-b border-[#E6E7E9]">
+                    <tr className="border-b border-white/10">
                       <td className="py-3 px-4 font-mono">10,000</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">0.001 XLM</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">Small micro-payment</td>
+                      <td className="py-3 px-4 text-gray-400">0.001 XLM</td>
+                      <td className="py-3 px-4 text-gray-400">Small micro-payment</td>
                     </tr>
-                    <tr className="border-b border-[#E6E7E9]">
+                    <tr className="border-b border-white/10">
                       <td className="py-3 px-4 font-mono">1,000,000</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">0.1 XLM</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">Small transfer</td>
+                      <td className="py-3 px-4 text-gray-400">0.1 XLM</td>
+                      <td className="py-3 px-4 text-gray-400">Small transfer</td>
                     </tr>
-                    <tr className="border-b border-[#E6E7E9]">
+                    <tr className="border-b border-white/10">
                       <td className="py-3 px-4 font-mono">10,000,000</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">1 XLM</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">Standard unit</td>
+                      <td className="py-3 px-4 text-gray-400">1 XLM</td>
+                      <td className="py-3 px-4 text-gray-400">Standard unit</td>
                     </tr>
-                    <tr className="border-b border-[#E6E7E9]">
+                    <tr className="border-b border-white/10">
                       <td className="py-3 px-4 font-mono">100,000,000</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">10 XLM</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">Typical payment</td>
+                      <td className="py-3 px-4 text-gray-400">10 XLM</td>
+                      <td className="py-3 px-4 text-gray-400">Typical payment</td>
                     </tr>
                   </tbody>
                 </table>
@@ -615,21 +615,21 @@ const stroops = xlm * 10_000_000;
               </div>
 
               <h3 className="text-base sm:text-lg font-semibold mt-6 mb-3">Display Format in Analytics</h3>
-              <p className="text-[#6A6A6A] mb-4 text-sm">
+              <p className="text-gray-400 mb-4 text-sm">
                 Our analytics use smart formatting based on context:
               </p>
               <div className="space-y-3">
-                <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
+                <div className="p-4 rounded-lg bg-[#1D1E26] border border-white/10">
                   <h4 className="font-semibold mb-1 text-sm">Network Fees</h4>
-                  <p className="text-xs text-[#6A6A6A]">Always displayed in stroops (e.g., &quot;100 stroops&quot;)</p>
+                  <p className="text-xs text-gray-400">Always displayed in stroops (e.g., &quot;100 stroops&quot;)</p>
                 </div>
-                <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
+                <div className="p-4 rounded-lg bg-[#1D1E26] border border-white/10">
                   <h4 className="font-semibold mb-1 text-sm">Token Volumes</h4>
-                  <p className="text-xs text-[#6A6A6A]">Always displayed in XLM with 2 decimal places (e.g., &quot;1,234,567.89 XLM&quot;)</p>
+                  <p className="text-xs text-gray-400">Always displayed in XLM with 2 decimal places (e.g., &quot;1,234,567.89 XLM&quot;)</p>
                 </div>
-                <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
+                <div className="p-4 rounded-lg bg-[#1D1E26] border border-white/10">
                   <h4 className="font-semibold mb-1 text-sm">Contract Gas Fees</h4>
-                  <p className="text-xs text-[#6A6A6A]">Smart display: stroops for small amounts, XLM for amounts &ge;10,000,000 stroops</p>
+                  <p className="text-xs text-gray-400">Smart display: stroops for small amounts, XLM for amounts &ge;10,000,000 stroops</p>
                 </div>
               </div>
 
@@ -649,16 +649,16 @@ const stroops = xlm * 10_000_000;
 
             {/* API Reference */}
             <section id="api-reference" className="mb-10 sm:mb-16">
-              <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-[#E6E7E9]">API Reference</h2>
+              <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-white/10">API Reference</h2>
 
               <div className="space-y-6">
                 {/* Network API */}
-                <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
+                <div className="p-4 rounded-lg bg-[#1D1E26] border border-white/10">
                   <div className="flex flex-wrap items-center gap-2 mb-3">
                     <span className="px-2 py-1 rounded bg-green-100 text-green-700 font-mono text-xs">GET</span>
-                    <code className="text-[#6A6A6A] text-sm">/api/analytics/network</code>
+                    <code className="text-gray-400 text-sm">/api/analytics/network</code>
                   </div>
-                  <p className="text-xs sm:text-sm text-[#6A6A6A] mb-3">Network metrics including ledger info, transactions, and fees</p>
+                  <p className="text-xs sm:text-sm text-gray-400 mb-3">Network metrics including ledger info, transactions, and fees</p>
                   <div className="text-xs">
                     <strong>Query Parameters:</strong>
                     <code className="ml-2 px-2 py-1 rounded bg-white text-[#7366FF]">range=24h|7d|30d</code>
@@ -666,12 +666,12 @@ const stroops = xlm * 10_000_000;
                 </div>
 
                 {/* Tokens API */}
-                <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
+                <div className="p-4 rounded-lg bg-[#1D1E26] border border-white/10">
                   <div className="flex flex-wrap items-center gap-2 mb-3">
                     <span className="px-2 py-1 rounded bg-green-100 text-green-700 font-mono text-xs">GET</span>
-                    <code className="text-[#6A6A6A] text-sm">/api/analytics/tokens</code>
+                    <code className="text-gray-400 text-sm">/api/analytics/tokens</code>
                   </div>
-                  <p className="text-xs sm:text-sm text-[#6A6A6A] mb-3">Token velocity, whale tracking, and issuer risk analysis</p>
+                  <p className="text-xs sm:text-sm text-gray-400 mb-3">Token velocity, whale tracking, and issuer risk analysis</p>
                   <div className="text-xs">
                     <strong>Query Parameters:</strong>
                     <code className="ml-2 px-2 py-1 rounded bg-white text-[#7366FF]">range=24h|7d|30d</code>
@@ -679,12 +679,12 @@ const stroops = xlm * 10_000_000;
                 </div>
 
                 {/* Contracts API */}
-                <div className="p-4 rounded-lg bg-[#F5F6F7] border border-[#E6E7E9]">
+                <div className="p-4 rounded-lg bg-[#1D1E26] border border-white/10">
                   <div className="flex flex-wrap items-center gap-2 mb-3">
                     <span className="px-2 py-1 rounded bg-green-100 text-green-700 font-mono text-xs">GET</span>
-                    <code className="text-[#6A6A6A] text-sm">/api/analytics/contracts</code>
+                    <code className="text-gray-400 text-sm">/api/analytics/contracts</code>
                   </div>
-                  <p className="text-xs sm:text-sm text-[#6A6A6A] mb-3">Soroban contract activity, gas usage, and events</p>
+                  <p className="text-xs sm:text-sm text-gray-400 mb-3">Soroban contract activity, gas usage, and events</p>
                   <div className="text-xs">
                     <strong>Query Parameters:</strong>
                     <code className="ml-2 px-2 py-1 rounded bg-white text-[#7366FF]">range=24h|7d|30d</code>
@@ -726,8 +726,8 @@ const stroops = xlm * 10_000_000;
 
             {/* Data Sources */}
             <section id="data-sources" className="mb-10 sm:mb-16">
-              <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-[#E6E7E9]">Data Sources</h2>
-              <p className="text-[#6A6A6A] mb-4 text-sm sm:text-base">
+              <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 pb-2 border-b border-white/10">Data Sources</h2>
+              <p className="text-gray-400 mb-4 text-sm sm:text-base">
                 All analytics data is sourced from the Stellar network infrastructure:
               </p>
 
@@ -759,27 +759,27 @@ const stroops = xlm * 10_000_000;
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[400px] text-sm">
                   <thead>
-                    <tr className="border-b border-[#E6E7E9] bg-[#F5F6F7]">
+                    <tr className="border-b border-white/10 bg-[#1D1E26]">
                       <th className="text-left py-3 px-4 font-medium">Section</th>
                       <th className="text-left py-3 px-4 font-medium">Auto-Refresh</th>
                     </tr>
                   </thead>
                   <tbody className="text-xs sm:text-sm">
-                    <tr className="border-b border-[#E6E7E9]">
+                    <tr className="border-b border-white/10">
                       <td className="py-3 px-4">Network Overview</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">Every 30 seconds</td>
+                      <td className="py-3 px-4 text-gray-400">Every 30 seconds</td>
                     </tr>
-                    <tr className="border-b border-[#E6E7E9]">
+                    <tr className="border-b border-white/10">
                       <td className="py-3 px-4">Network Metrics</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">Every 30 seconds</td>
+                      <td className="py-3 px-4 text-gray-400">Every 30 seconds</td>
                     </tr>
-                    <tr className="border-b border-[#E6E7E9]">
+                    <tr className="border-b border-white/10">
                       <td className="py-3 px-4">Token Analytics</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">Every 60 seconds</td>
+                      <td className="py-3 px-4 text-gray-400">Every 60 seconds</td>
                     </tr>
-                    <tr className="border-b border-[#E6E7E9]">
+                    <tr className="border-b border-white/10">
                       <td className="py-3 px-4">Contract Analytics</td>
-                      <td className="py-3 px-4 text-[#6A6A6A]">Every 60 seconds</td>
+                      <td className="py-3 px-4 text-gray-400">Every 60 seconds</td>
                     </tr>
                   </tbody>
                 </table>
@@ -791,7 +791,7 @@ const stroops = xlm * 10_000_000;
               <h2 className="text-lg sm:text-xl font-bold mb-2">Explore Analytics</h2>
               <p className="text-white/80 mb-4 text-sm sm:text-base">Ready to dive into Stellar network data? Access our real-time analytics dashboard.</p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                <Link href="/analytics" className="px-4 py-2 rounded-lg bg-white text-[#7366FF] text-sm font-medium hover:bg-gray-100 transition-colors text-center">
+                <Link href="/analytics" className="px-4 py-2 rounded-lg bg-white text-[#7366FF] text-sm font-medium hover:bg-white/10 transition-colors text-center">
                   Go to Analytics
                 </Link>
                 <a href="mailto:support@lumenquery.io" className="px-4 py-2 rounded-lg bg-white/20 text-white text-sm font-medium hover:bg-white/30 transition-colors text-center">
