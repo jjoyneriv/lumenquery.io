@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import Script from 'next/script';
 
 const posts: Record<string, {
   title: string;
@@ -8791,8 +8790,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
 
   return (
     <div className="text-white">
-      <Script
-        id="article-schema"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />

@@ -59,5 +59,8 @@ temp/
 *.crt
 *.p12
 
+# Google service account keys
+lumenquery-*.json
+
 # Traefik generated files
 traefik/acme.json

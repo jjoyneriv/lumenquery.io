@@ -50,9 +50,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    // Add these when you have them
-    // google: 'your-google-verification-code',
-    // yandex: 'your-yandex-verification-code',
+    google: 'inSkUaLXCS-P3vSuN2fiRRga8CN4lUOZlUuO-oHWkxs',
   },
 };
 
@@ -67,6 +65,28 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: 'LumenQuery',
+              url: 'https://lumenquery.io',
+              description: 'Enterprise-grade Stellar Horizon API infrastructure.',
+              publisher: {
+                '@type': 'Organization',
+                name: 'LumenQuery',
+                url: 'https://lumenquery.io',
+              },
+              potentialAction: {
+                '@type': 'SearchAction',
+                target: 'https://lumenquery.io/query?q={search_term_string}',
+                'query-input': 'required name=search_term_string',
+              },
+            }),
+          }}
+        />
       </head>
       <body className={rubik.className}>
         <Providers>{children}</Providers>
