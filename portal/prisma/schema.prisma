@@ -73,6 +73,7 @@ enum UserRole {
 
 model User {
   id             String    @id @default(cuid())
+  userId         String    @unique @default(cuid()) // 16-char alphanumeric public user ID
   email          String    @unique
   emailVerified  DateTime?
   name           String?
@@ -1166,4 +1167,116 @@ model TrustlineRisk {
 
   @@unique([accountId, assetCode, assetIssuer])
   @@index([riskScore])
+}
+
+// ===========================================
+// Support Ticketing System
+// ===========================================
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_ON_CUSTOMER
+  RESOLVED
+  CLOSED
+}
+
+enum TicketCategory {
+  GENERAL
+  BILLING
+  SUBSCRIPTION
+  TECHNICAL
+  BUG_REPORT
+  FEATURE_REQUEST
+  ACCOUNT
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model SupportTicket {
+  id          String         @id @default(cuid())
+  userId      String
+  subject     String
+  description String         @db.Text
+  category    TicketCategory @default(GENERAL)
+  status      TicketStatus   @default(OPEN)
+  priority    TicketPriority @default(MEDIUM)
+  messages    TicketMessage[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model TicketMessage {
+  id        String        @id @default(cuid())
+  ticketId  String
+  ticket    SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  senderId  String
+  senderName String
+  isAdmin   Boolean       @default(false)
+  message   String        @db.Text
+  createdAt DateTime      @default(now())
+
+  @@index([ticketId])
+}
+
+// ===========================================
+// Crypto Payment System
+// ===========================================
+
+enum PaymentStatus {
+  PENDING
+  CONFIRMED
+  EXPIRED
+  FAILED
+}
+
+model CryptoPayment {
+  id              String        @id @default(cuid())
+  userId          String
+  organizationId  String?
+  plan            String        // starter, professional, enterprise
+  currency        String        // XLM or USDC
+  amount          String        // amount due
+  amountUsd       Float         // USD equivalent
+  memo            String        // user email as memo for payment identification
+  toAddress       String        // receiving Stellar address
+  status          PaymentStatus @default(PENDING)
+  txHash          String?       // Stellar transaction hash once confirmed
+  confirmedAt     DateTime?
+  expiresAt       DateTime      // payment window expiry
+  subscriptionEnd DateTime?     // when the subscription period ends
+  createdAt       DateTime      @default(now())
+
+  @@index([userId])
+  @@index([status])
+  @@index([memo])
+}
+
+// ===========================================
+// Page View Tracking
+// ===========================================
+
+model PageView {
+  id          String   @id @default(cuid())
+  path        String
+  userId      String?
+  userTier    String?
+  sessionId   String
+  referrer    String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  @@index([path])
+  @@index([userId])
+  @@index([userTier])
+  @@index([createdAt])
 }

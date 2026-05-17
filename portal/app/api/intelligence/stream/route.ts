@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import { prisma } from '@/lib/prisma';
-import { checkIntelligenceAccess, getWhaleThreshold } from '@/lib/intelligence/gates';
 import {
   fetchPayments,
   fetchOperations,
@@ -11,211 +9,170 @@ import {
 } from '@/lib/intelligence/horizon-client';
 import { StreamFilterType } from '@/lib/intelligence/types';
 
-const HORIZON_URL = process.env.HORIZON_API_URL || 'http://stellar-horizon:8000';
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
+const DEFAULT_WHALE_THRESHOLD = 100000;
+const POLL_INTERVAL = 5000;
+
+function filterOps(operations: any[], filter: string, filterValue?: string, whaleThreshold?: number): any[] {
+  switch (filter) {
+    case 'payments':
+      return operations.filter((op) =>
+        op.type === 'payment' || op.type === 'create_account' ||
+        op.type === 'path_payment_strict_send' || op.type === 'path_payment_strict_receive'
+      );
+    case 'offers':
+      return operations.filter((op) =>
+        op.type === 'manage_sell_offer' || op.type === 'manage_buy_offer' ||
+        op.type === 'create_passive_sell_offer'
+      );
+    case 'path_payments':
+      return operations.filter((op) =>
+        op.type === 'path_payment_strict_send' || op.type === 'path_payment_strict_receive'
+      );
+    case 'trustlines':
+      return operations.filter((op) => op.type === 'change_trust');
+    case 'account':
+      return filterValue
+        ? operations.filter((op) => op.source_account === filterValue || op.from === filterValue || op.to === filterValue)
+        : operations;
+    case 'asset':
+      return filterValue
+        ? operations.filter((op) => op.asset_code === filterValue || (op.asset_type === 'native' && filterValue === 'XLM'))
+        : operations;
+    case 'whale':
+      return filterWhaleMovements(operations, whaleThreshold || DEFAULT_WHALE_THRESHOLD);
+    case 'contracts':
+      return operations.filter((op) => op.type === 'invoke_host_function');
+    default:
+      return operations;
+  }
+}
 
 export async function GET(req: Request) {
-  // Check authentication
   const session = await auth();
   if (!session?.user?.email) {
-    return NextResponse.json(
-      { error: 'Authentication required' },
-      { status: 401 }
-    );
+    return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
   }
 
-  // Get user and organization
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
-    include: { organization: true },
-  });
-
-  if (!user?.organizationId) {
-    return NextResponse.json(
-      { error: 'Organization not found' },
-      { status: 400 }
-    );
-  }
-
-  // Check streaming access
-  const access = await checkIntelligenceAccess(user.organizationId, 'stream');
-  if (!access.allowed) {
-    return NextResponse.json(
-      { error: access.reason },
-      { status: 403 }
-    );
-  }
-
-  // Parse query parameters
   const { searchParams } = new URL(req.url);
   const filter = (searchParams.get('filter') || 'all') as StreamFilterType;
   const filterValue = searchParams.get('value') || undefined;
   const minAmount = parseFloat(searchParams.get('minAmount') || '0');
+  const whaleThreshold = minAmount > 0 ? minAmount : DEFAULT_WHALE_THRESHOLD;
 
-  // Get whale threshold
-  const whaleThreshold = await getWhaleThreshold(user.organizationId);
-
-  // Create SSE stream
   let isActive = true;
-  let lastCursor: string | undefined;
 
   const stream = new ReadableStream({
     async start(controller) {
       const encoder = new TextEncoder();
+      let lastSeenId: string | undefined;
 
-      // Send initial connection message
-      controller.enqueue(
-        encoder.encode(
-          `data: ${JSON.stringify({
-            type: 'connected',
-            filter,
-            filterValue,
-            timestamp: new Date().toISOString(),
-          })}\n\n`
-        )
-      );
+      // Send connection event
+      controller.enqueue(encoder.encode(
+        `event: connected\ndata: ${JSON.stringify({ filter, timestamp: new Date().toISOString() })}\n\n`
+      ));
 
-      // Poll for new transactions/operations
+      // First fetch: get latest operations (desc) to establish baseline
+      try {
+        const isPaymentFilter = filter === 'payments' || filter === 'whale';
+        const initial = isPaymentFilter
+          ? await fetchPayments(20)
+          : await fetchOperations(20);
+        const ops = isPaymentFilter ? (initial as any).payments : (initial as any).operations;
+
+        if (ops && ops.length > 0) {
+          // Record the latest paging_token so we only get newer ops next time
+          lastSeenId = ops[0].paging_token || ops[0].id;
+
+          // Send initial batch (reversed so oldest first)
+          const filtered = filterOps(ops.reverse(), filter, filterValue, whaleThreshold);
+          for (const op of filtered.slice(-10)) {
+            const transformed = transformOperation(op);
+            controller.enqueue(encoder.encode(
+              `event: transaction\ndata: ${JSON.stringify({
+                ...transformed,
+                hash: op.transaction_hash,
+                transactionType: mapOperationType(op.type),
+                createdAt: op.created_at,
+                successful: op.transaction_successful,
+              })}\n\n`
+            ));
+          }
+        }
+      } catch (err) {
+        console.error('Initial fetch error:', err);
+      }
+
+      // Poll loop: fetch only NEW operations using cursor
       const poll = async () => {
         while (isActive) {
+          await new Promise((r) => setTimeout(r, POLL_INTERVAL));
+          if (!isActive) break;
+
           try {
-            let operations: Awaited<ReturnType<typeof fetchOperations>>['operations'] = [];
+            const isPaymentFilter = filter === 'payments' || filter === 'whale';
 
-            // Fetch based on filter type
-            if (filter === 'payments' || filter === 'whale') {
-              const result = await fetchPayments(50, lastCursor);
-              operations = result.payments;
-              if (result.nextCursor) lastCursor = result.nextCursor;
+            // Fetch with cursor to get only operations AFTER lastSeenId
+            let ops: any[] = [];
+            if (lastSeenId) {
+              // Use cursor with order=asc to get operations after our last seen
+              const url = isPaymentFilter
+                ? `/payments?cursor=${lastSeenId}&order=asc&limit=50&include_failed=false`
+                : `/operations?cursor=${lastSeenId}&order=asc&limit=50&include_failed=false`;
+
+              const HORIZON = 'https://horizon.stellar.org';
+              const res = await fetch(`${HORIZON}${url}`, { cache: 'no-store' });
+              if (res.ok) {
+                const data = await res.json();
+                ops = data._embedded?.records || [];
+              }
             } else {
-              const result = await fetchOperations(50, lastCursor);
-              operations = result.operations;
-              if (result.nextCursor) lastCursor = result.nextCursor;
+              const result = isPaymentFilter
+                ? await fetchPayments(20)
+                : await fetchOperations(20);
+              ops = isPaymentFilter ? (result as any).payments : (result as any).operations;
             }
 
-            // Filter operations based on filter type
-            let filtered = operations;
+            if (ops.length > 0) {
+              // Update cursor to the newest operation
+              lastSeenId = ops[ops.length - 1].paging_token || ops[ops.length - 1].id;
 
-            switch (filter) {
-              case 'payments':
-                filtered = operations.filter(
-                  (op) =>
-                    op.type === 'payment' ||
-                    op.type === 'create_account' ||
-                    op.type === 'path_payment_strict_send' ||
-                    op.type === 'path_payment_strict_receive'
-                );
-                break;
-
-              case 'offers':
-                filtered = operations.filter(
-                  (op) =>
-                    op.type === 'manage_sell_offer' ||
-                    op.type === 'manage_buy_offer' ||
-                    op.type === 'create_passive_sell_offer'
-                );
-                break;
-
-              case 'path_payments':
-                filtered = operations.filter(
-                  (op) =>
-                    op.type === 'path_payment_strict_send' ||
-                    op.type === 'path_payment_strict_receive'
-                );
-                break;
-
-              case 'trustlines':
-                filtered = operations.filter((op) => op.type === 'change_trust');
-                break;
-
-              case 'account':
-                if (filterValue) {
-                  filtered = operations.filter(
-                    (op) =>
-                      op.source_account === filterValue ||
-                      op.from === filterValue ||
-                      op.to === filterValue
-                  );
-                }
-                break;
-
-              case 'asset':
-                if (filterValue) {
-                  filtered = operations.filter(
-                    (op) =>
-                      op.asset_code === filterValue ||
-                      (op.asset_type === 'native' && filterValue === 'XLM')
-                  );
-                }
-                break;
-
-              case 'whale':
-                filtered = filterWhaleMovements(
-                  operations,
-                  minAmount > 0 ? minAmount : whaleThreshold
-                );
-                break;
-
-              case 'contracts':
-                filtered = operations.filter(
-                  (op) => op.type === 'invoke_host_function'
-                );
-                break;
-            }
-
-            // Send filtered operations
-            for (const op of filtered) {
-              const transformed = transformOperation(op);
-              controller.enqueue(
-                encoder.encode(
-                  `data: ${JSON.stringify({
-                    type: 'transaction',
-                    operation: {
-                      ...transformed,
-                      transactionType: mapOperationType(op.type),
-                      createdAt: op.created_at,
-                      successful: op.transaction_successful,
-                    },
-                    timestamp: new Date().toISOString(),
+              const filtered = filterOps(ops, filter, filterValue, whaleThreshold);
+              for (const op of filtered) {
+                const transformed = transformOperation(op);
+                controller.enqueue(encoder.encode(
+                  `event: transaction\ndata: ${JSON.stringify({
+                    ...transformed,
+                    hash: op.transaction_hash,
+                    transactionType: mapOperationType(op.type),
+                    createdAt: op.created_at,
+                    successful: op.transaction_successful,
                   })}\n\n`
-                )
-              );
+                ));
+              }
             }
 
-            // Send heartbeat
-            controller.enqueue(
-              encoder.encode(
-                `data: ${JSON.stringify({
-                  type: 'heartbeat',
-                  timestamp: new Date().toISOString(),
-                })}\n\n`
-              )
-            );
-
-            // Wait before next poll
-            await new Promise((resolve) => setTimeout(resolve, 5000));
+            // Heartbeat
+            controller.enqueue(encoder.encode(
+              `event: heartbeat\ndata: ${JSON.stringify({ timestamp: new Date().toISOString() })}\n\n`
+            ));
           } catch (error) {
-            console.error('Stream error:', error);
-            controller.enqueue(
-              encoder.encode(
-                `data: ${JSON.stringify({
-                  type: 'error',
-                  message: 'Error fetching data',
-                  timestamp: new Date().toISOString(),
-                })}\n\n`
-              )
-            );
-
-            // Wait before retry
-            await new Promise((resolve) => setTimeout(resolve, 10000));
+            console.error('Stream poll error:', error);
+            controller.enqueue(encoder.encode(
+              `event: error\ndata: ${JSON.stringify({ message: 'Poll error', timestamp: new Date().toISOString() })}\n\n`
+            ));
+            await new Promise((r) => setTimeout(r, 10000));
           }
         }
       };
 
       poll();
 
-      // Handle client disconnect
       req.signal.addEventListener('abort', () => {
         isActive = false;
-        controller.close();
+        try { controller.close(); } catch {}
       });
     },
   });
@@ -223,8 +180,9 @@ export async function GET(req: Request) {
   return new Response(stream, {
     headers: {
       'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
+      'Cache-Control': 'no-cache, no-transform',
       'Connection': 'keep-alive',
+      'X-Accel-Buffering': 'no',
     },
   });
 }

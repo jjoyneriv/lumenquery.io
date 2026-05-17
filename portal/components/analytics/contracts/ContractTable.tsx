@@ -70,7 +70,7 @@ export function ContractTable({ contracts }: ContractTableProps) {
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#E6E7E9]">
+          <tbody className="divide-y divide-white/5">
             {contracts.length > 0 ? (
               contracts.map((contract, index) => (
                 <tr key={index} className="hover:bg-white/5">

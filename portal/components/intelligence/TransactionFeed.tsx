@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { TransactionRow, Transaction } from './TransactionRow';
 import { StreamStatusIndicator } from './StreamStatusIndicator';
 
@@ -29,11 +29,21 @@ export function TransactionFeed({
   const [isPaused, setIsPaused] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
+  const isPausedRef = useRef(false);
+  const seenIdsRef = useRef<Set<string>>(new Set());
 
-  const connect = useCallback(() => {
+  // Keep ref in sync with state
+  isPausedRef.current = isPaused;
+
+  const cleanup = useCallback(() => {
     if (eventSourceRef.current) {
       eventSourceRef.current.close();
+      eventSourceRef.current = null;
     }
+  }, []);
+
+  const connect = useCallback(() => {
+    cleanup();
 
     const params = new URLSearchParams();
     params.set('filter', filter);
@@ -41,82 +51,102 @@ export function TransactionFeed({
     if (assetCode) params.set('asset', assetCode);
 
     const url = `/api/intelligence/stream?${params.toString()}`;
-    const eventSource = new EventSource(url);
-    eventSourceRef.current = eventSource;
+    const es = new EventSource(url);
+    eventSourceRef.current = es;
 
-    eventSource.onopen = () => {
-      setStatus('connected');
-    };
-
-    eventSource.addEventListener('connected', () => {
+    es.addEventListener('connected', () => {
       setStatus('connected');
     });
 
-    eventSource.addEventListener('transaction', (event) => {
-      if (!isPaused) {
-        try {
-          const tx = JSON.parse(event.data) as Transaction;
-          setTransactions((prev) => {
-            const updated = [tx, ...prev].slice(0, maxTransactions);
-            return updated;
-          });
-          setLastUpdate(new Date());
+    es.addEventListener('transaction', (event) => {
+      if (isPausedRef.current) return;
+      try {
+        const data = JSON.parse(event.data);
+        const txId = data.id || data.hash || '';
 
-          if (autoScroll && containerRef.current) {
-            containerRef.current.scrollTop = 0;
+        // Deduplicate
+        if (txId && seenIdsRef.current.has(txId)) return;
+        if (txId) {
+          seenIdsRef.current.add(txId);
+          // Keep set bounded
+          if (seenIdsRef.current.size > 500) {
+            const arr = Array.from(seenIdsRef.current);
+            seenIdsRef.current = new Set(arr.slice(-250));
           }
-        } catch (err) {
-          console.error('Failed to parse transaction:', err);
         }
+
+        const tx: Transaction = {
+          id: txId || String(Date.now()) + Math.random(),
+          type: data.transactionType || data.type || 'unknown',
+          sourceAccount: data.sourceAccount
+            ? `${data.sourceAccount.slice(0, 6)}...${data.sourceAccount.slice(-6)}`
+            : 'Unknown',
+          fullSourceAccount: data.sourceAccount,
+          timestamp: data.createdAt || new Date().toISOString(),
+          ledger: 0,
+          txHash: data.hash || data.id || '',
+          amount: data.amount,
+          assetCode: data.assetCode || (data.assetType === 'native' ? 'XLM' : data.assetCode),
+          destinationAccount: data.to
+            ? `${data.to.slice(0, 6)}...${data.to.slice(-6)}`
+            : undefined,
+          fullDestinationAccount: data.to,
+        };
+
+        setTransactions((prev) => [tx, ...prev].slice(0, maxTransactions));
+        setLastUpdate(new Date());
+
+        if (autoScroll && containerRef.current) {
+          containerRef.current.scrollTop = 0;
+        }
+      } catch (err) {
+        console.error('Failed to parse transaction:', err);
       }
     });
 
-    eventSource.addEventListener('heartbeat', () => {
+    es.addEventListener('heartbeat', () => {
       setLastUpdate(new Date());
     });
 
-    eventSource.addEventListener('error', (event) => {
-      console.error('Stream error:', event);
-      setStatus('error');
-    });
-
-    eventSource.onerror = () => {
+    es.onerror = () => {
       setStatus('disconnected');
+      cleanup();
+      // Reconnect after delay unless paused
       setTimeout(() => {
-        if (!isPaused) {
+        if (!isPausedRef.current) {
           setStatus('connecting');
           connect();
         }
       }, 5000);
     };
-  }, [filter, accountId, assetCode, isPaused, maxTransactions, autoScroll]);
+  }, [filter, accountId, assetCode, maxTransactions, autoScroll, cleanup]);
 
+  // Connect on mount and when filter changes
   useEffect(() => {
     if (!isPaused) {
+      setStatus('connecting');
       connect();
     }
-
-    return () => {
-      if (eventSourceRef.current) {
-        eventSourceRef.current.close();
-      }
-    };
-  }, [connect, isPaused]);
+    return cleanup;
+  }, [filter, accountId, assetCode]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleTogglePause = () => {
     if (isPaused) {
       setIsPaused(false);
+      isPausedRef.current = false;
+      setStatus('connecting');
+      connect();
     } else {
       setIsPaused(true);
-      if (eventSourceRef.current) {
-        eventSourceRef.current.close();
-      }
+      isPausedRef.current = true;
+      cleanup();
       setStatus('disconnected');
     }
   };
 
   const handleClear = () => {
     setTransactions([]);
+    seenIdsRef.current.clear();
   };
 
   return (
@@ -131,8 +161,8 @@ export function TransactionFeed({
             onClick={handleTogglePause}
             className={`p-2 rounded-lg transition-colors ${
               isPaused
-                ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
+                ? 'bg-green-500/10 text-green-400 hover:bg-green-500/20'
+                : 'bg-[#FFB829]/10 text-[#FFB829] hover:bg-[#FFB829]/20'
             }`}
             title={isPaused ? 'Resume' : 'Pause'}
           >
@@ -149,7 +179,7 @@ export function TransactionFeed({
           </button>
           <button
             onClick={handleClear}
-            className="p-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
+            className="p-2 rounded-lg bg-white/5 text-[#A8A9AD] hover:bg-white/10 transition-colors"
             title="Clear"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -168,24 +198,22 @@ export function TransactionFeed({
           <div className="p-8 text-center text-gray-400">
             {status === 'connected' ? (
               <>
-                <svg
-                  className="w-12 h-12 mx-auto mb-4 animate-pulse"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="w-12 h-12 mx-auto mb-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
                 <p>Waiting for transactions...</p>
               </>
             ) : status === 'connecting' ? (
-              <p>Connecting to stream...</p>
+              <div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7366FF] mx-auto mb-4" />
+                <p>Connecting to stream...</p>
+              </div>
             ) : (
               <p>Stream disconnected. Click resume to reconnect.</p>
             )}
           </div>
         ) : (
-          <div className="divide-y divide-[#E6E7E9]">
+          <div className="divide-y divide-white/5">
             {transactions.map((tx) => (
               <TransactionRow
                 key={tx.id}

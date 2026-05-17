@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
+import { randomBytes } from 'crypto';
 import { prisma } from '@/lib/prisma';
+
+function generateUserId(): string {
+  return randomBytes(8).toString('hex').toUpperCase(); // 16-char alphanumeric
+}
 
 // Email validation regex (RFC 5322 simplified)
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
@@ -90,10 +95,14 @@ export async function POST(req: Request) {
       },
     });
 
+    // Generate 16-char alphanumeric public user ID
+    const publicUserId = generateUserId();
+
     // Create user with organization
     const user = await prisma.user.create({
       data: {
         id: userId,
+        userId: publicUserId,
         email,
         name,
         hashedPassword,
@@ -103,7 +112,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       success: true,
-      user: { id: user.id, email: user.email, name: user.name },
+      user: { id: user.id, userId: user.userId, email: user.email, name: user.name },
     });
   } catch (error: any) {
     console.error('Signup error:', error);

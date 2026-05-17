@@ -80,28 +80,29 @@ export default function BarChart({
         margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
       >
         {showGrid && (
-          <CartesianGrid strokeDasharray="3 3" stroke="#E6E7E9" vertical={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
         )}
         <XAxis
           dataKey={xAxisKey}
           tickFormatter={formatXAxis}
-          tick={{ fill: '#6A6A6A', fontSize: 12 }}
-          axisLine={{ stroke: '#E6E7E9' }}
+          tick={{ fill: '#A8A9AD', fontSize: 12 }}
+          axisLine={{ stroke: 'rgba(255,255,255,0.05)' }}
           tickLine={false}
         />
         <YAxis
           tickFormatter={(v) => formatTooltipValue(v)}
-          tick={{ fill: '#6A6A6A', fontSize: 12 }}
+          tick={{ fill: '#A8A9AD', fontSize: 12 }}
           axisLine={false}
           tickLine={false}
           width={60}
         />
         <Tooltip
           contentStyle={{
-            backgroundColor: 'white',
-            border: '1px solid #E6E7E9',
+            backgroundColor: '#262932',
+            border: '1px solid rgba(255,255,255,0.1)',
             borderRadius: '8px',
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.3)',
+            color: '#BEBFC2',
           }}
           labelFormatter={(label) => {
             try {

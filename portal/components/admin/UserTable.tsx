@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 interface User {
   id: string;
+  userId: string;
   email: string;
   name: string | null;
   role: string;
@@ -30,6 +31,27 @@ interface UserTableProps {
 export default function UserTable({ users, onRefresh }: UserTableProps) {
   const [sortBy, setSortBy] = useState('createdAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [deleting, setDeleting] = useState<string | null>(null);
+
+  const handleDelete = async (userId: string, email: string) => {
+    if (!confirm(`Are you sure you want to permanently delete user "${email}"? This action cannot be undone.`)) {
+      return;
+    }
+    setDeleting(userId);
+    try {
+      const res = await fetch(`/api/admin/users/${userId}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const data = await res.json();
+        alert(data.error || 'Failed to delete user');
+      } else {
+        onRefresh();
+      }
+    } catch {
+      alert('Failed to delete user');
+    } finally {
+      setDeleting(null);
+    }
+  };
 
   const handleSort = (field: string) => {
     if (sortBy === field) {
@@ -67,9 +89,9 @@ export default function UserTable({ users, onRefresh }: UserTableProps) {
 
   const getRoleBadge = (role: string) => {
     const styles: Record<string, string> = {
-      SUPER_ADMIN: 'bg-red-100 text-red-700',
-      ADMIN: 'bg-purple-100 text-purple-700',
-      USER: 'bg-gray-100 text-gray-700',
+      SUPER_ADMIN: 'bg-[#FC564A]/10 text-[#FC564A]',
+      ADMIN: 'bg-purple-500/10 text-purple-400',
+      USER: 'bg-white/5 text-[#A8A9AD]',
     };
     return (
       <span className={`px-2 py-1 rounded-full text-xs font-medium ${styles[role] || styles.USER}`}>
@@ -80,11 +102,11 @@ export default function UserTable({ users, onRefresh }: UserTableProps) {
 
   const getTierBadge = (tier: string) => {
     const styles: Record<string, string> = {
-      ENTERPRISE: 'bg-yellow-100 text-yellow-800',
-      TEAM: 'bg-blue-100 text-blue-700',
-      DEVELOPER: 'bg-green-100 text-green-700',
-      AUDITOR: 'bg-purple-100 text-purple-700',
-      FREE: 'bg-gray-100 text-gray-600',
+      ENTERPRISE: 'bg-[#FFB829]/10 text-[#FFB829]',
+      TEAM: 'bg-[#40B8F4]/10 text-[#40B8F4]',
+      DEVELOPER: 'bg-green-500/10 text-green-400',
+      AUDITOR: 'bg-purple-500/10 text-purple-400',
+      FREE: 'bg-white/5 text-[#A8A9AD]',
     };
     return (
       <span className={`px-2 py-1 rounded-full text-xs font-medium ${styles[tier] || styles.FREE}`}>
@@ -167,6 +189,7 @@ export default function UserTable({ users, onRefresh }: UserTableProps) {
                     <div>
                       <p className="font-medium text-white">{user.name || 'No name'}</p>
                       <p className="text-sm text-gray-400">{user.email}</p>
+                      <p className="text-[10px] font-mono text-[#7366FF]">ID: {user.userId}</p>
                     </div>
                   </div>
                 </td>
@@ -202,12 +225,21 @@ export default function UserTable({ users, onRefresh }: UserTableProps) {
                   </span>
                 </td>
                 <td className="py-3 px-4 text-right">
-                  <Link
-                    href={`/admin/users/${user.id}`}
-                    className="text-[#7366FF] hover:text-[#1e40af] text-sm font-medium"
-                  >
-                    View
-                  </Link>
+                  <div className="flex items-center justify-end gap-3">
+                    <Link
+                      href={`/admin/users/${user.id}`}
+                      className="text-[#7366FF] hover:text-[#5A4FCF] text-sm font-medium"
+                    >
+                      View
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(user.id, user.email)}
+                      disabled={deleting === user.id}
+                      className="text-[#FC564A] hover:text-[#FC564A]/70 text-sm font-medium disabled:opacity-50"
+                    >
+                      {deleting === user.id ? '...' : 'Delete'}
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

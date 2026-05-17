@@ -4,7 +4,8 @@
 
 import { StreamTransaction, StreamOperation, TransactionType } from './types';
 
-const HORIZON_URL = process.env.HORIZON_API_URL || 'http://stellar-horizon:8000';
+// Always use public Horizon - local stellar-horizon is on a different Docker network
+const HORIZON_URL = 'https://horizon.stellar.org';
 
 // Horizon API response types
 interface HorizonTransaction {
@@ -101,7 +102,7 @@ export async function fetchTransactions(
     url += `&cursor=${cursor}`;
   }
 
-  const res = await fetch(url, { next: { revalidate: 5 } });
+  const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error('Failed to fetch transactions');
 
   const data = await res.json();
@@ -122,7 +123,7 @@ export async function fetchOperations(
     url += `&cursor=${cursor}`;
   }
 
-  const res = await fetch(url, { next: { revalidate: 5 } });
+  const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error('Failed to fetch operations');
 
   const data = await res.json();
@@ -142,7 +143,7 @@ export async function fetchPayments(
     url += `&cursor=${cursor}`;
   }
 
-  const res = await fetch(url, { next: { revalidate: 5 } });
+  const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error('Failed to fetch payments');
 
   const data = await res.json();
@@ -162,7 +163,7 @@ export async function fetchEffects(
     url += `&cursor=${cursor}`;
   }
 
-  const res = await fetch(url, { next: { revalidate: 10 } });
+  const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error('Failed to fetch effects');
 
   const data = await res.json();
@@ -176,7 +177,7 @@ export async function fetchEffects(
 export async function fetchAccount(accountId: string): Promise<HorizonAccount | null> {
   try {
     const res = await fetch(`${HORIZON_URL}/accounts/${accountId}`, {
-      next: { revalidate: 30 },
+      cache: 'no-store',
     });
 
     if (!res.ok) {
@@ -202,7 +203,7 @@ export async function fetchAccountOperations(
     url += `&cursor=${cursor}`;
   }
 
-  const res = await fetch(url, { next: { revalidate: 30 } });
+  const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error('Failed to fetch account operations');
 
   const data = await res.json();
@@ -223,7 +224,7 @@ export async function fetchAccountEffects(
     url += `&cursor=${cursor}`;
   }
 
-  const res = await fetch(url, { next: { revalidate: 30 } });
+  const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error('Failed to fetch account effects');
 
   const data = await res.json();

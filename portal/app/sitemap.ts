@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://lumenquery.io';
-  const today = new Date('2026-03-27');
+  const today = new Date('2026-04-24');
 
   // Core pages
   const corePages: MetadataRoute.Sitemap = [
@@ -80,12 +80,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'daily',
       priority: 0.7,
     },
-    {
-      url: `${baseUrl}/analytics/contracts`,
-      lastModified: today,
-      changeFrequency: 'daily',
-      priority: 0.7,
-    },
   ];
 
   // Contracts explorer (public landing page)
@@ -136,8 +130,95 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Blog posts - ALL 20 posts with their actual publication dates
+  // Blog posts - ALL 35 posts with their actual publication dates
   const blogPosts: MetadataRoute.Sitemap = [
+    // 2026-05-15 posts (Bermuda, RWA $2B, YLDS, XLM price)
+    {
+      url: `${baseUrl}/blog/bermuda-onchain-economy-stellar`,
+      lastModified: new Date('2026-05-15'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/stellar-rwa-2-billion-q1-2026`,
+      lastModified: new Date('2026-05-15'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/figure-ylds-stellar-tokenized-yield`,
+      lastModified: new Date('2026-05-15'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/xlm-price-016-may-2026-outlook`,
+      lastModified: new Date('2026-05-15'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    // 2026-04-24 posts (MoneyGram, regulation, XLM price, $236B economy)
+    {
+      url: `${baseUrl}/blog/moneygram-stellar-partnership-stablecoin-utility`,
+      lastModified: new Date('2026-04-24'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/stellar-regulatory-clarity-bullish-xlm`,
+      lastModified: new Date('2026-04-24'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/xlm-price-prediction-whale-accumulation`,
+      lastModified: new Date('2026-04-24'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/stellar-236-billion-economy-redefining-value`,
+      lastModified: new Date('2026-04-24'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    // 2026-04-19 posts (record transactions, Protocol 26, RWA, MiCAR, LOBSTR, XLM performance)
+    {
+      url: `${baseUrl}/blog/stellar-record-14-million-transactions`,
+      lastModified: new Date('2026-04-19'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/stellar-protocol-26-yardstick-upgrade`,
+      lastModified: new Date('2026-04-19'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/stellar-institutional-rwa-adoption-2026`,
+      lastModified: new Date('2026-04-19'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/micar-eurau-stablecoin-stellar`,
+      lastModified: new Date('2026-04-19'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/lobstr-xrp-ledger-cross-chain`,
+      lastModified: new Date('2026-04-19'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/xlm-market-performance-outpacing-crypto`,
+      lastModified: new Date('2026-04-19'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
     // 2026-03-27 posts (RWA, roadmap, Stellar RPC, developer ecosystem)
     {
       url: `${baseUrl}/blog/stellar-foundation-real-world-assets`,

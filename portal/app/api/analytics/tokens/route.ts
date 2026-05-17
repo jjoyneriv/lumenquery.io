@@ -28,7 +28,7 @@ async function fetchWithFallback(path: string, options?: RequestInit): Promise<R
 }
 
 // Cache TTLs
-const VELOCITY_CACHE_TTL = 30;    // 30 seconds (for 5-minute chart)
+const VELOCITY_CACHE_TTL = 300;   // 5 minutes (for 24h hourly chart)
 const WHALE_CACHE_TTL = 120;      // 2 minutes
 const RISK_CACHE_TTL = 300;       // 5 minutes
 
@@ -196,36 +196,102 @@ function calculateRiskScore(flags: {
   return 'low';
 }
 
-// Fetch multiple pages of payments with proper pagination and error handling
+// Fetch recent payments (small sample for velocity/whale calculations)
 async function fetchPayments(): Promise<HorizonPayment[]> {
   const allPayments: HorizonPayment[] = [];
-  const maxPages = 25; // Fetch 25 pages (5000 payments) to cover ~5 minutes of activity
+  const maxPages = 5;
   let nextUrl: string | null = `${PUBLIC_HORIZON_URL}/payments?order=desc&limit=200&include_failed=false`;
 
   for (let page = 0; page < maxPages && nextUrl; page++) {
     try {
-      const res: Response = await fetch(nextUrl, { next: { revalidate: 30 } });
+      const res: Response = await fetch(nextUrl, { next: { revalidate: 60 } });
       if (!res.ok) break;
-
       const data = await res.json();
       const records = data._embedded?.records || [];
       if (records.length === 0) break;
-
-      // Filter to payment and create_account operations
       const payments = records.filter(
         (p: HorizonPayment) => p.type === 'payment' || p.type === 'create_account'
       );
       allPayments.push(...payments);
-
-      // Get next page URL from HAL links
       nextUrl = data._links?.next?.href || null;
     } catch (error) {
       console.error('Error fetching payments page:', error);
       break;
     }
   }
-
   return allPayments;
+}
+
+// Fetch 24h hourly activity by sampling ledgers at each hour boundary
+// Horizon paging_token for ledgers = sequence * 2^32
+const LEDGER_PAGING_MULTIPLIER = BigInt(4294967296);
+
+async function fetchHourlyActivity(): Promise<Array<{ timestamp: string; payments: number; volume: string }>> {
+  // Get latest ledger to determine current sequence
+  const latestRes = await fetch(`${PUBLIC_HORIZON_URL}/ledgers?order=desc&limit=1`, { next: { revalidate: 60 } });
+  if (!latestRes.ok) return [];
+  const latestData = await latestRes.json();
+  const latestLedger = latestData._embedded?.records?.[0];
+  if (!latestLedger) return [];
+
+  const currentSeq = latestLedger.sequence;
+  const LEDGERS_PER_HOUR = 720; // ~5 sec/ledger * 720 = 3600 sec = 1 hour
+  const SAMPLE_SIZE = 100; // sample 100 ledgers per hour (~8 min window)
+
+  // Build 24 fetch promises in parallel, one per hour
+  const hourPromises = [];
+  for (let hoursAgo = 23; hoursAgo >= 0; hoursAgo--) {
+    const targetSeq = currentSeq - (hoursAgo * LEDGERS_PER_HOUR) - Math.floor(SAMPLE_SIZE / 2);
+    const safeSeq = Math.max(targetSeq, 1);
+    // Convert sequence to paging token: sequence * 2^32
+    const cursor = (BigInt(safeSeq) * LEDGER_PAGING_MULTIPLIER).toString();
+
+    hourPromises.push(
+      (async () => {
+        try {
+          const res = await fetch(
+            `${PUBLIC_HORIZON_URL}/ledgers?cursor=${cursor}&order=asc&limit=${SAMPLE_SIZE}`,
+            { next: { revalidate: 300 } }
+          );
+          if (!res.ok) return { hoursAgo, ops: 0, txs: 0, timestamp: '' };
+          const data = await res.json();
+          const records = data._embedded?.records || [];
+          if (records.length === 0) return { hoursAgo, ops: 0, txs: 0, timestamp: '' };
+
+          let totalOps = 0;
+          let totalTxs = 0;
+          for (const ledger of records) {
+            totalOps += ledger.operation_count || 0;
+            totalTxs += ledger.successful_transaction_count || 0;
+          }
+
+          // Scale sample to full hour
+          const scale = records.length > 0 ? LEDGERS_PER_HOUR / records.length : 1;
+          const midLedger = records[Math.floor(records.length / 2)];
+          const timestamp = midLedger?.closed_at || new Date(Date.now() - hoursAgo * 3600000).toISOString();
+
+          return {
+            hoursAgo,
+            ops: Math.round(totalOps * scale),
+            txs: Math.round(totalTxs * scale),
+            timestamp,
+          };
+        } catch {
+          return { hoursAgo, ops: 0, txs: 0, timestamp: new Date(Date.now() - hoursAgo * 3600000).toISOString() };
+        }
+      })()
+    );
+  }
+
+  const results = await Promise.all(hourPromises);
+
+  return results
+    .sort((a, b) => b.hoursAgo - a.hoursAgo)
+    .map((r) => ({
+      timestamp: r.timestamp || new Date(Date.now() - r.hoursAgo * 3600000).toISOString(),
+      payments: r.ops,
+      volume: formatXLM(r.txs),
+    }));
 }
 
 async function fetchTopAssets(limit: number = 15): Promise<HorizonAsset[]> {
@@ -315,38 +381,6 @@ function calculateVelocity(payments: HorizonPayment[]): TokenVelocity {
       };
     });
 
-  // Aggregate payments by 15-second intervals for chart (last 5 minutes only)
-  // This gives ~20 data points for good visualization
-  const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
-  const intervalData = new Map<string, { payments: number; volume: number }>();
-
-  for (const payment of payments) {
-    const paymentTime = new Date(payment.created_at).getTime();
-    // Only include payments from the last 5 minutes
-    if (paymentTime < fiveMinutesAgo) continue;
-
-    const date = new Date(payment.created_at);
-    // Round to 15-second intervals for finer granularity
-    const seconds = Math.floor(date.getSeconds() / 15) * 15;
-    date.setSeconds(seconds, 0);
-    const intervalKey = date.toISOString();
-    const existing = intervalData.get(intervalKey) || { payments: 0, volume: 0 };
-    existing.payments += 1;
-    // Only add volume for payments with amount (not all operations have amount)
-    if (payment.amount) {
-      existing.volume += parseFloat(payment.amount);
-    }
-    intervalData.set(intervalKey, existing);
-  }
-
-  const hourlyActivity = Array.from(intervalData.entries())
-    .map(([timestamp, data]) => ({
-      timestamp,
-      payments: data.payments,
-      volume: formatXLM(data.volume),
-    }))
-    .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
-
   // Also update total payments to use all payments, not just XLM
   const estimated24hAllPayments = Math.round(payments.length * scaleFactor);
 
@@ -355,7 +389,7 @@ function calculateVelocity(payments: HorizonPayment[]): TokenVelocity {
     totalVolumeXLM: formatXLM(estimated24hVolume),
     avgPaymentSize: formatXLM(avgPayment),
     topTokensByVolume: topTokens,
-    hourlyActivity,
+    hourlyActivity: [] as Array<{ timestamp: string; payments: number; volume: string }>,
   };
 }
 
@@ -436,11 +470,12 @@ export async function GET(req: Request) {
     const range = searchParams.get('range') || '24h';
 
     // Fetch all data in parallel with caching
-    const [velocity, whaleData, riskData] = await Promise.all([
+    const [velocity, hourlyActivity, whaleData, riskData] = await Promise.all([
       getCachedOrFetch(`analytics:tokens:velocity:${range}`, VELOCITY_CACHE_TTL, async () => {
         const payments = await fetchPayments();
         return calculateVelocity(payments);
       }),
+      getCachedOrFetch(`analytics:tokens:hourly:24h`, VELOCITY_CACHE_TTL, fetchHourlyActivity),
       getCachedOrFetch(`analytics:tokens:whales:${range}`, WHALE_CACHE_TTL, async () => {
         const [payments, accounts] = await Promise.all([
           fetchPayments(),
@@ -455,7 +490,7 @@ export async function GET(req: Request) {
     ]);
 
     return NextResponse.json({
-      velocity,
+      velocity: { ...velocity, hourlyActivity },
       whales: whaleData,
       issuerRisk: riskData,
       updatedAt: new Date().toISOString(),

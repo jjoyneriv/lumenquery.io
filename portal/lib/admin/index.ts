@@ -113,6 +113,7 @@ export function unauthorizedResponse() {
 export function formatUserForResponse(user: any) {
   return {
     id: user.id,
+    userId: user.userId,
     email: user.email,
     name: user.name,
     role: user.role,
@@ -123,8 +124,13 @@ export function formatUserForResponse(user: any) {
     organization: user.organization ? {
       id: user.organization.id,
       name: user.organization.name,
+      slug: user.organization.slug,
       tier: user.organization.tier,
+      monthlyRequestLimit: user.organization.monthlyRequestLimit,
+      sorobanProEnabled: user.organization.sorobanProEnabled,
+      intelligenceEnabled: user.organization.intelligenceEnabled,
       intelligenceTier: user.organization.intelligenceTier,
+      portfolioEnabled: user.organization.portfolioEnabled,
       portfolioTier: user.organization.portfolioTier,
     } : null,
   };

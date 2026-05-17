@@ -41,7 +41,7 @@ export function EventsTable({ events }: EventsTableProps) {
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#E6E7E9]">
+          <tbody className="divide-y divide-white/5">
             {events.length > 0 ? (
               events.map((event, index) => (
                 <tr key={index} className="hover:bg-white/5">
@@ -49,7 +49,7 @@ export function EventsTable({ events }: EventsTableProps) {
                     <code className="text-sm font-mono text-[#7366FF]">{event.contractId}</code>
                   </td>
                   <td className="px-4 sm:px-6 py-4">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-500/10 text-purple-400">
                       {event.type}
                     </span>
                   </td>

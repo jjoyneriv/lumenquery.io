@@ -37,16 +37,16 @@ function formatTimeAgo(timestamp: string): string {
 }
 
 const typeColors: Record<string, { bg: string; text: string }> = {
-  payment: { bg: 'bg-green-100', text: 'text-green-800' },
-  path_payment: { bg: 'bg-blue-100', text: 'text-blue-800' },
-  create_account: { bg: 'bg-purple-100', text: 'text-purple-800' },
-  manage_offer: { bg: 'bg-orange-100', text: 'text-orange-800' },
-  set_options: { bg: 'bg-gray-100', text: 'text-gray-800' },
-  change_trust: { bg: 'bg-yellow-100', text: 'text-yellow-800' },
-  allow_trust: { bg: 'bg-yellow-100', text: 'text-yellow-800' },
-  account_merge: { bg: 'bg-red-100', text: 'text-red-800' },
-  invoke_host_function: { bg: 'bg-indigo-100', text: 'text-indigo-800' },
-  default: { bg: 'bg-gray-100', text: 'text-gray-800' },
+  payment: { bg: 'bg-green-500/10', text: 'text-green-400' },
+  path_payment: { bg: 'bg-blue-500/10', text: 'text-blue-400' },
+  create_account: { bg: 'bg-purple-500/10', text: 'text-purple-400' },
+  manage_offer: { bg: 'bg-orange-500/10', text: 'text-orange-400' },
+  set_options: { bg: 'bg-white/5', text: 'text-[#A8A9AD]' },
+  change_trust: { bg: 'bg-[#FFB829]/10', text: 'text-[#FFB829]' },
+  allow_trust: { bg: 'bg-[#FFB829]/10', text: 'text-[#FFB829]' },
+  account_merge: { bg: 'bg-[#FC564A]/10', text: 'text-[#FC564A]' },
+  invoke_host_function: { bg: 'bg-[#7366FF]/10', text: 'text-[#7366FF]' },
+  default: { bg: 'bg-white/5', text: 'text-[#A8A9AD]' },
 };
 
 function CopyButton({ text }: { text: string }) {

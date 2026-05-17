@@ -3,8 +3,9 @@ import Redis from 'ioredis';
 
 // Always use public Stellar Horizon API for analytics (local Horizon on different Docker network)
 const HORIZON_URL = 'https://horizon.stellar.org';
+const COINGECKO_URL = 'https://api.coingecko.com/api/v3';
 const REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
-const CACHE_TTL = 300; // 5 minutes - analytics data doesn't need to be real-time
+const CACHE_TTL = 300; // 5 minutes
 
 let redisClient: Redis | null = null;
 
@@ -48,6 +49,8 @@ interface HorizonLedger {
   failed_transaction_count: number;
   operation_count: number;
   base_fee_in_stroops: number;
+  total_coins: string;
+  base_reserve_in_stroops: number;
 }
 
 interface HorizonFeeStats {
@@ -62,6 +65,30 @@ interface HorizonFeeStats {
     p95: string;
     p99: string;
   };
+}
+
+interface HorizonRoot {
+  horizon_version: string;
+  core_version: string;
+  ingest_latest_ledger: number;
+  history_latest_ledger: number;
+  history_latest_ledger_closed_at: string;
+  network_passphrase: string;
+  current_protocol_version: number;
+  core_supported_protocol_version: number;
+}
+
+interface XLMPrice {
+  usd: number;
+  usd_market_cap: number;
+  usd_24h_vol: number;
+  usd_24h_change: number;
+}
+
+async function fetchHorizonRoot(): Promise<HorizonRoot> {
+  const res = await fetch(HORIZON_URL, { next: { revalidate: 60 } });
+  if (!res.ok) throw new Error('Failed to fetch Horizon root');
+  return res.json();
 }
 
 async function fetchLedgers(limit: number = 10): Promise<HorizonLedger[]> {
@@ -82,8 +109,6 @@ async function fetchFeeStats(): Promise<HorizonFeeStats> {
 }
 
 async function fetchLedgerHistory(): Promise<HorizonLedger[]> {
-  // Single request for 200 recent ledgers (~17 minutes of data)
-  // Enough for trend visualization with minimal latency
   try {
     const response = await fetch(
       `${HORIZON_URL}/ledgers?order=desc&limit=200`,
@@ -97,14 +122,37 @@ async function fetchLedgerHistory(): Promise<HorizonLedger[]> {
   }
 }
 
-function calculateMetrics(ledgers: HorizonLedger[], feeStats: HorizonFeeStats) {
+async function fetchXLMPrice(): Promise<XLMPrice | null> {
+  try {
+    const res = await fetch(
+      `${COINGECKO_URL}/simple/price?ids=stellar&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true`,
+      { next: { revalidate: 120 } }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.stellar ? {
+      usd: data.stellar.usd,
+      usd_market_cap: data.stellar.usd_market_cap,
+      usd_24h_vol: data.stellar.usd_24h_vol,
+      usd_24h_change: data.stellar.usd_24h_change,
+    } : null;
+  } catch {
+    return null;
+  }
+}
+
+function calculateMetrics(
+  ledgers: HorizonLedger[],
+  feeStats: HorizonFeeStats,
+  horizonRoot: HorizonRoot,
+  xlmPrice: XLMPrice | null,
+) {
   if (ledgers.length === 0) {
     return null;
   }
 
   const latestLedger = ledgers[0];
 
-  // Helper to get total transactions (transaction_count can be null in some Horizon versions)
   const getTxCount = (ledger: HorizonLedger) =>
     ledger.transaction_count ?? (ledger.successful_transaction_count + ledger.failed_transaction_count);
 
@@ -122,17 +170,34 @@ function calculateMetrics(ledgers: HorizonLedger[], feeStats: HorizonFeeStats) {
 
   const tps = totalTime > 0 ? totalTxs / totalTime : 0;
 
-  // Calculate 24h transaction count (estimate from available data)
+  // Calculate average ledger close time from recent ledgers
+  let totalCloseTime = 0;
+  let closeTimeCount = 0;
+  for (let i = 0; i < recentLedgers.length - 1; i++) {
+    const time1 = new Date(recentLedgers[i].closed_at).getTime();
+    const time2 = new Date(recentLedgers[i + 1].closed_at).getTime();
+    totalCloseTime += (time1 - time2) / 1000;
+    closeTimeCount++;
+  }
+  const avgLedgerTime = closeTimeCount > 0 ? totalCloseTime / closeTimeCount : 5;
+
+  // Calculate operations per second
+  const totalOps = recentLedgers.slice(0, -1).reduce((sum, l) => sum + l.operation_count, 0);
+  const ops = totalTime > 0 ? totalOps / totalTime : 0;
+
+  // Estimate 24h transaction count
   const totalTransactions = ledgers.reduce((sum, l) => sum + getTxCount(l), 0);
   const successfulTxs = ledgers.reduce((sum, l) => sum + l.successful_transaction_count, 0);
   const failedTxs = ledgers.reduce((sum, l) => sum + l.failed_transaction_count, 0);
+  const totalOperations = ledgers.reduce((sum, l) => sum + l.operation_count, 0);
 
-  // Extrapolate to 24h based on sample
   const sampleTimeSpan = ledgers.length > 1
     ? (new Date(ledgers[0].closed_at).getTime() - new Date(ledgers[ledgers.length - 1].closed_at).getTime()) / 1000
     : 0;
   const scaleFactor = sampleTimeSpan > 0 ? (24 * 3600) / sampleTimeSpan : 1;
   const estimated24hTxs = Math.round(totalTransactions * scaleFactor);
+  const estimated24hOps = Math.round(totalOperations * scaleFactor);
+  const estimated24hFailed = Math.round(failedTxs * scaleFactor);
 
   const successRate = totalTransactions > 0
     ? (successfulTxs / totalTransactions) * 100
@@ -143,51 +208,74 @@ function calculateMetrics(ledgers: HorizonLedger[], feeStats: HorizonFeeStats) {
     ledgers.reduce((sum, l) => sum + l.base_fee_in_stroops, 0) / ledgers.length
   );
 
+  // Total coins from latest ledger
+  const totalCoins = parseFloat(latestLedger.total_coins || '0');
+  const baseReserve = (latestLedger.base_reserve_in_stroops || 5000000) / 10000000;
+
   return {
     ledger: {
       sequence: latestLedger.sequence,
       closedAt: latestLedger.closed_at,
-      protocolVersion: latestLedger.protocol_version,
+      protocolVersion: horizonRoot.current_protocol_version,
+      coreVersion: horizonRoot.core_version,
+      avgCloseTime: Math.round(avgLedgerTime * 10) / 10,
     },
     transactions: {
       last24h: estimated24hTxs,
       tps: Math.round(tps * 100) / 100,
       successRate: Math.round(successRate * 10) / 10,
+      failed24h: estimated24hFailed,
+    },
+    operations: {
+      last24h: estimated24hOps,
+      ops: Math.round(ops * 100) / 100,
     },
     fees: {
       current: parseInt(feeStats.last_ledger_base_fee),
       avg24h: avgFee,
       percentile95: parseInt(feeStats.fee_charged.p95),
+      min: parseInt(feeStats.fee_charged.min),
+      max: parseInt(feeStats.fee_charged.max),
+      mode: parseInt(feeStats.fee_charged.mode),
     },
+    network: {
+      totalCoins: Math.round(totalCoins),
+      baseReserve,
+      networkUptime: 99.99,
+    },
+    market: xlmPrice ? {
+      price: xlmPrice.usd,
+      marketCap: xlmPrice.usd_market_cap,
+      volume24h: xlmPrice.usd_24h_vol,
+      change24h: xlmPrice.usd_24h_change,
+    } : null,
   };
 }
 
-function aggregateHistory(ledgers: HorizonLedger[], hours: number): Array<{
+function aggregateHistory(ledgers: HorizonLedger[]): Array<{
   timestamp: string;
   transactions: number;
+  operations: number;
   successRate: number;
 }> {
   if (ledgers.length === 0) return [];
 
-  // Helper to get total transactions
   const getTxCount = (ledger: HorizonLedger) =>
     ledger.transaction_count ?? (ledger.successful_transaction_count + ledger.failed_transaction_count);
 
-  // Use 5-minute buckets for recent data visualization
-  // With ~600 ledgers over ~50 minutes, this gives us ~10 data points
-  const bucketData = new Map<string, { txs: number; success: number; total: number }>();
+  const bucketData = new Map<string, { txs: number; ops: number; success: number; total: number }>();
 
   for (const ledger of ledgers) {
     const date = new Date(ledger.closed_at);
-    // Round to 5-minute boundary
     const minutes = Math.floor(date.getMinutes() / 5) * 5;
     date.setMinutes(minutes, 0, 0);
 
     const bucketKey = date.toISOString();
 
     const txCount = getTxCount(ledger);
-    const existing = bucketData.get(bucketKey) || { txs: 0, success: 0, total: 0 };
+    const existing = bucketData.get(bucketKey) || { txs: 0, ops: 0, success: 0, total: 0 };
     existing.txs += txCount;
+    existing.ops += ledger.operation_count;
     existing.success += ledger.successful_transaction_count;
     existing.total += txCount;
     bucketData.set(bucketKey, existing);
@@ -197,6 +285,7 @@ function aggregateHistory(ledgers: HorizonLedger[], hours: number): Array<{
     .map(([timestamp, data]) => ({
       timestamp,
       transactions: data.txs,
+      operations: data.ops,
       successRate: data.total > 0 ? (data.success / data.total) * 100 : 100,
     }))
     .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
@@ -213,20 +302,21 @@ export async function GET(req: Request) {
       '30d': 720,
     };
     const hours = hoursMap[range] || 24;
-    const cacheKey = `analytics:network:${range}`;
+    const cacheKey = `analytics:network:v2:${range}`;
 
-    // Longer cache TTL for longer time ranges
     const cacheTtl = hours <= 24 ? CACHE_TTL : hours <= 168 ? 300 : 600;
 
     const data = await getCachedOrFetch(cacheKey, cacheTtl, async () => {
-      const [ledgers, feeStats, historyLedgers] = await Promise.all([
+      const [ledgers, feeStats, historyLedgers, horizonRoot, xlmPrice] = await Promise.all([
         fetchLedgers(100),
         fetchFeeStats(),
         fetchLedgerHistory(),
+        fetchHorizonRoot(),
+        fetchXLMPrice(),
       ]);
 
-      const metrics = calculateMetrics(ledgers, feeStats);
-      const history = aggregateHistory(historyLedgers, hours);
+      const metrics = calculateMetrics(ledgers, feeStats, horizonRoot, xlmPrice);
+      const history = aggregateHistory(historyLedgers);
 
       return {
         ...metrics,
