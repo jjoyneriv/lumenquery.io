@@ -130,8 +130,57 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Blog posts - ALL 43 posts with their actual publication dates
+  // Blog posts - ALL 51 posts with their actual publication dates
   const blogPosts: MetadataRoute.Sitemap = [
+    // 2026-06-05 posts (payment dashboard, Soroban RPC, stablecoins, live tracking, explorer, events, rate limits, NL search)
+    {
+      url: `${baseUrl}/blog/build-stellar-payment-dashboard-horizon-api`,
+      lastModified: new Date('2026-06-05'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/what-is-soroban-rpc-stellar-smart-contracts`,
+      lastModified: new Date('2026-06-05'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/stellar-stablecoin-payments-low-fees-fast-settlement`,
+      lastModified: new Date('2026-06-05'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/track-live-stellar-transactions-real-time`,
+      lastModified: new Date('2026-06-05'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/building-blockchain-explorer-stellar-core-data`,
+      lastModified: new Date('2026-06-05'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/stellar-smart-contract-events-soroban-developers`,
+      lastModified: new Date('2026-06-05'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/api-rate-limits-blockchain-apps-production`,
+      lastModified: new Date('2026-06-05'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/natural-language-search-stellar-blockchain-data`,
+      lastModified: new Date('2026-06-05'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
     // 2026-06-04 posts (developer guides, RWA, rate limits, monitoring)
     {
       url: `${baseUrl}/blog/horizon-api-vs-stellar-rpc-which-to-use`,

@@ -9,6 +9,1122 @@ const posts: Record<string, {
   category: string;
   content: string;
 }> = {
+  'build-stellar-payment-dashboard-horizon-api': {
+    title: 'How to Build a Stellar Payment Dashboard Using Horizon API Data',
+    date: '2026-06-05',
+    readTime: '12 min read',
+    category: 'Developer Guide',
+    content: `
+A payment dashboard is one of the most practical things you can build on Stellar. It shows account balances, tracks incoming and outgoing payments, displays transaction status, and gives users visibility into their on-chain activity. This tutorial walks through building one using the Horizon API.
+
+## What We Are Building
+
+A dashboard that displays:
+1. **Account balances** — XLM and all trusted assets
+2. **Payment history** — recent incoming and outgoing payments with amounts, assets, and timestamps
+3. **Transaction status** — success/failure indicators with fee and ledger info
+4. **Ledger info** — current network state
+
+## Fetching Account Balances
+
+The \`/accounts/{id}\` endpoint returns everything about an account in a single call:
+
+\`\`\`javascript
+const HORIZON = 'https://horizon.stellar.org';
+
+async function getAccountData(accountId) {
+  const res = await fetch(\`\${HORIZON}/accounts/\${accountId}\`);
+  if (res.status === 404) return { error: 'Account not found or not funded' };
+  const account = await res.json();
+
+  return {
+    id: account.account_id,
+    sequence: account.sequence,
+    balances: account.balances.map(b => ({
+      asset: b.asset_type === 'native' ? 'XLM' : \`\${b.asset_code}\`,
+      balance: parseFloat(b.balance),
+      issuer: b.asset_issuer || null,
+    })),
+    signers: account.signers.length,
+    subentries: account.subentry_count,
+    homeDomain: account.home_domain || null,
+  };
+}
+\`\`\`
+
+### Displaying Balances
+
+\`\`\`javascript
+function renderBalances(balances) {
+  return balances
+    .sort((a, b) => b.balance - a.balance)
+    .map(b => \`\${b.asset}: \${b.balance.toLocaleString()}\`)
+    .join('\\n');
+}
+\`\`\`
+
+## Fetching Payment History
+
+The \`/accounts/{id}/payments\` endpoint returns all payment-type operations:
+
+\`\`\`javascript
+async function getPayments(accountId, limit = 20) {
+  const res = await fetch(
+    \`\${HORIZON}/accounts/\${accountId}/payments?limit=\${limit}&order=desc\`
+  );
+  const data = await res.json();
+
+  return data._embedded.records.map(p => ({
+    id: p.id,
+    type: p.type,
+    createdAt: p.created_at,
+    amount: p.amount,
+    asset: p.asset_type === 'native' ? 'XLM' : p.asset_code,
+    from: p.from,
+    to: p.to,
+    direction: p.to === accountId ? 'incoming' : 'outgoing',
+    transactionHash: p.transaction_hash,
+  }));
+}
+\`\`\`
+
+This gives you the data to render a payment feed with direction indicators, amounts, and timestamps.
+
+## Fetching Transaction Details
+
+For each payment, you can fetch the full transaction to show status and fees:
+
+\`\`\`javascript
+async function getTransaction(hash) {
+  const res = await fetch(\`\${HORIZON}/transactions/\${hash}\`);
+  const tx = await res.json();
+
+  return {
+    hash: tx.hash,
+    ledger: tx.ledger,
+    successful: tx.successful,
+    feeCharged: parseInt(tx.fee_charged),
+    operationCount: tx.operation_count,
+    memo: tx.memo || null,
+    memoType: tx.memo_type,
+    createdAt: tx.created_at,
+  };
+}
+\`\`\`
+
+## Fetching Current Ledger Info
+
+Show the user what is happening on the network right now:
+
+\`\`\`javascript
+async function getNetworkStatus() {
+  const [ledgerRes, feeRes] = await Promise.all([
+    fetch(\`\${HORIZON}/ledgers?limit=1&order=desc\`),
+    fetch(\`\${HORIZON}/fee_stats\`),
+  ]);
+
+  const ledger = (await ledgerRes.json())._embedded.records[0];
+  const fees = await feeRes.json();
+
+  return {
+    currentLedger: ledger.sequence,
+    closedAt: ledger.closed_at,
+    transactionCount: ledger.successful_transaction_count,
+    baseFee: parseInt(fees.fee_charged.min),
+    protocolVersion: ledger.protocol_version,
+  };
+}
+\`\`\`
+
+## Putting It Together
+
+\`\`\`javascript
+async function buildDashboard(accountId) {
+  const [account, payments, network] = await Promise.all([
+    getAccountData(accountId),
+    getPayments(accountId, 10),
+    getNetworkStatus(),
+  ]);
+
+  console.log('=== Account ===');
+  console.log(\`ID: \${account.id}\`);
+  account.balances.forEach(b =>
+    console.log(\`  \${b.asset}: \${b.balance.toLocaleString()}\`)
+  );
+
+  console.log('\\n=== Recent Payments ===');
+  payments.forEach(p =>
+    console.log(\`  \${p.direction === 'incoming' ? '←' : '→'} \${p.amount} \${p.asset} (\${p.createdAt})\`)
+  );
+
+  console.log('\\n=== Network ===');
+  console.log(\`  Ledger: #\${network.currentLedger}\`);
+  console.log(\`  TXs in last ledger: \${network.transactionCount}\`);
+  console.log(\`  Base fee: \${network.baseFee} stroops\`);
+}
+\`\`\`
+
+## Auto-Refreshing
+
+Poll for new payments using cursors:
+
+\`\`\`javascript
+async function pollPayments(accountId, onNewPayment) {
+  let cursor = 'now';
+  setInterval(async () => {
+    const res = await fetch(
+      \`\${HORIZON}/accounts/\${accountId}/payments?cursor=\${cursor}&order=asc&limit=50\`
+    );
+    const data = await res.json();
+    for (const payment of data._embedded.records) {
+      onNewPayment(payment);
+      cursor = payment.paging_token;
+    }
+  }, 5000);
+}
+\`\`\`
+
+## Next Steps
+
+- Add WebSocket-style streaming using Horizon's SSE support
+- Integrate with the [LumenQuery Live Transaction Viewer](/dashboard/transactions) for decoded operations
+- Use [Network Analytics](/analytics) for TPS and fee trends
+
+---
+
+*Build your payment dashboard on reliable infrastructure. [LumenQuery](/auth/signup) provides managed Horizon API with sub-100ms response times. Start free.*
+    `,
+  },
+  'what-is-soroban-rpc-stellar-smart-contracts': {
+    title: 'What Is Soroban RPC and Why It Matters for Stellar Smart Contracts',
+    date: '2026-06-05',
+    readTime: '9 min read',
+    category: 'Developer Guide',
+    content: `
+Soroban is Stellar's smart contract platform. The Soroban RPC (now called Stellar RPC) is how you interact with it — deploying contracts, invoking functions, reading storage, and monitoring events. If you are new to Stellar smart contracts, this article explains what the RPC does and why you need it.
+
+## What Soroban RPC Is
+
+Soroban RPC is a JSON-RPC server that provides access to the current state of the Stellar network and smart contracts. Unlike Horizon, which indexes historical data into a database, the RPC gives you direct access to the live ledger.
+
+Think of it this way:
+- **Horizon** = Database that stores everything that ever happened on Stellar
+- **Soroban RPC** = Live window into the current state of the network and smart contracts
+
+## Core RPC Methods
+
+| Method | What It Does |
+|--------|-------------|
+| \`getLatestLedger\` | Returns current ledger sequence and protocol version |
+| \`simulateTransaction\` | Dry-runs a transaction — shows result, fees, and resource usage |
+| \`sendTransaction\` | Submits a signed transaction to the network |
+| \`getTransaction\` | Checks status of a submitted transaction |
+| \`getEvents\` | Queries smart contract events by topic, contract, or ledger range |
+| \`getLedgerEntries\` | Reads specific ledger entries (contract storage, account data) |
+| \`getHealth\` | Returns RPC server health status |
+| \`getNetwork\` | Returns network passphrase and protocol info |
+
+## Why You Need It
+
+### 1. Transaction Simulation
+
+Before you submit any Soroban transaction, you should simulate it. Simulation tells you:
+- Will this transaction succeed or fail?
+- How much will it cost in fees and resources?
+- What state changes will it make?
+
+\`\`\`json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "simulateTransaction",
+  "params": {
+    "transaction": "AAAAAgAAAAB..."
+  }
+}
+\`\`\`
+
+Without simulation, you are guessing at resource limits and fees — which means either overpaying or having transactions rejected.
+
+### 2. Contract Storage Access
+
+Want to read the current state of a smart contract? That is RPC territory:
+
+\`\`\`json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getLedgerEntries",
+  "params": {
+    "keys": ["AAAAAAAAAA..."]
+  }
+}
+\`\`\`
+
+Horizon does not understand Soroban contract internals. Only the RPC can read contract storage.
+
+### 3. Event Monitoring
+
+Smart contracts emit events when important things happen. The RPC lets you query these:
+
+\`\`\`json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getEvents",
+  "params": {
+    "startLedger": 61000000,
+    "filters": [{
+      "type": "contract",
+      "contractIds": ["CDLZFC3S..."],
+      "topics": [["*"]]
+    }]
+  }
+}
+\`\`\`
+
+This is how you build reactive applications that respond to on-chain contract activity.
+
+## Horizon vs Soroban RPC
+
+| Need | Use |
+|------|-----|
+| Account balances | Horizon |
+| Transaction history | Horizon |
+| Payment tracking | Horizon |
+| Asset listing | Horizon |
+| Order book | Horizon |
+| Submit Soroban transactions | **RPC** |
+| Simulate transactions | **RPC** |
+| Read contract storage | **RPC** |
+| Monitor contract events | **RPC** |
+| Get current ledger state | **RPC** |
+
+Most apps need both. Horizon for historical reads, RPC for contract interaction and transaction submission.
+
+## Running Your Own vs Managed
+
+Running your own Soroban RPC requires Captive Core, monitoring, and maintenance. A managed service like LumenQuery handles all of that.
+
+- **[Soroban RPC docs](/docs/contracts)**: Complete method reference
+- **[Smart Contract Explorer](/contracts)**: Decoded contract data, events, and storage
+- **[Deploy Contracts](/contracts/deploy)**: Deploy from your browser with Freighter
+
+---
+
+*Interact with Soroban smart contracts on reliable infrastructure. [LumenQuery](/auth/signup) provides managed Stellar RPC — start free.*
+    `,
+  },
+  'stellar-stablecoin-payments-low-fees-fast-settlement': {
+    title: 'Stellar for Stablecoin Payments: Why Low Fees and Fast Settlement Matter',
+    date: '2026-06-05',
+    readTime: '10 min read',
+    category: 'Industry Insights',
+    content: `
+USDC on Stellar has over 2.1 million holder accounts. MoneyGram uses Stellar to settle stablecoin remittances across 200+ countries. The MiCAR-compliant EURAU stablecoin launched on Stellar for European settlement. This is not a testnet experiment — it is production-grade payment infrastructure processing real money.
+
+## Why Stablecoins on Stellar Work
+
+### Transaction Costs
+
+A Stellar transaction costs approximately 0.00001 XLM — a fraction of a cent. Compare this across networks:
+
+| Network | Transfer Cost | Settlement Time |
+|---------|-------------|-----------------|
+| **Stellar** | ~$0.00001 | 5-6 seconds |
+| **Ethereum** | $2-50 | 12-60 seconds |
+| **Solana** | ~$0.00025 | 400ms |
+| **Tron** | ~$1 | 3 seconds |
+| **SWIFT** | $15-50 | 1-5 days |
+
+For payment applications processing thousands of small transactions, the fee difference between Stellar and Ethereum is not an optimization — it determines whether the business model works.
+
+### Settlement Finality
+
+Stellar ledgers close every 5-6 seconds with absolute finality. No reorgs, no probabilistic finality, no waiting for confirmations. When a payment is in a ledger, it is settled.
+
+For a remittance company, this means the recipient can access funds in seconds rather than days.
+
+### Compliance at the Protocol Level
+
+Stablecoin issuers need compliance controls. Stellar provides these at the protocol level:
+
+- **Authorization Required**: Issuer must approve each holder
+- **Freeze**: Issuer can freeze a holder's balance
+- **Clawback**: Issuer can recover tokens for regulatory enforcement
+
+Circle uses these features for USDC on Stellar.
+
+## Real-World Stablecoin Use Cases on Stellar
+
+### Cross-Border Remittances (MoneyGram)
+
+MoneyGram's stablecoin service works like this:
+1. Sender deposits local currency at a MoneyGram location
+2. Funds are converted to USDC on Stellar
+3. USDC transfers to the recipient's local agent in seconds
+4. Recipient withdraws in local currency
+
+Cost: A fraction of traditional remittance fees. Speed: Minutes, not days.
+
+### Institutional Settlement
+
+Franklin Templeton, Mercado Bitcoin, and RedSwan all use Stellar for institutional settlement. Stablecoins are the settlement currency — assets are priced in USD, and USDC handles the actual value transfer.
+
+### European Payments (EURAU)
+
+The EURAU stablecoin launched on Stellar with full MiCAR compliance for European settlement. This opens euro-denominated payment corridors using the same low-fee, fast-settlement infrastructure.
+
+## The USDC Ecosystem on Stellar
+
+| Metric | Value |
+|--------|-------|
+| **Holders** | 2.1M+ accounts |
+| **Circulation** | $240M+ |
+| **Issuer** | Circle (GA5ZSEJYB37...) |
+| **Daily volume** | Significant (billions annually) |
+
+### Why Circle Chose Stellar
+
+Circle maintains USDC on multiple chains. Stellar is a primary chain because:
+- Low fees make micropayments practical
+- Fast finality matches real-world payment expectations
+- Built-in compliance controls meet regulatory requirements
+- Established anchor network provides on/off ramps globally
+
+## Building Stablecoin Payment Apps
+
+If you are building a payment application on Stellar, LumenQuery provides the infrastructure:
+
+- **[Horizon API](/docs)**: Track payments, balances, and transaction history
+- **[Live Transactions](/dashboard/transactions)**: Watch payments stream in real time
+- **[Network Analytics](/analytics)**: Monitor network throughput and fees
+
+---
+
+*Build stablecoin payment applications on Stellar. [LumenQuery](/auth/signup) provides managed Horizon API and Soroban RPC — start free.*
+    `,
+  },
+  'track-live-stellar-transactions-real-time': {
+    title: 'How to Track Live Stellar Transactions in Real Time',
+    date: '2026-06-05',
+    readTime: '10 min read',
+    category: 'Developer Guide',
+    content: `
+Stellar processes 5-10 million transactions per day. If you are building a payment app, monitoring tool, or analytics dashboard, you need to see these transactions as they happen. This guide covers three approaches: cursor-based polling, Server-Sent Events (SSE), and the LumenQuery live transaction viewer.
+
+## Approach 1: Cursor-Based Polling
+
+The simplest method — poll Horizon with a cursor to get only new transactions:
+
+\`\`\`javascript
+const HORIZON = 'https://horizon.stellar.org';
+
+async function streamTransactions(onTransaction) {
+  // Get starting cursor
+  const initial = await fetch(\`\${HORIZON}/transactions?limit=1&order=desc\`);
+  const data = await initial.json();
+  let cursor = data._embedded.records[0].paging_token;
+
+  // Poll every 5 seconds
+  setInterval(async () => {
+    try {
+      const res = await fetch(
+        \`\${HORIZON}/transactions?cursor=\${cursor}&order=asc&limit=100\`
+      );
+      const batch = await res.json();
+      for (const tx of batch._embedded.records) {
+        onTransaction(tx);
+        cursor = tx.paging_token;
+      }
+    } catch (err) {
+      console.error('Poll error:', err.message);
+    }
+  }, 5000);
+}
+
+streamTransactions((tx) => {
+  console.log(\`TX \${tx.hash.slice(0, 8)}... | \${tx.operation_count} ops | fee: \${tx.fee_charged}\`);
+});
+\`\`\`
+
+### Pros and Cons
+- **Pro**: Simple, works everywhere, no special dependencies
+- **Con**: 5-second delay between polls, uses more API calls
+
+## Approach 2: Horizon SSE Streaming
+
+Horizon supports Server-Sent Events for real-time streaming:
+
+\`\`\`javascript
+const EventSource = require('eventsource');
+
+const es = new EventSource(
+  \`\${HORIZON}/transactions?cursor=now&order=asc\`
+);
+
+es.onmessage = (event) => {
+  const tx = JSON.parse(event.data);
+  console.log(\`TX \${tx.hash.slice(0, 8)}... | ledger \${tx.ledger}\`);
+};
+
+es.onerror = (err) => {
+  console.error('SSE error, reconnecting...');
+};
+\`\`\`
+
+### Filtering by Account
+
+Stream only transactions for a specific account:
+
+\`\`\`javascript
+const es = new EventSource(
+  \`\${HORIZON}/accounts/\${ACCOUNT_ID}/transactions?cursor=now\`
+);
+\`\`\`
+
+### Filtering by Payments
+
+Stream only payment operations:
+
+\`\`\`javascript
+const es = new EventSource(
+  \`\${HORIZON}/payments?cursor=now\`
+);
+\`\`\`
+
+## Approach 3: Decoding Operations
+
+Raw transactions are not very readable. Decode the operations for human-friendly output:
+
+\`\`\`javascript
+async function decodeTransaction(tx) {
+  const opsRes = await fetch(\`\${HORIZON}/transactions/\${tx.hash}/operations\`);
+  const ops = (await opsRes.json())._embedded.records;
+
+  return ops.map(op => {
+    switch (op.type) {
+      case 'payment':
+        return \`Payment: \${op.amount} \${op.asset_type === 'native' ? 'XLM' : op.asset_code} from \${op.from.slice(0,8)}... to \${op.to.slice(0,8)}...\`;
+      case 'create_account':
+        return \`Create account \${op.account.slice(0,8)}... with \${op.starting_balance} XLM\`;
+      case 'change_trust':
+        return \`Trust \${op.asset_code}:\${op.asset_issuer?.slice(0,8)}...\`;
+      case 'invoke_host_function':
+        return \`Soroban contract invocation\`;
+      default:
+        return \`\${op.type}\`;
+    }
+  });
+}
+\`\`\`
+
+## LumenQuery Live Transaction Viewer
+
+If you do not want to build your own, LumenQuery provides a pre-built live transaction viewer at [/dashboard/transactions](/dashboard/transactions):
+
+- Real-time streaming with automatic reconnection
+- Decoded XDR operations in plain English (25+ operation types)
+- Expandable transaction details with raw JSON
+- Soroban operation highlighting
+- Pause/resume and clear controls
+- Dark theme for comfortable monitoring
+
+The viewer uses SSE under the hood and decodes all operation types including Soroban contract calls.
+
+## Rate Limit Considerations
+
+When streaming transactions, be aware of rate limits:
+- Public Horizon limits to ~100-200 requests/minute per IP
+- Each poll cycle counts as a request
+- SSE connections count as long-lived requests
+
+For production streaming, use a managed API endpoint with higher limits.
+
+---
+
+*Stream live Stellar transactions with [LumenQuery](/auth/signup). Our [live viewer](/dashboard/transactions) decodes operations in real time — or use the API to build your own.*
+    `,
+  },
+  'building-blockchain-explorer-stellar-core-data': {
+    title: 'Building a Blockchain Explorer for Stellar: Core Data You Need',
+    date: '2026-06-05',
+    readTime: '11 min read',
+    category: 'Developer Guide',
+    content: `
+A blockchain explorer is one of the most useful tools you can build for a network. For Stellar, the core data comes from five entity types: accounts, ledgers, transactions, assets, and operations. Here is how to query and display each one.
+
+## The Five Pillars
+
+### 1. Accounts
+
+Every Stellar account has a public key, balances, signers, and configuration:
+
+\`\`\`javascript
+GET /accounts/{accountId}
+\`\`\`
+
+**Key fields to display:**
+- Account ID (public key)
+- XLM balance and all asset balances
+- Number of signers and threshold configuration
+- Home domain (if set)
+- Subentry count (trustlines, offers, data entries)
+- Last modified ledger
+
+### 2. Ledgers
+
+Ledgers are Stellar's equivalent of blocks — they close every 5-6 seconds:
+
+\`\`\`javascript
+GET /ledgers?limit=10&order=desc
+GET /ledgers/{sequence}
+\`\`\`
+
+**Key fields to display:**
+- Sequence number
+- Close time
+- Transaction count (successful + failed)
+- Operation count
+- Base fee
+- Protocol version
+- Hash
+
+### 3. Transactions
+
+Each ledger contains transactions submitted by accounts:
+
+\`\`\`javascript
+GET /transactions?limit=20&order=desc
+GET /transactions/{hash}
+GET /transactions/{hash}/operations
+\`\`\`
+
+**Key fields to display:**
+- Hash
+- Source account
+- Ledger number
+- Fee charged
+- Operation count
+- Success/failure status
+- Memo (if present)
+- Envelope XDR (for advanced users)
+
+### 4. Operations
+
+Operations are the atomic units of work within transactions:
+
+\`\`\`javascript
+GET /operations?limit=20&order=desc
+GET /accounts/{id}/operations
+\`\`\`
+
+Stellar has 25+ operation types. The most common:
+- \`payment\` — XLM or asset transfer
+- \`create_account\` — Fund a new account
+- \`change_trust\` — Add or remove an asset trustline
+- \`manage_sell_offer\` / \`manage_buy_offer\` — DEX trading
+- \`invoke_host_function\` — Soroban smart contract calls
+
+### 5. Assets
+
+Every non-XLM token on Stellar is an asset with a code and issuer:
+
+\`\`\`javascript
+GET /assets?limit=20&order=desc
+GET /assets?asset_code=USDC
+\`\`\`
+
+**Key fields to display:**
+- Asset code
+- Issuer account
+- Number of accounts holding it
+- Total amount issued
+- Flags (authorization required, revocable, clawback, immutable)
+
+## Connecting the Data
+
+An explorer lets users navigate between these entities:
+
+- **Ledger → Transactions**: Click a ledger to see its transactions
+- **Transaction → Operations**: Click a transaction to see its operations
+- **Operation → Accounts**: Click source/destination to see the account
+- **Account → Assets**: See all assets an account holds
+- **Asset → Holders**: See accounts holding a specific asset
+
+Each Horizon response includes \`_links\` with HAL links to related resources, making navigation easy.
+
+## Pagination
+
+All list endpoints use cursor-based pagination:
+
+\`\`\`javascript
+// First page
+GET /transactions?limit=20&order=desc
+
+// Next page (use _links.next.href from response)
+GET /transactions?cursor=abc123&limit=20&order=desc
+\`\`\`
+
+## Search
+
+An explorer needs search. Common patterns:
+
+- **Account search**: Validate as Stellar public key (starts with G, 56 chars)
+- **Transaction search**: Validate as hex hash (64 chars)
+- **Ledger search**: Validate as integer
+- **Asset search**: Query \`/assets?asset_code={code}\`
+
+## LumenQuery as Your Data Layer
+
+Building an explorer from scratch means managing Horizon infrastructure. LumenQuery provides:
+
+- **[Horizon API](/docs)**: All endpoints for accounts, ledgers, transactions, assets, operations
+- **[Smart Contract Explorer](/contracts)**: Decoded Soroban data (calls, storage, events)
+- **[Live Transactions](/dashboard/transactions)**: Real-time decoded transaction stream
+
+---
+
+*Power your Stellar explorer with [LumenQuery](/auth/signup). Managed Horizon API with all the data you need — start free.*
+    `,
+  },
+  'stellar-smart-contract-events-soroban-developers': {
+    title: 'Stellar Smart Contract Events Explained for Soroban Developers',
+    date: '2026-06-05',
+    readTime: '11 min read',
+    category: 'Developer Guide',
+    content: `
+Events are your primary observability tool for Soroban smart contracts. When your contract does something important — a transfer, a state change, an error condition — it should emit an event. This guide covers how to emit events in your contract, query them via the RPC, and use them for monitoring and debugging.
+
+## What Are Soroban Events
+
+Soroban events are structured data emitted during contract execution. They are stored in the ledger metadata and queryable via the Stellar RPC \`getEvents\` method.
+
+Each event has:
+- **Contract ID**: Which contract emitted it
+- **Topics**: An array of values used for filtering (up to 4 topics)
+- **Data**: The event payload (arbitrary XDR-encoded data)
+- **Ledger**: Which ledger the event was emitted in
+- **Type**: \`contract\` (from your code), \`system\` (from the runtime), or \`diagnostic\`
+
+## Emitting Events in Rust
+
+In your Soroban contract:
+
+\`\`\`rust
+use soroban_sdk::{contractimpl, Env, Symbol, Address, symbol_short};
+
+#[contractimpl]
+impl MyContract {
+    pub fn transfer(env: Env, from: Address, to: Address, amount: i128) {
+        // ... transfer logic ...
+
+        // Emit event
+        env.events().publish(
+            (symbol_short!("transfer"), from.clone(), to.clone()),
+            amount,
+        );
+    }
+}
+\`\`\`
+
+The topics tuple is what consumers use to filter events. Put the event type first, then the key identifiers.
+
+## Querying Events via RPC
+
+Use the \`getEvents\` method to query contract events:
+
+\`\`\`json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getEvents",
+  "params": {
+    "startLedger": 61000000,
+    "filters": [{
+      "type": "contract",
+      "contractIds": ["CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC"],
+      "topics": [["AAAADwAAAAh0cmFuc2Zlcg==", "*", "*"]]
+    }],
+    "pagination": {
+      "limit": 100
+    }
+  }
+}
+\`\`\`
+
+### Filter Options
+
+| Filter | Description |
+|--------|-------------|
+| \`type\` | \`contract\`, \`system\`, or \`diagnostic\` |
+| \`contractIds\` | Array of contract IDs to filter by |
+| \`topics\` | Array of topic filters (\`*\` for wildcard) |
+| \`startLedger\` | Start of the ledger range |
+
+### Topic Matching
+
+Topics are XDR-encoded. Use wildcards for flexible matching:
+- \`["*"]\` — Match any first topic
+- \`["transfer", "*", "*"]\` — Match transfer events from any account to any account
+- \`["transfer", "GABC...", "*"]\` — Match transfers from a specific account
+
+## Event Types to Emit
+
+### Standard Events
+
+| Event | Topics | Data | When |
+|-------|--------|------|------|
+| transfer | (transfer, from, to) | amount | Asset moved |
+| approve | (approve, owner, spender) | amount | Allowance set |
+| mint | (mint, to) | amount | New tokens created |
+| burn | (burn, from) | amount | Tokens destroyed |
+
+### Custom Events
+
+| Event | Topics | Data | When |
+|-------|--------|------|------|
+| config_change | (config, key) | new_value | Settings updated |
+| error | (error, code) | message | Error condition |
+| deposit | (deposit, user) | amount, asset | Funds deposited |
+| withdrawal | (withdrawal, user) | amount, asset | Funds withdrawn |
+
+## Monitoring Events in Production
+
+### Polling Pattern
+
+\`\`\`javascript
+async function pollEvents(contractId, startLedger, onEvent) {
+  let cursor = startLedger;
+
+  setInterval(async () => {
+    const res = await fetch(RPC_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0', id: 1,
+        method: 'getEvents',
+        params: {
+          startLedger: cursor,
+          filters: [{ type: 'contract', contractIds: [contractId], topics: [['*']] }],
+          pagination: { limit: 100 },
+        },
+      }),
+    });
+    const data = await res.json();
+    const events = data.result?.events || [];
+
+    for (const event of events) {
+      onEvent(event);
+      cursor = event.ledger + 1;
+    }
+  }, 5000);
+}
+\`\`\`
+
+### What to Alert On
+
+| Condition | Alert Level |
+|-----------|------------|
+| No events in 30 minutes (normally active contract) | Warning |
+| Error events | Critical |
+| Unexpected event topic | Warning |
+| Large transfer event (whale movement) | Info |
+| Event volume spike (2x normal) | Info |
+
+## Debugging with Events
+
+Events are invaluable for debugging production issues:
+
+1. **Missing events**: If an operation should have emitted an event but didn't, the transaction likely failed
+2. **Event ordering**: Events are emitted in the order they occur during execution
+3. **Diagnostic events**: Enable diagnostic events during simulation for detailed execution traces
+4. **System events**: Monitor system events for TTL extensions, storage changes, and resource usage
+
+## Tools
+
+LumenQuery provides tools for working with Soroban events:
+
+- **[Smart Contract Explorer](/contracts)**: Event stream with decoded topics and data
+- **[Soroban RPC](/docs/contracts)**: Direct access to getEvents for programmatic monitoring
+
+---
+
+*Monitor your Soroban contract events with [LumenQuery](/auth/signup). Decoded event streams, storage viewer, and call history — start free.*
+    `,
+  },
+  'api-rate-limits-blockchain-apps-production': {
+    title: 'How API Rate Limits Affect Blockchain Applications in Production',
+    date: '2026-06-05',
+    readTime: '9 min read',
+    category: 'Developer Guide',
+    content: `
+Your blockchain app works perfectly in development. Then you launch, get 50 concurrent users, and everything breaks. The culprit is almost always API rate limits — the silent killer of blockchain applications.
+
+## The Problem
+
+Every blockchain app needs data from a node. Account balances, transaction history, contract state, network status — all of it comes from API calls. In development, you are the only user. In production, every user multiplies your API consumption.
+
+### The Math
+
+A typical Stellar dashboard page load:
+- 1 call for account balances
+- 1 call for payment history
+- 1 call for recent transactions
+- 1 call for network status
+- **= 4 API calls per page load**
+
+With auto-refresh every 10 seconds: **24 calls per user per minute**
+
+| Users | Calls/Minute | Public Horizon Limit | Result |
+|-------|-------------|---------------------|--------|
+| 1 | 24 | 100-200 | Fine |
+| 5 | 120 | 100-200 | Borderline |
+| 10 | 240 | 100-200 | Rate limited |
+| 50 | 1,200 | 100-200 | Broken |
+
+## How Rate Limits Work
+
+### Public Endpoints
+
+The public Stellar Horizon (\`horizon.stellar.org\`) limits by IP address. When you exceed the limit, you get HTTP 429 responses with a \`Retry-After\` header.
+
+Your app does not crash — it degrades. Some requests succeed, some fail. Users see partial data, loading spinners that never complete, and stale information.
+
+### Managed Endpoints
+
+Managed API providers authenticate with API keys and offer higher limits per plan:
+
+| Plan | Requests/Month | Requests/Minute | Best For |
+|------|---------------|-----------------|----------|
+| **Free** | 10,000 | 60 | Learning, prototyping |
+| **Starter** | 100,000-500,000 | 200-500 | MVPs, early apps |
+| **Professional** | 1M-10M | 1,000-5,000 | Production apps |
+| **Enterprise** | Custom | Custom | Exchanges, institutions |
+
+## Optimization Strategies
+
+### 1. Cache Aggressively
+
+Not all data changes every second:
+
+| Data | Cache Duration | Why |
+|------|---------------|-----|
+| Account balances | 5-10 seconds | Changes per transaction |
+| Fee stats | 30 seconds | Updates per ledger |
+| Asset info | 5 minutes | Rarely changes |
+| Ledger history | Forever | Historical data is immutable |
+| Network info | 60 seconds | Slow-changing |
+
+### 2. Use Cursors, Not Full Refreshes
+
+Instead of re-fetching all data on every refresh, track your cursor and only fetch new records:
+
+\`\`\`javascript
+// Bad: Refetch everything
+GET /accounts/{id}/payments?limit=20&order=desc
+
+// Good: Only fetch new data since last check
+GET /accounts/{id}/payments?cursor={lastCursor}&order=asc
+\`\`\`
+
+### 3. Batch Related Calls
+
+Use account-level endpoints instead of per-entity calls:
+
+\`\`\`javascript
+// Bad: 10 separate calls
+GET /transactions/{hash1}/operations
+GET /transactions/{hash2}/operations
+...
+
+// Good: 1 call
+GET /accounts/{id}/operations?limit=200&order=desc
+\`\`\`
+
+### 4. Reduce Refresh Frequency
+
+Does your dashboard need to update every second? For most use cases, 5-10 second intervals provide a good user experience while cutting API calls by 80-90%.
+
+### 5. Implement Client-Side Deduplication
+
+If multiple components on the same page request the same data, deduplicate at the fetch layer:
+
+\`\`\`javascript
+const cache = new Map();
+
+async function cachedFetch(url, ttl = 5000) {
+  const cached = cache.get(url);
+  if (cached && Date.now() - cached.time < ttl) return cached.data;
+
+  const data = await fetch(url).then(r => r.json());
+  cache.set(url, { data, time: Date.now() });
+  return data;
+}
+\`\`\`
+
+## When to Upgrade
+
+You need a paid plan when:
+- You are hitting 429 errors in production
+- Your app has more than 5-10 concurrent users
+- You need consistent response times (SLA)
+- You are building for institutional users who expect reliability
+- You need support when things break
+
+## The Cost of Not Upgrading
+
+- **Engineer time** debugging rate limit issues: $50-150/hour
+- **Lost users** who see broken dashboards: Hard to quantify but real
+- **Reputation damage** from unreliable service: Especially costly for B2B
+- **Opportunity cost** of building rate limit workarounds instead of features
+
+A $25-99/month managed API is almost always cheaper than the alternatives.
+
+## Getting Started with LumenQuery
+
+- **[Pricing](/pricing)**: Compare plans and find the right fit
+- **[API Documentation](/docs)**: Complete endpoint reference
+- **[Sign Up](/auth/signup)**: Start with the free tier — no credit card required
+
+---
+
+*Stop fighting rate limits. [LumenQuery](/auth/signup) provides managed Stellar API with transparent rate limits and reliable performance. Start free.*
+    `,
+  },
+  'natural-language-search-stellar-blockchain-data': {
+    title: 'Using Natural Language Search to Query Stellar Blockchain Data',
+    date: '2026-06-05',
+    readTime: '8 min read',
+    category: 'Tutorial',
+    content: `
+Querying blockchain data usually means learning API endpoints, understanding parameters, parsing JSON responses, and handling pagination. What if you could just type "top 10 XLM holders" and get a table of results?
+
+That is what LumenQuery's natural language query does. It translates plain English questions into Horizon API calls and returns formatted results.
+
+## How It Works
+
+1. You type a question in plain English
+2. The parser identifies the query type and parameters
+3. The executor runs the appropriate Horizon API calls
+4. Results are returned in a formatted table
+
+No SDK knowledge required. No API documentation to read. Just ask a question.
+
+## Supported Queries
+
+### Account Queries
+
+**"Show account GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7"**
+
+Returns: Account ID, balances, signers, thresholds, home domain.
+
+**"Top 10 XLM holders"**
+
+Returns: Largest XLM balances on the network with account IDs and amounts.
+
+### Payment Queries
+
+**"Recent payments"**
+
+Returns: Latest payment operations with amounts, assets, senders, and recipients.
+
+**"Payments larger than 100,000 XLM"**
+
+Returns: Whale movements — payments exceeding your specified threshold.
+
+### Transaction Queries
+
+**"Latest 50 transactions"**
+
+Returns: Recent transactions with hashes, ledger numbers, operation counts, and fees.
+
+**"Transactions for GABC..."**
+
+Returns: Transaction history for a specific account.
+
+### Network Queries
+
+**"Latest ledger status"**
+
+Returns: Current ledger sequence, close time, transaction count, protocol version, and base fee.
+
+### Asset Queries
+
+**"What assets are on Stellar?"**
+
+Returns: Popular Stellar assets with codes, issuers, and holder counts.
+
+## Try It Now
+
+Go to [lumenquery.io/query](/query) and try these examples:
+
+| Query | What You Get |
+|-------|-------------|
+| "Top 10 XLM holders" | Largest wallets by balance |
+| "Recent payments" | Latest payment activity |
+| "Payments larger than 1M XLM" | Whale transfers |
+| "What assets are on Stellar?" | Token listing |
+| "Latest ledger status" | Network health snapshot |
+| "Latest 50 transactions" | Recent transaction feed |
+
+Each query runs against the live Stellar network and returns real-time data.
+
+## What You See
+
+For each query, the interface shows:
+
+1. **Results table** — Formatted data with sortable columns
+2. **SQL preview** — The equivalent SQL representation for learning
+3. **Execution time** — How long the query took
+4. **Query type** — What the parser detected (top_holders, recent_payments, etc.)
+
+## Under the Hood
+
+The query system uses a rule-based parser that matches natural language patterns to query types:
+
+- "top N" + "holders" → \`top_holders\` query
+- "payments" + "larger than" + amount → \`large_payments\` query
+- "account" + Stellar address → \`account_info\` query
+- "ledger" or "network status" → \`ledger_info\` query
+
+The executor then translates each query type into the appropriate Horizon API calls, fetches the data, and formats the response.
+
+## Who This Is For
+
+### Non-Technical Users
+
+Product managers, analysts, and business users who need blockchain data without learning APIs. Type a question, get an answer.
+
+### Developers Exploring
+
+Developers new to Stellar who want to understand what data is available before writing code. Use natural language to explore, then switch to the API when you are ready to build.
+
+### Quick Checks
+
+Even experienced developers use natural language queries for quick checks — "is this account funded?", "what's the latest ledger?", "show me recent whale movements."
+
+## API Access
+
+The query endpoint is also available programmatically:
+
+\`\`\`bash
+curl -X POST https://lumenquery.io/api/query \\
+  -H "Content-Type: application/json" \\
+  -d '{"query": "top 10 xlm holders"}'
+\`\`\`
+
+Response includes the parsed query type, formatted data, column definitions, and execution time.
+
+## Try It
+
+Head to [lumenquery.io/query](/query) and start asking questions. No account required for basic queries.
+
+---
+
+*Query the Stellar blockchain in plain English. [LumenQuery](/query) makes blockchain data accessible to everyone — try it now, no signup needed.*
+    `,
+  },
   'horizon-api-vs-stellar-rpc-which-to-use': {
     title: 'Horizon API vs Stellar RPC: Which One Should Your App Use?',
     date: '2026-06-04',
