@@ -9,6 +9,939 @@ const posts: Record<string, {
   category: string;
   content: string;
 }> = {
+  'horizon-api-vs-stellar-rpc-which-to-use': {
+    title: 'Horizon API vs Stellar RPC: Which One Should Your App Use?',
+    date: '2026-06-04',
+    readTime: '11 min read',
+    category: 'Developer Guide',
+    content: `
+If you are building on Stellar, you have two primary ways to interact with the network: the Horizon API and the Stellar RPC (formerly Soroban RPC). They serve different purposes, and most production applications end up using both. Here is when to use each.
+
+## What Horizon Does
+
+Horizon is a RESTful API server that ingests the Stellar ledger and provides indexed, queryable access to historical and current blockchain data. Think of it as a read-optimized database layer on top of the raw ledger.
+
+### Horizon's Strengths
+
+- **Historical data**: Horizon indexes every transaction, operation, effect, and payment that has ever occurred on the network
+- **Rich querying**: Filter by account, asset, operation type, time range, and more with cursor-based pagination
+- **Account state**: Fetch balances, signers, thresholds, offers, trustlines in a single call
+- **Asset discovery**: List all assets, filter by code or issuer, see holder counts and supply
+
+### Key Horizon Endpoints
+
+| Endpoint | Purpose |
+|----------|---------|
+| \`/accounts/{id}\` | Account balances, signers, thresholds |
+| \`/transactions\` | Transaction history with filtering |
+| \`/operations\` | Operation details across all types |
+| \`/payments\` | Payment-specific operations |
+| \`/assets\` | Asset listing with holder counts |
+| \`/order_book\` | Current order book for any pair |
+| \`/trade_aggregations\` | OHLCV candle data |
+| \`/fee_stats\` | Current network fee statistics |
+| \`/ledgers\` | Ledger history with metadata |
+
+### When to Use Horizon
+
+- Displaying account balances and transaction history
+- Building block explorers or portfolio trackers
+- Querying historical payment data
+- Showing order books and trading activity
+- Fetching network statistics (TPS, fees, ledger data)
+
+## What Stellar RPC Does
+
+Stellar RPC is a JSON-RPC interface for interacting with the network's current state and smart contracts. It was originally called Soroban RPC and now serves as the unified real-time interface.
+
+### RPC's Strengths
+
+- **Transaction simulation**: Dry-run transactions to see results, resource costs, and fees before submitting
+- **Real-time state**: Current ledger state without indexing delay
+- **Smart contract interaction**: Query contract storage, invoke functions, monitor events
+- **Event streaming**: Query contract events by topic, contract ID, or ledger range
+
+### Key RPC Methods
+
+| Method | Purpose |
+|--------|---------|
+| \`getLatestLedger\` | Current ledger sequence and protocol version |
+| \`simulateTransaction\` | Dry-run a transaction, get resource estimates |
+| \`sendTransaction\` | Submit a signed transaction |
+| \`getTransaction\` | Check transaction status by hash |
+| \`getEvents\` | Query contract events with filters |
+| \`getLedgerEntries\` | Read specific ledger entries |
+
+### When to Use RPC
+
+- Submitting transactions (especially Soroban)
+- Simulating transactions before submission
+- Reading smart contract storage state
+- Monitoring contract events
+- Building DeFi or smart contract applications
+
+## Side-by-Side Comparison
+
+| Capability | Horizon | Stellar RPC |
+|------------|---------|-------------|
+| **Protocol** | REST (HTTP) | JSON-RPC |
+| **Historical data** | Yes (full history) | No (recent only) |
+| **Transaction submission** | Yes (basic) | Yes (with simulation) |
+| **Smart contract storage** | No | Yes |
+| **Contract events** | No | Yes |
+| **Transaction simulation** | No | Yes |
+| **Order book** | Yes | No |
+| **Trade aggregations** | Yes | No |
+| **Asset listing** | Yes | No |
+
+## Using Both Together
+
+Most production applications use both:
+
+1. **Horizon for reads**: Account balances, transaction history, asset discovery, analytics
+2. **RPC for writes**: Transaction simulation, submission, and status polling
+3. **RPC for contracts**: Storage reads, event monitoring, function invocation
+
+**Example**: Building a token dashboard — use Horizon for asset info, holder counts, payment history. Use RPC for reading DeFi contract state and monitoring events.
+
+## Infrastructure Considerations
+
+Running your own Horizon instance requires PostgreSQL, Captive Core, disk management, and 24/7 monitoring. Running RPC is simpler but still needs infrastructure. Managed services like LumenQuery handle all of this:
+
+- **[Horizon API](/docs)**: Full indexed access with caching and rate limiting
+- **[Soroban RPC](/docs/contracts)**: Contract interaction and transaction submission
+- **[Network Analytics](/analytics)**: Pre-built dashboards for network metrics
+
+---
+
+*Build on both APIs without running a single node. [LumenQuery](/auth/signup) provides managed Horizon and Soroban RPC with sub-100ms response times. Start free.*
+    `,
+  },
+  'build-stellar-app-without-running-node': {
+    title: 'How to Build a Production-Ready Stellar App Without Running Your Own Node',
+    date: '2026-06-04',
+    readTime: '10 min read',
+    category: 'Developer Guide',
+    content: `
+Running your own Stellar infrastructure sounds empowering until you are debugging disk space issues at 3 AM because your Horizon database grew faster than expected. For most applications, managed infrastructure is the pragmatic choice.
+
+## What Running Your Own Node Actually Means
+
+### Horizon Server
+- **PostgreSQL database** that grows continuously (50+ GB/year)
+- **Captive Core** process that must stay in sync with the network
+- **Ingestion pipeline** processing every ledger into PostgreSQL
+- **Ledger lag monitoring**: If ingestion falls behind, your data is stale
+- **Database maintenance**: Vacuuming, index rebuilding, connection pool tuning
+
+### Soroban RPC
+- **Captive Core** (separate from Horizon's)
+- **Ledger retention** management
+- **Health monitoring**: Is the RPC responding? Is it up to date?
+
+### Both Require
+- 24/7 uptime with monitoring and alerting
+- Security patching for the OS, databases, and Stellar software
+- Backup strategy for the PostgreSQL database
+- Scaling plan as your traffic grows
+
+## The Managed Alternative
+
+A managed Stellar API service handles all of the above. You get an API endpoint, and the provider handles the infrastructure.
+
+### What You Skip
+- No PostgreSQL to manage
+- No Captive Core to monitor
+- No disk space to watch
+- No ledger lag to debug
+- No security patches to apply
+- No 3 AM alerts about ingestion pipeline failures
+
+## Building Your App
+
+### Step 1: Get API Access
+
+Sign up for a managed API and get your API key. With LumenQuery, the free tier gives you 10,000 requests per month.
+
+### Step 2: Query Account Data
+
+\`\`\`javascript
+const HORIZON = 'https://horizon.stellar.org';
+
+async function getBalances(accountId) {
+  const res = await fetch(\`\${HORIZON}/accounts/\${accountId}\`);
+  const account = await res.json();
+  return account.balances.map(b => ({
+    asset: b.asset_type === 'native' ? 'XLM' : b.asset_code,
+    balance: parseFloat(b.balance).toLocaleString(),
+  }));
+}
+\`\`\`
+
+### Step 3: Submit Transactions via RPC
+
+\`\`\`javascript
+async function submitTransaction(signedXdr) {
+  const res = await fetch('https://rpc.lumenquery.io', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      jsonrpc: '2.0', id: 1,
+      method: 'sendTransaction',
+      params: { transaction: signedXdr },
+    }),
+  });
+  return res.json();
+}
+\`\`\`
+
+## When You Actually Need Your Own Node
+
+1. **Data sovereignty**: Regulatory requirements that data stays within your infrastructure
+2. **Custom indexing**: You need data Horizon does not expose
+3. **Extreme throughput**: Millions of API calls per hour with sub-10ms latency
+4. **Validator operations**: You are running a Stellar validator
+
+For most apps — wallets, explorers, DeFi frontends, payment processors — managed infrastructure is the right choice.
+
+## Cost Comparison
+
+| Aspect | Self-Hosted | Managed |
+|--------|-----------|---------|
+| **Server costs** | $200-500/mo | $0-99/mo |
+| **DevOps time** | 10-20 hrs/month | 0 hrs/month |
+| **Time to first API call** | 1-3 days | 5 minutes |
+| **Scaling** | Manual | Automatic |
+
+The engineer hours spent managing infrastructure cost more than a managed API subscription.
+
+---
+
+*Ship your Stellar app faster. [LumenQuery](/auth/signup) handles the infrastructure so you can focus on your product. Free tier available.*
+    `,
+  },
+  'soroban-smart-contract-monitoring-production': {
+    title: 'Soroban Smart Contract Monitoring: What Developers Should Track in Production',
+    date: '2026-06-04',
+    readTime: '12 min read',
+    category: 'Developer Guide',
+    content: `
+You deployed your Soroban smart contract to mainnet. It is live, processing transactions, managing state. But how do you know if it is working correctly? How do you find out when something goes wrong before your users do?
+
+## What Can Go Wrong
+
+- **Failed invocations**: Transactions that call your contract but revert
+- **Unexpected storage changes**: State modifications that do not match expected patterns
+- **Gas spikes**: Invocations consuming abnormally high resources
+- **Event anomalies**: Missing events or unexpected event patterns
+- **Storage bloat**: Contract storage growing beyond expected bounds
+
+## Core Metrics to Track
+
+### 1. Invocation Success Rate
+
+The most fundamental metric. A healthy contract should have a 95%+ success rate. Failures below that indicate a bug, UI issue, or configuration problem.
+
+### 2. Gas Consumption
+
+Track average and P95 gas per invocation. A sudden spike usually indicates an inefficient code path, unexpectedly large storage entries, or a new usage pattern.
+
+### 3. Error Types
+
+| Error Type | Meaning |
+|-----------|---------|
+| \`InvokeHostFunctionFailed\` | Contract execution reverted |
+| \`InsufficientBalance\` | Caller lacks XLM for fees |
+| \`ExceededResourceLimit\` | Transaction hit CPU/memory limits |
+| \`StorageEntryNotFound\` | Missing storage entry |
+
+### 4. Storage State
+
+Track persistent, temporary, and instance storage entry counts and sizes. Storage has direct cost implications — entries that expire must be restored at additional cost.
+
+### 5. Event Volume
+
+If your contract emits events, monitor volume over time, events by topic, and gaps where events should be firing but are not.
+
+## Setting Up Monitoring
+
+### Using Stellar RPC Events
+
+Poll the \`getEvents\` RPC method at regular intervals:
+
+\`\`\`json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getEvents",
+  "params": {
+    "startLedger": 61000000,
+    "filters": [{
+      "type": "contract",
+      "contractIds": ["YOUR_CONTRACT_ID"],
+      "topics": [["*"]]
+    }],
+    "pagination": { "limit": 100 }
+  }
+}
+\`\`\`
+
+### Alerting Rules
+
+| Alert | Condition | Severity |
+|-------|-----------|----------|
+| **Success rate drop** | Below 90% over 1 hour | Critical |
+| **No invocations** | Zero calls in 30 min (if normally active) | Warning |
+| **Gas spike** | P95 gas 2x baseline | Warning |
+| **Storage growth** | 10%+ increase in 24 hours | Info |
+| **Error burst** | 5+ failures in 5 minutes | Critical |
+
+## Common Production Issues
+
+### TTL Expiration
+Soroban storage entries have time-to-live values. If an entry expires, it must be restored before it can be read, causing unexpected failures. Monitor TTL values for critical entries.
+
+### Frontend Staleness
+If your frontend caches contract state, users may submit transactions based on stale data. Monitor the delta between frontend state and actual contract state.
+
+## Tools
+
+LumenQuery provides contract monitoring tools:
+
+- **[Smart Contract Explorer](/contracts)**: Decoded call history, storage viewer, event stream
+- **[Network Analytics](/analytics)**: Network-level Soroban activity metrics
+- **[Live Transactions](/dashboard/transactions)**: Real-time transaction stream with Soroban highlighting
+
+---
+
+*Monitor your Soroban contracts in production with [LumenQuery](/auth/signup). Decoded calls, storage viewer, and event streaming — start free.*
+    `,
+  },
+  'stellar-transaction-monitoring-exchanges-compliance': {
+    title: 'Real-Time Stellar Transaction Monitoring for Exchanges, Funds, and Compliance Teams',
+    date: '2026-06-04',
+    readTime: '11 min read',
+    category: 'Industry Insights',
+    content: `
+If you operate an exchange, manage a fund, or run a compliance desk that touches the Stellar network, you need more than a block explorer. You need real-time transaction monitoring with filtering, alerting, and the ability to track specific accounts and patterns at scale.
+
+## What Institutional Teams Monitor
+
+### Exchanges
+- **Deposit confirmations**: Incoming payments to hot and cold wallets
+- **Withdrawal status**: Outgoing transactions with success/failure tracking
+- **Whale movements**: Large XLM transfers signaling market-moving activity
+- **Counterparty risk**: Transactions from known mixer addresses or sanctioned entities
+
+### Funds and Treasuries
+- **Portfolio account balances**: Real-time tracking across multiple accounts
+- **Trustline changes**: New additions or removals affecting asset exposure
+- **RWA distributions**: Payments from tokenized assets (BENJI, YLDS, etc.)
+- **Liquidity pool positions**: LP token balances and pool changes
+
+### Compliance Teams
+- **Watchlist monitoring**: Transactions involving flagged accounts
+- **Suspicious pattern detection**: Circular payments, structuring, rapid conversion
+- **Sanctions screening**: Cross-referencing against OFAC, UN, and EU lists
+- **Audit trail**: Immutable record of flagged transactions and review decisions
+
+## Why Default Tools Fall Short
+
+Block explorers are excellent for manual investigation but lack:
+- Webhook notifications
+- Custom alert rules
+- Watchlist management
+- Programmatic API access to monitoring data
+
+The public Horizon endpoint provides raw data but rate limits prevent the request volume needed for real-time monitoring.
+
+## Building a Monitoring Stack
+
+### Layer 1: Data Ingestion
+
+Stream transactions using Horizon or a managed API with higher limits:
+
+\`\`\`
+GET /transactions?order=desc&limit=200&include_failed=true
+\`\`\`
+
+### Layer 2: Filtering
+
+For each transaction, apply rules:
+1. Is the source or destination on any watchlist?
+2. Does the payment exceed configured thresholds (e.g., >100K XLM)?
+3. Does this fit a known suspicious pattern?
+4. Is any party on a sanctions list?
+
+### Layer 3: Alerting
+
+| Channel | Use Case | Latency |
+|---------|----------|---------|
+| **Webhook** | System integration | <1 second |
+| **Email** | Compliance review | <30 seconds |
+| **Slack** | Team notification | <5 seconds |
+| **Dashboard** | Visual monitoring | Real-time |
+
+### Layer 4: Investigation
+
+When an alert fires, investigators need transaction details, account profiles, counterparty graphs, historical context, and a decision workflow (false positive, escalate, or report).
+
+## Key Alert Types
+
+### Whale Movement Alerts
+Track transfers above configurable thresholds (default: >1M XLM). Include context: is the source a known exchange? Is this a regular transfer?
+
+### Watchlist Alerts
+Trigger on any transaction involving watched accounts — internal watchlists and external regulatory lists.
+
+### Pattern Detection
+- **Structuring**: Multiple transactions just below reporting thresholds
+- **Circular payments**: Funds moving in loops between related accounts
+- **Rapid conversion**: Quick XLM to stablecoin to XLM cycles
+- **Dormant activation**: Inactive accounts suddenly sending large transactions
+
+### Trustline Change Alerts
+New trust line additions or removals — indicating new asset exposure, abandonment, or potential scam token activity.
+
+## Data Requirements
+
+The Stellar network processes 5-10 million transactions per day. Your monitoring system must handle 100+ TPS with filtering applied in real-time. Retention requirements vary by jurisdiction but typically 5-7 years for compliance data.
+
+## Getting Started
+
+LumenQuery provides the infrastructure layer for institutional monitoring:
+
+- **[Transaction Intelligence](/intelligence)**: Real-time stream with filtering and watchlists
+- **[Live Transactions](/dashboard/transactions)**: Decoded transaction feed
+- **[Horizon API](/docs)**: Programmatic access to accounts and transactions
+- **[Portfolio Intelligence](/portfolio)**: Multi-account balance tracking
+
+---
+
+*Build institutional-grade Stellar monitoring with [LumenQuery](/auth/signup). Real-time transaction data, watchlists, and alerting — start with the free tier.*
+    `,
+  },
+  'query-stellar-accounts-ledgers-javascript': {
+    title: 'How to Query Stellar Accounts, Ledgers, and Transactions with JavaScript',
+    date: '2026-06-04',
+    readTime: '13 min read',
+    category: 'Developer Guide',
+    content: `
+A hands-on tutorial for JavaScript developers who want to query the Stellar blockchain. We will fetch account balances, read ledger data, page through transaction history, and handle errors — all with working code.
+
+## Setup
+
+You need Node.js 18+ (for built-in fetch). Optionally install the Stellar SDK:
+
+\`\`\`bash
+npm install @stellar/stellar-sdk
+\`\`\`
+
+## Querying Accounts
+
+### Fetch Account Balances
+
+\`\`\`javascript
+const HORIZON = 'https://horizon.stellar.org';
+
+async function getBalances(accountId) {
+  const res = await fetch(\`\${HORIZON}/accounts/\${accountId}\`);
+  if (!res.ok) throw new Error(\`Account not found: \${res.status}\`);
+  const account = await res.json();
+
+  return account.balances.map(b => ({
+    asset: b.asset_type === 'native' ? 'XLM' : b.asset_code,
+    balance: parseFloat(b.balance).toLocaleString(),
+    issuer: b.asset_issuer || 'native',
+  }));
+}
+
+const balances = await getBalances('GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7');
+console.table(balances);
+\`\`\`
+
+## Querying Ledgers
+
+### Get Latest Ledger
+
+\`\`\`javascript
+async function getLatestLedger() {
+  const res = await fetch(\`\${HORIZON}/ledgers?limit=1&order=desc\`);
+  const data = await res.json();
+  const ledger = data._embedded.records[0];
+
+  return {
+    sequence: ledger.sequence,
+    closedAt: ledger.closed_at,
+    txCount: ledger.successful_transaction_count,
+    operationCount: ledger.operation_count,
+    baseFee: ledger.base_fee_in_stroops,
+    protocolVersion: ledger.protocol_version,
+  };
+}
+\`\`\`
+
+### Get Fee Statistics
+
+\`\`\`javascript
+async function getFeeStats() {
+  const res = await fetch(\`\${HORIZON}/fee_stats\`);
+  const fees = await res.json();
+  return {
+    baseFee: fees.last_ledger_base_fee,
+    p50: fees.fee_charged.p50,
+    p95: fees.fee_charged.p95,
+    maxFee: fees.fee_charged.max,
+  };
+}
+\`\`\`
+
+## Querying Transactions
+
+### Recent Transactions
+
+\`\`\`javascript
+async function getRecentTransactions(limit = 10) {
+  const res = await fetch(\`\${HORIZON}/transactions?limit=\${limit}&order=desc\`);
+  const data = await res.json();
+
+  return data._embedded.records.map(tx => ({
+    hash: tx.hash.slice(0, 12) + '...',
+    ledger: tx.ledger,
+    sourceAccount: tx.source_account.slice(0, 8) + '...',
+    operationCount: tx.operation_count,
+    feeCharged: tx.fee_charged,
+    successful: tx.successful,
+  }));
+}
+\`\`\`
+
+### Transaction Operations
+
+\`\`\`javascript
+async function getTransactionOperations(txHash) {
+  const res = await fetch(\`\${HORIZON}/transactions/\${txHash}/operations\`);
+  const data = await res.json();
+
+  return data._embedded.records.map(op => ({
+    type: op.type,
+    sourceAccount: op.source_account.slice(0, 8) + '...',
+    ...(op.type === 'payment' && {
+      to: op.to.slice(0, 8) + '...',
+      amount: op.amount,
+      asset: op.asset_type === 'native' ? 'XLM' : op.asset_code,
+    }),
+  }));
+}
+\`\`\`
+
+## Pagination
+
+Horizon uses cursor-based pagination with HAL links:
+
+\`\`\`javascript
+async function getAllPayments(accountId, maxPages = 5) {
+  let url = \`\${HORIZON}/accounts/\${accountId}/payments?limit=200&order=desc\`;
+  const allPayments = [];
+  let page = 0;
+
+  while (url && page < maxPages) {
+    const res = await fetch(url);
+    const data = await res.json();
+    const records = data._embedded.records;
+    if (records.length === 0) break;
+
+    allPayments.push(...records);
+    page++;
+    url = data._links?.next?.href || null;
+  }
+
+  return allPayments;
+}
+\`\`\`
+
+## Error Handling
+
+\`\`\`javascript
+async function safeFetch(url) {
+  const res = await fetch(url);
+  if (res.status === 404) return { error: 'not_found' };
+  if (res.status === 429) {
+    const retryAfter = res.headers.get('Retry-After') || '5';
+    return { error: 'rate_limited', retryAfter: parseInt(retryAfter) };
+  }
+  if (!res.ok) return { error: 'api_error', status: res.status };
+  return { data: await res.json() };
+}
+\`\`\`
+
+### Retry with Backoff
+
+\`\`\`javascript
+async function fetchWithRetry(url, maxRetries = 3) {
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      const res = await fetch(url);
+      if (res.status === 429) {
+        await new Promise(r => setTimeout(r, Math.pow(2, attempt) * 1000));
+        continue;
+      }
+      if (!res.ok) throw new Error(\`HTTP \${res.status}\`);
+      return await res.json();
+    } catch (err) {
+      if (attempt === maxRetries - 1) throw err;
+      await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+    }
+  }
+}
+\`\`\`
+
+## Using the Stellar SDK
+
+\`\`\`javascript
+import { Horizon } from '@stellar/stellar-sdk';
+
+const server = new Horizon.Server('https://horizon.stellar.org');
+
+// Account
+const account = await server.loadAccount('GABC...');
+console.log('Balances:', account.balances);
+
+// Transactions
+const txs = await server.transactions()
+  .forAccount('GABC...')
+  .limit(10)
+  .order('desc')
+  .call();
+
+// Streaming payments
+server.payments()
+  .forAccount('GABC...')
+  .cursor('now')
+  .stream({ onmessage: (payment) => {
+    console.log('Payment:', payment.amount, payment.asset_type);
+  }});
+\`\`\`
+
+## Complete Example: Account Dashboard
+
+\`\`\`javascript
+async function accountDashboard(accountId) {
+  const [account, payments] = await Promise.all([
+    fetch(\`\${HORIZON}/accounts/\${accountId}\`).then(r => r.json()),
+    fetch(\`\${HORIZON}/accounts/\${accountId}/payments?limit=5&order=desc\`).then(r => r.json()),
+  ]);
+
+  console.log('=== Account Dashboard ===');
+  console.log('ID:', accountId.slice(0, 12) + '...');
+  account.balances.forEach(b => {
+    const asset = b.asset_type === 'native' ? 'XLM' : b.asset_code;
+    console.log(\`  \${asset}: \${parseFloat(b.balance).toLocaleString()}\`);
+  });
+  console.log('Recent Payments:');
+  payments._embedded.records.forEach(p => {
+    const asset = p.asset_type === 'native' ? 'XLM' : p.asset_code;
+    console.log(\`  \${p.amount} \${asset} (\${p.created_at})\`);
+  });
+}
+\`\`\`
+
+---
+
+*Query the Stellar blockchain with reliable infrastructure. [LumenQuery](/auth/signup) provides managed Horizon API with sub-100ms response times. Start free.*
+    `,
+  },
+  'why-rwa-tokenization-growing-stellar': {
+    title: 'Why Real-World Asset Tokenization Is Growing on Stellar',
+    date: '2026-06-04',
+    readTime: '10 min read',
+    category: 'RWA Tokenization',
+    content: `
+Stellar has quietly become one of the top three blockchains for tokenized real-world assets. With over $2 billion in onchain RWAs in Q1 2026 and a 66.7% growth in RWA holders, the network's position is measurable. Here is why institutions keep choosing Stellar.
+
+## The Numbers
+
+| Metric | Value |
+|--------|-------|
+| **Onchain RWAs** | $2B+ (Q1 2026) |
+| **RWA Market Cap Ranking** | #2 (Santiment, $5.48B) |
+| **RWA Holder Growth** | 66.7% YoY |
+| **USDC on Stellar** | $240M+, 2.1M holders |
+| **Longest-running tokenized fund** | BENJI (5 years) |
+
+## What Is Being Tokenized
+
+**Money Market Funds**: Franklin Templeton's BENJI — a U.S.-registered fund running on Stellar since 2021. Five years, no incidents.
+
+**Fixed Income**: Mercado Bitcoin's $200M in tokenized fixed income. Real bonds, tokenized for fractional ownership and instant settlement.
+
+**Real Estate**: RedSwan's $100M in commercial real estate. Investors hold tokenized shares of physical properties.
+
+**Yield Products**: Figure's YLDS (May 2026) — tokenized yield targeting institutional investors.
+
+**Stablecoins**: USDC with 2.1M holders on Stellar. EURAU for MiCAR-compliant euro settlement.
+
+## Why Institutions Choose Stellar
+
+### 1. Protocol-Level Compliance
+
+Stellar's most differentiated feature for RWAs:
+
+| Feature | What It Does |
+|---------|-------------|
+| **Authorization Required** | Issuer must approve every holder |
+| **Authorization Revocable** | Issuer can revoke access |
+| **Clawback** | Issuer can recover tokens |
+| **Freeze** | Issuer can freeze balances |
+
+These are protocol features, not smart contracts. They cannot be bypassed and do not cost gas to enforce.
+
+### 2. Economics
+
+| Operation | Stellar | Ethereum |
+|-----------|---------|----------|
+| Token transfer | ~$0.00001 | $2-50 |
+| Dividend to 1,000 holders | ~$0.01 | $2,000-50,000 |
+| Annual compliance ops | <$1 | $5,000-100,000 |
+
+### 3. Settlement Speed
+
+5-6 second finality. No reorgs, no confirmations. T+0 instead of T+1.
+
+### 4. Five Years of Track Record
+
+Franklin Templeton running a SEC-registered fund on Stellar for five years through multiple market cycles is proof no amount of marketing can substitute.
+
+### 5. Regulatory Clarity
+
+XLM classified as a commodity in several jurisdictions. Less legal ambiguity than chains with ongoing classification disputes.
+
+## The Growth Trajectory
+
+- **SDF invested in Ascend** (May 2026) — compliant RWA infrastructure platform
+- **Bermuda chose Stellar** for national payments — sovereign-level validation
+- **CME added XLM** to index futures — institutional access
+- **RWA holder base** up 66.7% in 2026
+
+## For Developers
+
+The RWA boom creates opportunities: asset issuance platforms, secondary trading interfaces, portfolio trackers, compliance tools.
+
+- **[Horizon API](/docs)**: Query asset details, holder counts, transaction history
+- **[Network Analytics](/analytics)**: Monitor tokenized asset growth
+- **[Portfolio Intelligence](/portfolio)**: Track RWA holdings across accounts
+
+---
+
+*Build on the blockchain institutions trust. [LumenQuery](/auth/signup) provides enterprise-grade Stellar API infrastructure for RWA applications. Start free.*
+    `,
+  },
+  'stellar-api-rate-limits-choose-plan': {
+    title: 'Stellar API Rate Limits Explained: How to Choose the Right Plan for Your App',
+    date: '2026-06-04',
+    readTime: '8 min read',
+    category: 'Developer Guide',
+    content: `
+The public Stellar Horizon endpoint is free — until you hit the rate limit. Then your app gets HTTP 429 responses, users see loading spinners, and you realize that "free" has a cost.
+
+## How Rate Limiting Works
+
+The public Horizon endpoint (\`horizon.stellar.org\`) limits to roughly 100-200 requests per minute per IP. No API key, no account — just IP-based limits.
+
+### What 100 Requests Per Minute Gets You
+
+- Loading one account page (balances + transactions + operations): **4 requests**
+- Refreshing a dashboard every 30 seconds: **8 requests/minute**
+- Monitoring 10 accounts: **40+ requests/minute**
+
+A single user with a moderately complex dashboard consumes half your limit. Two concurrent users and you are hitting 429s.
+
+## Usage Patterns by Scale
+
+| Scale | Requests/min | Monthly | Rate Limit Risk |
+|-------|-------------|---------|-----------------|
+| **Hobby** | 10-30 | ~30K | Low |
+| **Startup/MVP** | 50-500 | 150K-1.5M | Moderate-High |
+| **Production** | 500-5,000 | 1.5M-15M | Guaranteed |
+| **Enterprise** | 5,000-50,000 | 15M-150M | Need dedicated infra |
+
+## Strategies to Reduce API Calls
+
+### 1. Caching
+
+| Data Type | Cache TTL |
+|-----------|-----------|
+| Account balances | 5-10 seconds |
+| Fee stats | 30 seconds |
+| Asset info | 5 minutes |
+| Ledger history | Forever |
+
+### 2. Batch Requests
+
+Use account-level endpoints instead of per-transaction queries:
+
+\`\`\`
+# Instead of 10 requests (one per transaction):
+GET /transactions/{hash}/operations (x10)
+
+# Use 1 request:
+GET /accounts/{id}/operations?limit=200&order=desc
+\`\`\`
+
+### 3. Use Cursors
+
+Track the cursor from your last request and only fetch new records:
+
+\`\`\`
+GET /accounts/{id}/payments?cursor={saved_cursor}&order=asc
+\`\`\`
+
+### 4. Reduce Polling Frequency
+
+5-10 second intervals are usually sufficient. Your dashboard does not need to refresh every second.
+
+## Choosing a Plan
+
+| Tier | Requests/month | Rate Limit | Best For |
+|------|---------------|------------|----------|
+| **Free** | 10,000 | 60/min | Learning, prototyping |
+| **Starter** | 100K-500K | 200-500/min | MVPs, small production |
+| **Professional** | 1M-10M | 1K-5K/min | Production apps |
+| **Enterprise** | Custom | Custom | Exchanges, institutions |
+
+## The Real Cost Calculation
+
+Engineer time debugging rate limits costs $50-150/hour. Infrastructure management for self-hosted nodes costs 10-20 hours/month. A $25-99/month managed API is dramatically cheaper.
+
+- **[Pricing](/pricing)**: Compare tiers
+- **[API Documentation](/docs)**: Complete endpoint reference
+- **[Sign Up](/auth/signup)**: Start free, no credit card required
+
+---
+
+*Stop hitting rate limits. [LumenQuery](/auth/signup) provides managed Horizon API and Soroban RPC with generous rate limits. Start free, scale when you need to.*
+    `,
+  },
+  'monitor-stellar-network-health-tps-latency': {
+    title: 'How to Monitor Stellar Network Health: Ledgers, TPS, Latency, and RPC Availability',
+    date: '2026-06-04',
+    readTime: '9 min read',
+    category: 'Operations',
+    content: `
+Whether you run a Stellar validator, operate a business on the network, or just depend on the infrastructure, monitoring network health is essential. Here is what to watch and how.
+
+## Key Metrics
+
+### 1. Ledger Close Time
+
+Stellar ledgers close every 5-6 seconds under normal conditions.
+
+| Value | Meaning |
+|-------|---------|
+| 5-6 seconds | Normal |
+| 7-8 seconds | Slight congestion |
+| 10+ seconds | Significant issue |
+
+### 2. Transactions Per Second (TPS)
+
+\`\`\`
+TPS = successful_transaction_count / ledger_close_time
+\`\`\`
+
+| TPS Range | Context |
+|-----------|---------|
+| 10-30 | Light activity |
+| 30-60 | Normal load |
+| 60-100+ | High activity (Stellar regularly sustains this) |
+
+The network handled 14.1 million transactions in a single day in April 2026.
+
+### 3. Transaction Success Rate
+
+\`\`\`
+Success Rate = successful / (successful + failed) * 100
+\`\`\`
+
+95-100% is healthy. Below 85% warrants investigation — usually fee-related during congestion.
+
+### 4. Fee Distribution
+
+\`\`\`bash
+curl -s https://horizon.stellar.org/fee_stats | \\
+  python3 -c "import sys,json; d=json.load(sys.stdin); \\
+  print('P50:', d['fee_charged']['p50'], 'P95:', d['fee_charged']['p95'])"
+\`\`\`
+
+If P95 is much higher than the base fee, the network is congested.
+
+### 5. Protocol Version
+
+Track upgrades through validator voting:
+\`\`\`bash
+curl -s https://horizon.stellar.org/ | python3 -c "import sys,json; print(json.load(sys.stdin)['current_protocol_version'])"
+\`\`\`
+
+### 6. Horizon API Health
+
+| Metric | Target |
+|--------|--------|
+| Response time (\`/ledgers?limit=1\`) | <500ms |
+| Availability | 200 OK |
+| Ingestion lag | <5 ledgers |
+| Error rate | <1% |
+
+### 7. Soroban RPC Health
+
+\`\`\`bash
+curl -s -X POST https://mainnet.sorobanrpc.com \\
+  -H 'Content-Type: application/json' \\
+  -d '{"jsonrpc":"2.0","id":1,"method":"getHealth"}' | python3 -m json.tool
+\`\`\`
+
+## Alert Thresholds
+
+| Alert | Condition | Action |
+|-------|-----------|--------|
+| **Ledger stall** | No new ledger in 30s | Check SDF status |
+| **Success rate** | Below 85% for 10 min | Check fee market |
+| **Fee spike** | P95 fee 10x base | Adjust fee strategy |
+| **Horizon lag** | >10 ledgers behind | Check server health |
+| **RPC unhealthy** | getHealth returns unhealthy | Failover to backup |
+
+## Data Collection Script
+
+\`\`\`python
+import requests, time
+
+def collect_metrics():
+    ledger = requests.get("https://horizon.stellar.org/ledgers?limit=1&order=desc").json()
+    latest = ledger["_embedded"]["records"][0]
+    fees = requests.get("https://horizon.stellar.org/fee_stats").json()
+
+    return {
+        "ledger": latest["sequence"],
+        "closed_at": latest["closed_at"],
+        "tx_count": latest["successful_transaction_count"],
+        "failed_tx": latest["failed_transaction_count"],
+        "fee_p50": fees["fee_charged"]["p50"],
+        "fee_p95": fees["fee_charged"]["p95"],
+    }
+\`\`\`
+
+## LumenQuery Network Analytics
+
+LumenQuery provides a pre-built dashboard at [/analytics](/analytics) — public, no auth required:
+
+- Real-time metrics: Ledger sequence, TPS, success rate, protocol version
+- Historical charts: 24-hour trends
+- Fee tracking: Current fee distribution
+- Soroban metrics: Contract invocation counts and gas usage
+
+---
+
+*Monitor Stellar network health without building your own dashboard. [LumenQuery](/analytics) provides real-time analytics — free and public.*
+    `,
+  },
   'bermuda-onchain-economy-stellar': {
     title: 'Stellar Is Powering Bermuda\'s Plan for a Fully Onchain Economy',
     date: '2026-05-15',

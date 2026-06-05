@@ -130,8 +130,57 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Blog posts - ALL 35 posts with their actual publication dates
+  // Blog posts - ALL 43 posts with their actual publication dates
   const blogPosts: MetadataRoute.Sitemap = [
+    // 2026-06-04 posts (developer guides, RWA, rate limits, monitoring)
+    {
+      url: `${baseUrl}/blog/horizon-api-vs-stellar-rpc-which-to-use`,
+      lastModified: new Date('2026-06-04'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/build-stellar-app-without-running-node`,
+      lastModified: new Date('2026-06-04'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/soroban-smart-contract-monitoring-production`,
+      lastModified: new Date('2026-06-04'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/stellar-transaction-monitoring-exchanges-compliance`,
+      lastModified: new Date('2026-06-04'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/query-stellar-accounts-ledgers-javascript`,
+      lastModified: new Date('2026-06-04'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/why-rwa-tokenization-growing-stellar`,
+      lastModified: new Date('2026-06-04'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/stellar-api-rate-limits-choose-plan`,
+      lastModified: new Date('2026-06-04'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/monitor-stellar-network-health-tps-latency`,
+      lastModified: new Date('2026-06-04'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
     // 2026-05-15 posts (Bermuda, RWA $2B, YLDS, XLM price)
     {
       url: `${baseUrl}/blog/bermuda-onchain-economy-stellar`,
