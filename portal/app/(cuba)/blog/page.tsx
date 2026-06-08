@@ -2,6 +2,38 @@ import Link from 'next/link';
 
 const posts = [
   {
+    slug: 'build-stellar-payment-status-page-lumenquery-apis',
+    title: 'How to Build a Stellar Payment Status Page with LumenQuery APIs',
+    excerpt: 'A practical developer guide to building a live payment status page that shows confirmations, failed transactions, ledger settlement progress, and real-time payment tracking using the Horizon API.',
+    date: '2026-06-08',
+    readTime: '13 min read',
+    category: 'Developer Guide',
+  },
+  {
+    slug: 'stellar-api-rate-limits-production-apps',
+    title: 'Stellar API Rate Limits Explained: How to Design Apps That Don\'t Break in Production',
+    excerpt: 'Public Horizon endpoints rate-limit aggressively. Learn how rate limits work across Stellar infrastructure, how to architect around them, and when to upgrade from free endpoints to managed API access.',
+    date: '2026-06-08',
+    readTime: '11 min read',
+    category: 'Developer Guide',
+  },
+  {
+    slug: 'track-token-velocity-stellar-stablecoins-rwa',
+    title: 'How to Track Token Velocity on Stellar for Stablecoins and RWAs',
+    excerpt: 'Token velocity reveals whether an asset is being used or just held. Learn how to measure it on Stellar for USDC, EURC, and tokenized real-world assets using the Horizon API and LumenQuery analytics.',
+    date: '2026-06-08',
+    readTime: '12 min read',
+    category: 'Developer Guide',
+  },
+  {
+    slug: 'building-compliance-friendly-stellar-apps',
+    title: 'Building Compliance-Friendly Stellar Apps: Logging, Auditing, and Transaction Traceability',
+    excerpt: 'For fintech, institutional, and RWA applications on Stellar, compliance is not optional. This guide covers transaction logging, audit trails, traceability patterns, and how to build apps that regulators can trust.',
+    date: '2026-06-08',
+    readTime: '14 min read',
+    category: 'Developer Guide',
+  },
+  {
     slug: 'build-stellar-payment-dashboard-horizon-api',
     title: 'How to Build a Stellar Payment Dashboard Using Horizon API Data',
     excerpt: 'A step-by-step developer tutorial showing how to display account balances, payment history, ledger info, and transaction status using the Stellar Horizon API.',

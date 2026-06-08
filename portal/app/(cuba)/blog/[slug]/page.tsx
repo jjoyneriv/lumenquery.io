@@ -9,6 +9,1077 @@ const posts: Record<string, {
   category: string;
   content: string;
 }> = {
+  'build-stellar-payment-status-page-lumenquery-apis': {
+    title: 'How to Build a Stellar Payment Status Page with LumenQuery APIs',
+    date: '2026-06-08',
+    readTime: '13 min read',
+    category: 'Developer Guide',
+    content: `
+A payment status page is one of the most valuable things you can add to any application that moves money on Stellar. Whether you are building a remittance platform, an e-commerce checkout, or an internal treasury tool, your users need to know: did the payment go through, is it still pending, or did it fail? This guide shows you how to build one using the Horizon API.
+
+## What a Payment Status Page Shows
+
+A good payment status page answers four questions:
+
+1. **Was the transaction submitted?** Did it reach the network at all?
+2. **Was it included in a ledger?** Which ledger, and when did it close?
+3. **Did it succeed or fail?** If it failed, why?
+4. **How many confirmations does it have?** How many ledgers have closed since settlement?
+
+## Checking Transaction Status
+
+After submitting a transaction, you get back a hash. Use it to poll for status:
+
+\`\`\`javascript
+const HORIZON = 'https://horizon.stellar.org';
+
+async function getTransactionStatus(txHash) {
+  const res = await fetch(\`\${HORIZON}/transactions/\${txHash}\`);
+
+  if (res.status === 404) {
+    return { status: 'pending', message: 'Transaction not yet included in a ledger' };
+  }
+
+  const tx = await res.json();
+
+  return {
+    status: tx.successful ? 'success' : 'failed',
+    hash: tx.hash,
+    ledger: tx.ledger,
+    createdAt: tx.created_at,
+    feeCharged: parseInt(tx.fee_charged),
+    operationCount: tx.operation_count,
+    memo: tx.memo || null,
+    resultCodes: tx.result_codes || null,
+  };
+}
+\`\`\`
+
+A 404 response means the transaction has not been included in a ledger yet. It could still be in the submission queue or it may have been rejected before reaching consensus.
+
+## Counting Confirmations
+
+On Stellar, a ledger closes roughly every 5 seconds. Each new ledger after your transaction's ledger is a confirmation:
+
+\`\`\`javascript
+async function getConfirmations(txLedger) {
+  const res = await fetch(\`\${HORIZON}/ledgers?limit=1&order=desc\`);
+  const data = await res.json();
+  const currentLedger = data._embedded.records[0].sequence;
+
+  return {
+    confirmations: currentLedger - txLedger,
+    currentLedger,
+    txLedger,
+    estimatedSeconds: (currentLedger - txLedger) * 5,
+  };
+}
+\`\`\`
+
+Most applications treat a transaction as final after 1 confirmation on Stellar, because Stellar's consensus protocol (SCP) provides deterministic finality — unlike proof-of-work chains where you need to wait for multiple blocks.
+
+## Tracking Payment Operations
+
+A transaction can contain multiple operations. To show what actually happened, fetch the operations:
+
+\`\`\`javascript
+async function getPaymentOperations(txHash) {
+  const res = await fetch(\`\${HORIZON}/transactions/\${txHash}/operations\`);
+  const data = await res.json();
+
+  return data._embedded.records.map(op => ({
+    id: op.id,
+    type: op.type,
+    amount: op.amount,
+    asset: op.asset_type === 'native' ? 'XLM' : \`\${op.asset_code}:\${op.asset_issuer?.slice(0, 4)}\`,
+    from: op.from,
+    to: op.to,
+    sourceAccount: op.source_account,
+  }));
+}
+\`\`\`
+
+## Handling Failed Transactions
+
+When a transaction fails, the \`result_codes\` field tells you exactly why:
+
+\`\`\`javascript
+const ERROR_MESSAGES = {
+  tx_failed: 'One or more operations failed',
+  tx_bad_auth: 'Invalid signature or authorization',
+  tx_bad_seq: 'Sequence number mismatch — transaction may have been submitted twice',
+  tx_insufficient_balance: 'Sender does not have enough XLM to cover amount + fees',
+  tx_no_source_account: 'Source account does not exist on the network',
+  tx_too_late: 'Transaction expired (timebounds exceeded)',
+  op_underfunded: 'Not enough balance to complete the payment',
+  op_no_trust: 'Recipient has not established a trustline for this asset',
+  op_no_destination: 'Destination account does not exist',
+  op_line_full: 'Recipient trustline balance limit exceeded',
+};
+
+function getErrorMessage(resultCodes) {
+  if (!resultCodes) return 'Unknown error';
+  const txCode = resultCodes.transaction;
+  const opCodes = resultCodes.operations || [];
+  const messages = [
+    ERROR_MESSAGES[txCode] || txCode,
+    ...opCodes.map(code => ERROR_MESSAGES[code] || code),
+  ];
+  return messages.join('. ');
+}
+\`\`\`
+
+## Building the Status Page Component
+
+Here is a React component that ties everything together:
+
+\`\`\`javascript
+function PaymentStatusPage({ txHash }) {
+  const [status, setStatus] = useState(null);
+  const [confirmations, setConfirmations] = useState(0);
+
+  useEffect(() => {
+    const poll = async () => {
+      const txStatus = await getTransactionStatus(txHash);
+      setStatus(txStatus);
+
+      if (txStatus.status === 'success') {
+        const conf = await getConfirmations(txStatus.ledger);
+        setConfirmations(conf.confirmations);
+      }
+    };
+
+    poll();
+    const interval = setInterval(poll, 5000);
+    return () => clearInterval(interval);
+  }, [txHash]);
+
+  if (!status) return <div>Loading...</div>;
+
+  return (
+    <div>
+      <h2>Payment Status</h2>
+      <StatusBadge status={status.status} />
+      {status.status === 'pending' && <p>Waiting for network confirmation...</p>}
+      {status.status === 'success' && (
+        <>
+          <p>Settled in ledger #{status.ledger}</p>
+          <p>{confirmations} confirmations ({confirmations * 5}s ago)</p>
+          <p>Fee: {status.feeCharged} stroops</p>
+        </>
+      )}
+      {status.status === 'failed' && (
+        <p className="error">{getErrorMessage(status.resultCodes)}</p>
+      )}
+    </div>
+  );
+}
+\`\`\`
+
+## Streaming Status Updates with SSE
+
+Instead of polling, you can use Horizon's Server-Sent Events to get instant updates:
+
+\`\`\`javascript
+function streamTransactionStatus(txHash, onUpdate) {
+  const es = new EventSource(
+    \`\${HORIZON}/transactions/\${txHash}?cursor=now\`
+  );
+
+  es.onmessage = (event) => {
+    const tx = JSON.parse(event.data);
+    onUpdate({
+      status: tx.successful ? 'success' : 'failed',
+      ledger: tx.ledger,
+      createdAt: tx.created_at,
+    });
+    es.close();
+  };
+
+  return es;
+}
+\`\`\`
+
+## Displaying Settlement Progress
+
+A progress bar shows users how their payment is moving through the pipeline:
+
+| Stage | Description | Visual |
+|-------|-------------|--------|
+| Submitted | Transaction sent to Horizon | Step 1 of 4 |
+| Accepted | Horizon accepted the transaction | Step 2 of 4 |
+| Settled | Included in a closed ledger | Step 3 of 4 |
+| Confirmed | Additional ledgers closed after settlement | Step 4 of 4 |
+
+## Production Considerations
+
+**Timeout handling**: If a transaction is not confirmed within 30 seconds, it likely failed or was not submitted. Check the account sequence number to determine if it was applied.
+
+**Idempotency**: Use the memo field or a unique ID to prevent duplicate payments. Before resubmitting, check if the original transaction was already applied.
+
+**Rate limits**: If you are polling Horizon directly, keep requests under the rate limit. LumenQuery's managed API gives you higher throughput with built-in caching.
+
+**Multi-currency**: For path payments, the source and destination assets may differ. Show both the sent and received amounts.
+
+## Next Steps
+
+- Use the [LumenQuery Live Transaction Viewer](/dashboard/transactions) to see decoded operations in real time
+- Explore [Network Analytics](/analytics) for settlement time trends
+- Check out the [Horizon API docs](/docs) for the complete endpoint reference
+
+---
+
+*Build reliable payment experiences on Stellar. [LumenQuery](/auth/signup) provides managed Horizon API access with higher rate limits and sub-100ms response times. Start free.*
+    `,
+  },
+  'stellar-api-rate-limits-production-apps': {
+    title: "Stellar API Rate Limits Explained: How to Design Apps That Don't Break in Production",
+    date: '2026-06-08',
+    readTime: '11 min read',
+    category: 'Developer Guide',
+    content: `
+Rate limits are one of the most common reasons blockchain applications break in production. Everything works fine in development with a few test requests, but the moment real users show up, your app starts throwing 429 errors and the dashboard goes blank. This guide explains how Stellar API rate limits work and how to build applications that handle them gracefully.
+
+## How Rate Limits Work on Stellar
+
+Stellar has two main API surfaces, and each has its own rate limiting behavior:
+
+| API | Endpoint | Default Public Limit |
+|-----|----------|---------------------|
+| Horizon | horizon.stellar.org | ~5 requests/second per IP |
+| Stellar RPC | mainnet.sorobanrpc.com | ~1 request/second per IP |
+
+These limits are per IP address. If you are running a backend server, all requests from your server count as a single IP. If you have 100 users hitting your frontend, each gets their own limit — unless all requests are proxied through your server.
+
+## What Happens When You Hit the Limit
+
+When you exceed the rate limit, the API returns HTTP 429 (Too Many Requests):
+
+\`\`\`json
+{
+  "type": "https://stellar.org/horizon-errors/rate_limit_exceeded",
+  "title": "Rate Limit Exceeded",
+  "status": 429,
+  "detail": "The rate limit for the requesting IP address is over the allowed limit."
+}
+\`\`\`
+
+The response includes a \`Retry-After\` header telling you how many seconds to wait. Ignoring this and retrying immediately will extend your lockout.
+
+## Common Patterns That Burn Through Limits
+
+### 1. Polling Without Cursors
+
+The most common mistake is repeatedly fetching the same endpoint to check for updates:
+
+\`\`\`javascript
+// Bad: Fetches everything every 2 seconds
+setInterval(async () => {
+  const res = await fetch(
+    'https://horizon.stellar.org/accounts/GABC.../payments?limit=10&order=desc'
+  );
+  // process...
+}, 2000);
+\`\`\`
+
+Instead, use cursors to only fetch new records:
+
+\`\`\`javascript
+// Good: Only fetches new payments since last check
+let cursor = 'now';
+setInterval(async () => {
+  const res = await fetch(
+    \`https://horizon.stellar.org/accounts/GABC.../payments?cursor=\${cursor}&order=asc&limit=50\`
+  );
+  const data = await res.json();
+  for (const record of data._embedded.records) {
+    cursor = record.paging_token;
+    // process new record...
+  }
+}, 5000);
+\`\`\`
+
+### 2. Fetching Redundant Data
+
+If your dashboard shows account balances, network stats, and recent transactions, do not fetch them all every 5 seconds. Different data has different freshness requirements:
+
+| Data | Freshness Needed | Suggested Poll Interval |
+|------|-----------------|------------------------|
+| Account balances | Moderate | 30 seconds |
+| Network ledger | High | 5 seconds |
+| Fee stats | Low | 60 seconds |
+| Transaction history | Low | 30 seconds |
+| Asset list | Very low | 5 minutes |
+
+### 3. N+1 Query Patterns
+
+Fetching a list of items and then making an additional request for each one:
+
+\`\`\`javascript
+// Bad: 1 request + 10 detail requests = 11 requests
+const txs = await fetch('.../transactions?limit=10');
+for (const tx of txs) {
+  const ops = await fetch(\`.../transactions/\${tx.hash}/operations\`);
+}
+\`\`\`
+
+Batch your requests or use endpoints that embed related data.
+
+## Building a Rate-Limit-Aware Client
+
+\`\`\`javascript
+class StellarClient {
+  constructor(baseUrl, maxRetries = 3) {
+    this.baseUrl = baseUrl;
+    this.maxRetries = maxRetries;
+    this.queue = [];
+    this.processing = false;
+  }
+
+  async fetch(path) {
+    for (let attempt = 0; attempt <= this.maxRetries; attempt++) {
+      const res = await fetch(\`\${this.baseUrl}\${path}\`);
+
+      if (res.status === 429) {
+        const retryAfter = parseInt(res.headers.get('Retry-After') || '5');
+        console.warn(\`Rate limited. Retrying in \${retryAfter}s\`);
+        await new Promise(r => setTimeout(r, retryAfter * 1000));
+        continue;
+      }
+
+      if (!res.ok) throw new Error(\`HTTP \${res.status}: \${res.statusText}\`);
+      return res.json();
+    }
+
+    throw new Error('Max retries exceeded');
+  }
+}
+\`\`\`
+
+## Using a Cache Layer
+
+Caching is the single most effective way to reduce API calls. Most Stellar data changes slowly:
+
+\`\`\`javascript
+const cache = new Map();
+
+async function cachedFetch(url, ttlMs) {
+  const cached = cache.get(url);
+  if (cached && Date.now() - cached.time < ttlMs) {
+    return cached.data;
+  }
+
+  const data = await fetch(url).then(r => r.json());
+  cache.set(url, { data, time: Date.now() });
+  return data;
+}
+
+// Usage
+const feeStats = await cachedFetch(
+  'https://horizon.stellar.org/fee_stats',
+  60000 // cache for 60 seconds
+);
+\`\`\`
+
+For production applications, use Redis instead of an in-memory Map. LumenQuery's API includes a built-in Redis cache layer with configurable TTLs per endpoint.
+
+## Use SSE Instead of Polling
+
+Horizon supports Server-Sent Events (SSE) for real-time streaming. One persistent connection replaces hundreds of polling requests:
+
+\`\`\`javascript
+// One connection, zero polling, instant updates
+const es = new EventSource(
+  'https://horizon.stellar.org/ledgers?cursor=now'
+);
+
+es.onmessage = (event) => {
+  const ledger = JSON.parse(event.data);
+  console.log('New ledger:', ledger.sequence);
+};
+\`\`\`
+
+SSE is available for ledgers, transactions, operations, payments, effects, and order book changes.
+
+## When to Upgrade from Public Endpoints
+
+You need dedicated infrastructure when:
+
+| Signal | Why It Matters |
+|--------|---------------|
+| You are hitting 429s regularly | Your users see errors |
+| You need >5 req/s from one server | Backend aggregation |
+| You need guaranteed uptime | Public endpoints have no SLA |
+| You need faster response times | Public endpoints add latency |
+| You need historical data access | Deep pagination is throttled |
+| You are building for production | Rate limits will bite at scale |
+
+## LumenQuery API Tiers
+
+| Tier | Rate Limit | Price | Best For |
+|------|-----------|-------|----------|
+| Free | 10 req/min | $0 | Prototyping |
+| Developer | 200 req/min | $25/mo | Side projects, MVPs |
+| Team | 1,000 req/min | $99/mo | Production apps |
+| Enterprise | Custom | Custom | High-throughput |
+
+All tiers include built-in caching, usage analytics, and no cold starts.
+
+## Architecture for High-Throughput Apps
+
+For applications that need to process thousands of transactions per minute:
+
+\`\`\`
+Client requests → Your API → LumenQuery (cached) → Horizon/RPC
+                      ↓
+               Redis cache (30s-5min TTL)
+                      ↓
+               PostgreSQL (historical data)
+\`\`\`
+
+1. **Frontend** calls your API, never Horizon directly
+2. **Your API** checks Redis cache first
+3. **Cache miss** goes to LumenQuery (which has its own cache)
+4. **Background jobs** pre-warm caches for common queries
+5. **Historical data** is stored in your own database
+
+This pattern can handle tens of thousands of concurrent users with a single LumenQuery Team plan.
+
+## Testing Rate Limit Behavior
+
+Before going to production, simulate rate limit scenarios:
+
+\`\`\`javascript
+async function testRateLimits() {
+  const results = [];
+  for (let i = 0; i < 20; i++) {
+    const start = Date.now();
+    const res = await fetch('https://horizon.stellar.org/ledgers?limit=1');
+    results.push({
+      attempt: i + 1,
+      status: res.status,
+      latencyMs: Date.now() - start,
+    });
+  }
+
+  const limited = results.filter(r => r.status === 429);
+  console.log(\`Hit rate limit after \${results.length - limited.length} requests\`);
+  console.log(\`\${limited.length} requests were throttled\`);
+}
+\`\`\`
+
+## Summary
+
+| Strategy | Impact |
+|----------|--------|
+| Use cursors instead of re-fetching | 80-90% fewer requests |
+| Cache with appropriate TTLs | 50-80% fewer requests |
+| Use SSE for real-time data | Eliminates polling entirely |
+| Batch related queries | 60-70% fewer requests |
+| Use managed API with higher limits | Removes the ceiling |
+
+The goal is not to fight rate limits — it is to design your application so that they never matter.
+
+---
+
+*Stop fighting rate limits. [LumenQuery](/auth/signup) provides managed Stellar API access with generous rate limits, built-in caching, and usage analytics. Start with the free tier.*
+    `,
+  },
+  'track-token-velocity-stellar-stablecoins-rwa': {
+    title: 'How to Track Token Velocity on Stellar for Stablecoins and RWAs',
+    date: '2026-06-08',
+    readTime: '12 min read',
+    category: 'Developer Guide',
+    content: `
+Token velocity measures how frequently an asset changes hands over a given period. It is one of the most revealing metrics for understanding whether a token is being actively used in commerce and settlement — or just sitting in wallets waiting for a price move. For stablecoins like USDC on Stellar and tokenized real-world assets (RWAs), velocity is a direct indicator of product-market fit.
+
+## What Token Velocity Is
+
+Token velocity is calculated as:
+
+**Velocity = Transaction Volume / Average Supply in Circulation**
+
+If a stablecoin has 100 million tokens in circulation and 500 million in transaction volume over a month, the velocity is 5.0. That means each token changed hands an average of 5 times during the period.
+
+| Velocity | What It Means |
+|----------|---------------|
+| < 1.0 | Token is mostly held, low usage |
+| 1.0 - 5.0 | Moderate usage, healthy for store-of-value assets |
+| 5.0 - 20.0 | Active usage, typical for payment stablecoins |
+| > 20.0 | Very high turnover, common for settlement tokens |
+
+## Why It Matters for Stablecoins
+
+Stablecoins are designed to be spent, not held. A USDC token sitting in a wallet for months is not doing its job. High velocity means the stablecoin is being used for:
+
+- Cross-border remittances
+- Merchant payments
+- DeFi settlement
+- Treasury management
+
+On Stellar, USDC has over 2.1 million holders. But how many of them are actively transacting? Velocity answers that question.
+
+## Why It Matters for RWAs
+
+Real-world assets on Stellar — tokenized treasury bills, bonds, real estate tokens — have a different velocity profile. You expect lower velocity (these are investment instruments), but zero velocity is a red flag:
+
+- **Zero velocity**: No secondary market activity, possibly illiquid
+- **Low velocity (0.1 - 1.0)**: Normal for long-term holdings like bonds
+- **Higher velocity**: Indicates active secondary market trading
+
+## Fetching Payment Data from Horizon
+
+To calculate velocity, you need two things: transaction volume and circulating supply. Start with payments:
+
+\`\`\`javascript
+const HORIZON = 'https://horizon.stellar.org';
+
+async function getPaymentVolume(assetCode, assetIssuer, hours = 24) {
+  const cutoff = new Date(Date.now() - hours * 60 * 60 * 1000);
+  let totalVolume = 0;
+  let paymentCount = 0;
+  let url = \`\${HORIZON}/payments?order=desc&limit=200\`;
+
+  while (url) {
+    const res = await fetch(url);
+    const data = await res.json();
+    const records = data._embedded.records;
+
+    let reachedCutoff = false;
+    for (const record of records) {
+      if (new Date(record.created_at) < cutoff) {
+        reachedCutoff = true;
+        break;
+      }
+
+      if (
+        record.type === 'payment' &&
+        record.asset_code === assetCode &&
+        record.asset_issuer === assetIssuer
+      ) {
+        totalVolume += parseFloat(record.amount);
+        paymentCount++;
+      }
+    }
+
+    if (reachedCutoff || records.length < 200) break;
+    url = data._links?.next?.href;
+  }
+
+  return { totalVolume, paymentCount, periodHours: hours };
+}
+\`\`\`
+
+## Fetching Circulating Supply
+
+For Stellar assets, the circulating supply is the total amount issued minus what the issuer holds:
+
+\`\`\`javascript
+async function getCirculatingSupply(assetCode, assetIssuer) {
+  const res = await fetch(
+    \`\${HORIZON}/assets?asset_code=\${assetCode}&asset_issuer=\${assetIssuer}\`
+  );
+  const data = await res.json();
+  const asset = data._embedded.records[0];
+
+  if (!asset) return null;
+
+  const totalSupply = parseFloat(asset.amount);
+  const numAccounts = asset.num_accounts;
+
+  // Get issuer balance to calculate circulating supply
+  const issuerRes = await fetch(\`\${HORIZON}/accounts/\${assetIssuer}\`);
+  const issuer = await issuerRes.json();
+  const issuerBalance = issuer.balances.find(
+    b => b.asset_code === assetCode && b.asset_issuer === assetIssuer
+  );
+  const issuerHeld = issuerBalance ? parseFloat(issuerBalance.balance) : 0;
+
+  return {
+    totalSupply,
+    issuerHeld,
+    circulating: totalSupply - issuerHeld,
+    holders: numAccounts,
+  };
+}
+\`\`\`
+
+## Calculating Velocity
+
+\`\`\`javascript
+async function calculateVelocity(assetCode, assetIssuer, periodHours = 24) {
+  const [volume, supply] = await Promise.all([
+    getPaymentVolume(assetCode, assetIssuer, periodHours),
+    getCirculatingSupply(assetCode, assetIssuer),
+  ]);
+
+  if (!supply || supply.circulating === 0) {
+    return { error: 'Cannot calculate — zero circulating supply' };
+  }
+
+  const annualizedVolume = volume.totalVolume * (8760 / periodHours);
+  const velocity = annualizedVolume / supply.circulating;
+
+  return {
+    asset: \`\${assetCode}:\${assetIssuer.slice(0, 4)}...\${assetIssuer.slice(-4)}\`,
+    periodHours,
+    transactionVolume: volume.totalVolume,
+    paymentCount: volume.paymentCount,
+    circulatingSupply: supply.circulating,
+    holders: supply.holders,
+    annualizedVelocity: Math.round(velocity * 100) / 100,
+  };
+}
+\`\`\`
+
+## Tracking Velocity Over Time
+
+To see trends, store daily snapshots and compare:
+
+\`\`\`javascript
+async function trackVelocityTrend(assetCode, assetIssuer, days = 7) {
+  const snapshots = [];
+
+  for (let i = 0; i < days; i++) {
+    const offsetHours = i * 24;
+    // In production, you would query historical data from your database
+    // This simplified version shows the concept
+    const velocity = await calculateVelocity(assetCode, assetIssuer, 24);
+    snapshots.push({
+      date: new Date(Date.now() - offsetHours * 60 * 60 * 1000).toISOString().split('T')[0],
+      velocity: velocity.annualizedVelocity,
+      volume: velocity.transactionVolume,
+      payments: velocity.paymentCount,
+    });
+  }
+
+  return snapshots;
+}
+\`\`\`
+
+## Interpreting Velocity for Specific Asset Types
+
+### USDC on Stellar
+
+USDC is the most liquid stablecoin on Stellar. Expect high velocity driven by:
+- MoneyGram remittance flows
+- DEX trading pairs
+- DeFi settlement
+
+A sudden velocity drop could indicate a shift in remittance corridors or reduced DEX activity.
+
+### Tokenized Treasury Bills
+
+Assets like Franklin Templeton's BENJI have low velocity by design. These are buy-and-hold instruments. Watch for:
+- Velocity spikes around maturity dates
+- Gradual increase as secondary markets develop
+- Zero velocity on new issuances (holders are waiting)
+
+### Euro Stablecoins (EURC, EURAU)
+
+Euro-denominated stablecoins on Stellar target European settlement. Velocity patterns follow business hours and payment cycles. Expect higher velocity on weekdays and lower on weekends.
+
+## Building a Velocity Dashboard
+
+Combine the above functions into a monitoring dashboard:
+
+\`\`\`javascript
+async function buildVelocityDashboard() {
+  const assets = [
+    { code: 'USDC', issuer: 'GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN' },
+    { code: 'yXLM', issuer: 'GARDNV3Q7YGT4MASTV2SUDBOMUQTTSKZYA2FKYWP45HJRYSALIDNGGEH' },
+    // Add more assets as needed
+  ];
+
+  const results = await Promise.all(
+    assets.map(a => calculateVelocity(a.code, a.issuer, 24))
+  );
+
+  return results.sort((a, b) => b.annualizedVelocity - a.annualizedVelocity);
+}
+\`\`\`
+
+## Using LumenQuery Analytics
+
+The [LumenQuery Analytics dashboard](/analytics/tokens) tracks token velocity, whale movements, and issuer risk for all Stellar assets. It pre-computes velocity metrics with Redis caching so you do not need to paginate through thousands of payment records yourself.
+
+The \`/api/analytics/tokens\` endpoint returns:
+- Payment volume and velocity for top assets
+- Whale activity (transfers > 100,000 XLM)
+- Issuer risk scores
+- Historical volume charts
+
+## Alerts Based on Velocity Changes
+
+Set up alerts for velocity anomalies:
+
+\`\`\`javascript
+function checkVelocityAlert(current, previous, threshold = 0.5) {
+  if (!previous) return null;
+
+  const change = (current - previous) / previous;
+
+  if (change > threshold) {
+    return { type: 'spike', change: \`+\${(change * 100).toFixed(0)}%\`, message: 'Unusual velocity increase' };
+  }
+
+  if (change < -threshold) {
+    return { type: 'drop', change: \`\${(change * 100).toFixed(0)}%\`, message: 'Significant velocity decrease' };
+  }
+
+  return null;
+}
+\`\`\`
+
+A 50% spike in velocity for a stablecoin could mean a major remittance corridor opened up. A 50% drop could indicate a liquidity problem or a migration to a different asset.
+
+## Next Steps
+
+- Explore the [LumenQuery Token Analytics](/analytics/tokens) dashboard for live velocity data
+- Read about [whale tracking](/blog/xlm-price-prediction-whale-accumulation) and large transfer monitoring
+- Check the [API documentation](/docs/analytics) for detailed endpoint reference
+
+---
+
+*Track token velocity without building infrastructure from scratch. [LumenQuery](/auth/signup) provides pre-computed analytics with caching, so you can focus on insights instead of pagination. Start free.*
+    `,
+  },
+  'building-compliance-friendly-stellar-apps': {
+    title: 'Building Compliance-Friendly Stellar Apps: Logging, Auditing, and Transaction Traceability',
+    date: '2026-06-08',
+    readTime: '14 min read',
+    category: 'Developer Guide',
+    content: `
+If you are building a fintech application, an exchange, or a tokenized asset platform on Stellar, compliance is not something you bolt on later. Regulators want to see that your application was designed with traceability, auditability, and record-keeping from day one. Stellar's architecture makes this easier than most blockchains — every transaction is public, deterministic, and final within seconds. But you still need to build the right logging and audit infrastructure on your side.
+
+## Why Stellar Is Compliance-Friendly by Design
+
+Stellar has several properties that regulators and compliance teams appreciate:
+
+| Property | Why It Helps |
+|----------|-------------|
+| **Deterministic finality** | A settled transaction is final. No chain reorganizations. No waiting for block confirmations. |
+| **Account-based model** | Every account has a known public key. Easier to track than UTXO models. |
+| **Built-in asset controls** | Issuers can require authorization, freeze accounts, and clawback tokens. |
+| **Memo field** | Attach reference IDs, customer identifiers, or compliance tags to every transaction. |
+| **Low fees** | Sub-cent transaction costs make detailed logging economically feasible. |
+| **Public ledger** | All transactions are auditable by anyone with a Horizon node. |
+
+## The Three Pillars of Compliance Logging
+
+### 1. Transaction Logging
+
+Every transaction your application sends or receives should be logged with:
+
+\`\`\`javascript
+const transactionLog = {
+  // Blockchain data
+  txHash: 'abc123...',
+  ledger: 61500000,
+  timestamp: '2026-06-08T14:30:00Z',
+  successful: true,
+  feeCharged: 100,
+
+  // Application data
+  internalId: 'PAY-2026-00142',
+  customerId: 'USR-789',
+  purpose: 'remittance',
+  complianceStatus: 'cleared',
+
+  // Counterparty data
+  sourceAccount: 'GABC...',
+  destinationAccount: 'GXYZ...',
+  amount: '1000.00',
+  asset: 'USDC',
+
+  // Audit metadata
+  initiatedBy: 'api-user-456',
+  approvedBy: 'compliance-officer-12',
+  ipAddress: '192.168.1.100',
+  userAgent: 'MyApp/2.1',
+};
+\`\`\`
+
+### 2. Audit Trail
+
+An audit trail records who did what, when, and why. It must be append-only — entries can never be modified or deleted:
+
+\`\`\`javascript
+async function logAuditEntry(entry) {
+  const record = {
+    id: generateUUID(),
+    timestamp: new Date().toISOString(),
+    actor: entry.actor,
+    action: entry.action,
+    target: entry.target,
+    details: entry.details,
+    ipAddress: entry.ipAddress,
+    // Hash chain for tamper detection
+    previousHash: await getLastAuditHash(),
+    hash: null,
+  };
+
+  record.hash = await computeHash(
+    record.previousHash +
+    record.timestamp +
+    record.actor +
+    record.action +
+    JSON.stringify(record.details)
+  );
+
+  await db.auditLog.create({ data: record });
+  return record;
+}
+\`\`\`
+
+The hash chain ensures that if any entry is tampered with, the chain breaks and the modification is detectable.
+
+### 3. Transaction Traceability
+
+Regulators need to trace the full lifecycle of a payment:
+
+\`\`\`
+Customer request → KYC check → Compliance screening → Transaction built →
+Transaction signed → Transaction submitted → Ledger inclusion →
+Confirmation → Settlement record → Reporting
+\`\`\`
+
+Each step should have a timestamp and a reference to the previous step.
+
+## Implementing Transaction Logging
+
+### Capturing Transactions from Horizon
+
+\`\`\`javascript
+async function logIncomingTransaction(txHash) {
+  const tx = await fetch(\`\${HORIZON}/transactions/\${txHash}\`).then(r => r.json());
+  const ops = await fetch(\`\${HORIZON}/transactions/\${txHash}/operations\`).then(r => r.json());
+
+  const logEntry = {
+    txHash: tx.hash,
+    ledger: tx.ledger,
+    timestamp: tx.created_at,
+    successful: tx.successful,
+    fee: parseInt(tx.fee_charged),
+    memo: tx.memo || null,
+    memoType: tx.memo_type,
+    sourceAccount: tx.source_account,
+    operations: ops._embedded.records.map(op => ({
+      type: op.type,
+      amount: op.amount,
+      asset: op.asset_type === 'native' ? 'XLM' : op.asset_code,
+      from: op.from,
+      to: op.to,
+    })),
+    capturedAt: new Date().toISOString(),
+  };
+
+  await db.transactionLog.create({ data: logEntry });
+  return logEntry;
+}
+\`\`\`
+
+### Streaming for Real-Time Capture
+
+Do not rely on periodic polling for compliance-critical logging. Use SSE streaming to capture every transaction as it happens:
+
+\`\`\`javascript
+function startComplianceStream(accountId) {
+  const es = new EventSource(
+    \`\${HORIZON}/accounts/\${accountId}/transactions?cursor=now\`
+  );
+
+  es.onmessage = async (event) => {
+    const tx = JSON.parse(event.data);
+    await logIncomingTransaction(tx.hash);
+    await runComplianceChecks(tx);
+  };
+
+  es.onerror = () => {
+    console.error('Stream disconnected, reconnecting...');
+    setTimeout(() => startComplianceStream(accountId), 5000);
+  };
+}
+\`\`\`
+
+## Using Stellar's Built-In Compliance Tools
+
+### Memo Field for Reference IDs
+
+The memo field lets you attach a reference to every transaction. This is critical for matching on-chain activity to off-chain records:
+
+\`\`\`javascript
+// When building a payment transaction
+const transaction = new StellarSdk.TransactionBuilder(account, {
+  fee: '100',
+  networkPassphrase: StellarSdk.Networks.PUBLIC,
+})
+  .addOperation(StellarSdk.Operation.payment({
+    destination: recipientId,
+    asset: StellarSdk.Asset.native(),
+    amount: '1000',
+  }))
+  .addMemo(StellarSdk.Memo.text('PAY-2026-00142'))
+  .setTimeout(30)
+  .build();
+\`\`\`
+
+Use structured memo formats:
+- \`PAY-{year}-{sequence}\` for payments
+- \`WDR-{year}-{sequence}\` for withdrawals
+- \`TRF-{year}-{sequence}\` for internal transfers
+
+### Authorization Flags
+
+For tokenized assets that require compliance, use Stellar's authorization flags:
+
+| Flag | Effect |
+|------|--------|
+| \`AUTH_REQUIRED\` | Accounts must be approved before holding the asset |
+| \`AUTH_REVOCABLE\` | Issuer can revoke authorization (freeze) |
+| \`AUTH_CLAWBACK_ENABLED\` | Issuer can claw back tokens |
+| \`AUTH_IMMUTABLE\` | Flags cannot be changed (locks the configuration) |
+
+For regulated assets, \`AUTH_REQUIRED\` + \`AUTH_REVOCABLE\` + \`AUTH_CLAWBACK_ENABLED\` gives you full control. You approve accounts after KYC, freeze accounts under investigation, and clawback tokens if required by a court order.
+
+## Building a Compliance Report
+
+Regulators typically want periodic reports showing:
+
+\`\`\`javascript
+async function generateComplianceReport(startDate, endDate) {
+  const transactions = await db.transactionLog.findMany({
+    where: {
+      timestamp: { gte: startDate, lte: endDate },
+    },
+    orderBy: { timestamp: 'asc' },
+  });
+
+  return {
+    period: { start: startDate, end: endDate },
+    summary: {
+      totalTransactions: transactions.length,
+      successfulTransactions: transactions.filter(t => t.successful).length,
+      failedTransactions: transactions.filter(t => !t.successful).length,
+      totalVolume: transactions.reduce((sum, t) =>
+        sum + t.operations.reduce((s, op) => s + parseFloat(op.amount || '0'), 0), 0),
+      uniqueAccounts: new Set(transactions.flatMap(t =>
+        t.operations.flatMap(op => [op.from, op.to].filter(Boolean))
+      )).size,
+    },
+    flaggedTransactions: transactions.filter(t => t.complianceStatus === 'flagged'),
+    transactions: transactions.map(t => ({
+      hash: t.txHash,
+      time: t.timestamp,
+      amount: t.operations[0]?.amount,
+      asset: t.operations[0]?.asset,
+      from: t.sourceAccount,
+      memo: t.memo,
+      status: t.complianceStatus,
+    })),
+  };
+}
+\`\`\`
+
+## Database Schema for Compliance
+
+\`\`\`sql
+CREATE TABLE transaction_log (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tx_hash VARCHAR(64) UNIQUE NOT NULL,
+  ledger BIGINT NOT NULL,
+  timestamp TIMESTAMPTZ NOT NULL,
+  successful BOOLEAN NOT NULL,
+  fee_charged INTEGER,
+  memo TEXT,
+  memo_type VARCHAR(20),
+  source_account VARCHAR(56) NOT NULL,
+  operations JSONB NOT NULL,
+  internal_id VARCHAR(50),
+  customer_id VARCHAR(50),
+  compliance_status VARCHAR(20) DEFAULT 'pending',
+  captured_at TIMESTAMPTZ DEFAULT NOW(),
+  INDEX idx_timestamp (timestamp),
+  INDEX idx_source (source_account),
+  INDEX idx_customer (customer_id),
+  INDEX idx_compliance (compliance_status)
+);
+
+CREATE TABLE audit_log (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  actor VARCHAR(100) NOT NULL,
+  action VARCHAR(50) NOT NULL,
+  target VARCHAR(100),
+  details JSONB,
+  ip_address VARCHAR(45),
+  previous_hash VARCHAR(64),
+  hash VARCHAR(64) NOT NULL,
+  INDEX idx_audit_time (timestamp),
+  INDEX idx_audit_actor (actor)
+);
+\`\`\`
+
+## Retention Policies
+
+Different jurisdictions have different retention requirements:
+
+| Jurisdiction | Minimum Retention |
+|-------------|-------------------|
+| US (BSA/AML) | 5 years |
+| EU (AMLD6) | 5 years after relationship ends |
+| UK (MLR 2017) | 5 years |
+| Singapore (PSOA) | 5 years |
+
+Design your database with partitioning by date so you can efficiently manage retention:
+
+\`\`\`sql
+-- Partition by year for efficient retention management
+CREATE TABLE transaction_log (
+  ...
+) PARTITION BY RANGE (timestamp);
+
+CREATE TABLE transaction_log_2026 PARTITION OF transaction_log
+  FOR VALUES FROM ('2026-01-01') TO ('2027-01-01');
+\`\`\`
+
+## Integrating with LumenQuery
+
+LumenQuery's [Transaction Intelligence](/intelligence) and [Analytics](/analytics) features provide pre-built compliance infrastructure:
+
+- **Real-time transaction monitoring** with SSE streaming
+- **Account profiling** and classification
+- **Watchlist management** for monitored accounts
+- **Alert system** for suspicious activity patterns
+- **Audit logging** with hash chain verification
+
+These features are designed for the exact use cases described in this article — saving you months of development time.
+
+## Best Practices
+
+1. **Log before you transact**: Write the intent to your audit log before submitting the transaction. If the transaction fails, you have a record of the attempt.
+
+2. **Never delete logs**: Use soft deletes or retention policies. Compliance officers need the complete picture.
+
+3. **Hash chain your audit log**: A simple hash chain makes tampering detectable without the complexity of a separate blockchain.
+
+4. **Use structured memos**: A consistent memo format lets you join on-chain and off-chain records reliably.
+
+5. **Monitor in real time**: Batch processing is not sufficient for compliance. Use SSE streaming to catch issues as they happen.
+
+6. **Separate compliance data from application data**: Compliance logs should be in a separate database or schema with restricted access and its own backup schedule.
+
+## Next Steps
+
+- Explore the [LumenQuery API Documentation](/docs) for endpoint details
+- Check the [Transaction Intelligence](/intelligence) dashboard for real-time monitoring
+- Read about [Stellar's regulatory positioning](/blog/stellar-regulatory-clarity-bullish-xlm)
+
+---
+
+*Build compliance into your Stellar application from day one. [LumenQuery](/auth/signup) provides the API infrastructure, transaction monitoring, and audit tools that regulated businesses need. Start free.*
+    `,
+  },
   'build-stellar-payment-dashboard-horizon-api': {
     title: 'How to Build a Stellar Payment Dashboard Using Horizon API Data',
     date: '2026-06-05',

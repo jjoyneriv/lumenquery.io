@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://lumenquery.io';
-  const today = new Date('2026-04-24');
+  const today = new Date('2026-06-08');
 
   // Core pages
   const corePages: MetadataRoute.Sitemap = [
@@ -130,8 +130,33 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Blog posts - ALL 51 posts with their actual publication dates
+  // Blog posts - ALL 55 posts with their actual publication dates
   const blogPosts: MetadataRoute.Sitemap = [
+    // 2026-06-08 posts (payment status page, API rate limits, token velocity, compliance-friendly apps)
+    {
+      url: `${baseUrl}/blog/build-stellar-payment-status-page-lumenquery-apis`,
+      lastModified: new Date('2026-06-08'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/stellar-api-rate-limits-production-apps`,
+      lastModified: new Date('2026-06-08'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/track-token-velocity-stellar-stablecoins-rwa`,
+      lastModified: new Date('2026-06-08'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/building-compliance-friendly-stellar-apps`,
+      lastModified: new Date('2026-06-08'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
     // 2026-06-05 posts (payment dashboard, Soroban RPC, stablecoins, live tracking, explorer, events, rate limits, NL search)
     {
       url: `${baseUrl}/blog/build-stellar-payment-dashboard-horizon-api`,
