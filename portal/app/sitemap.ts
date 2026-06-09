@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://lumenquery.io';
-  const today = new Date('2026-06-08');
+  const today = new Date('2026-06-09');
 
   // Core pages
   const corePages: MetadataRoute.Sitemap = [
@@ -130,8 +130,33 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Blog posts - ALL 55 posts with their actual publication dates
+  // Blog posts - ALL 59 posts with their actual publication dates
   const blogPosts: MetadataRoute.Sitemap = [
+    // 2026-06-09 posts (Protocol 27, Circle CCTP, DTCC, Alchemy)
+    {
+      url: `${baseUrl}/blog/stellar-protocol-27-zipper-developer-guide`,
+      lastModified: new Date('2026-06-09'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/circle-cctp-stellar-cross-chain-usdc`,
+      lastModified: new Date('2026-06-09'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/dtcc-stellar-tokenized-securities-institutional-catalyst`,
+      lastModified: new Date('2026-06-09'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/alchemy-stellar-rpc-infrastructure-competition`,
+      lastModified: new Date('2026-06-09'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
     // 2026-06-08 posts (payment status page, API rate limits, token velocity, compliance-friendly apps)
     {
       url: `${baseUrl}/blog/build-stellar-payment-status-page-lumenquery-apis`,

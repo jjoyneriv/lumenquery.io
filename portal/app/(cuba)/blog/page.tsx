@@ -2,6 +2,38 @@ import Link from 'next/link';
 
 const posts = [
   {
+    slug: 'stellar-protocol-27-zipper-developer-guide',
+    title: 'Stellar Protocol 27 "Zipper": What Developers Need to Prepare Before the July Mainnet Vote',
+    excerpt: 'SDF published the Protocol 27 upgrade guide on June 4. Here is what changes, what breaks, which SDK versions you need, and how to test on the testnet before the mainnet vote.',
+    date: '2026-06-09',
+    readTime: '12 min read',
+    category: 'Protocol Update',
+  },
+  {
+    slug: 'circle-cctp-stellar-cross-chain-usdc',
+    title: 'Circle CCTP on Stellar: How Cross-Chain USDC Transfers Change the Developer Opportunity',
+    excerpt: 'Circle CCTP went live on Stellar on May 19, enabling native USDC movement between Stellar and other supported chains. Here is what it means for builders and how to integrate.',
+    date: '2026-06-09',
+    readTime: '11 min read',
+    category: 'Industry Insights',
+  },
+  {
+    slug: 'dtcc-stellar-tokenized-securities-institutional-catalyst',
+    title: 'DTCC + Stellar: Why Tokenized Securities Could Become Stellar\'s Biggest Institutional Catalyst',
+    excerpt: 'DTCC announced that DTC-tokenized assets are expected to become available on Stellar in 1H 2027, with potential asset classes including Russell 1000 constituents, ETFs, and U.S. Treasuries.',
+    date: '2026-06-09',
+    readTime: '13 min read',
+    category: 'Industry Insights',
+  },
+  {
+    slug: 'alchemy-stellar-rpc-infrastructure-competition',
+    title: 'Alchemy Adds Stellar Support: What It Means for RPC Infrastructure Competition',
+    excerpt: 'Alchemy announced Stellar support on April 16, adding another major player to the managed RPC market. We analyze what this means for developer infrastructure and how LumenQuery compares.',
+    date: '2026-06-09',
+    readTime: '10 min read',
+    category: 'Industry Insights',
+  },
+  {
     slug: 'build-stellar-payment-status-page-lumenquery-apis',
     title: 'How to Build a Stellar Payment Status Page with LumenQuery APIs',
     excerpt: 'A practical developer guide to building a live payment status page that shows confirmations, failed transactions, ledger settlement progress, and real-time payment tracking using the Horizon API.',

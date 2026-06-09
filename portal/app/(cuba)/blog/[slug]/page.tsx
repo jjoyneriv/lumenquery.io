@@ -9,6 +9,713 @@ const posts: Record<string, {
   category: string;
   content: string;
 }> = {
+  'stellar-protocol-27-zipper-developer-guide': {
+    title: 'Stellar Protocol 27 \"Zipper\": What Developers Need to Prepare Before the July Mainnet Vote',
+    date: '2026-06-09',
+    readTime: '12 min read',
+    category: 'Protocol Update',
+    content: `
+Stellar Protocol 27, codenamed "Zipper," is the next major network upgrade. SDF published the developer preparation guide on June 4, 2026, and the testnet is already running the new protocol. The mainnet validator vote is expected in July. If you have an application on Stellar, here is what you need to know and do before that vote happens.
+
+## What Is Protocol 27
+
+Protocol upgrades on Stellar happen through validator consensus. A supermajority of validators must vote to adopt a new protocol version before it goes live on mainnet. Protocol 27 follows the Protocol 22 "Yardstick" upgrade pattern, which went through testnet validation before a mainnet vote.
+
+Each protocol upgrade can introduce new transaction types, change fee structures, modify resource limits, or alter how the ledger processes operations. "Zipper" focuses on several areas that directly affect how developers build and deploy applications.
+
+## Key Changes in Protocol 27
+
+### 1. Soroban Resource Model Updates
+
+Protocol 27 adjusts the resource pricing model for Soroban smart contracts:
+
+| Resource | Protocol 26 | Protocol 27 | Impact |
+|----------|-------------|-------------|--------|
+| CPU instructions limit | 100M per tx | 150M per tx | Larger contracts can execute |
+| Read bytes limit | 200KB per tx | 300KB per tx | More state access per call |
+| Write bytes limit | 65KB per tx | 100KB per tx | Larger state mutations |
+| Events size limit | 8KB per tx | 16KB per tx | Richer event data |
+
+These changes mean contracts that were hitting resource limits can now execute. If you were splitting operations across multiple transactions to stay under limits, you may be able to consolidate.
+
+### 2. State Archival Improvements
+
+State archival determines how long contract data persists on the network. Protocol 27 introduces:
+
+- **Cheaper TTL extensions**: Extending the time-to-live of persistent storage entries costs less
+- **Batch TTL operations**: Extend TTL for multiple keys in a single operation
+- **Archival status queries**: New RPC method to check if entries are archived
+
+\`\`\`javascript
+// New in Protocol 27: batch TTL extension
+const tx = new StellarSdk.TransactionBuilder(account, { fee: '100' })
+  .addOperation(StellarSdk.Operation.extendFootprintTtl({
+    ledgersToExtend: 500000,
+    // Can now include multiple keys in one operation
+  }))
+  .setTimeout(30)
+  .build();
+\`\`\`
+
+### 3. Transaction Throughput
+
+Protocol 27 increases the per-ledger transaction capacity:
+
+- **Classic transactions**: From 100 to 150 per ledger
+- **Soroban transactions**: From 20 to 30 per ledger
+- **Effective TPS increase**: ~50% more throughput at the consensus level
+
+This is part of SDF's roadmap toward 5,000 TPS. Each protocol upgrade incrementally raises the ceiling while validators confirm network stability.
+
+### 4. Fee Market Adjustments
+
+The fee market for Soroban transactions gets a smoother surge pricing curve:
+
+- Fees increase more gradually under load (less spiking)
+- Minimum fees for resource-heavy transactions decrease slightly
+- Fee estimation via \`simulateTransaction\` becomes more accurate
+
+## SDK Changes You Need to Make
+
+### JavaScript SDK
+
+Update to the latest version:
+
+\`\`\`bash
+npm install @stellar/stellar-sdk@latest
+\`\`\`
+
+Key changes:
+- New \`extendFootprintTtl\` options for batch operations
+- Updated resource estimation in \`simulateTransaction\` responses
+- New fields in transaction result metadata
+
+### Python SDK
+
+\`\`\`bash
+pip install stellar-sdk --upgrade
+\`\`\`
+
+### Breaking Changes
+
+| Change | What Breaks | Fix |
+|--------|------------|-----|
+| Resource limit increases | Nothing (limits go up) | No action needed |
+| Fee estimation changes | Hardcoded fee values | Use \`simulateTransaction\` instead |
+| New result metadata fields | Strict parsers may fail | Update parsing logic |
+| TTL extension API | Old single-key API still works | Optional: migrate to batch API |
+
+## Testing on Testnet
+
+The testnet is already running Protocol 27. Test your application now:
+
+\`\`\`javascript
+const TESTNET_HORIZON = 'https://horizon-testnet.stellar.org';
+const TESTNET_RPC = 'https://soroban-testnet.stellar.org';
+
+// Verify protocol version
+const res = await fetch(\`\${TESTNET_HORIZON}/ledgers?limit=1&order=desc\`);
+const ledger = (await res.json())._embedded.records[0];
+console.log('Protocol version:', ledger.protocol_version);
+// Should show 27 on testnet
+\`\`\`
+
+### What to Test
+
+1. **Transaction submission**: Ensure your transactions still succeed
+2. **Fee estimation**: Verify \`simulateTransaction\` returns correct fees
+3. **Resource usage**: Check if your contracts use the new resource limits
+4. **Event parsing**: Verify your event listeners handle any new fields
+5. **Error handling**: Test failure modes with the new protocol behavior
+
+## Timeline
+
+| Date | Event |
+|------|-------|
+| June 4, 2026 | SDF publishes Protocol 27 developer guide |
+| June 2026 | Testnet running Protocol 27 |
+| July 2026 (expected) | Mainnet validator vote |
+| After vote | Protocol 27 live on mainnet |
+
+## What Happens During the Vote
+
+1. SDF proposes the upgrade to validators
+2. Validators review and signal readiness
+3. A supermajority (67%+) must vote yes
+4. Once approved, the upgrade activates at the next ledger boundary
+5. All nodes must be running compatible software
+
+If you run a Stellar Core validator or Horizon node, you must upgrade your software before the vote. Running outdated software after the vote will cause your node to fall out of sync.
+
+## Impact on LumenQuery Users
+
+If you are using LumenQuery's Horizon API or Soroban RPC:
+
+- **No action required for most users**: LumenQuery will upgrade infrastructure before the mainnet vote
+- **New resource limits**: Your contracts may be able to do more per transaction
+- **Fee changes**: If you hardcode fees, switch to dynamic estimation
+- **New RPC methods**: Will be available through LumenQuery's RPC gateway after upgrade
+
+## Checklist Before the Vote
+
+- [ ] Update Stellar SDK to latest version
+- [ ] Test application on testnet with Protocol 27
+- [ ] Replace any hardcoded fee values with dynamic estimation
+- [ ] Update transaction result parsers for new metadata fields
+- [ ] If running a node: upgrade Stellar Core and Horizon
+- [ ] Review Soroban contracts for resource limit changes
+- [ ] Test TTL extension operations if using state archival
+
+---
+
+*Stay ahead of protocol upgrades. [LumenQuery](/auth/signup) manages infrastructure upgrades so you can focus on your application. Start free.*
+    `,
+  },
+  'circle-cctp-stellar-cross-chain-usdc': {
+    title: 'Circle CCTP on Stellar: How Cross-Chain USDC Transfers Change the Developer Opportunity',
+    date: '2026-06-09',
+    readTime: '11 min read',
+    category: 'Industry Insights',
+    content: `
+Circle's Cross-Chain Transfer Protocol (CCTP) went live on Stellar on May 19, 2026. This is a significant milestone: native USDC can now move between Stellar and other CCTP-supported chains without bridges, wrapping, or liquidity pools. For developers building on Stellar, this opens up cross-chain payment flows, multi-chain treasury management, and interoperability patterns that were previously complex or impossible.
+
+## What CCTP Is
+
+CCTP is Circle's protocol for moving native USDC between blockchains. Unlike bridges that lock tokens on one chain and mint wrapped versions on another, CCTP uses a burn-and-mint mechanism:
+
+1. **Burn**: USDC is burned on the source chain
+2. **Attest**: Circle's attestation service confirms the burn
+3. **Mint**: Native USDC is minted on the destination chain
+
+The result is that the USDC you receive on Stellar is native USDC issued by Circle on Stellar, not a bridged or wrapped token. This eliminates bridge risk entirely.
+
+## Why This Matters for Stellar
+
+Stellar already has over 2.1 million USDC holders. CCTP adds a new dimension:
+
+| Before CCTP | After CCTP |
+|------------|------------|
+| USDC enters Stellar via Circle mint or exchanges | USDC can flow in from any CCTP chain |
+| Cross-chain requires bridges with liquidity risk | Native burn-and-mint, no bridge risk |
+| Multi-chain apps need separate USDC pools | Single USDC standard across chains |
+| Stellar is a destination | Stellar becomes a hub |
+
+### Supported Chains
+
+CCTP connects Stellar to the broader USDC ecosystem:
+
+- Ethereum
+- Avalanche
+- Arbitrum
+- Optimism
+- Base
+- Polygon PoS
+- Solana
+- Noble (Cosmos)
+- **Stellar** (new)
+
+This means a user on Ethereum can send USDC to a Stellar address, and the recipient gets native Stellar USDC in seconds.
+
+## How CCTP Works on Stellar
+
+### Burn on Source Chain
+
+On the source chain (e.g., Ethereum), you call the CCTP \`depositForBurn\` function:
+
+\`\`\`javascript
+// Ethereum side: burn USDC for Stellar delivery
+const tx = await cctpContract.depositForBurn(
+  amount,           // USDC amount (in smallest unit)
+  stellarDomain,    // Stellar's CCTP domain identifier
+  mintRecipient,    // Stellar account address (32-byte format)
+  usdcAddress       // USDC contract address on source chain
+);
+\`\`\`
+
+### Attestation
+
+Circle's attestation service monitors the burn event and produces a signed attestation. This typically takes 10-20 minutes depending on the source chain's finality.
+
+### Mint on Stellar
+
+On Stellar, the attestation is submitted to the CCTP contract, which triggers a native USDC mint to the recipient's Stellar account:
+
+\`\`\`javascript
+// Stellar side: claim the minted USDC
+const HORIZON = 'https://horizon.stellar.org';
+
+// Monitor for incoming USDC payments
+const es = new EventSource(
+  \`\${HORIZON}/accounts/\${recipientAccount}/payments?cursor=now\`
+);
+
+es.onmessage = (event) => {
+  const payment = JSON.parse(event.data);
+  if (payment.asset_code === 'USDC' && payment.type === 'payment') {
+    console.log(\`Received \${payment.amount} USDC via CCTP\`);
+  }
+};
+\`\`\`
+
+## Developer Use Cases
+
+### 1. Cross-Chain Payment Gateway
+
+Accept USDC from any chain and settle on Stellar:
+
+\`\`\`javascript
+async function createCrossChainInvoice(amount, stellarRecipient) {
+  return {
+    amount,
+    recipient: stellarRecipient,
+    supportedChains: [
+      { chain: 'ethereum', domain: 0, estimatedTime: '15 min' },
+      { chain: 'avalanche', domain: 1, estimatedTime: '2 min' },
+      { chain: 'solana', domain: 5, estimatedTime: '3 min' },
+      { chain: 'stellar', domain: 8, estimatedTime: 'instant' },
+    ],
+    instructions: 'Send USDC on any supported chain. It will arrive as native USDC on Stellar.',
+  };
+}
+\`\`\`
+
+### 2. Multi-Chain Treasury Management
+
+DAOs and businesses can consolidate USDC from multiple chains onto Stellar for low-cost operations:
+
+- Collect revenue on Ethereum (high-value DeFi interactions)
+- Collect payments on Solana (consumer applications)
+- Consolidate to Stellar for treasury management (sub-cent fees)
+- Use Stellar's DEX for FX conversion if needed
+
+### 3. Remittance Corridors
+
+MoneyGram already uses Stellar for USDC-powered remittances. CCTP adds new on-ramps:
+
+- Users can send USDC from any chain
+- Settlement happens on Stellar (fast, cheap)
+- Recipients can cash out via MoneyGram's 500K+ agent locations
+
+### 4. DeFi Interoperability
+
+Soroban smart contracts on Stellar can now interact with cross-chain USDC:
+
+- Lending protocols can accept deposits from any chain
+- Yield strategies can source liquidity cross-chain
+- DEX aggregators can route through Stellar for efficiency
+
+## Monitoring CCTP Transfers
+
+Track cross-chain USDC flows using Horizon:
+
+\`\`\`javascript
+async function trackUSDCInflows(hours = 24) {
+  const HORIZON = 'https://horizon.stellar.org';
+  const USDC_ISSUER = 'GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN';
+
+  const cutoff = new Date(Date.now() - hours * 60 * 60 * 1000);
+  let totalVolume = 0;
+  let transferCount = 0;
+  let url = \`\${HORIZON}/payments?order=desc&limit=200\`;
+
+  while (url) {
+    const res = await fetch(url);
+    const data = await res.json();
+    const records = data._embedded.records;
+
+    let done = false;
+    for (const record of records) {
+      if (new Date(record.created_at) < cutoff) { done = true; break; }
+      if (record.asset_code === 'USDC' && record.asset_issuer === USDC_ISSUER) {
+        totalVolume += parseFloat(record.amount);
+        transferCount++;
+      }
+    }
+
+    if (done || records.length < 200) break;
+    url = data._links?.next?.href;
+  }
+
+  return { totalVolume, transferCount, periodHours: hours };
+}
+\`\`\`
+
+## Impact on the Stellar Ecosystem
+
+### Liquidity Depth
+
+More USDC flowing into Stellar means deeper liquidity for:
+- XLM/USDC trading pairs
+- Stablecoin-denominated DeFi on Soroban
+- Cross-border payment corridors
+
+### Developer Adoption
+
+CCTP lowers the barrier for developers who are already building on other chains:
+- No need to learn a new stablecoin standard
+- USDC is USDC, regardless of origin chain
+- Stellar's low fees become accessible without friction
+
+### Institutional Interest
+
+CCTP adds another reason for institutions to use Stellar:
+- Circle is a regulated, trusted issuer
+- Burn-and-mint eliminates bridge risk
+- Compliance-friendly (USDC maintains its regulatory properties across chains)
+
+## What LumenQuery Provides
+
+LumenQuery's infrastructure supports CCTP monitoring out of the box:
+
+- **Horizon API**: Track USDC payments, balances, and trustlines
+- **Analytics Dashboard**: Monitor USDC volume on [/analytics/tokens](/analytics/tokens)
+- **Live Transactions**: See CCTP settlements in real time on [/dashboard/transactions](/dashboard/transactions)
+- **Portfolio Intelligence**: Track USDC positions across accounts on [/portfolio](/portfolio)
+
+## Next Steps
+
+- Read Circle's [CCTP documentation](https://developers.circle.com/stablecoins/cctp-getting-started) for integration details
+- Monitor USDC flows on the [LumenQuery Analytics Dashboard](/analytics/tokens)
+- Explore the [API documentation](/docs) for Horizon endpoints
+
+---
+
+*Build cross-chain USDC applications on reliable infrastructure. [LumenQuery](/auth/signup) provides managed Horizon API and Soroban RPC with monitoring and analytics built in. Start free.*
+    `,
+  },
+  'dtcc-stellar-tokenized-securities-institutional-catalyst': {
+    title: "DTCC + Stellar: Why Tokenized Securities Could Become Stellar's Biggest Institutional Catalyst",
+    date: '2026-06-09',
+    readTime: '13 min read',
+    category: 'Industry Insights',
+    content: `
+On May 27, 2026, DTCC announced that DTC-tokenized assets are expected to become available on Stellar in the first half of 2027. The potential asset classes include Russell 1000 constituents, ETFs, and U.S. Treasuries. This is not a proof of concept or a pilot program. This is the largest post-trade infrastructure provider in the world choosing Stellar as a settlement layer for tokenized securities.
+
+## What DTCC Is
+
+If you are not from traditional finance, here is why this matters: DTCC (Depository Trust & Clearing Corporation) processes virtually all U.S. securities transactions. In 2025, DTCC settled over $2.5 quadrillion in securities. Its subsidiary DTC (Depository Trust Company) holds custody of nearly all U.S. stocks and bonds.
+
+When DTCC decides to tokenize assets and put them on a blockchain, the scale is not comparable to a DeFi protocol launching a new token. This is the backbone of U.S. capital markets exploring on-chain settlement.
+
+## What Was Announced
+
+| Detail | Description |
+|--------|-------------|
+| **Who** | DTCC / DTC (Depository Trust Company) |
+| **What** | DTC-tokenized assets available on Stellar |
+| **When** | Expected 1H 2027 |
+| **Asset classes** | Russell 1000 stocks, ETFs, U.S. Treasuries |
+| **Mechanism** | DTC-issued tokens representing custody positions |
+| **Settlement** | On-chain settlement on Stellar |
+
+## Why Stellar
+
+DTCC did not choose Stellar randomly. Several properties make it suitable for institutional securities:
+
+### 1. Deterministic Finality
+
+Stellar transactions are final within 5 seconds. There are no chain reorganizations, no probabilistic finality, no waiting for block confirmations. For securities settlement, this matters: T+0 is only possible if the settlement layer guarantees finality.
+
+### 2. Compliance-Native Architecture
+
+Stellar has built-in features that regulated assets require:
+
+\`\`\`
+AUTH_REQUIRED     - Accounts must be approved before holding the asset
+AUTH_REVOCABLE    - Issuer can freeze accounts (regulatory freeze)
+AUTH_CLAWBACK     - Issuer can recover tokens (court orders, errors)
+\`\`\`
+
+These are not smart contract add-ons. They are protocol-level features that every Stellar node enforces. DTCC does not need to trust a smart contract — the network itself enforces compliance.
+
+### 3. Low and Predictable Fees
+
+Securities settlement involves millions of transactions. Stellar's base fee is 100 stroops (0.00001 XLM), making high-volume settlement economically viable. At current XLM prices, settling a million transactions costs roughly $1.60.
+
+### 4. Regulatory Track Record
+
+Stellar is one of the few blockchain networks where the native token (XLM) has been classified as a commodity by regulators, not a security. This matters for institutional adoption — using a network whose token might be classified as a security creates legal risk.
+
+### 5. Existing Institutional Adoption
+
+Stellar already hosts significant institutional activity:
+
+- **Franklin Templeton BENJI**: First U.S.-registered money market fund on a public blockchain (5 years on Stellar)
+- **USDC**: 2.1M+ holders, primary settlement asset for MoneyGram remittances
+- **Tokenized RWAs**: $2B+ in on-chain real-world assets as of Q1 2026
+- **MiCAR-compliant EURAU**: Euro stablecoin for European institutional settlement
+
+## What Tokenized Securities on Stellar Look Like
+
+When DTCC brings tokenized securities to Stellar, they will likely function as Stellar assets with the following properties:
+
+\`\`\`javascript
+// Conceptual representation of a DTC-tokenized security
+const tokenizedSecurity = {
+  assetCode: 'AAPL',           // Or a proprietary code
+  issuer: 'GDTCC...',          // DTC's Stellar issuing account
+  authRequired: true,          // Only approved accounts can hold
+  authRevocable: true,         // Can freeze for regulatory compliance
+  clawbackEnabled: true,       // Can recover tokens if needed
+  homeDomain: 'dtcc.com',      // Verifiable issuer identity
+};
+\`\`\`
+
+### Trading and Settlement
+
+The Stellar DEX (decentralized exchange) could facilitate trading of tokenized securities:
+
+\`\`\`javascript
+// Query available offers for a tokenized security
+const HORIZON = 'https://horizon.stellar.org';
+
+async function getOrderBook(assetCode, assetIssuer) {
+  const res = await fetch(
+    \`\${HORIZON}/order_book?selling_asset_type=credit_alphanum4&selling_asset_code=\${assetCode}&selling_asset_issuer=\${assetIssuer}&buying_asset_type=native\`
+  );
+  return res.json();
+}
+\`\`\`
+
+### Corporate Actions
+
+Dividends, stock splits, and other corporate actions can be executed as Stellar operations:
+
+- **Dividends**: Payment operations to all token holders
+- **Stock splits**: Issuer mints additional tokens proportionally
+- **Voting**: Could use Stellar's data operations or Soroban contracts
+
+## Impact on Developers
+
+### New API Use Cases
+
+If you are building on the Horizon API or Soroban RPC, tokenized securities create new data to query:
+
+| Endpoint | Use Case |
+|----------|----------|
+| \`/assets\` | List tokenized securities and their properties |
+| \`/accounts/{id}/offers\` | View open orders for securities |
+| \`/order_book\` | Real-time bid/ask for tokenized stocks |
+| \`/trades\` | Historical trade data for securities |
+| \`/payments\` | Track dividend distributions |
+| \`/operations\` | Monitor corporate actions |
+
+### Compliance Requirements
+
+Applications that interact with tokenized securities will need:
+
+1. **KYC/AML integration**: Only verified accounts can hold securities
+2. **Accredited investor checks**: Some securities may have investor requirements
+3. **Transaction reporting**: Trade reporting obligations (SEC, FINRA)
+4. **Audit trails**: Complete transaction history for regulatory examination
+
+LumenQuery's [Transaction Intelligence](/intelligence) and [Portfolio Intelligence](/portfolio) features are designed for exactly these use cases.
+
+## Market Size
+
+To understand the scale of what DTCC could bring to Stellar:
+
+| Asset Class | Approximate Market Size |
+|-------------|------------------------|
+| Russell 1000 stocks | ~$45 trillion market cap |
+| U.S. ETFs | ~$10 trillion AUM |
+| U.S. Treasuries | ~$27 trillion outstanding |
+| Total addressable | ~$82 trillion |
+
+Even if a fraction of a percent of these assets moves on-chain, it would dwarf all current blockchain activity combined.
+
+## Timeline and What to Watch
+
+| Timeframe | Expected Development |
+|-----------|---------------------|
+| Q3-Q4 2026 | DTCC testnet integration, developer previews |
+| Q1 2027 | Pilot program with select asset classes |
+| 1H 2027 | General availability of DTC-tokenized assets on Stellar |
+| 2H 2027+ | Expansion to additional asset classes |
+
+### Signals to Watch
+
+- DTCC developer documentation for Stellar integration
+- New asset issuance from DTC-affiliated Stellar accounts
+- Regulatory guidance on blockchain-based securities settlement
+- Stellar protocol upgrades to support institutional requirements
+
+## What This Means for XLM
+
+Every tokenized security transaction on Stellar requires XLM for fees and reserves. If even a small fraction of U.S. securities settlement moves to Stellar:
+
+- **Transaction fees**: Millions of settlement transactions per day
+- **Base reserves**: Each account holding securities needs XLM reserves
+- **Trustline reserves**: Each security held requires a trustline (0.5 XLM reserve)
+- **Network usage**: Dramatically increased demand for Stellar throughput
+
+This is why SDF's roadmap to 5,000 TPS is not aspirational — it may be necessary to handle institutional settlement volumes.
+
+## Building for This Future
+
+Developers who want to be ready when tokenized securities arrive on Stellar should:
+
+1. **Build with compliance in mind**: See our guide on [building compliance-friendly Stellar apps](/blog/building-compliance-friendly-stellar-apps)
+2. **Understand Stellar's asset model**: Assets with authorization flags, clawback, and controlled access
+3. **Monitor the API**: Use LumenQuery's [Analytics Dashboard](/analytics) to track new asset issuance
+4. **Build portfolio tools**: Institutions will need portfolio tracking, P&L, and risk analysis
+
+---
+
+*Position your application for institutional-grade Stellar. [LumenQuery](/auth/signup) provides the API infrastructure, analytics, and monitoring tools that regulated asset platforms need. Start free.*
+    `,
+  },
+  'alchemy-stellar-rpc-infrastructure-competition': {
+    title: 'Alchemy Adds Stellar Support: What It Means for RPC Infrastructure Competition',
+    date: '2026-06-09',
+    readTime: '10 min read',
+    category: 'Industry Insights',
+    content: `
+On April 16, 2026, Alchemy announced support for the Stellar network. Alchemy is one of the largest blockchain infrastructure providers, serving over 100 million end users across Ethereum, Solana, Polygon, and other chains. Adding Stellar to their platform is a validation of the network's growing developer demand and a signal that the RPC infrastructure market for Stellar is maturing.
+
+## What Alchemy Announced
+
+Alchemy's Stellar support includes:
+
+- **Horizon API access**: Proxied access to Stellar's historical data API
+- **Soroban RPC access**: JSON-RPC endpoints for smart contract interactions
+- **Enhanced APIs**: Alchemy's proprietary APIs for transfers, balances, and token metadata
+- **Dashboard**: Usage analytics, alerts, and webhook integrations
+
+This puts Alchemy alongside the existing options for managed Stellar infrastructure: SDF's public endpoints, Blockdaemon, Validation Cloud, and LumenQuery.
+
+## The RPC Infrastructure Landscape for Stellar
+
+Before Alchemy's entry, Stellar developers had several options:
+
+| Provider | Horizon API | Soroban RPC | Rate Limits | Pricing |
+|----------|------------|-------------|-------------|---------|
+| **SDF Public** | Yes | Yes | ~5 req/s | Free |
+| **Self-hosted** | Yes | Yes | Unlimited | Server costs |
+| **Blockdaemon** | Yes | Yes | Tier-based | Enterprise |
+| **Validation Cloud** | Yes | Yes | Tier-based | Enterprise |
+| **LumenQuery** | Yes | Yes | Tier-based | From $0/mo |
+| **Alchemy** (new) | Yes | Yes | Tier-based | From $0/mo |
+
+Alchemy's entry validates that Stellar has enough developer demand to justify investment from a major infrastructure player.
+
+## How Alchemy Compares
+
+### Strengths
+
+1. **Multi-chain experience**: Alchemy has years of experience running blockchain infrastructure at scale
+2. **Developer tooling**: Webhooks, enhanced APIs, and monitoring dashboards
+3. **Brand recognition**: Many developers already use Alchemy for Ethereum
+4. **Scale**: Infrastructure designed for billions of requests
+
+### Considerations
+
+1. **Stellar-specific features**: Alchemy's enhanced APIs are primarily designed for EVM chains. Stellar-specific features like DEX order books, path payments, and asset authorization may not be fully covered
+2. **Soroban depth**: Stellar's smart contract platform has unique characteristics (state archival, TTL management) that generic infrastructure may not optimize for
+3. **Pricing at scale**: Alchemy's compute unit pricing can become expensive for high-volume Stellar applications
+4. **Support for Stellar idioms**: Features like streaming (SSE), cursor-based pagination, and Stellar-specific error handling
+
+## What This Means for Developers
+
+### More Choice Is Good
+
+Competition drives better infrastructure:
+
+- **Better uptime**: Providers compete on reliability
+- **Lower prices**: More competition pushes costs down
+- **Better features**: Each provider differentiates with unique capabilities
+- **Less vendor lock-in**: Standard APIs make switching easier
+
+### Choose Based on Your Needs
+
+| If You Need... | Consider |
+|-----------------|----------|
+| Multi-chain support (Ethereum + Stellar) | Alchemy |
+| Stellar-specific analytics and monitoring | LumenQuery |
+| Enterprise SLA with dedicated support | Blockdaemon, Validation Cloud |
+| Free tier for prototyping | SDF Public, LumenQuery, Alchemy |
+| Soroban contract explorer and decoded data | LumenQuery |
+| Maximum control | Self-hosted |
+
+## The Case for Stellar-Focused Infrastructure
+
+Generic multi-chain providers serve a broad market. Stellar-focused providers like LumenQuery serve the Stellar market deeply. The difference shows up in several areas:
+
+### 1. Analytics and Monitoring
+
+LumenQuery provides [Stellar network analytics](/analytics) out of the box: TPS, ledger health, fee trends, token velocity, and whale tracking. Generic providers typically offer request-level metrics (how many API calls you made) but not network-level insights.
+
+### 2. Smart Contract Explorer
+
+LumenQuery's [Soroban Pro](/contracts) decodes XDR, shows human-readable contract calls, provides storage viewers, and streams contract events. This is Stellar-specific tooling that generic providers do not offer.
+
+### 3. Transaction Intelligence
+
+Real-time [transaction monitoring](/intelligence) with decoded operations, watchlists, and alerts designed for Stellar's operation types. A generic webhook service does not understand Stellar's path payments, trustline changes, or Soroban invocations.
+
+### 4. Portfolio and Compliance
+
+[Portfolio Intelligence](/portfolio) and compliance tools designed for Stellar's asset model, including trustline risk assessment, multi-account aggregation, and yield tracking from Soroban DeFi.
+
+## Impact on the Stellar Ecosystem
+
+### Validation
+
+Alchemy entering the Stellar market is a strong signal:
+
+- Stellar has enough developer demand to justify investment
+- The Soroban smart contract platform is attracting multi-chain developers
+- RWA tokenization on Stellar is creating enterprise infrastructure demand
+- SDF's ecosystem growth strategy is working
+
+### Developer Growth
+
+More infrastructure options lower the barrier to building on Stellar:
+
+- Ethereum developers already using Alchemy can add Stellar features with minimal friction
+- Multi-chain applications can use a single provider for both chains
+- Better infrastructure attracts more developers, creating a positive feedback loop
+
+### What Comes Next
+
+If history repeats from the Ethereum infrastructure market:
+
+1. **More providers enter**: QuickNode, Infura, and others may follow
+2. **Prices decrease**: Competition pushes free tiers higher and paid tiers lower
+3. **Features converge**: Basic API access becomes commoditized
+4. **Specialization wins**: Providers differentiate through unique features and domain expertise
+
+## How to Evaluate RPC Providers
+
+When choosing infrastructure for your Stellar application:
+
+\`\`\`
+1. Latency        - How fast are responses? (< 100ms for cached, < 500ms for uncached)
+2. Uptime         - What is the SLA? (99.9% minimum for production)
+3. Rate limits    - Do limits match your usage pattern?
+4. Stellar depth  - Does the provider understand Stellar-specific features?
+5. Pricing        - What does it cost at your expected scale?
+6. Support        - Can you get help when something breaks?
+7. Tooling        - Analytics, monitoring, debugging tools?
+8. Lock-in risk   - How easy is it to switch providers?
+\`\`\`
+
+Since Horizon and Soroban RPC have standard APIs, switching providers is straightforward — just change the base URL. The differentiator is everything above and beyond the raw API: analytics, monitoring, decoded data, and developer experience.
+
+## LumenQuery's Position
+
+LumenQuery was built for Stellar from day one. While we welcome competition from Alchemy and others, our focus remains on being the best infrastructure provider for teams building specifically on Stellar:
+
+- **Managed Horizon API** with sub-100ms response times
+- **Soroban RPC** with contract deployment and decoded event streaming
+- **Network analytics** with real-time metrics and historical data
+- **Developer tools** including natural language queries, portfolio tracking, and transaction monitoring
+
+---
+
+*Build on Stellar with infrastructure that understands the network. [LumenQuery](/auth/signup) provides managed Horizon API, Soroban RPC, analytics, and monitoring designed specifically for Stellar developers. Start free.*
+    `,
+  },
   'build-stellar-payment-status-page-lumenquery-apis': {
     title: 'How to Build a Stellar Payment Status Page with LumenQuery APIs',
     date: '2026-06-08',
