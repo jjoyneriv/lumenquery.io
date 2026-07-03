@@ -10,7 +10,7 @@ export default function Footer({ variant = 'simple' }: FooterProps) {
     return (
       <footer className="bg-[#1D1E26] py-8 sm:py-12 px-4 sm:px-6 border-t border-white/10">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6 sm:gap-8 mb-8">
             <div className="col-span-2 md:col-span-1">
               <div className="flex items-center gap-2 mb-4">
                 <Image
@@ -49,11 +49,21 @@ export default function Footer({ variant = 'simple' }: FooterProps) {
               </ul>
             </div>
             <div>
+              <h4 className="font-semibold mb-3 sm:mb-4 text-white">Company</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><Link href="/status" className="hover:text-[#7366FF]">Status</Link></li>
+                <li><Link href="/security" className="hover:text-[#7366FF]">Security</Link></li>
+                <li><Link href="/sla" className="hover:text-[#7366FF]">SLA</Link></li>
+                <li><Link href="/changelog" className="hover:text-[#7366FF]">Changelog</Link></li>
+                <li><Link href="/enterprise" className="hover:text-[#7366FF]">Enterprise</Link></li>
+                <li><Link href="/contact" className="hover:text-[#7366FF]">Contact</Link></li>
+              </ul>
+            </div>
+            <div>
               <h4 className="font-semibold mb-3 sm:mb-4 text-white">Resources</h4>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li><a href="https://developers.stellar.org" target="_blank" rel="noopener noreferrer" className="hover:text-[#7366FF]">Stellar Docs</a></li>
                 <li><a href="https://stellar.org" target="_blank" rel="noopener noreferrer" className="hover:text-[#7366FF]">Stellar.org</a></li>
-                <li><a href="mailto:support@lumenquery.io" className="hover:text-[#7366FF]">Contact Us</a></li>
                 <li><Link href="/dashboard" className="hover:text-[#7366FF]">Dashboard</Link></li>
                 <li><Link href="/sitemap.xml" className="hover:text-[#7366FF]">Sitemap</Link></li>
               </ul>

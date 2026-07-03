@@ -51,6 +51,13 @@ const SITEMAP_URLS = [
   '/xlm-whale-alerts',
   '/stellar-api-rate-limits',
   '/stellar-api-provider-comparison',
+  // Company/trust pages
+  '/status',
+  '/sla',
+  '/security',
+  '/changelog',
+  '/contact',
+  '/enterprise',
   // Blog
   '/blog',
   '/blog/stellar-quantum-preparedness-post-quantum-soroban',

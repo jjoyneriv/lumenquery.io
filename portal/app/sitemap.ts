@@ -150,6 +150,46 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
+  // Trust/company pages
+  const companyPages: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/status`,
+      lastModified: today,
+      changeFrequency: 'daily',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/sla`,
+      lastModified: today,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/security`,
+      lastModified: today,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/changelog`,
+      lastModified: today,
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/contact`,
+      lastModified: today,
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/enterprise`,
+      lastModified: today,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+  ];
+
   // Blog listing
   const blogListing: MetadataRoute.Sitemap = [
     {
@@ -567,6 +607,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...analyticsPages,
     ...contractsPages,
     ...seoLandingPages,
+    ...companyPages,
     ...blogListing,
     ...blogPosts,
   ];
