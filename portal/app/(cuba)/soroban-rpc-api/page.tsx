@@ -440,6 +440,29 @@ console.log('Min Fee:', result.minResourceFee); // Minimum fee in stroops`}</cod
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'SoftwareApplication',
+          name: 'LumenQuery',
+          applicationCategory: 'DeveloperApplication',
+          operatingSystem: 'Web',
+          url: 'https://lumenquery.io/soroban-rpc-api',
+          description: 'Soroban RPC API for smart contract development, event querying, transaction simulation, and contract monitoring.',
+          offers: {
+            '@type': 'Offer',
+            price: '0',
+            priceCurrency: 'USD',
+            description: 'Free tier available',
+            url: 'https://lumenquery.io/pricing',
+          },
+          softwareHelp: {
+            '@type': 'CreativeWork',
+            url: 'https://lumenquery.io/docs',
+          },
+        }) }}
+      />
     </>
   );
 }

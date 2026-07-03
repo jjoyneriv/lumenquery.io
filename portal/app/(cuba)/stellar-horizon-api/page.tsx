@@ -452,6 +452,29 @@ account.balances.forEach(balance => {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'SoftwareApplication',
+          name: 'LumenQuery',
+          applicationCategory: 'DeveloperApplication',
+          operatingSystem: 'Web',
+          url: 'https://lumenquery.io/stellar-horizon-api',
+          description: 'Stellar Horizon API for querying accounts, transactions, payments, assets, and ledgers with production-ready infrastructure.',
+          offers: {
+            '@type': 'Offer',
+            price: '0',
+            priceCurrency: 'USD',
+            description: 'Free tier available',
+            url: 'https://lumenquery.io/pricing',
+          },
+          softwareHelp: {
+            '@type': 'CreativeWork',
+            url: 'https://lumenquery.io/docs',
+          },
+        }) }}
+      />
     </>
   );
 }

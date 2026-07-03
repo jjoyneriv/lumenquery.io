@@ -406,6 +406,29 @@ export default function StellarRpcProviderPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'SoftwareApplication',
+          name: 'LumenQuery',
+          applicationCategory: 'DeveloperApplication',
+          operatingSystem: 'Web',
+          url: 'https://lumenquery.io/stellar-rpc-provider',
+          description: 'Managed Stellar RPC provider with Horizon API and Soroban RPC access for production applications.',
+          offers: {
+            '@type': 'Offer',
+            price: '0',
+            priceCurrency: 'USD',
+            description: 'Free tier available',
+            url: 'https://lumenquery.io/pricing',
+          },
+          softwareHelp: {
+            '@type': 'CreativeWork',
+            url: 'https://lumenquery.io/docs',
+          },
+        }) }}
+      />
     </>
   );
 }

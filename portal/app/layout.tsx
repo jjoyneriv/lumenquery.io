@@ -87,6 +87,24 @@ export default function RootLayout({
             }),
           }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              name: 'LumenQuery',
+              url: 'https://lumenquery.io',
+              logo: 'https://lumenquery.io/logo.png',
+              description: 'Enterprise Stellar Horizon API and Soroban RPC infrastructure for developers. Blockchain analytics, transaction monitoring, and smart contract tools for the Stellar network.',
+              contactPoint: {
+                '@type': 'ContactPoint',
+                email: 'support@lumenquery.io',
+                contactType: 'customer support',
+              },
+            }),
+          }}
+        />
       </head>
       <body className={rubik.className}>
         <Providers>{children}</Providers>

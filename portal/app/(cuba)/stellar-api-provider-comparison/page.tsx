@@ -94,6 +94,29 @@ export default function StellarApiProviderComparisonPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'SoftwareApplication',
+          name: 'LumenQuery',
+          applicationCategory: 'DeveloperApplication',
+          operatingSystem: 'Web',
+          url: 'https://lumenquery.io/stellar-api-provider-comparison',
+          description: 'Compare Stellar API providers across Horizon support, Soroban RPC, rate limits, analytics, and pricing.',
+          offers: {
+            '@type': 'Offer',
+            price: '0',
+            priceCurrency: 'USD',
+            description: 'Free tier available',
+            url: 'https://lumenquery.io/pricing',
+          },
+          softwareHelp: {
+            '@type': 'CreativeWork',
+            url: 'https://lumenquery.io/docs',
+          },
+        }) }}
+      />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
         {/* Breadcrumb */}
