@@ -98,34 +98,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Developer guides (SEO anchor pages)
-  const guidePages: MetadataRoute.Sitemap = [
-    {
-      url: `${baseUrl}/guides/stellar-rpc-guide`,
-      lastModified: today,
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/guides/stellar-api-tutorial`,
-      lastModified: today,
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/guides/horizon-vs-rpc-vs-indexers`,
-      lastModified: today,
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/guides/lumenquery-tutorial`,
-      lastModified: today,
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
-  ];
-
   // Blog listing
   const blogListing: MetadataRoute.Sitemap = [
     {
@@ -542,7 +514,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...docPages,
     ...analyticsPages,
     ...contractsPages,
-    ...guidePages,
     ...blogListing,
     ...blogPosts,
   ];

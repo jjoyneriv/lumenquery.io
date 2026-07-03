@@ -42,11 +42,6 @@ const SITEMAP_URLS = [
   '/analytics/tokens',
   // Contracts
   '/contracts',
-  // Guides
-  '/guides/stellar-rpc-guide',
-  '/guides/stellar-api-tutorial',
-  '/guides/horizon-vs-rpc-vs-indexers',
-  '/guides/lumenquery-tutorial',
   // Blog
   '/blog',
   '/blog/stellar-quantum-preparedness-post-quantum-soroban',
