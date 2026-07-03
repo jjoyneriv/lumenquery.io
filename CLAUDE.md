@@ -1,29 +1,22 @@
 # Project Context
 
 ## Current Status
-- Working on: Natural language query feature
-- Last session: 2026-03-13
-- Last validated: 2026-03-13 (query feature deployed)
-- All services: 12 containers running healthy
-- Stellar Horizon: Fixed database connection (184.105.230.250)
-- Transaction Viewer: Fixed with public Horizon API fallback
-- Analytics API: Fixed with public Horizon fallback
-- Live Transaction Viewer: Implementation complete, SSE route fix deployed
-- Admin Console: Implementation complete, deployed, SUPER_ADMIN only access
-- Blog Posts: 12 articles (4 new SEO-optimized posts added)
+- Working on: Infrastructure cleanup, blog content, SEO
+- Last session: 2026-07-03
+- Last validated: 2026-07-03
+- All services: 11 containers running (stellar-horizon removed)
+- Stellar Horizon: Removed (not needed, all services use public Horizon API)
+- Database: PostgreSQL 33 tables (10 orphaned compliance tables removed)
+- Blog Posts: 63+ articles (4 new posts added 2026-07-03)
 - Portfolio Intelligence: Implementation complete, deployed, documentation complete
 - Soroban Pro: Implementation complete, deployed, documentation complete
-- Contract Deployment: Implementation complete, Freighter wallet integration, WASM upload
-- Natural Language Query: Implementation complete, deployed, 9 query types, all 6 examples validated
-- Compliance & AML: **REMOVED** (feature completely removed from codebase)
+- Compliance & AML: REMOVED (code, schema, and database tables all cleaned up)
 - Transaction Intelligence: Documentation complete
 - Stellar Network Analytics: Documentation complete
-- SEO Optimization: Complete, ready for Google indexing
+- SEO: Sitemap updated (80 URLs), submitted to Google + Bing, 84 URLs submitted for indexing
+- Google Index Status: 1 indexed, 16 crawled-not-indexed, 67 unknown (as of 2026-07-03)
 - Performance: Gzip compression enabled, Core Web Vitals optimized
-- Forgot Password: Implementation complete, deployed
-- Analytics Charts: Fixed (24h only, removed 7d/30d due to performance)
-- Analytics Performance: Optimized (1.5s uncached, 47ms cached, page loads in 0.6s)
-- Authentication: NextAuth v5 migration complete, login working
+- Disk: Freed 115GB by removing /opt/stellar/ directory
 
 ## Service Status (api1.lumenquery.io)
 
@@ -31,7 +24,6 @@
 | Service | Status | Ports |
 |---------|--------|-------|
 | soroban-rpc | ✅ Running | Internal |
-| stellar-horizon | ✅ Healthy | 127.0.0.1:8000, 127.0.0.1:6060 |
 | lumenquery-portal | ✅ Running | 0.0.0.0:3000 |
 | lumenquery-postgres | ✅ Healthy | 0.0.0.0:5432 |
 | lumenquery-redis | ✅ Healthy | 0.0.0.0:6379 |
@@ -51,12 +43,10 @@
 
 | Database | Type | Location | Status |
 |----------|------|----------|--------|
-| Captive Core | SQLite | `/opt/stellar/captive-core/captive-core/stellar.db` | ✅ 375 MB |
-| LumenQuery | PostgreSQL | lumenquery-postgres:5432 | ✅ Healthy (40 tables) |
+| LumenQuery | PostgreSQL | lumenquery-postgres:5432 | ✅ Healthy (33 tables) |
 | LumenQuery Cache | Redis | lumenquery-redis:6379 | ✅ Healthy |
-| Horizon (remote) | PostgreSQL | 184.105.230.246:5432 | ❌ Unreachable (connection refused) |
 
-**Note:** Local Horizon instance cannot reach its remote PostgreSQL database. Analytics API has been configured to fallback to public Stellar Horizon API (https://horizon.stellar.org).
+**Note:** All Horizon API calls use the public Stellar Horizon API (https://horizon.stellar.org). Local Horizon instance was removed (2026-07-03).
 
 ## Firewall Configuration (api1)
 
@@ -97,9 +87,7 @@
 ├── soroban-rpc/                 # Soroban RPC service
 │   ├── docker-compose.yml
 │   └── config/
-├── stellar/                     # Stellar infrastructure
-│   ├── captive-core/
-│   └── horizon/
+├── stellar/                     # Stellar infrastructure (legacy configs)
 └── .claude/                     # Claude configuration
 ```
 
@@ -121,7 +109,7 @@
 ### Infrastructure
 - **Reverse Proxy**: Traefik
 - **Containers**: Docker & Docker Compose
-- **Blockchain**: Stellar Captive Core, Soroban RPC
+- **Blockchain**: Soroban RPC, Public Stellar Horizon API
 - **Monitoring**: Prometheus + Grafana
 
 ## Source Code Locations
@@ -133,11 +121,16 @@
 | Analytics Components | `/opt/lumenquery-portal/portal/components/analytics/` | MetricCard, AreaChart, TimeRangeSelector |
 | Analytics Pages | `/opt/lumenquery-portal/portal/app/analytics/` | Public analytics dashboard |
 | Analytics API | `/opt/lumenquery-portal/portal/app/api/analytics/` | Network metrics API endpoint |
+| Compliance Components | `/opt/lumenquery-portal/portal/components/compliance/` | ViolationTable, RuleCard, StatusCard |
+| Compliance Pages | `/opt/lumenquery-portal/portal/app/compliance/` | Compliance dashboard |
+| Compliance API | `/opt/lumenquery-portal/portal/app/api/compliance/` | Rules, violations, reports API |
+| Compliance Lib | `/opt/lumenquery-portal/portal/lib/compliance/` | Rules engine, evaluators, audit |
 | Intelligence Components | `/opt/lumenquery-portal/portal/components/intelligence/` | WatchlistTable, AlertTable, TrustlineMonitor |
 | Intelligence Pages | `/opt/lumenquery-portal/portal/app/intelligence/` | Intelligence dashboard |
 | Intelligence API | `/opt/lumenquery-portal/portal/app/api/intelligence/` | Watchlists, alerts, stream API |
 | Intelligence Docs | `/opt/lumenquery-portal/portal/app/docs/intelligence/` | Transaction Intelligence documentation |
 | Analytics Docs | `/opt/lumenquery-portal/portal/app/docs/analytics/` | Stellar Network Analytics documentation |
+| Compliance Docs | `/opt/lumenquery-portal/portal/app/docs/compliance/` | Compliance & AML documentation |
 | Contracts Docs | `/opt/lumenquery-portal/portal/app/docs/contracts/` | Soroban Smart Contracts Explorer documentation |
 | Portfolio Docs | `/opt/lumenquery-portal/portal/app/docs/portfolio/` | Portfolio Intelligence documentation |
 | Portfolio Components | `/opt/lumenquery-portal/portal/components/portfolio/` | PortfolioNav, PortfolioSummary, AssetTable |
@@ -148,9 +141,6 @@
 | Admin Pages | `/opt/lumenquery-portal/portal/app/admin/` | Admin dashboard and management pages |
 | Admin API | `/opt/lumenquery-portal/portal/app/api/admin/` | Users, usage, audit log endpoints |
 | Admin Lib | `/opt/lumenquery-portal/portal/lib/admin/` | Admin guards, audit logging utilities |
-| Query Page | `/opt/lumenquery-portal/portal/app/query/` | Natural language query interface |
-| Query API | `/opt/lumenquery-portal/portal/app/api/query/` | Query execution endpoint |
-| Query Lib | `/opt/lumenquery-portal/portal/lib/query/` | Parser, executor, types for NL queries |
 | Jobs System | `/opt/lumenquery-portal/portal/lib/jobs/` | Background job queue and workers |
 | Notifications | `/opt/lumenquery-portal/portal/lib/notifications/` | Email, Slack, webhook channels |
 | Portal Lib | `/opt/lumenquery-portal/portal/lib/` | Auth, Prisma, rate-limit, Redis utilities |
@@ -164,6 +154,11 @@
 
 | Slug | Title | Date |
 |------|-------|------|
+| stellar-quantum-preparedness-post-quantum-soroban | Stellar's Quantum Preparedness Plan: How Developers Should Audit Signatures Before Post-Quantum Soroban | 2026-07-03 |
+| open-usd-consortium-visa-blackrock-stellar-stablecoin | Inside the Open USD Consortium: What Visa and BlackRock's Stellar Stablecoin Means for Payment Developers | 2026-07-03 |
+| erc-3643-compliant-security-tokens-stellar | Building Compliant Security Tokens on Stellar with ERC-3643 | 2026-07-03 |
+| stellar-2b-rwa-tokenized-asset-analytics-dashboard | Tracking Stellar's $2B RWA Milestone On-Chain: Build a Tokenized-Asset Analytics Dashboard | 2026-07-03 |
+| (59 earlier posts) | See blog listing page for full list | 2026-01-25 to 2026-06-09 |
 | build-stellar-blockchain-explorer-horizon-api | How to Build a Stellar Blockchain Explorer Using Horizon API | 2026-02-13 |
 | soroban-json-rpc-explained | Soroban JSON RPC Explained: How to Query Smart Contracts on Stellar | 2026-02-13 |
 | best-stellar-api-providers-2026 | Best Stellar API Providers in 2026 (Comparison Guide) | 2026-02-13 |
@@ -178,8 +173,8 @@
 | getting-started-with-lumenquery | Getting Started with LumenQuery | 2026-01-25 |
 
 **Blog files:**
-- Listing: `/opt/lumenquery-portal/portal/app/blog/page.tsx`
-- Content: `/opt/lumenquery-portal/portal/app/blog/[slug]/page.tsx`
+- Listing: `/opt/lumenquery-portal/portal/app/(cuba)/blog/page.tsx`
+- Content: `/opt/lumenquery-portal/portal/app/(cuba)/blog/[slug]/page.tsx`
 
 ## Repository Status
 
@@ -350,8 +345,7 @@ docker compose up -d
 | `/opt/lumenquery-portal/traefik/dynamic.yml` | Routing + security |
 | `/opt/lumenquery-portal/monitoring/docker-compose.yml` | Monitoring stack (mon1) |
 | `/opt/lumenquery-portal/monitoring/exporters-docker-compose.yml` | Exporters (api1) |
-| `/opt/soroban-rpc/docker-compose.yml` | Soroban RPC |
-| `/opt/stellar/horizon/docker-compose.yml` | Stellar Horizon |
+| `/opt/soroban-rpc/docker-compose.yml` | Soroban RPC (self-contained with embedded Captive Core) |
 
 ## Production Checklist
 
@@ -916,382 +910,76 @@ docker compose up -d
    - Created .gitignore for captive-core data directories
    - Initial commit with horizon/docker-compose.yml
    - Pending: Create GitHub remote repository
-8. Fixed /analytics overview page time range switching:
-   - Issue: Charts didn't update when selecting 7d or 30d time ranges
-   - Root cause: Stale closure bug - fetchMetrics captured old timeRange value
-   - Fix: Moved fetchMetrics inside useEffect and pass timeRange as parameter
-   - Also set loading state on time range change for better UX
-9. Improved AreaChart x-axis formatting:
-   - 24h: Shows hours only (e.g., "2:00 PM")
-   - 7d: Shows date and hour (e.g., "Feb 14, 12 AM")
-   - 30d: Shows date only (e.g., "Feb 14")
-   - Automatically detects data span to choose appropriate format
-10. Enhanced transaction viewer with Soroban highlighting:
-    - Soroban operations (invoke_host_function, etc.) now have white badge
-    - Transactions with Soroban operations have highlighted border
-11. Fixed contracts API error handling:
-    - getEvents now handles errors gracefully for contracts without events
-12. Committed and pushed all fixes to GitHub
-13. Fixed analytics charts not re-rendering on 30d time range:
-    - Issue: Charts weren't visually updating when switching to 7d or 30d
-    - Root cause: SVG gradient ID conflicts and React not re-rendering charts
-    - Fix: Added unique gradient IDs per chart using chartId prop
-    - Fix: Added React key prop to force chart re-creation on timeRange change
-    - Verified API returns correct data for all ranges:
-      - 24h: 25 hourly data points
-      - 7d: 43 four-hour data points
-      - 30d: 23 daily data points
-14. Committed and pushed chart re-rendering fix to GitHub
-15. Removed 7d and 30d time range options from all analytics pages:
-    - Issue: 7d and 30d API calls were slow (fetching 700-1600 pages of data)
-    - Fix: Removed TimeRangeSelector from all pages, hardcoded to 24h only
-    - Updated pages:
-      - /analytics (overview)
-      - /analytics/network
-      - /analytics/tokens
-      - /analytics/contracts
-    - Result: All analytics pages now load quickly with 24h data only
-16. Committed and pushed time range removal to GitHub
-17. Removed Compliance & AML feature:
-    - Deleted all compliance pages (/compliance/*)
-    - Deleted all compliance API routes (/api/compliance/*)
-    - Deleted compliance components (/components/compliance/)
-    - Deleted compliance library (/lib/compliance/)
-    - Deleted compliance docs (/app/docs/compliance/)
-    - Deleted jobs system (/lib/jobs/) - was compliance-specific
-    - Deleted notifications system (/lib/notifications/) - was compliance-specific
-    - Created standalone email module (/lib/email.ts) for forgot-password
-    - Added nodemailer package for email sending
-    - Removed compliance links from Header, AdminNav, docs pages
-    - Removed complianceEnabled/complianceTier from admin APIs
-    - Updated pricing page metadata
-    - Rebuilt and deployed portal
-    - Verified compliance routes return 404
-18. Committed and pushed compliance removal to GitHub
-19. Verified site is working:
-    - All 6 containers running healthy
-    - All public routes returning 200: /, /analytics, /pricing, /docs, /blog, /contracts, /dashboard
-    - Compliance routes correctly returning 404
-    - Public HTTPS URLs verified working
-20. Optimized analytics API response time:
-    - Issue: Analytics page took ~8-11 seconds to load
-    - Root cause: `fetchWithFallback()` tried local Horizon first, but portal container
-      couldn't reach stellar-horizon (different Docker networks), causing timeout
-    - Fix: Use public Horizon API directly for analytics endpoint
-    - Changed `/portal/app/api/analytics/network/route.ts`:
-      - Removed fetchWithFallback() function
-      - Use public Horizon API (`https://horizon.stellar.org`) directly
-      - Single request for 200 ledgers instead of pagination
-    - Performance results:
-      - Uncached API: 11s → 1.5s (86% faster)
-      - Cached API: 47ms
-      - Page load: ~8s → 0.6s (92% faster)
-    - Rebuilt and deployed portal
-21. Committed and pushed analytics optimization to GitHub
-22. Added Soroban smart contract deployment feature:
-    - Freighter wallet integration for transaction signing
-    - WASM file upload with drag-and-drop support
-    - File validation (256KB limit, magic bytes check)
-    - Multi-step deployment wizard UI
-    - API endpoints for simulate, submit, and status polling
-    - Uses public Soroban RPC with fallback
-    - Dependencies: @stellar/freighter-api, @stellar/stellar-sdk
-    - New files:
-      - lib/wallet/ (Freighter integration)
-      - lib/soroban/deploy.ts (transaction building)
-      - hooks/useFreighter.ts, useContractDeploy.ts
-      - components/contracts/WalletConnect, WasmUploader, DeploymentWizard, DeploymentStatus
-      - app/contracts/deploy/ (deployment page)
-      - app/api/contracts/deploy/ (simulate, submit, status endpoints)
-    - Added "Deploy Contract" button to /contracts page
-    - Rebuilt and deployed portal
-23. Committed and pushed contract deployment feature to GitHub
-24. Updated contracts page layout to match dashboard:
-    - Replaced hero section with custom header matching dashboard layout
-    - Added LumenQuery logo (LQ) with page title "Smart Contract Explorer"
-    - Added subtitle "Soroban Pro"
-    - Moved deploy button to header
-    - Added product navigation bar with links to Live Transactions, Contracts, Analytics, Intelligence, Portfolio, Docs, Admin
-    - Reorganized content into card-based sections (search, features, recent contracts)
-    - Uses same styling as dashboard (white cards, rounded-xl corners, consistent colors)
-    - Rebuilt and deployed portal
-25. Committed and pushed contracts page layout update to GitHub
-26. Updated analytics page layout to match dashboard:
-    - Replaced Header component and sidebar AnalyticsNav with custom header
-    - Added LumenQuery logo (LQ) with page title "Stellar Network Analytics"
-    - Added subtitle "Real-time blockchain metrics" and live indicator
-    - Added product navigation bar (Live Transactions, Contracts, Analytics, etc.)
-    - Converted sidebar navigation to inline tabs (Overview, Network, Tokens, Contracts)
-    - Created new layout-client.tsx for client-side navigation
-    - Removed Footer for cleaner look matching dashboard
-    - Verified all sub-pages working (/analytics, /network, /tokens, /contracts)
-    - Rebuilt and deployed portal
-27. Committed and pushed analytics page layout update to GitHub
-28. Changed Payment Activity chart to bar chart on /analytics/tokens:
-    - Created new BarChart component at portal/components/analytics/BarChart.tsx
-    - Uses Recharts BarChart with rounded top corners and hover highlight
-    - Same tooltip styling and x-axis formatting as AreaChart
-    - Updated tokens page to import and use BarChart instead of AreaChart
-    - Rebuilt and deployed portal
-29. Committed and pushed bar chart changes to GitHub
-30. Updated Payment Activity bar chart to show last 5 minutes:
-    - Filter chart data to only include payments from last 5 minutes
-    - Changed interval from 30-second to 15-second buckets (~20 data points)
-    - Increased pages fetched from 5 to 25 (5000 payments) for better coverage
-    - Reduced cache TTL from 60s to 30s for more frequent updates
-    - Rebuilt and deployed portal
-31. Committed and pushed 5-minute chart changes to GitHub
-32. Updated intelligence page layout to match dashboard:
-    - Replaced Header component and sidebar with custom header
-    - Added LumenQuery logo (LQ) with page title "Transaction Intelligence"
-    - Added subtitle "Real-time monitoring & alerts" and live indicator
-    - Added product navigation bar (Live Transactions, Contracts, Analytics, etc.)
-    - Converted sidebar IntelligenceNav to inline tabs (Overview, Live Stream, Accounts, Watchlists, Alerts, Trustlines, Contracts)
-    - Created new layout-client.tsx for client-side navigation
-    - Removed sidebar from page.tsx
-    - Rebuilt and deployed portal
-33. Committed and pushed intelligence page layout update to GitHub
-34. Updated portfolio page layout to match dashboard:
-    - Replaced Header/Footer components with custom header
-    - Added LumenQuery logo (LQ) with page title "Portfolio Intelligence"
-    - Added subtitle "P&L, yield tracking & risk analysis"
-    - Added product navigation bar (Live Transactions, Contracts, Analytics, etc.)
-    - Added conditional sub-navigation for portfolio detail pages (All Portfolios / Portfolio Details)
-    - Created new layout-client.tsx for client-side navigation
-    - Reorganized page.tsx with tier info card at top and features grid
-    - Rebuilt and deployed portal
-35. Committed and pushed portfolio page layout update to GitHub
-36. Updated docs page layout to match dashboard:
-    - Replaced Header/Footer with custom header matching dashboard style
-    - Added LumenQuery logo (LQ) with page title "API Documentation"
-    - Added subtitle "Horizon API & Soroban RPC"
-    - Added product navigation bar (Live Transactions, Contracts, etc.)
-    - Added docs sub-navigation tabs (API Reference, Analytics, Intelligence, Contracts, Portfolio)
-    - Created new layout-client.tsx for client-side navigation
-    - Reorganized page.tsx into card-based sections:
-      - Hero card with API endpoints overview
-      - Authentication and Quick Start side-by-side
-      - Horizon API endpoints grid
-      - Soroban RPC methods grid
-      - Rate limits tables (side-by-side)
-      - SDK integration examples
-      - Feature documentation link cards
-    - Verified all docs sub-pages working (/docs, /docs/analytics, /docs/intelligence, /docs/contracts)
-    - Rebuilt and deployed portal
-37. Committed and pushed docs page layout update to GitHub
-38. Fixed transaction viewer rate limiting issues:
-    - Issue: Page showed "Error fetching transactions" after ~14 transactions loaded
-    - Root cause: Making too many requests to Horizon API (11 requests per poll cycle)
-    - Fix: Reduced transactions per batch from 10 to 5
-    - Fix: Added 100ms delay between operations requests
-    - Fix: Made operations fetch non-blocking (continue if individual fetch fails)
-    - Fix: Only show error to client after 3 consecutive failures
-    - Fix: Added exponential backoff on errors (up to 30s poll interval)
-    - Fix: Handle 429 rate limit responses silently with backoff
-    - Rebuilt and deployed portal
-39. Committed and pushed transaction stream fix to GitHub
-40. Updated pricing page layout to match dashboard:
-    - Replaced Header/Footer with custom header matching dashboard style
-    - Added LumenQuery logo (LQ) with page title "Pricing"
-    - Added subtitle "Simple, transparent plans"
-    - Added product navigation bar (Live Transactions, Contracts, etc.)
-    - Created new layout-client.tsx for client-side navigation
-    - Reorganized page.tsx into card-based sections:
-      - Hero card with gradient background
-      - Soroban Pro section with icon header and 4-column tier grid
-      - Transaction Intelligence section with icon header and 3-column tier grid
-      - FAQ section in 2-column grid
-      - CTA section with action buttons
-    - Rebuilt and deployed portal
-41. Committed and pushed pricing page layout update to GitHub
 
-### 2026-02-22
-1. Fixed authentication/login not working:
-   - Issue: Users unable to login at /auth/signin
-   - Root cause: NextAuth v4 webpack bundling issue where CredentialsProvider
-     authorize function was being stubbed out (`authorize: () => null`)
-   - Solution: Upgraded from NextAuth v4 to NextAuth v5 beta
-2. NextAuth v5 Migration:
-   - Created new `portal/auth.ts` as central NextAuth v5 configuration
-   - Updated `portal/app/api/auth/[...nextauth]/route.ts` to use v5 handlers
-   - Replaced `@next-auth/prisma-adapter` with `@auth/prisma-adapter`
-   - Updated 18+ API routes to use `auth()` instead of `getServerSession(authOptions)`
-   - Added `trustHost: true` for production environment
-3. Database discovery:
-   - Found portal was connecting to `lumenquery_portal` database (not `lumenquery`)
-   - Container uses Docker network with `postgres:5432` hostname
-   - Updated admin password in correct database
-4. Files changed:
-   - portal/auth.ts (new): Central NextAuth v5 configuration
-   - portal/app/api/auth/[...nextauth]/route.ts: Simplified handler
-   - portal/lib/auth.ts: Re-exports from auth.ts
-   - portal/lib/admin/index.ts: Updated auth imports
-   - portal/app/admin/layout.tsx: Updated auth imports
-   - 18+ API routes: Updated to use auth() instead of getServerSession
-   - portal/package.json: Updated next-auth to v5 beta
-5. Admin credentials updated:
-   - Email: admin@lumenquery.io
-   - Password: abc123abc123
-   - Role: SUPER_ADMIN
-6. Verified login working in browser
-7. Committed and pushed to GitHub
-
-### 2026-03-07
-1. Updated website logo with new LumenQuery branding:
-   - Replaced blue "LQ" text box with new logo image
-   - Logo features magnifying glass with blockchain cube elements
-   - Copied logo to `/opt/lumenquery-portal/portal/public/logo.png`
-2. Updated 16 files to use new logo:
-   - portal/components/Header.tsx - Main site header
-   - portal/components/Footer.tsx - Site footer (both full and simple variants)
-   - portal/app/analytics/layout-client.tsx
-   - portal/app/portfolio/layout-client.tsx
-   - portal/app/blog/layout-client.tsx
-   - portal/app/docs/layout-client.tsx
-   - portal/app/pricing/layout-client.tsx
-   - portal/app/intelligence/layout-client.tsx
-   - portal/app/dashboard/page.tsx
-   - portal/app/dashboard/transactions/page.tsx
-   - portal/app/contracts/page.tsx
-   - portal/app/auth/signin/page.tsx
-   - portal/app/auth/signup/page.tsx
-   - portal/app/auth/forgot-password/page.tsx
-   - portal/app/auth/reset-password/page.tsx
-3. Used Next.js Image component for optimized logo loading
-4. Rebuilt and deployed portal with new logo
-5. Validated Analytics and Smart Contract Analytics pages:
-   - /analytics page: ✅ Working with live data
-   - /analytics/contracts page: ✅ Working with Soroban metrics
-   - Network API returning: Ledger 61,547,528, TPS 104.2, Success 65.3%
-   - Contracts API returning: 536 invocations (24h), 100% success rate
-6. Committed and pushed logo update to GitHub
-7. Fixed docs page layout:
-   - Issue: Two menus at top of page
-   - Fix: Kept main product navigation at top, moved docs sub-navigation to left sidebar
-   - Updated docs/layout-client.tsx with flexbox layout (sidebar + main content)
-8. Fixed intelligence page layout:
-   - Issue: Two menus at top of page
-   - Fix: Kept main product navigation at top, moved intelligence sub-navigation to left sidebar
-   - Updated intelligence/layout-client.tsx with same sidebar pattern as docs
-9. Restricted Admin Console to SUPER_ADMIN role only:
-   - Previously: Both ADMIN and SUPER_ADMIN could access Admin Console
-   - Now: Only SUPER_ADMIN role can see and access Admin Console
-   - Updated 10 files:
-     - admin/layout.tsx - Server-side role check
-     - Header.tsx - Desktop and mobile navigation
-     - dashboard/page.tsx - Product navigation
-     - contracts/page.tsx - Product navigation
-     - analytics/layout-client.tsx - Product navigation
-     - portfolio/layout-client.tsx - Product navigation
-     - blog/layout-client.tsx - Product navigation
-     - pricing/layout-client.tsx - Product navigation
-     - docs/layout-client.tsx - Product navigation
-     - intelligence/layout-client.tsx - Product navigation
-10. Rebuilt and deployed portal with all changes
-11. Committed and pushed all changes to GitHub
-
-### 2026-03-08
-1. Changed analytics page navigation from top tabs to left sidebar:
-   - Converted inline tab navigation to left sidebar menu
-   - Sidebar shows Overview, Network, Tokens, Contracts links
-   - Uses same sticky sidebar pattern as docs/intelligence pages
-   - Active link highlighted with blue background
-   - Updated analytics/layout-client.tsx with flexbox layout
-2. Rebuilt and deployed portal with analytics sidebar change
-3. Verified analytics page returns HTTP 200
-4. Committed and pushed changes to GitHub
-5. Fixed duplicate sidebar menus on 5 intelligence pages:
-   - Issue: Pages had their own IntelligenceNav sidebar, but layout-client.tsx already provides it
-   - Fixed pages:
-     - /intelligence/accounts
-     - /intelligence/watchlists
-     - /intelligence/alerts
-     - /intelligence/trustlines
-     - /intelligence/contracts
-   - Removed duplicate sidebar wrappers, keeping only page content
-   - Each page now renders cleanly within the layout's main content area
-6. Rebuilt and deployed portal with intelligence page fixes
-7. Verified all 5 pages return HTTP 200
-8. Committed and pushed intelligence page fixes to GitHub
-9. Removed sidebar from all docs pages:
-   - Updated docs/layout-client.tsx to remove left sidebar navigation
-   - Removed docsNavItems array and usePathname import (no longer needed)
-   - Content now takes full width within the layout
-   - Affected pages: /docs, /docs/analytics, /docs/intelligence, /docs/contracts, /docs/portfolio
-   - Rebuilt and deployed portal
-   - Verified all 5 docs pages return HTTP 200
-10. Committed and pushed docs sidebar removal to GitHub
-
-### 2026-03-10
-1. Added sidebar navigation to docs pages (later removed):
-   - Added left sidebar with links to API Reference, Analytics, Intelligence, Contracts, Portfolio
-   - Sidebar highlighted active page with blue background
-   - Used sticky positioning on desktop
-2. Removed sidebar from docs pages:
-   - User changed their mind - reverted to full-width content without sidebar
-   - Updated docs/layout-client.tsx to remove sidebar and simplify layout
-3. Removed duplicate Header/Footer from docs sub-pages:
-   - Issue: Docs sub-pages (/docs/analytics, /docs/intelligence, /docs/contracts, /docs/portfolio) had their own Header and Footer components, causing duplicate navigation menus
-   - Fix: Removed Header and Footer imports from all 4 sub-pages
-   - Sub-pages now only render their content, relying on layout-client.tsx for navigation
-4. Rebuilt and deployed portal
-5. Committed and pushed changes to GitHub
-
-### 2026-03-13
-1. Implemented Natural Language Query feature:
-   - Created `/api/query` endpoint for query execution
-   - Built rule-based natural language parser (`/lib/query/parser.ts`)
-   - Implemented query executor against Horizon API (`/lib/query/executor.ts`)
-   - Supports 9 query types:
-     - `top_holders` - Top XLM holders by balance
-     - `account_info` - Account details by address
-     - `recent_payments` - Recent payment activity
-     - `large_payments` - Whale movements (payments > X XLM)
-     - `recent_transactions` - Latest transactions
-     - `assets` - Stellar assets list
-     - `account_transactions` - Transactions for specific account
-     - `ledger_info` - Latest ledger information
-     - `operations` - Recent operations
-2. Updated /query page with interactive features:
-   - Added onClick handler to Query button
-   - Loading state with spinner
-   - Interactive results table with formatted data
-   - SQL preview with copy button
-   - Quick example buttons for common queries
-   - Click-to-try example queries
-3. Fixed bugs:
-   - Fixed parser to handle simpler phrasings like "top 10 xlm holders"
-   - Fixed assets query error (num_accounts toLocaleString issue)
-4. Rebuilt and deployed portal
-5. Committed and pushed to GitHub
-6. Validated all 6 example queries on /query page:
-   - Query 1: "Show the top 10 wallets holding XLM" - ✅ Working (top_holders)
-   - Query 2: "Which wallets received the most XLM today?" - ✅ Working (top_holders)
-   - Query 3: "Payments larger than 100,000 XLM" - ✅ Working (large_payments)
-   - Query 4: "What assets are on Stellar?" - ✅ Working (assets)
-   - Query 5: Originally "Which validators processed..." - ❌ Not supported
-   - Query 6: Originally "Compare USDC and yXLM..." - ❌ Not supported
-7. Fixed failing example queries:
-   - Replaced query 5 with "Latest ledger status" (ledger_info)
-   - Replaced query 6 with "Recent 50 transactions" (recent_transactions)
-   - All 6 examples now validated and working
-8. Rebuilt and deployed portal with fixed examples
-9. Committed and pushed example queries fix to GitHub
+### 2026-07-03
+1. Infrastructure cleanup - Removed stellar-horizon service:
+   - Confirmed no services use local Horizon (all use public https://horizon.stellar.org)
+   - Stopped and removed stellar-horizon container (was failing to ingest due to core version mismatch)
+   - Reduced from 12 to 11 running containers
+   - Confirmed pg1.lumenquery.io database safe to delete (only used by removed Horizon)
+2. Fixed broken portfolio Horizon client:
+   - `portal/lib/portfolio/horizon-client.ts` was defaulting to `http://stellar-horizon:8000`
+   - Changed to `https://horizon.stellar.org` (portfolio feature was broken without this)
+3. Removed stale HORIZON_API_URL references:
+   - Removed from `.env` (was `http://172.17.0.1:8000`)
+   - Removed from `docker-compose.yml` portal service (was `http://stellar-horizon:8000`)
+   - Removed from `docker-compose.yml` api-gateway service (was `http://127.0.0.1:8000`)
+4. Cleaned up orphaned compliance database schema:
+   - Removed 10 Prisma models: ComplianceRule, ComplianceViolation, MonitoredAccount, SanctionedAccount, AuditLogEntry, PaymentGraphEdge, PaymentCycle, ComplianceReport, NotificationDelivery, BackgroundJob
+   - Removed 4 enums: ComplianceTier, ComplianceRuleType, ViolationStatus, MonitoringLevel
+   - Removed 8 compliance fields from Organization model
+   - Ran `prisma db push --accept-data-loss` to drop tables (40 → 33 tables)
+5. Removed /opt/stellar/ directory:
+   - Contained captive-core data (115GB) and horizon docker-compose.yml
+   - No longer needed by any service (soroban-rpc has its own embedded captive core)
+   - Freed 115GB of disk space
+6. Updated CLAUDE.md with all infrastructure changes
+7. Committed and pushed cleanup to GitHub
+8. Created 4 new blog posts:
+   - "Stellar's Quantum Preparedness Plan: How Developers Should Audit Signatures Before Post-Quantum Soroban" (Developer Guide, 14 min)
+   - "Inside the Open USD Consortium: What Visa and BlackRock's Stellar Stablecoin Means for Payment Developers" (Industry Insights, 12 min)
+   - "Building Compliant Security Tokens on Stellar with ERC-3643: A Developer's Guide to Permissioned Assets" (Developer Guide, 15 min)
+   - "Tracking Stellar's $2B RWA Milestone On-Chain: Build a Tokenized-Asset Analytics Dashboard with LumenQuery APIs" (Developer Guide, 16 min)
+9. Rebuilt and deployed portal with new blog posts
+10. Committed and pushed blog posts to GitHub
+11. Updated sitemap:
+    - Added /stellar page and 4 new blog URLs
+    - Updated base date to 2026-07-03
+    - Total URLs: 80
+12. Submitted sitemap to Google Search Console:
+    - Sitemap submitted at 2026-07-03T18:45:55Z
+    - Previous status: 75 URLs discovered, 0 indexed
+13. Submitted URLs to Bing via IndexNow API:
+    - Submitted 13 URLs via api.indexnow.org (HTTP 200)
+    - Submitted 5 new URLs directly via www.bing.com/indexnow (HTTP 200)
+14. Updated Google Search Console script with new URLs
+15. Committed and pushed sitemap/script updates to GitHub
+16. Checked Google Search Console analytics (last 28 days):
+    - 1 click, 12 impressions, 8.33% CTR, avg position 7.3
+    - Homepage ranking at position 1.9
+    - Only query: "stellar rpc server" (position 61)
+17. Checked Google index status for all 84 URLs:
+    - 1 indexed (homepage)
+    - 16 crawled but not indexed (older blog posts from Feb-Mar)
+    - 67 unknown to Google (not yet crawled)
+18. Requested Google indexing for all 84 URLs:
+    - All 84 submitted successfully, 0 failures
 
 ## SEO & Performance Optimization
 
 ### Sitemap Configuration
-All public pages included in `/sitemap.xml` (24 URLs total):
+All public pages included in `/sitemap.xml` (80 URLs total):
 
-**Core Pages (2):**
+**Core Pages (3):**
 - / (home) - priority 1.0
+- /stellar - priority 0.9
+- /query - priority 0.9
 - /pricing - priority 0.9
 
-**Documentation (6):**
+**Documentation (5):**
 - /docs (main) - priority 0.9
 - /docs/analytics - priority 0.8
 - /docs/intelligence - priority 0.8
-- /docs/compliance - priority 0.8
 - /docs/contracts - priority 0.8
 - /docs/portfolio - priority 0.8
 
@@ -1304,9 +992,9 @@ All public pages included in `/sitemap.xml` (24 URLs total):
 **Services (1):**
 - /contracts - priority 0.8
 
-**Blog (13):**
+**Blog (64):**
 - /blog (listing) - priority 0.8
-- 12 individual blog posts with lastmod dates
+- 63 individual blog posts with lastmod dates
 
 Pages excluded (require auth or noindex):
 - /auth/* (blocked by robots.txt)
@@ -1367,10 +1055,22 @@ middlewares:
         - image/webp
 ```
 
-### Google Search Console Next Steps
-1. Submit sitemap: https://lumenquery.io/sitemap.xml
-2. Request indexing via URL Inspection tool
-3. Monitor Core Web Vitals in GSC
+### Google Search Console Status (2026-07-03)
+- **Sitemap submitted**: 2026-07-03T18:45:55Z (80 URLs)
+- **Indexing requested**: All 84 URLs submitted via Indexing API (84/84 success)
+- **Index status**: 1 indexed, 16 crawled-not-indexed, 67 unknown
+- **Analytics (28d)**: 1 click, 12 impressions, 8.33% CTR, avg position 7.3
+- **Bing**: URLs submitted via IndexNow API
+
+### Google Search Console Management Script
+```bash
+cd /opt/lumenquery-portal
+node scripts/google-search-console.mjs status        # Check index status
+node scripts/google-search-console.mjs analytics      # Search analytics (28d)
+node scripts/google-search-console.mjs submit-sitemap # Submit sitemap
+node scripts/google-search-console.mjs index-all      # Request indexing for all URLs
+node scripts/google-search-console.mjs inspect <url>  # Inspect specific URL
+```
 
 ## Forgot Password / Account Recovery
 
@@ -1442,20 +1142,159 @@ The password reset email includes:
 
 ## Compliance & AML Alerting Service
 
-**STATUS: REMOVED**
+### Overview
+Enterprise compliance monitoring and AML alerting for Stellar network. Designed for exchanges, custodians, and financial institutions requiring regulatory compliance.
 
-This feature was removed from the codebase on 2026-02-21. The Compliance & AML alerting service, including all pages, API routes, components, and library code, has been deleted.
+### Pages
+| Route | Description | Status |
+|-------|-------------|--------|
+| /compliance | Overview dashboard | ✅ Deployed |
+| /compliance/accounts | Monitored accounts management | ✅ Deployed |
+| /compliance/violations | Violations list with filters | ✅ Deployed |
+| /compliance/violations/[id] | Violation detail and review | ✅ Deployed |
+| /compliance/rules | Rules management | ✅ Deployed |
+| /compliance/reports | Report generation | ✅ Deployed |
+| /compliance/audit | Audit log viewer | ✅ Deployed |
 
-Removed items:
-- `/app/compliance/*` - All compliance pages
-- `/app/api/compliance/*` - All compliance API routes
-- `/app/docs/compliance/` - Compliance documentation
-- `/components/compliance/*` - All compliance components
-- `/lib/compliance/*` - Rules engine, evaluators, audit
-- `/lib/jobs/*` - Background job queue (was compliance-specific)
-- `/lib/notifications/*` - Notification system (was compliance-specific)
+### API Endpoints
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| /api/compliance/status | GET | Compliance status overview |
+| /api/compliance/accounts | GET, POST | List/add monitored accounts |
+| /api/compliance/accounts/[id] | GET, PUT, DELETE | Account operations |
+| /api/compliance/rules | GET, POST | List/create rules |
+| /api/compliance/rules/[id] | GET, PUT, DELETE | Rule operations |
+| /api/compliance/violations | GET | List violations with filters |
+| /api/compliance/violations/[id] | GET, PUT | View/update violation |
+| /api/compliance/reports | GET, POST | List/generate reports |
+| /api/compliance/reports/[id] | GET, DELETE | Report operations |
+| /api/compliance/reports/[id]/export | GET | Export CSV/JSON |
+| /api/compliance/audit | GET | Audit log entries |
 
-Database schema still contains compliance-related models but they are not used.
+### Rule Types
+| Type | Description | Tier |
+|------|-------------|------|
+| SANCTIONS_SCREENING | OFAC/UN sanctions list matching | Basic |
+| VELOCITY_LIMIT | Transaction frequency limits | Basic |
+| VOLUME_LIMIT | Transaction volume limits | Basic |
+| CIRCULAR_PAYMENT | Detect circular payment patterns | Standard |
+| MIXER_DETECTION | Known mixer service detection | Standard |
+| UNUSUAL_PATTERN | Anomaly detection | Standard |
+| COUNTERPARTY_RISK | Counterparty risk assessment | Standard |
+| CONTRACT_ABUSE | Soroban contract abuse detection | Enterprise |
+| STRUCTURING | Transaction structuring detection | Enterprise |
+| DORMANT_ACTIVATION | Dormant account activation alerts | Enterprise |
+
+### Violation Status Workflow
+```
+PENDING → UNDER_REVIEW → CLEARED
+                      → CONFIRMED → ESCALATED → REPORTED
+```
+
+### Tier Feature Matrix
+| Feature | BASIC ($49) | STANDARD ($149) | ENTERPRISE (Custom) |
+|---------|-------------|-----------------|---------------------|
+| Monitored Accounts | 100 | 1,000 | Unlimited |
+| Rule Types | 3 (basic) | 7 (+ advanced) | 10 (all) |
+| Report Retention | 30 days | 90 days | Unlimited |
+| Audit Log | 30 days | 1 year | Unlimited |
+| Real-time Alerts | Email only | Email + Slack | All channels |
+| API Access | Limited | Full | Full + Webhooks |
+| Custom Rules | No | No | Yes |
+| Dedicated Support | No | Email | 24/7 Phone |
+
+### Files Created
+```
+portal/lib/compliance/
+├── types.ts
+├── tiers.ts
+├── gates.ts
+├── audit.ts
+├── rules-engine.ts
+├── index.ts
+└── evaluators/
+    ├── index.ts
+    ├── sanctions-evaluator.ts
+    ├── velocity-evaluator.ts
+    ├── volume-evaluator.ts
+    ├── circular-payment-evaluator.ts
+    ├── mixer-evaluator.ts
+    ├── pattern-evaluator.ts
+    ├── counterparty-evaluator.ts
+    ├── contract-abuse-evaluator.ts
+    └── structuring-evaluator.ts
+
+portal/lib/jobs/
+├── types.ts
+├── queue.ts
+├── scheduler.ts
+├── index.ts
+└── workers/
+    ├── index.ts
+    ├── account-scan-worker.ts
+    ├── risk-assessment-worker.ts
+    └── sanctions-sync-worker.ts
+
+portal/lib/notifications/
+├── index.ts
+├── manager.ts
+├── channels/
+│   ├── email.ts
+│   ├── slack.ts
+│   └── webhook.ts
+└── templates/
+    └── violation-alert.ts
+
+portal/app/api/compliance/
+├── status/route.ts
+├── accounts/route.ts
+├── accounts/[accountId]/route.ts
+├── rules/route.ts
+├── rules/[ruleId]/route.ts
+├── violations/route.ts
+├── violations/[violationId]/route.ts
+├── reports/route.ts
+├── reports/[reportId]/route.ts
+├── reports/[reportId]/export/route.ts
+└── audit/route.ts
+
+portal/app/compliance/
+├── layout.tsx
+├── page.tsx
+├── accounts/page.tsx
+├── violations/page.tsx
+├── violations/[violationId]/page.tsx
+├── rules/page.tsx
+├── reports/page.tsx
+└── audit/page.tsx
+
+portal/components/compliance/
+├── index.ts
+├── ComplianceNav.tsx
+├── ViolationTable.tsx
+├── AccountTable.tsx
+├── RuleCard.tsx
+├── RuleForm.tsx
+├── AuditLogTable.tsx
+└── StatusCard.tsx
+
+portal/lib/redis.ts
+```
+
+### Environment Variables
+```
+SMTP_HOST=smtp.example.com          # Email notifications
+SMTP_PORT=587
+SMTP_USER=user
+SMTP_PASSWORD=password
+SMTP_FROM=compliance@lumenquery.io
+SLACK_WEBHOOK_URL=https://hooks.slack.com/...  # Slack notifications
+```
+
+### Deployment
+The service is deployed and running. Access at:
+- Dashboard: https://lumenquery.io/compliance
+- API: https://lumenquery.io/api/compliance/*
 
 ## Soroban Pro
 
@@ -1466,7 +1305,6 @@ Premium Soroban smart contract explorer for Web3 developers, startups, and audit
 | Route | Description | Status |
 |-------|-------------|--------|
 | /contracts | Explorer home with search | ✅ Built |
-| /contracts/deploy | Contract deployment wizard | ✅ Built |
 | /contracts/[id] | Contract overview | ✅ Built |
 | /contracts/[id]/calls | Call history with filters | ✅ Built |
 | /contracts/[id]/storage | Storage viewer | ✅ Built |
@@ -1478,9 +1316,6 @@ Premium Soroban smart contract explorer for Web3 developers, startups, and audit
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | /api/contracts/search | GET | Search by ID/name |
-| /api/contracts/deploy/simulate | POST | Simulate deployment transaction |
-| /api/contracts/deploy/submit | POST | Submit signed transaction |
-| /api/contracts/deploy/status/[txHash] | GET | Poll transaction status |
 | /api/contracts/[id] | GET | Contract details |
 | /api/contracts/[id]/calls | GET | Paginated call history |
 | /api/contracts/[id]/storage | GET | Storage entries |
@@ -1509,25 +1344,10 @@ portal/lib/soroban/
 ├── formatter.ts
 ├── gates.ts
 ├── rpc-client.ts
-├── deploy.ts              # Contract deployment service
-└── index.ts
-
-portal/lib/wallet/
-├── types.ts               # Wallet state types
-├── freighter.ts           # Freighter API integration
-└── index.ts
-
-portal/hooks/
-├── useFreighter.ts        # Wallet state hook
-├── useContractDeploy.ts   # Deployment workflow hook
 └── index.ts
 
 portal/app/api/contracts/
 ├── search/route.ts
-├── deploy/
-│   ├── simulate/route.ts  # Simulate deployment tx
-│   ├── submit/route.ts    # Submit signed tx
-│   └── status/[txHash]/route.ts  # Poll tx status
 └── [contractId]/
     ├── route.ts
     ├── calls/route.ts
@@ -1541,9 +1361,6 @@ portal/app/api/contracts/
 portal/app/contracts/
 ├── page.tsx
 ├── layout.tsx
-├── deploy/
-│   ├── page.tsx           # Deployment wizard page
-│   └── layout.tsx
 └── [contractId]/
     ├── page.tsx
     ├── layout.tsx
@@ -1561,10 +1378,6 @@ portal/components/contracts/
 ├── EventStream.tsx
 ├── AIExplanation.tsx
 ├── ExportButton.tsx
-├── WalletConnect.tsx      # Freighter wallet connection
-├── WasmUploader.tsx       # WASM file upload
-├── DeploymentWizard.tsx   # Multi-step deployment UI
-├── DeploymentStatus.tsx   # Progress and result display
 └── index.ts
 
 portal/app/pricing/
@@ -1592,82 +1405,6 @@ cd /opt/lumenquery-portal
 docker compose build portal
 docker compose up -d portal
 ```
-
-## Contract Deployment Feature
-
-### Overview
-Deploy Soroban smart contracts to the Stellar network directly from the browser using Freighter wallet for authentication and transaction signing.
-
-### How It Works
-1. **Connect Wallet**: User connects their Freighter browser wallet
-2. **Upload WASM**: User uploads compiled .wasm contract file (max 256KB)
-3. **Simulate**: Transaction is simulated to estimate fees
-4. **Sign Upload**: User signs transaction in Freighter to upload WASM
-5. **Sign Create**: User signs second transaction to create contract instance
-6. **Complete**: Contract ID is returned, linked to explorer
-
-### Pages
-| Route | Description |
-|-------|-------------|
-| /contracts | Explorer with "Deploy Contract" button |
-| /contracts/deploy | Deployment wizard with multi-step UI |
-
-### API Endpoints
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| /api/contracts/deploy/simulate | POST | Simulate deployment transaction |
-| /api/contracts/deploy/submit | POST | Submit signed transaction |
-| /api/contracts/deploy/status/[txHash] | GET | Poll transaction status |
-
-### Components
-| Component | Description |
-|-----------|-------------|
-| WalletConnect | Freighter wallet connection button |
-| WasmUploader | Drag-and-drop WASM file upload |
-| DeploymentWizard | Multi-step deployment flow |
-| DeploymentStatus | Progress indicator and results |
-
-### Hooks
-| Hook | Description |
-|------|-------------|
-| useFreighter | Wallet state management (connect, sign) |
-| useContractDeploy | Deployment workflow (simulate, submit, poll) |
-
-### Dependencies
-```json
-{
-  "@stellar/freighter-api": "^3.1.0",
-  "@stellar/stellar-sdk": "^12.3.0"
-}
-```
-
-### Security Features
-- All signing happens client-side in Freighter (no private keys stored)
-- WASM validation (magic bytes check, 256KB size limit)
-- Mainnet network enforcement
-- Rate limiting on API endpoints
-
-### WASM Validation
-- Magic bytes: `\0asm` (0x00 0x61 0x73 0x6d)
-- Maximum size: 256 KB
-- File extension: `.wasm`
-
-### RPC Configuration
-Uses public Soroban RPC with fallback:
-1. `https://mainnet.sorobanrpc.com` (primary)
-2. `https://soroban-rpc.mainnet.stellar.gateway.fm`
-3. Local RPC (fallback)
-
-### Error Handling
-| Error | User Message |
-|-------|--------------|
-| Freighter not installed | "Install Freighter wallet to deploy contracts" |
-| Wrong network | "Switch to Stellar Mainnet in Freighter" |
-| Invalid WASM | "Invalid WASM file format" |
-| WASM too large | "File exceeds 256KB limit" |
-| Insufficient balance | "Need X XLM for deployment fees" |
-| User rejected | "Transaction cancelled" |
-| Transaction failed | "Deployment failed: {error}" |
 
 ## Transaction Intelligence Documentation
 
@@ -1748,9 +1485,63 @@ portal/app/docs/page.tsx            # Updated with Analytics link
 
 ## Compliance & AML Documentation
 
-**STATUS: REMOVED**
+### Overview
+Comprehensive documentation for the Compliance & AML Alerting Service, available at `/docs/compliance`.
 
-This documentation has been removed along with the Compliance & AML feature on 2026-02-21. The `/docs/compliance` page no longer exists.
+### Documentation Sections
+| Section | Description |
+|---------|-------------|
+| Introduction | Feature overview and compliance dashboard |
+| Dashboard | Key statistics, active rules, pending violations |
+| Subscription Tiers | Basic, Standard, Enterprise comparison table |
+| Accounts | Monitored accounts with monitoring levels |
+| Rules | 10 rule types with parameters and conditions |
+| Violations | Status workflow, severity levels, review process |
+| Reports | Compliance report generation and export |
+| Audit Log | Immutable audit trail with hash chain verification |
+| How-to: Add Account | Step-by-step account onboarding guide |
+| How-to: Create Rule | Rule configuration walkthrough |
+| API Reference | Complete endpoint documentation |
+
+### Monitoring Levels Documented
+- BASIC - Standard transaction monitoring
+- STANDARD - Enhanced with pattern analysis
+- ENHANCED - Full monitoring with real-time alerts
+- RESTRICTED - Maximum scrutiny for high-risk accounts
+
+### Rule Types Documented
+| Type | Description | Tier |
+|------|-------------|------|
+| SANCTIONS_SCREENING | OFAC/UN sanctions list matching | Basic |
+| VELOCITY_LIMIT | Transaction frequency limits | Basic |
+| VOLUME_LIMIT | Transaction volume limits | Basic |
+| CIRCULAR_PAYMENT | Detect circular payment patterns | Standard |
+| MIXER_DETECTION | Known mixer service detection | Standard |
+| UNUSUAL_PATTERN | Anomaly detection | Standard |
+| COUNTERPARTY_RISK | Counterparty risk assessment | Standard |
+| CONTRACT_ABUSE | Soroban contract abuse detection | Enterprise |
+| STRUCTURING | Transaction structuring detection | Enterprise |
+| DORMANT_ACTIVATION | Dormant account activation alerts | Enterprise |
+
+### Violation Status Workflow
+```
+PENDING → UNDER_REVIEW → CLEARED
+                       → CONFIRMED → ESCALATED → REPORTED
+```
+
+### API Endpoints Documented
+- `/api/compliance/status` - Compliance overview statistics
+- `/api/compliance/accounts` - Monitored accounts management
+- `/api/compliance/rules` - Rule CRUD operations
+- `/api/compliance/violations` - Violations list and review
+- `/api/compliance/reports` - Report generation and export
+- `/api/compliance/audit` - Audit log access
+
+### Files
+```
+portal/app/docs/compliance/page.tsx  # Main documentation page
+portal/app/docs/page.tsx             # Updated with Compliance link
+```
 
 ## Soroban Pro Documentation
 
@@ -2046,78 +1837,10 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 ```
 
-## Natural Language Query Interface
-
-### Overview
-Query the Stellar blockchain using plain English. The query interface translates natural language questions into Horizon API calls and returns formatted results. Accessible at `/query`.
-
-### Features
-- **Natural Language Input**: Type questions in plain English
-- **Interactive Results**: Data displayed in sortable tables
-- **SQL Preview**: See the equivalent SQL for learning
-- **Quick Examples**: Click-to-try example queries
-- **Real-time Execution**: Queries executed against live Horizon API
-
-### Supported Query Types
-| Type | Example Query | Description |
-|------|---------------|-------------|
-| `top_holders` | "Top 10 XLM holders" | Find largest XLM holders |
-| `account_info` | "Account GABC..." | Get account details and balances |
-| `recent_payments` | "Recent payments" | View recent payment activity |
-| `large_payments` | "Payments larger than 1M XLM" | Find whale movements |
-| `recent_transactions` | "Latest 50 transactions" | View recent transactions |
-| `assets` | "What assets are on Stellar?" | List popular tokens |
-| `account_transactions` | "Transactions for GABC..." | Account transaction history |
-| `ledger_info` | "Latest ledger" | Current network status |
-| `operations` | "Recent operations" | View recent operations |
-
-### API Endpoint
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| /api/query | POST | Execute natural language query |
-| /api/query | GET | Get query suggestions and examples |
-
-### Request/Response
-```bash
-# Request
-curl -X POST https://lumenquery.io/api/query \
-  -H "Content-Type: application/json" \
-  -d '{"query": "top 10 xlm holders"}'
-
-# Response
-{
-  "success": true,
-  "data": [
-    {"account_id": "GAXJ...7K2F", "balance_xlm": "125,430,000", ...}
-  ],
-  "columns": ["account_id", "balance_xlm", "last_active"],
-  "sql": "SELECT account_id, balance...",
-  "executionTimeMs": 142,
-  "parsedQuery": {"type": "top_holders", "description": "Top 10 XLM holders"}
-}
-```
-
-### Files
-```
-portal/app/query/page.tsx           # Query interface UI
-portal/app/query/layout.tsx         # SEO metadata
-portal/app/api/query/route.ts       # API endpoint
-portal/lib/query/types.ts           # TypeScript interfaces
-portal/lib/query/parser.ts          # Natural language parser
-portal/lib/query/executor.ts        # Query execution against Horizon
-portal/lib/query/index.ts           # Module exports
-```
-
-### Technical Details
-- **Parser**: Rule-based regex matching for query type detection
-- **Executor**: Fetches data from public Horizon API (horizon.stellar.org)
-- **No AI Required**: Works without external AI API (future: Claude integration for complex queries)
-- **Caching**: Results not cached (real-time data)
-
 ## Administrative Console
 
 ### Overview
-Internal admin console for managing users, monitoring feature usage, tracking login activity, and performing admin tasks. Access restricted to users with SUPER_ADMIN role only.
+Internal admin console for managing users, monitoring feature usage, tracking login activity, and performing admin tasks. Access restricted to users with ADMIN or SUPER_ADMIN role.
 
 ### Pages
 | Route | Description | Status |
@@ -2228,369 +1951,3 @@ UPDATE "User" SET role = 'SUPER_ADMIN' WHERE email = 'admin@example.com';
 - Before ending a session, ask Claude to update this file with current progress
 - Monitoring server (mon1) is ready for stack deployment
 - GitHub secrets need to be configured for automated deployments
-
----
-
-# Project Memory Summary
-
-*Last Updated: 2026-03-08 | For future session context loading*
-
-## Project Purpose
-
-**LumenQuery** is a comprehensive Stellar blockchain analytics and developer platform. It provides:
-
-1. **Horizon API Gateway** - Proxied access to Stellar Horizon with rate limiting, caching, and usage tracking
-2. **Soroban RPC Gateway** - JSON-RPC proxy for Soroban smart contracts
-3. **Analytics Dashboard** - Real-time Stellar network metrics (public, no auth required)
-4. **Soroban Pro** - Smart contract explorer with decoded calls, storage viewer, event streaming
-5. **Transaction Intelligence** - Real-time transaction monitoring, watchlists, alerts
-6. **Portfolio Intelligence** - Multi-account aggregation, P&L tracking, yield monitoring
-7. **Admin Console** - User management, usage analytics, audit logging (SUPER_ADMIN only)
-
-**Target users**: Web3 developers, traders, validators, exchanges, custodians, DAOs, DeFi participants
-
-## Architecture
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                         Internet                                 │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    Traefik (Reverse Proxy)                      │
-│         - TLS termination (Let's Encrypt)                       │
-│         - Rate limiting                                          │
-│         - Gzip compression                                       │
-│         - Routing: lumenquery.io, api.*, rpc.*                  │
-└─────────────────────────────────────────────────────────────────┘
-          │                    │                    │
-          ▼                    ▼                    ▼
-┌─────────────────┐   ┌─────────────────┐   ┌─────────────────┐
-│  Portal (3000)  │   │ API Gateway     │   │ RPC Gateway     │
-│  Next.js 14     │   │ (8080)          │   │ (8082)          │
-│  - App Router   │   │ - Horizon proxy │   │ - Soroban proxy │
-│  - NextAuth v5  │   │ - Usage logging │   │ - Usage logging │
-│  - Prisma ORM   │   │                 │   │                 │
-└─────────────────┘   └─────────────────┘   └─────────────────┘
-          │                    │                    │
-          ▼                    ▼                    ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                     Data Layer                                   │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐ │
-│  │ PostgreSQL  │  │    Redis    │  │  External APIs          │ │
-│  │  (5432)     │  │   (6379)    │  │  - horizon.stellar.org  │ │
-│  │  40 tables  │  │  - Cache    │  │  - Soroban RPC          │ │
-│  │             │  │  - Sessions │  │                         │ │
-│  └─────────────┘  └─────────────┘  └─────────────────────────┘ │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-### Docker Services (12 containers)
-| Service | Container | Purpose |
-|---------|-----------|---------|
-| traefik | lumenquery-traefik | Reverse proxy, TLS, routing |
-| portal | lumenquery-portal | Next.js web application |
-| api-gateway | lumenquery-api-gateway | Horizon API proxy |
-| rpc-gateway | lumenquery-rpc-gateway | Soroban RPC proxy |
-| postgres | lumenquery-postgres | Primary database |
-| redis | lumenquery-redis | Cache and sessions |
-| stellar-horizon | stellar-horizon | Local Horizon (uses remote DB) |
-| soroban-rpc | soroban-rpc | Local Soroban RPC |
-| node-exporter | node-exporter | System metrics |
-| cadvisor | cadvisor | Container metrics |
-| postgres-exporter | postgres-exporter | DB metrics |
-| redis-exporter | redis-exporter | Cache metrics |
-
-## Key Directories
-
-```
-/opt/lumenquery-portal/
-├── portal/                      # Next.js application
-│   ├── app/                     # App Router pages and API routes
-│   │   ├── api/                 # API endpoints
-│   │   │   ├── admin/           # Admin APIs (SUPER_ADMIN)
-│   │   │   ├── analytics/       # Network analytics
-│   │   │   ├── auth/            # NextAuth endpoints
-│   │   │   ├── contracts/       # Soroban Pro APIs
-│   │   │   ├── intelligence/    # Transaction intelligence
-│   │   │   ├── portfolio/       # Portfolio APIs
-│   │   │   └── transactions/    # Live transaction stream (SSE)
-│   │   ├── admin/               # Admin Console pages
-│   │   ├── analytics/           # Analytics dashboard
-│   │   ├── contracts/           # Contract explorer
-│   │   ├── dashboard/           # User dashboard
-│   │   ├── docs/                # API documentation
-│   │   ├── intelligence/        # Intelligence dashboard
-│   │   └── portfolio/           # Portfolio pages
-│   ├── components/              # React components
-│   │   ├── Header.tsx           # Main navigation
-│   │   ├── Footer.tsx           # Site footer
-│   │   ├── admin/               # Admin components
-│   │   ├── analytics/           # Charts, metrics
-│   │   ├── contracts/           # Contract explorer UI
-│   │   ├── intelligence/        # Intelligence UI
-│   │   └── portfolio/           # Portfolio UI
-│   ├── lib/                     # Utility libraries
-│   │   ├── admin/               # Admin guards, audit
-│   │   ├── intelligence/        # Account profiling
-│   │   ├── portfolio/           # P&L, risk assessment
-│   │   ├── soroban/             # XDR decoding, RPC client
-│   │   ├── wallet/              # Freighter integration
-│   │   ├── prisma.ts            # DB client
-│   │   ├── redis.ts             # Cache client
-│   │   └── rate-limit.ts        # Rate limiting
-│   ├── hooks/                   # React hooks
-│   ├── prisma/                  # Database schema
-│   └── public/                  # Static assets
-├── api-gateway/                 # Horizon proxy service
-├── rpc-gateway/                 # Soroban RPC proxy
-├── traefik/                     # Traefik configuration
-│   └── dynamic.yml              # Routes and middleware
-├── monitoring/                  # Prometheus/Grafana
-├── docker-compose.yml           # Main orchestration
-├── .env                         # Environment secrets
-└── CLAUDE.md                    # This documentation
-```
-
-## Important Scripts
-
-### Development
-```bash
-cd /opt/lumenquery-portal/portal
-npm run dev                      # Start dev server (port 3000)
-npm run lint                     # Run ESLint
-npm run build                    # Build for production
-```
-
-### Database
-```bash
-cd /opt/lumenquery-portal/portal
-npx prisma db push               # Sync schema (no migration)
-npx prisma migrate dev           # Create migration
-npx prisma studio                # Database GUI
-npx prisma generate              # Generate client
-```
-
-### Docker Operations
-```bash
-cd /opt/lumenquery-portal
-docker compose build portal      # Build portal image
-docker compose up -d portal      # Deploy portal
-docker compose logs -f portal    # View logs
-docker compose ps                # Check status
-```
-
-### Deployment (Full)
-```bash
-cd /opt/lumenquery-portal
-docker compose build portal && docker compose up -d portal
-```
-
-### Git Operations
-```bash
-cd /opt/lumenquery-portal
-git status                       # Check changes
-git add <files>                  # Stage changes
-git commit -m "message"          # Commit
-git push                         # Push to GitHub
-```
-
-## Deployment Process
-
-1. **Make changes** to code in `/opt/lumenquery-portal/portal/`
-
-2. **Build Docker image**:
-   ```bash
-   cd /opt/lumenquery-portal
-   docker compose build portal
-   ```
-
-3. **Deploy**:
-   ```bash
-   docker compose up -d portal
-   ```
-
-4. **Verify**:
-   ```bash
-   curl -s -o /dev/null -w "%{http_code}" https://lumenquery.io
-   # Should return 200
-   ```
-
-5. **Commit and push**:
-   ```bash
-   git add <files>
-   git commit -m "Description of changes"
-   git push
-   ```
-
-### Environment Variables (in .env)
-| Variable | Purpose |
-|----------|---------|
-| DATABASE_URL | PostgreSQL connection string |
-| REDIS_URL | Redis connection string |
-| NEXTAUTH_URL | Public URL (https://lumenquery.io) |
-| NEXTAUTH_SECRET | Session encryption key |
-| DOMAIN | Primary domain |
-| ACME_EMAIL | Let's Encrypt email |
-| STRIPE_* | Payment processing |
-| ANTHROPIC_API_KEY | AI explanations (coming soon) |
-
-## Coding Conventions
-
-### File Structure
-- **Pages**: `/app/[route]/page.tsx` (server component by default)
-- **Layouts**: `/app/[route]/layout.tsx` or `layout-client.tsx` (for client-side nav)
-- **API Routes**: `/app/api/[endpoint]/route.ts`
-- **Components**: `/components/[feature]/ComponentName.tsx`
-- **Libraries**: `/lib/[feature]/index.ts`
-
-### Naming
-- Components: PascalCase (`ContractCard.tsx`)
-- Utilities: camelCase (`formatAddress.ts`)
-- API routes: kebab-case directories (`/api/forgot-password/`)
-
-### Patterns
-- **Authentication**: Use `auth()` from `/auth.ts` (NextAuth v5)
-- **Database**: Import `prisma` from `/lib/prisma`
-- **Cache**: Import `redis` from `/lib/redis`
-- **Role checks**: `(session.user as any)?.role === 'SUPER_ADMIN'`
-
-### UI Conventions
-- **Colors**: Primary blue `#2855FF`, Gray text `#6A6A6A`, Border `#E6E7E9`
-- **Layout**: `max-w-6xl mx-auto px-4 sm:px-6` for content width
-- **Cards**: `rounded-xl bg-white border border-[#E6E7E9] p-4 sm:p-6`
-- **Responsive**: Mobile-first with `sm:`, `md:`, `lg:` breakpoints
-
-### Navigation Pattern
-Each major section has a `layout-client.tsx` with:
-1. Header with logo and page title
-2. Product navigation bar (Live Transactions, Contracts, Analytics, etc.)
-3. Admin link visible only to SUPER_ADMIN users
-4. Section-specific sub-navigation (sidebar for analytics/intelligence, none for docs)
-
-### Layout Patterns
-- **Analytics/Intelligence**: Left sidebar navigation with sticky positioning
-- **Docs**: Full-width content, no sidebar
-- **Portfolio**: Conditional sub-navigation based on route depth
-- **Dashboard/Contracts**: Product navigation bar only, no sub-nav
-
-## Open Problems
-
-### Infrastructure
-1. **Local Horizon database unreachable** - PostgreSQL at 184.105.230.246:5432 refuses connections
-   - **Workaround**: Analytics/transactions use public Horizon API (horizon.stellar.org)
-   
-2. **Monitoring stack not deployed** - Prometheus/Grafana configured but not running on mon1
-   - Files ready in `/monitoring/`, needs deployment to mon1.lumenquery.io
-
-3. **GitHub Secrets not configured** - CI/CD deployment not automated
-   - Need to add: DEPLOY_HOST, DEPLOY_USER, DEPLOY_SSH_KEY
-
-### Features
-4. **AI Explanations** - Soroban Pro feature not implemented
-   - Requires ANTHROPIC_API_KEY
-   - UI shows "Coming Soon"
-
-5. **Compliance feature removed** - Was removed 2026-02-21
-   - Database schema still has compliance tables (unused)
-   - Consider cleaning up schema in future migration
-
-6. **Analytics 7d/30d removed** - Performance issue (too many API calls)
-   - Only 24h time range available
-   - Would need background job to pre-aggregate data
-
-### Technical Debt
-7. **Type casting for user role** - Uses `(session.user as any)?.role`
-   - Should extend NextAuth types properly
-
-8. **Build warnings** - Stellar SDK has require() warnings
-   - Non-blocking but appears in build logs
-
-9. **Unused enums** - ADMIN role exists but Admin Console is SUPER_ADMIN only
-   - May want to remove ADMIN role or give it limited access
-
-### Data
-10. **No database backups** - PostgreSQL not backed up
-    - Should configure pg_dump cron job or managed backup
-
-11. **No SSL monitoring** - Let's Encrypt certificates not monitored
-    - Should add certificate expiry alerts
-
-## Quick Reference
-
-### Check Service Status
-```bash
-docker ps --format "table {{.Names}}\t{{.Status}}"
-```
-
-### View Logs
-```bash
-docker compose logs -f portal --tail 100
-```
-
-### Database Access
-```bash
-docker exec -it lumenquery-postgres psql -U lumenquery -d lumenquery_portal
-```
-
-### Redis Access
-```bash
-docker exec -it lumenquery-redis redis-cli
-```
-
-### Common Issues
-
-**Portal won't start**: Check logs, usually DATABASE_URL or REDIS_URL issue
-```bash
-docker compose logs portal --tail 50
-```
-
-**API returns 500**: Usually Horizon API unreachable, check fallback is working
-```bash
-curl https://horizon.stellar.org/ledgers?limit=1
-```
-
-**Build fails**: Usually TypeScript error, check build output
-```bash
-docker compose build portal 2>&1 | tail -100
-```
-
-## Recent Session Changes (2026-03-10)
-
-### UI Layout Updates
-1. **Docs pages**: Sidebar added then removed - now full-width content without sidebar
-2. **Docs sub-pages**: Removed duplicate Header/Footer components that were causing double navigation menus
-3. Analytics/Intelligence use left sidebar, Docs does not
-
-### Key Files Modified
-- `portal/app/docs/layout-client.tsx` - Removed sidebar, simplified to full-width content
-- `portal/app/docs/analytics/page.tsx` - Removed Header/Footer imports
-- `portal/app/docs/intelligence/page.tsx` - Removed Header/Footer imports
-- `portal/app/docs/contracts/page.tsx` - Removed Header/Footer imports
-- `portal/app/docs/portfolio/page.tsx` - Removed Header/Footer imports
-
-### Pattern Learned
-When a `layout-client.tsx` provides navigation, individual pages within that layout should NOT include their own Header/Footer components - they should only render their content. The layout wraps all pages with consistent navigation.
-
-## URLs Reference
-
-### Public Pages (no auth)
-- https://lumenquery.io/ - Home
-- https://lumenquery.io/analytics - Network analytics
-- https://lumenquery.io/contracts - Contract explorer
-- https://lumenquery.io/docs - API documentation
-- https://lumenquery.io/blog - Blog posts
-- https://lumenquery.io/pricing - Pricing
-
-### Authenticated Pages
-- https://lumenquery.io/dashboard - User dashboard
-- https://lumenquery.io/intelligence - Transaction intelligence
-- https://lumenquery.io/portfolio - Portfolio management
-- https://lumenquery.io/admin - Admin console (SUPER_ADMIN only)
-
-### API Endpoints
-- https://lumenquery.io/api/health - Health check
-- https://lumenquery.io/api/analytics/network - Network metrics
-- https://lumenquery.io/api/transactions/stream - SSE transaction stream
-
