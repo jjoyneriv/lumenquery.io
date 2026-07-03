@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://lumenquery.io';
-  const today = new Date('2026-06-09');
+  const today = new Date('2026-07-03');
 
   // Core pages
   const corePages: MetadataRoute.Sitemap = [
@@ -11,6 +11,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: today,
       changeFrequency: 'weekly',
       priority: 1.0,
+    },
+    {
+      url: `${baseUrl}/stellar`,
+      lastModified: today,
+      changeFrequency: 'daily',
+      priority: 0.9,
     },
     {
       url: `${baseUrl}/query`,
@@ -130,8 +136,33 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Blog posts - ALL 59 posts with their actual publication dates
+  // Blog posts with their actual publication dates
   const blogPosts: MetadataRoute.Sitemap = [
+    // 2026-07-03 posts (quantum, Open USD, ERC-3643, RWA dashboard)
+    {
+      url: `${baseUrl}/blog/stellar-quantum-preparedness-post-quantum-soroban`,
+      lastModified: new Date('2026-07-03'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/open-usd-consortium-visa-blackrock-stellar-stablecoin`,
+      lastModified: new Date('2026-07-03'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/erc-3643-compliant-security-tokens-stellar`,
+      lastModified: new Date('2026-07-03'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/stellar-2b-rwa-tokenized-asset-analytics-dashboard`,
+      lastModified: new Date('2026-07-03'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
     // 2026-06-09 posts (Protocol 27, Circle CCTP, DTCC, Alchemy)
     {
       url: `${baseUrl}/blog/stellar-protocol-27-zipper-developer-guide`,

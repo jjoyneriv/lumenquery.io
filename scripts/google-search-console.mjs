@@ -27,6 +27,7 @@ const BASE_URL = 'https://lumenquery.io';
 const SITEMAP_URLS = [
   // Core
   '/',
+  '/stellar',
   '/query',
   '/pricing',
   // Docs
@@ -48,6 +49,18 @@ const SITEMAP_URLS = [
   '/guides/lumenquery-tutorial',
   // Blog
   '/blog',
+  '/blog/stellar-quantum-preparedness-post-quantum-soroban',
+  '/blog/open-usd-consortium-visa-blackrock-stellar-stablecoin',
+  '/blog/erc-3643-compliant-security-tokens-stellar',
+  '/blog/stellar-2b-rwa-tokenized-asset-analytics-dashboard',
+  '/blog/stellar-protocol-27-zipper-developer-guide',
+  '/blog/circle-cctp-stellar-cross-chain-usdc',
+  '/blog/dtcc-stellar-tokenized-securities-institutional-catalyst',
+  '/blog/alchemy-stellar-rpc-infrastructure-competition',
+  '/blog/build-stellar-payment-status-page-lumenquery-apis',
+  '/blog/stellar-api-rate-limits-production-apps',
+  '/blog/track-token-velocity-stellar-stablecoins-rwa',
+  '/blog/building-compliance-friendly-stellar-apps',
   '/blog/build-stellar-payment-dashboard-horizon-api',
   '/blog/what-is-soroban-rpc-stellar-smart-contracts',
   '/blog/stellar-stablecoin-payments-low-fees-fast-settlement',
