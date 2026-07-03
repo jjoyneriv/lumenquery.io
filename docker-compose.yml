@@ -47,7 +47,6 @@ services:
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
       - STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}
       - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
-      - HORIZON_API_URL=http://stellar-horizon:8000
       - SOROBAN_RPC_URL=http://host.docker.internal:8001
     depends_on:
       - postgres
@@ -65,7 +64,6 @@ services:
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@127.0.0.1:5432/${POSTGRES_DB}
       - REDIS_URL=redis://127.0.0.1:6379
-      - HORIZON_API_URL=http://127.0.0.1:8000
     depends_on:
       - postgres
       - redis

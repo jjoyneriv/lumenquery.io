@@ -2,7 +2,8 @@
 // Horizon API Client for Portfolio Data
 // ===========================================
 
-const HORIZON_URL = process.env.HORIZON_URL || 'http://stellar-horizon:8000';
+// Always use public Stellar Horizon API (local stellar-horizon container was removed)
+const HORIZON_URL = 'https://horizon.stellar.org';
 
 export interface HorizonAccount {
   id: string;
