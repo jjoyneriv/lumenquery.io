@@ -36,18 +36,26 @@ export default function Footer({ variant = 'simple' }: FooterProps) {
               </ul>
             </div>
             <div>
+              <h4 className="font-semibold mb-3 sm:mb-4 text-white">Solutions</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><Link href="/stellar-horizon-api" className="hover:text-[#7366FF]">Stellar Horizon API</Link></li>
+                <li><Link href="/stellar-rpc-provider" className="hover:text-[#7366FF]">Stellar RPC Provider</Link></li>
+                <li><Link href="/soroban-rpc-api" className="hover:text-[#7366FF]">Soroban RPC API</Link></li>
+                <li><Link href="/stellar-blockchain-analytics-api" className="hover:text-[#7366FF]">Blockchain Analytics</Link></li>
+                <li><Link href="/stellar-transaction-monitoring" className="hover:text-[#7366FF]">Transaction Monitoring</Link></li>
+                <li><Link href="/xlm-whale-alerts" className="hover:text-[#7366FF]">XLM Whale Alerts</Link></li>
+                <li><Link href="/stellar-api-rate-limits" className="hover:text-[#7366FF]">API Rate Limits</Link></li>
+                <li><Link href="/stellar-api-provider-comparison" className="hover:text-[#7366FF]">Provider Comparison</Link></li>
+              </ul>
+            </div>
+            <div>
               <h4 className="font-semibold mb-3 sm:mb-4 text-white">Resources</h4>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li><a href="https://developers.stellar.org" target="_blank" rel="noopener noreferrer" className="hover:text-[#7366FF]">Stellar Docs</a></li>
                 <li><a href="https://stellar.org" target="_blank" rel="noopener noreferrer" className="hover:text-[#7366FF]">Stellar.org</a></li>
-                <li><Link href="/sitemap.xml" className="hover:text-[#7366FF]">Sitemap</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-3 sm:mb-4 text-white">Support</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
                 <li><a href="mailto:support@lumenquery.io" className="hover:text-[#7366FF]">Contact Us</a></li>
                 <li><Link href="/dashboard" className="hover:text-[#7366FF]">Dashboard</Link></li>
+                <li><Link href="/sitemap.xml" className="hover:text-[#7366FF]">Sitemap</Link></li>
               </ul>
             </div>
           </div>

@@ -1779,6 +1779,12 @@ When choosing infrastructure for your Stellar application:
 
 Since Horizon and Soroban RPC have standard APIs, switching providers is straightforward — just change the base URL. The differentiator is everything above and beyond the raw API: analytics, monitoring, decoded data, and developer experience.
 
+## Related Resources
+
+- [Stellar API Provider Comparison](/stellar-api-provider-comparison) — Full comparison of Stellar infrastructure providers
+- [Stellar RPC Provider](/stellar-rpc-provider) — Managed Soroban RPC infrastructure
+- [Stellar Horizon API](/stellar-horizon-api) — Production Horizon API with analytics and monitoring
+
 ## LumenQuery's Position
 
 LumenQuery was built for Stellar from day one. While we welcome competition from Alchemy and others, our focus remains on being the best infrastructure provider for teams building specifically on Stellar:
@@ -2264,6 +2270,12 @@ async function testRateLimits() {
 
 The goal is not to fight rate limits — it is to design your application so that they never matter.
 
+## Related Resources
+
+- [Stellar API Rate Limits](/stellar-api-rate-limits) — Understand rate limits across tiers and how to choose the right plan
+- [Stellar Horizon API](/stellar-horizon-api) — Production-ready Horizon API access with built-in caching
+- [Stellar RPC Provider](/stellar-rpc-provider) — Managed Soroban RPC infrastructure for smart contract apps
+
 ---
 
 *Stop fighting rate limits. [LumenQuery](/auth/signup) provides managed Stellar API access with generous rate limits, built-in caching, and usage analytics. Start with the free tier.*
@@ -2522,6 +2534,12 @@ A 50% spike in velocity for a stablecoin could mean a major remittance corridor 
 - Explore the [LumenQuery Token Analytics](/analytics/tokens) dashboard for live velocity data
 - Read about [whale tracking](/blog/xlm-price-prediction-whale-accumulation) and large transfer monitoring
 - Check the [API documentation](/docs/analytics) for detailed endpoint reference
+
+## Related Resources
+
+- [Stellar Blockchain Analytics API](/stellar-blockchain-analytics-api) — Pre-built analytics for token velocity and network metrics
+- [XLM Whale Alerts](/xlm-whale-alerts) — Track large XLM transfers and whale movements in real time
+- [Stellar Transaction Monitoring](/stellar-transaction-monitoring) — Monitor payment flows across the Stellar network
 
 ---
 
@@ -3045,6 +3063,12 @@ async function pollPayments(accountId, onNewPayment) {
 - Integrate with the [LumenQuery Live Transaction Viewer](/dashboard/transactions) for decoded operations
 - Use [Network Analytics](/analytics) for TPS and fee trends
 
+## Related Resources
+
+- [Stellar Horizon API](/stellar-horizon-api) — Managed Horizon API for payment dashboards and account queries
+- [Stellar API Provider Comparison](/stellar-api-provider-comparison) — Evaluate providers for your payment infrastructure
+- [Stellar Transaction Monitoring](/stellar-transaction-monitoring) — Real-time payment monitoring tools
+
 ---
 
 *Build your payment dashboard on reliable infrastructure. [LumenQuery](/auth/signup) provides managed Horizon API with sub-100ms response times. Start free.*
@@ -3164,6 +3188,12 @@ Running your own Soroban RPC requires Captive Core, monitoring, and maintenance.
 - **[Soroban RPC docs](/docs/contracts)**: Complete method reference
 - **[Smart Contract Explorer](/contracts)**: Decoded contract data, events, and storage
 - **[Deploy Contracts](/contracts/deploy)**: Deploy from your browser with Freighter
+
+## Related Resources
+
+- [Soroban RPC API](/soroban-rpc-api) — Full Soroban RPC method reference and infrastructure
+- [Stellar RPC Provider](/stellar-rpc-provider) — Managed RPC infrastructure for contract interaction
+- [Stellar API Provider Comparison](/stellar-api-provider-comparison) — Compare Soroban RPC access across providers
 
 ---
 
@@ -3395,6 +3425,12 @@ When streaming transactions, be aware of rate limits:
 - SSE connections count as long-lived requests
 
 For production streaming, use a managed API endpoint with higher limits.
+
+## Related Resources
+
+- [Stellar Transaction Monitoring](/stellar-transaction-monitoring) — Production-grade transaction monitoring tools
+- [Stellar Blockchain Analytics API](/stellar-blockchain-analytics-api) — Real-time network analytics and TPS tracking
+- [XLM Whale Alerts](/xlm-whale-alerts) — Automated alerts for large XLM transfers
 
 ---
 
@@ -3842,6 +3878,12 @@ A $25-99/month managed API is almost always cheaper than the alternatives.
 - **[API Documentation](/docs)**: Complete endpoint reference
 - **[Sign Up](/auth/signup)**: Start with the free tier — no credit card required
 
+## Related Resources
+
+- [Stellar API Rate Limits](/stellar-api-rate-limits) — Compare rate limits across plans and find the right fit
+- [Stellar Horizon API](/stellar-horizon-api) — Managed Horizon API with generous rate limits
+- [Stellar RPC Provider](/stellar-rpc-provider) — Soroban RPC infrastructure with transparent pricing
+
 ---
 
 *Stop fighting rate limits. [LumenQuery](/auth/signup) provides managed Stellar API with transparent rate limits and reliable performance. Start free.*
@@ -4083,6 +4125,12 @@ Running your own Horizon instance requires PostgreSQL, Captive Core, disk manage
 - **[Soroban RPC](/docs/contracts)**: Contract interaction and transaction submission
 - **[Network Analytics](/analytics)**: Pre-built dashboards for network metrics
 
+## Related Resources
+
+- [Stellar Horizon API](/stellar-horizon-api) — Managed Horizon API for account queries and transaction history
+- [Soroban RPC API](/soroban-rpc-api) — Smart contract RPC infrastructure for Soroban developers
+- [Stellar API Provider Comparison](/stellar-api-provider-comparison) — Compare Horizon vs RPC providers
+
 ---
 
 *Build on both APIs without running a single node. [LumenQuery](/auth/signup) provides managed Horizon and Soroban RPC with sub-100ms response times. Start free.*
@@ -4186,6 +4234,12 @@ For most apps — wallets, explorers, DeFi frontends, payment processors — man
 
 The engineer hours spent managing infrastructure cost more than a managed API subscription.
 
+## Related Resources
+
+- [Stellar Horizon API](/stellar-horizon-api) — Managed Horizon API so you never need to run your own node
+- [Stellar RPC Provider](/stellar-rpc-provider) — Hosted Soroban RPC with zero infrastructure overhead
+- [Stellar API Rate Limits](/stellar-api-rate-limits) — Understand managed API rate limits and choose the right plan
+
 ---
 
 *Ship your Stellar app faster. [LumenQuery](/auth/signup) handles the infrastructure so you can focus on your product. Free tier available.*
@@ -4282,6 +4336,12 @@ LumenQuery provides contract monitoring tools:
 - **[Smart Contract Explorer](/contracts)**: Decoded call history, storage viewer, event stream
 - **[Network Analytics](/analytics)**: Network-level Soroban activity metrics
 - **[Live Transactions](/dashboard/transactions)**: Real-time transaction stream with Soroban highlighting
+
+## Related Resources
+
+- [Soroban RPC API](/soroban-rpc-api) — RPC infrastructure for smart contract monitoring and event queries
+- [Stellar RPC Provider](/stellar-rpc-provider) — Managed Soroban RPC with monitoring-friendly rate limits
+- [Stellar Blockchain Analytics API](/stellar-blockchain-analytics-api) — Network-level analytics including Soroban metrics
 
 ---
 
@@ -4386,6 +4446,12 @@ LumenQuery provides the infrastructure layer for institutional monitoring:
 - **[Live Transactions](/dashboard/transactions)**: Decoded transaction feed
 - **[Horizon API](/docs)**: Programmatic access to accounts and transactions
 - **[Portfolio Intelligence](/portfolio)**: Multi-account balance tracking
+
+## Related Resources
+
+- [Stellar Transaction Monitoring](/stellar-transaction-monitoring) — Real-time monitoring infrastructure for exchanges and compliance teams
+- [XLM Whale Alerts](/xlm-whale-alerts) — Detect and alert on large XLM transfers
+- [Stellar Blockchain Analytics API](/stellar-blockchain-analytics-api) — Network analytics and transaction volume tracking
 
 ---
 
@@ -4788,6 +4854,12 @@ Engineer time debugging rate limits costs $50-150/hour. Infrastructure managemen
 - **[API Documentation](/docs)**: Complete endpoint reference
 - **[Sign Up](/auth/signup)**: Start free, no credit card required
 
+## Related Resources
+
+- [Stellar API Rate Limits](/stellar-api-rate-limits) — Detailed breakdown of rate limits per plan
+- [Stellar Horizon API](/stellar-horizon-api) — Production-ready Horizon API with high throughput
+- [Stellar API Provider Comparison](/stellar-api-provider-comparison) — Compare managed providers side by side
+
 ---
 
 *Stop hitting rate limits. [LumenQuery](/auth/signup) provides managed Horizon API and Soroban RPC with generous rate limits. Start free, scale when you need to.*
@@ -4907,6 +4979,12 @@ LumenQuery provides a pre-built dashboard at [/analytics](/analytics) — public
 - Historical charts: 24-hour trends
 - Fee tracking: Current fee distribution
 - Soroban metrics: Contract invocation counts and gas usage
+
+## Related Resources
+
+- [Stellar Blockchain Analytics API](/stellar-blockchain-analytics-api) — API access to network health metrics, TPS, and fee data
+- [Stellar Transaction Monitoring](/stellar-transaction-monitoring) — Real-time transaction monitoring and alerting
+- [Stellar Horizon API](/stellar-horizon-api) — Query ledgers, fees, and network state programmatically
 
 ---
 
@@ -8773,6 +8851,12 @@ You now have a working Stellar blockchain explorer. Here are some ways to extend
 4. **Real-time streaming** - Use Horizon's streaming API for live updates
 5. **Mobile responsiveness** - Make the explorer work on all devices
 
+## Related Resources
+
+- [Stellar Horizon API](/stellar-horizon-api) — Production-ready Horizon API access for blockchain explorers
+- [Stellar API Provider Comparison](/stellar-api-provider-comparison) — Compare Horizon providers and choose the right one
+- [Stellar API Rate Limits](/stellar-api-rate-limits) — Understand rate limits when building data-heavy explorer apps
+
 ---
 
 *Ready to build your own Stellar explorer? [Sign up for LumenQuery](/auth/signup) and get started with reliable Horizon API infrastructure.*
@@ -9284,6 +9368,12 @@ LumenQuery provides enterprise-grade Soroban RPC infrastructure:
 - **No maintenance** - We handle the infrastructure
 - **Support** - Expert help when you need it
 
+## Related Resources
+
+- [Soroban RPC API](/soroban-rpc-api) — Production-ready Soroban RPC infrastructure
+- [Stellar RPC Provider](/stellar-rpc-provider) — Managed RPC nodes for smart contract developers
+- [Stellar API Provider Comparison](/stellar-api-provider-comparison) — Compare Soroban RPC providers side by side
+
 ---
 
 *Ready to build with Soroban? [Sign up for LumenQuery](/auth/signup) and get production-ready RPC infrastructure today.*
@@ -9589,6 +9679,12 @@ There's no one-size-fits-all answer. The right choice depends on your specific r
 - **Enterprise/Regulated**: Consider self-hosted or dedicated infrastructure
 
 Whatever you choose, ensure your provider supports both Horizon and Soroban RPC—smart contracts are the future of Stellar, and you'll need full-stack support.
+
+## Related Resources
+
+- [Stellar API Provider Comparison](/stellar-api-provider-comparison) — Detailed provider comparison with pricing and features
+- [Stellar Horizon API](/stellar-horizon-api) — LumenQuery managed Horizon API infrastructure
+- [Stellar RPC Provider](/stellar-rpc-provider) — Managed Soroban RPC with enterprise-grade SLAs
 
 ---
 
@@ -13324,6 +13420,12 @@ Rather than relying on price predictions, you can track the on-chain metrics tha
 - **[Horizon API](/docs)**: Query account balances, payment history, and network state programmatically
 
 The data is public and verifiable. Use it to form your own view.
+
+## Related Resources
+
+- [XLM Whale Alerts](/xlm-whale-alerts) — Get alerted on large XLM transfers and whale accumulation patterns
+- [Stellar Transaction Monitoring](/stellar-transaction-monitoring) — Real-time monitoring for exchange flows and large movements
+- [Stellar Blockchain Analytics API](/stellar-blockchain-analytics-api) — API access to on-chain metrics, TPS, and volume data
 
 ---
 

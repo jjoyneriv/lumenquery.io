@@ -42,6 +42,15 @@ const SITEMAP_URLS = [
   '/analytics/tokens',
   // Contracts
   '/contracts',
+  // SEO landing pages
+  '/stellar-horizon-api',
+  '/stellar-rpc-provider',
+  '/soroban-rpc-api',
+  '/stellar-blockchain-analytics-api',
+  '/stellar-transaction-monitoring',
+  '/xlm-whale-alerts',
+  '/stellar-api-rate-limits',
+  '/stellar-api-provider-comparison',
   // Blog
   '/blog',
   '/blog/stellar-quantum-preparedness-post-quantum-soroban',

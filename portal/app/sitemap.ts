@@ -98,6 +98,58 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
+  // SEO landing pages
+  const seoLandingPages: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/stellar-horizon-api`,
+      lastModified: today,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/stellar-rpc-provider`,
+      lastModified: today,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/soroban-rpc-api`,
+      lastModified: today,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/stellar-blockchain-analytics-api`,
+      lastModified: today,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/stellar-transaction-monitoring`,
+      lastModified: today,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/xlm-whale-alerts`,
+      lastModified: today,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/stellar-api-rate-limits`,
+      lastModified: today,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/stellar-api-provider-comparison`,
+      lastModified: today,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+  ];
+
   // Blog listing
   const blogListing: MetadataRoute.Sitemap = [
     {
@@ -514,6 +566,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...docPages,
     ...analyticsPages,
     ...contractsPages,
+    ...seoLandingPages,
     ...blogListing,
     ...blogPosts,
   ];
