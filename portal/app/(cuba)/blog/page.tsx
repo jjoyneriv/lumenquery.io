@@ -2,6 +2,38 @@ import Link from 'next/link';
 
 const posts = [
   {
+    slug: 'stellar-quantum-preparedness-post-quantum-soroban',
+    title: 'Stellar\'s Quantum Preparedness Plan: How Developers Should Audit Signatures Before Post-Quantum Soroban',
+    excerpt: 'SDF\'s Quantum Preparedness Plan entered stage one in 2026, adding NIST-approved quantum-safe signature algorithms to the Soroban layer. Here is what changes for key management, signing, and contract design.',
+    date: '2026-07-03',
+    readTime: '14 min read',
+    category: 'Developer Guide',
+  },
+  {
+    slug: 'open-usd-consortium-visa-blackrock-stellar-stablecoin',
+    title: 'Inside the Open USD Consortium: What Visa and BlackRock\'s Stellar Stablecoin Means for Payment Developers',
+    excerpt: 'Stellar joined the Visa/BlackRock-backed Open USD Consortium in July 2026. A builder\'s read on the new stablecoin rails, what endpoints matter for tracking issuance and flows, and integration opportunities.',
+    date: '2026-07-03',
+    readTime: '12 min read',
+    category: 'Industry Insights',
+  },
+  {
+    slug: 'erc-3643-compliant-security-tokens-stellar',
+    title: 'Building Compliant Security Tokens on Stellar with ERC-3643: A Developer\'s Guide to Permissioned Assets',
+    excerpt: 'Stellar\'s ERC-3643 Association membership plus the $2B+ tokenized-RWA milestone. Practical how-to: native asset issuance vs permissioned standards, compliance flags, and querying compliant-asset state.',
+    date: '2026-07-03',
+    readTime: '15 min read',
+    category: 'Developer Guide',
+  },
+  {
+    slug: 'stellar-2b-rwa-tokenized-asset-analytics-dashboard',
+    title: 'Tracking Stellar\'s $2B RWA Milestone On-Chain: Build a Tokenized-Asset Analytics Dashboard with LumenQuery APIs',
+    excerpt: 'Stellar crossed $2B in tokenized RWAs with payment volume up 72% YoY. A hands-on guide to building a live dashboard tracking tokenized asset issuance, holder distribution, and transfer activity.',
+    date: '2026-07-03',
+    readTime: '16 min read',
+    category: 'Developer Guide',
+  },
+  {
     slug: 'stellar-protocol-27-zipper-developer-guide',
     title: 'Stellar Protocol 27 "Zipper": What Developers Need to Prepare Before the July Mainnet Vote',
     excerpt: 'SDF published the Protocol 27 upgrade guide on June 4. Here is what changes, what breaks, which SDK versions you need, and how to test on the testnet before the mainnet vote.',

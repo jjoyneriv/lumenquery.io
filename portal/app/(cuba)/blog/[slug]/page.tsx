@@ -9,6 +9,1083 @@ const posts: Record<string, {
   category: string;
   content: string;
 }> = {
+  'stellar-quantum-preparedness-post-quantum-soroban': {
+    title: 'Stellar\'s Quantum Preparedness Plan: How Developers Should Audit Signatures Before Post-Quantum Soroban',
+    date: '2026-07-03',
+    readTime: '14 min read',
+    category: 'Developer Guide',
+    content: `
+The Stellar Development Foundation published its Quantum Preparedness Plan in early 2026, entering stage one of a multi-phase effort to introduce NIST-approved quantum-safe signature algorithms into the Stellar protocol. The initial focus is on the Soroban smart contract layer, where new cryptographic primitives will be available before they reach the classic transaction layer. If you build on Stellar, this is your signal to start auditing how your application handles key management, transaction signing, and signature verification.
+
+## Why Quantum Preparedness Matters Now
+
+Quantum computers capable of breaking Ed25519 and ECDSA do not exist today. But the threat model is not about today. It is about two scenarios:
+
+1. **Harvest now, decrypt later**: Adversaries can record signed transactions today and attempt to forge keys once quantum hardware matures. Any long-lived account with significant assets is a target.
+2. **Migration lead time**: Transitioning millions of accounts and applications to new signature schemes takes years. Starting now means the network is ready before it is urgent.
+
+NIST finalized three post-quantum signature standards in 2024:
+
+| Algorithm | Type | Signature Size | Public Key Size | Use Case |
+|-----------|------|---------------|-----------------|----------|
+| ML-DSA (Dilithium) | Lattice-based | 2,420-4,627 bytes | 1,312-2,592 bytes | General purpose |
+| SLH-DSA (SPHINCS+) | Hash-based | 7,856-49,856 bytes | 32-64 bytes | Conservative fallback |
+| FN-DSA (Falcon) | Lattice-based | 666-1,280 bytes | 897-1,793 bytes | Compact signatures |
+
+Compare this to Ed25519, which Stellar currently uses:
+
+| Property | Ed25519 | ML-DSA-65 (Dilithium) |
+|----------|---------|----------------------|
+| Signature size | 64 bytes | 3,309 bytes |
+| Public key size | 32 bytes | 1,952 bytes |
+| Verification speed | ~70,000/sec | ~30,000/sec |
+| Quantum safe | No | Yes |
+
+The size increase is significant. A Stellar transaction envelope that currently fits in a few hundred bytes could grow by an order of magnitude. This has implications for network throughput, storage costs, and state archival.
+
+## What Changes for Stellar Developers
+
+### Stage One: Soroban Cryptographic Primitives
+
+The first stage introduces post-quantum signature verification as Soroban host functions. This means smart contracts can verify quantum-safe signatures, but the network's consensus layer still uses Ed25519.
+
+\`\`\`javascript
+// Future Soroban host function (illustrative)
+// Verify an ML-DSA signature inside a contract
+const result = contract.call('verify_pq_signature', {
+  algorithm: 'ML-DSA-65',
+  message: messageBytes,
+  signature: signatureBytes,
+  publicKey: pqPublicKeyBytes,
+});
+\`\`\`
+
+This allows developers to build hybrid schemes: the transaction itself is signed with Ed25519 (as required by the network), but the contract payload includes an additional quantum-safe signature for sensitive operations.
+
+### Stage Two: Hybrid Transaction Signatures
+
+In a later stage, the transaction envelope format will support hybrid signatures, where both a classical and a post-quantum signature are attached to each transaction. Validators verify both during consensus.
+
+### Stage Three: Full Migration
+
+Eventually, the network may allow pure post-quantum signatures. This is the furthest out and depends on ecosystem readiness.
+
+## How to Monitor Signature Schemes via API
+
+You can already start monitoring the cryptographic health of accounts and transactions on the Stellar network using the Horizon API through LumenQuery.
+
+### Check Account Signer Types
+
+\`\`\`javascript
+const HORIZON = 'https://horizon.stellar.org';
+
+async function getAccountSigners(accountId) {
+  const res = await fetch(\`\${HORIZON}/accounts/\${accountId}\`);
+  const account = await res.json();
+
+  return account.signers.map(signer => ({
+    key: signer.key,
+    type: signer.type,       // 'ed25519_public_key' currently
+    weight: signer.weight,
+  }));
+}
+
+// Audit: flag accounts that lack multi-sig
+async function auditSignerSecurity(accountId) {
+  const signers = await getAccountSigners(accountId);
+
+  return {
+    accountId,
+    signerCount: signers.length,
+    totalWeight: signers.reduce((sum, s) => sum + s.weight, 0),
+    usesMultiSig: signers.length > 1,
+    signerTypes: [...new Set(signers.map(s => s.type))],
+    hasQuantumSafeSigner: signers.some(s =>
+      s.type === 'ml_dsa_public_key' || s.type === 'slh_dsa_public_key'
+    ),
+  };
+}
+\`\`\`
+
+### Monitor Transaction Signature Sizes
+
+Track signature sizes over time to detect when quantum-safe signatures begin appearing on the network:
+
+\`\`\`javascript
+async function analyzeTransactionSignatures(limit = 50) {
+  const res = await fetch(
+    \`\${HORIZON}/transactions?limit=\${limit}&order=desc\`
+  );
+  const data = await res.json();
+
+  return data._embedded.records.map(tx => {
+    const envelope = Buffer.from(tx.envelope_xdr, 'base64');
+    return {
+      hash: tx.hash,
+      ledger: tx.ledger,
+      signatureCount: tx.signatures?.length || 0,
+      envelopeSize: envelope.length,
+      possiblePQSignature: envelope.length > 1000,
+    };
+  });
+}
+\`\`\`
+
+### Use LumenQuery Analytics to Track Network-Wide Trends
+
+\`\`\`javascript
+// Monitor average transaction envelope sizes over time
+const res = await fetch('https://lumenquery.io/api/analytics/network');
+const metrics = await res.json();
+
+console.log('Average tx size:', metrics.avgTransactionSize);
+console.log('Current protocol:', metrics.protocolVersion);
+\`\`\`
+
+## Practical Audit Checklist
+
+Use this checklist to assess your application's quantum readiness:
+
+### Key Management
+
+- **Inventory all signing keys**: List every Ed25519 key your application uses (hot wallets, cold storage, multi-sig signers)
+- **Identify long-lived keys**: Keys that have been active for more than 1 year are higher priority for migration
+- **Check key derivation**: If you derive keys from HD paths (SEP-0005), verify your library supports post-quantum key derivation
+- **Assess multi-sig configurations**: Multi-sig with 3-of-5 Ed25519 is not quantum-safe, it just requires breaking 3 keys instead of 1
+
+### Transaction Signing
+
+- **Audit signature verification**: If your application verifies signatures client-side, ensure your SDK version supports hybrid verification
+- **Check hardcoded assumptions**: Search your codebase for hardcoded signature sizes (64 bytes) or key sizes (32 bytes)
+- **Review XDR parsing**: If you parse transaction envelopes manually, verify your parser handles variable-length signature arrays
+
+\`\`\`javascript
+// Example: find hardcoded Ed25519 assumptions in your code
+const AUDIT_PATTERNS = [
+  /signature\\.length\\s*===?\\s*64/,     // Hardcoded sig size
+  /publicKey\\.length\\s*===?\\s*32/,      // Hardcoded key size
+  /ed25519/i,                           // Direct algorithm references
+  /SIGNATURE_LENGTH\\s*=\\s*64/,         // Constants
+];
+\`\`\`
+
+### Smart Contract Design
+
+- **Review on-chain verification**: If your Soroban contracts verify signatures, plan to add PQ verification paths
+- **Check storage impact**: Post-quantum keys and signatures consume more storage; review your TTL extension budget
+- **Assess contract upgradeability**: Ensure your contracts can be upgraded to support new signature verification logic
+
+## Cost Impact Estimation
+
+Post-quantum signatures will affect transaction costs due to larger envelope sizes:
+
+| Metric | Ed25519 (Current) | ML-DSA-65 (Hybrid) | Impact |
+|--------|-------------------|---------------------|--------|
+| Signature size | 64 bytes | 64 + 3,309 bytes | ~52x increase per sig |
+| Typical tx envelope | 300-500 bytes | 3,600-4,000 bytes | ~8-10x increase |
+| Write bytes (Soroban) | Charged per byte | Charged per byte | Higher resource fees |
+| State archival | Per-byte TTL cost | Per-byte TTL cost | Higher rent |
+
+\`\`\`javascript
+// Future-proof fee estimation
+async function estimateTransactionFee(tx, usePQSignature = false) {
+  const baseFee = 100; // stroops
+  const currentEnvelopeSize = tx.toEnvelope().toXDR().length;
+
+  if (usePQSignature) {
+    const pqOverhead = 3309 * tx.signatures.length;
+    const adjustedSize = currentEnvelopeSize + pqOverhead;
+    return Math.ceil(baseFee * (adjustedSize / currentEnvelopeSize));
+  }
+
+  return baseFee;
+}
+\`\`\`
+
+## Timeline and Recommendations
+
+| Phase | Expected Timeline | Developer Action |
+|-------|-------------------|-----------------|
+| Stage 1: Soroban primitives | 2026 H2 | Audit contracts, test PQ verification |
+| Stage 2: Hybrid signatures | 2027 | Update SDK, test hybrid signing |
+| Stage 3: Full migration | 2028+ | Rotate keys to PQ, deprecate Ed25519-only |
+
+### What to Do Today
+
+1. **Audit your key inventory** using the checklist above
+2. **Update your Stellar SDK** to the latest version
+3. **Monitor the SDF's quantum-preparedness repository** for specification updates
+4. **Test on testnet** once PQ host functions are available
+5. **Budget for increased transaction costs** in your application's fee model
+
+## How LumenQuery Helps
+
+LumenQuery provides the infrastructure to monitor the quantum transition:
+
+- **Horizon API**: Query account signers, transaction envelopes, and signature metadata through [api.lumenquery.io](https://api.lumenquery.io)
+- **Analytics Dashboard**: Track network-wide transaction size trends on [/analytics/network](/analytics/network)
+- **Soroban RPC**: Test post-quantum host functions via [rpc.lumenquery.io](https://rpc.lumenquery.io) as they become available
+- **Live Transactions**: Monitor signature types in real time on [/dashboard/transactions](/dashboard/transactions)
+- **Natural Language Query**: Ask questions like "show transactions with envelope size > 1000 bytes" on [/query](/query)
+
+---
+
+*Prepare your Stellar application for the quantum transition. [LumenQuery](/auth/signup) provides managed Horizon API and Soroban RPC with analytics to track the migration. Start free.*
+    `,
+  },
+  'open-usd-consortium-visa-blackrock-stellar-stablecoin': {
+    title: 'Inside the Open USD Consortium: What Visa and BlackRock\'s Stellar Stablecoin Means for Payment Developers',
+    date: '2026-07-03',
+    readTime: '12 min read',
+    category: 'Industry Insights',
+    content: `
+In July 2026, Stellar was announced as a member of the Open USD Consortium, an initiative backed by Visa and BlackRock to create interoperable stablecoin infrastructure for global payments. This is not another DeFi yield token or algorithmic experiment. This is the two largest players in payments and asset management building regulated stablecoin rails, and Stellar is part of that foundation.
+
+For developers building on Stellar, this article is a practical breakdown of what the consortium means, what new endpoints and data flows matter, and how to position your application to take advantage of institutional stablecoin adoption.
+
+## What Is the Open USD Consortium
+
+The Open USD Consortium is a multi-stakeholder initiative to standardize stablecoin issuance, transfer, and settlement across regulated networks. The founding members include:
+
+| Member | Role | Relevance |
+|--------|------|-----------|
+| Visa | Payment network operator | Merchant acceptance, card-to-stablecoin flows |
+| BlackRock | Asset manager, tokenized fund issuer | Reserve asset backing, institutional credibility |
+| Circle | USDC issuer | Existing stablecoin infrastructure |
+| SDF | Stellar network steward | Low-cost settlement layer |
+| Swift | Messaging standard | Interoperability with traditional banking |
+
+The consortium's goal is to create a unified framework where stablecoins issued by different parties can interoperate across chains and traditional payment networks.
+
+## Why Stellar Was Chosen
+
+Stellar's inclusion is not accidental. The network has specific properties that align with the consortium's requirements:
+
+### Transaction Economics
+
+| Property | Stellar | Ethereum L1 | Solana |
+|----------|---------|-------------|--------|
+| Average tx fee | 0.00001 XLM (~$0.000003) | $0.50-$5.00 | $0.001-$0.01 |
+| Finality | 5-7 seconds | 12-15 minutes | 400ms (soft), 32s (full) |
+| TPS (current) | 100-200 | 15-30 | 2,000-4,000 |
+| Compliance features | Native (flags, clawback) | Via smart contract | Via smart contract |
+
+### Built-in Compliance Primitives
+
+Stellar's asset model includes compliance features at the protocol level:
+
+- **Authorization Required**: Issuer must approve each trustline
+- **Authorization Revocable**: Issuer can freeze assets
+- **Clawback Enabled**: Issuer can retrieve assets (for regulatory seizure)
+- **Authorization Immutable**: Lock flags permanently
+
+These are exactly what a Visa-backed stablecoin needs for regulatory compliance, and they do not require a smart contract.
+
+## What This Means for Developers
+
+### Track Stablecoin Issuance and Supply
+
+Monitor the total supply of consortium stablecoins by querying the issuer account:
+
+\`\`\`javascript
+const HORIZON = 'https://horizon.stellar.org';
+
+async function trackStablecoinSupply(assetCode, issuerId) {
+  const res = await fetch(
+    \`\${HORIZON}/assets?asset_code=\${assetCode}&asset_issuer=\${issuerId}\`
+  );
+  const data = await res.json();
+  const asset = data._embedded.records[0];
+
+  return {
+    assetCode: asset.asset_code,
+    totalSupply: parseFloat(asset.amount),
+    authorizedAccounts: asset.accounts.authorized,
+    clawbackEnabled: asset.flags.auth_clawback_enabled,
+  };
+}
+
+// Track supply changes over time
+async function trackSupplyHistory(assetCode, issuerId, hours = 24) {
+  const res = await fetch(
+    \`\${HORIZON}/accounts/\${issuerId}/payments?limit=200&order=desc\`
+  );
+  const data = await res.json();
+  const cutoff = new Date(Date.now() - hours * 60 * 60 * 1000);
+
+  let minted = 0;
+  let burned = 0;
+
+  for (const payment of data._embedded.records) {
+    if (new Date(payment.created_at) < cutoff) break;
+    if (payment.asset_code !== assetCode) continue;
+
+    const amount = parseFloat(payment.amount);
+    if (payment.from === issuerId) {
+      minted += amount;   // Issuer sending = minting
+    } else if (payment.to === issuerId) {
+      burned += amount;   // Receiving back = burning
+    }
+  }
+
+  return { minted, burned, netIssuance: minted - burned };
+}
+\`\`\`
+
+### Monitor Payment Flows
+
+The real value for developers is in tracking payment flows. With Visa involved, expect payment volumes to increase significantly:
+
+\`\`\`javascript
+// Use LumenQuery's analytics endpoint for aggregated data
+async function getStablecoinMetrics() {
+  const res = await fetch('https://lumenquery.io/api/analytics/tokens');
+  const data = await res.json();
+
+  return {
+    usdcVolume24h: data.tokens?.find(t => t.code === 'USDC')?.volume24h,
+    paymentCount24h: data.paymentCount,
+    uniqueSenders: data.uniqueSenders,
+  };
+}
+\`\`\`
+
+## Integration Opportunities
+
+### 1. Merchant Payment Processing
+
+With Visa's involvement, expect a flow where merchants accept stablecoins via the consortium's rails. Developers building payment processing can prepare by streaming incoming payments:
+
+\`\`\`javascript
+// Stream incoming stablecoin payments to a merchant account
+function streamMerchantPayments(merchantAccountId) {
+  const url = \`\${HORIZON}/accounts/\${merchantAccountId}/payments?cursor=now\`;
+  const es = new EventSource(url);
+
+  es.onmessage = (event) => {
+    const payment = JSON.parse(event.data);
+
+    if (payment.type === 'payment' && payment.asset_code === 'USDC') {
+      console.log(\`Received \${payment.amount} USDC from \${payment.from}\`);
+
+      processPayment({
+        amount: payment.amount,
+        sender: payment.from,
+        transactionId: payment.transaction_hash,
+        timestamp: payment.created_at,
+      });
+    }
+  };
+}
+\`\`\`
+
+### 2. Compliance Reporting
+
+With auth_required and auth_revocable flags, consortium stablecoins will generate compliance-relevant data:
+
+\`\`\`javascript
+async function getAccountComplianceStatus(accountId) {
+  const res = await fetch(\`\${HORIZON}/accounts/\${accountId}\`);
+  const account = await res.json();
+
+  const stablecoinTrustlines = account.balances.filter(b =>
+    b.asset_type !== 'native' && ['USDC'].includes(b.asset_code)
+  );
+
+  return stablecoinTrustlines.map(tl => ({
+    asset: \`\${tl.asset_code}:\${tl.asset_issuer.substring(0, 8)}...\`,
+    balance: tl.balance,
+    authorized: tl.is_authorized,
+    frozen: !tl.is_authorized && tl.is_authorized_to_maintain_liabilities,
+  }));
+}
+\`\`\`
+
+### 3. Cross-Border Remittance Applications
+
+The combination of Visa's merchant network and Stellar's low-cost settlement creates new corridors:
+
+| Corridor | Before Consortium | After Consortium |
+|----------|-------------------|------------------|
+| US to Mexico | 3-5 day ACH, 3-5% fee | Near-instant, < 0.1% fee |
+| EU to Philippines | SWIFT, $25-45 fee | Near-instant, < $0.01 fee |
+| Intra-ASEAN | Correspondent banking | Direct stablecoin transfer |
+
+## What to Watch For
+
+### Short Term (Q3-Q4 2026)
+
+- Consortium specification documents (asset codes, issuer accounts, compliance requirements)
+- New stablecoin asset issuance announcements
+- SDK updates for consortium-specific features
+
+### Medium Term (2027)
+
+- Visa merchant integration pilots
+- BlackRock fund tokenization on Stellar
+- Cross-chain settlement protocols with consortium standards
+
+## How LumenQuery Helps
+
+LumenQuery is positioned to help developers build on consortium infrastructure:
+
+- **Horizon API**: Track stablecoin issuance, payments, and trustlines via [api.lumenquery.io](https://api.lumenquery.io)
+- **Analytics Dashboard**: Monitor stablecoin volume and network metrics on [/analytics](/analytics)
+- **Live Transactions**: Watch stablecoin settlements in real time on [/dashboard/transactions](/dashboard/transactions)
+- **Portfolio Intelligence**: Track stablecoin positions across multiple accounts on [/portfolio](/portfolio)
+- **Natural Language Query**: Ask "total USDC payments in the last 24 hours" on [/query](/query)
+
+---
+
+*Build on the next generation of stablecoin infrastructure. [LumenQuery](/auth/signup) provides managed Horizon API and Soroban RPC with real-time analytics for Stellar. Start free.*
+    `,
+  },
+  'erc-3643-compliant-security-tokens-stellar': {
+    title: 'Building Compliant Security Tokens on Stellar with ERC-3643: A Developer\'s Guide to Permissioned Assets',
+    date: '2026-07-03',
+    readTime: '15 min read',
+    category: 'Developer Guide',
+    content: `
+Stellar's membership in the ERC-3643 Association, combined with the network surpassing $2 billion in tokenized real-world assets, signals a clear direction: Stellar is becoming the preferred settlement layer for regulated, permissioned tokens. For developers, this means understanding how to issue compliant security tokens, manage permissioned transfers, and query on-chain compliance state through APIs.
+
+## What Is ERC-3643
+
+ERC-3643, also known as T-REX (Token for Regulated EXchanges), is a standard originally created for Ethereum that defines how security tokens should handle identity verification, transfer restrictions, and compliance enforcement on-chain.
+
+The standard has three core components:
+
+| Component | Purpose | Stellar Equivalent |
+|-----------|---------|-------------------|
+| Identity Registry | Maps wallet addresses to verified identities | Issuer account + SEP-0012 KYC |
+| Compliance Contract | Enforces transfer rules (jurisdiction, holding period, investor limits) | Authorization flags + Soroban contracts |
+| Token Contract | The security token itself | Native Stellar asset |
+
+Stellar does not implement ERC-3643 identically to Ethereum. Instead, Stellar's native asset model provides several of the same guarantees at the protocol level, and Soroban smart contracts fill the gaps.
+
+## Stellar's Native Compliance Features
+
+### Asset Authorization Flags
+
+Every Stellar asset issuer can set flags that control how the asset behaves:
+
+\`\`\`javascript
+const StellarSdk = require('@stellar/stellar-sdk');
+const server = new StellarSdk.Horizon.Server('https://horizon.stellar.org');
+
+// Configure an issuer account with compliance flags
+async function configureIssuer(issuerKeypair) {
+  const account = await server.loadAccount(issuerKeypair.publicKey());
+
+  const tx = new StellarSdk.TransactionBuilder(account, {
+    fee: '100',
+    networkPassphrase: StellarSdk.Networks.PUBLIC,
+  })
+    .addOperation(StellarSdk.Operation.setOptions({
+      setFlags:
+        StellarSdk.AuthRequiredFlag |
+        StellarSdk.AuthRevocableFlag |
+        StellarSdk.AuthClawbackEnabledFlag,
+    }))
+    .setTimeout(30)
+    .build();
+
+  tx.sign(issuerKeypair);
+  return server.submitTransaction(tx);
+}
+\`\`\`
+
+### Flag Behavior Matrix
+
+| Flag | Effect | Use Case |
+|------|--------|----------|
+| AUTH_REQUIRED | Holders must be approved by issuer before receiving | KYC enforcement |
+| AUTH_REVOCABLE | Issuer can freeze individual accounts | Regulatory freeze orders |
+| AUTH_CLAWBACK_ENABLED | Issuer can seize tokens from any holder | Court orders, compliance enforcement |
+| AUTH_IMMUTABLE | Flags cannot be changed once set | Lock configuration permanently |
+
+### Trustline Authorization Flow
+
+With AUTH_REQUIRED enabled, every new holder must be explicitly approved:
+
+\`\`\`javascript
+// Investor creates a trustline (requests to hold the asset)
+async function createTrustline(investorKeypair, assetCode, issuerPublicKey) {
+  const account = await server.loadAccount(investorKeypair.publicKey());
+  const asset = new StellarSdk.Asset(assetCode, issuerPublicKey);
+
+  const tx = new StellarSdk.TransactionBuilder(account, {
+    fee: '100',
+    networkPassphrase: StellarSdk.Networks.PUBLIC,
+  })
+    .addOperation(StellarSdk.Operation.changeTrust({ asset }))
+    .setTimeout(30)
+    .build();
+
+  tx.sign(investorKeypair);
+  return server.submitTransaction(tx);
+}
+
+// Issuer approves the trustline after KYC verification
+async function approveTrustline(issuerKeypair, investorPublicKey, assetCode) {
+  const issuerAccount = await server.loadAccount(issuerKeypair.publicKey());
+  const asset = new StellarSdk.Asset(assetCode, issuerKeypair.publicKey());
+
+  const tx = new StellarSdk.TransactionBuilder(issuerAccount, {
+    fee: '100',
+    networkPassphrase: StellarSdk.Networks.PUBLIC,
+  })
+    .addOperation(StellarSdk.Operation.setTrustLineFlags({
+      trustor: investorPublicKey,
+      asset,
+      flags: {
+        authorized: true,
+        authorizedToMaintainLiabilities: false,
+      },
+    }))
+    .setTimeout(30)
+    .build();
+
+  tx.sign(issuerKeypair);
+  return server.submitTransaction(tx);
+}
+\`\`\`
+
+## Adding ERC-3643 Compliance with Soroban
+
+Stellar's native flags handle the basics. But ERC-3643 compliance requires additional logic: transfer restrictions between verified investors, holding period enforcement, and investor count limits. This is where Soroban contracts come in.
+
+### Compliance Contract Architecture
+
+\`\`\`
+Identity Registry (Soroban) --> Compliance Module (Soroban) --> Token Issuer Logic (Off-chain)
+Maps addresses to claims       Evaluates transfer rules        Approves/denies trustlines
+\`\`\`
+
+### Example: Identity Registry Contract
+
+\`\`\`rust
+// Soroban contract: Identity Registry (simplified)
+#[contract]
+pub struct IdentityRegistry;
+
+#[contractimpl]
+impl IdentityRegistry {
+    pub fn register_identity(
+        env: Env,
+        investor: Address,
+        jurisdiction: Symbol,
+        accreditation_level: u32,
+        kyc_expiry: u64,
+    ) {
+        let admin: Address = env.storage().instance()
+            .get(&symbol!("admin")).unwrap();
+        admin.require_auth();
+
+        env.storage().persistent().set(&investor, &IdentityClaim {
+            jurisdiction,
+            accreditation_level,
+            kyc_expiry,
+            registered_at: env.ledger().timestamp(),
+        });
+    }
+
+    pub fn can_transfer(
+        env: Env,
+        from: Address,
+        to: Address,
+        _amount: i128,
+    ) -> bool {
+        let from_claim: IdentityClaim = env.storage().persistent()
+            .get(&from).unwrap();
+        let to_claim: IdentityClaim = env.storage().persistent()
+            .get(&to).unwrap();
+        let now = env.ledger().timestamp();
+
+        // Rule 1: Both parties must have valid KYC
+        if from_claim.kyc_expiry < now || to_claim.kyc_expiry < now {
+            return false;
+        }
+
+        // Rule 2: US accredited investors only
+        if to_claim.jurisdiction == symbol!("US")
+            && to_claim.accreditation_level < 1 {
+            return false;
+        }
+
+        // Rule 3: 12-month holding period
+        let holding_period = 365 * 24 * 60 * 60;
+        if now - from_claim.registered_at < holding_period {
+            return false;
+        }
+
+        true
+    }
+}
+\`\`\`
+
+## Querying Compliant Asset State
+
+### List All Holders of a Permissioned Asset
+
+\`\`\`javascript
+const HORIZON = 'https://horizon.stellar.org';
+
+async function getAuthorizedHolders(assetCode, issuerPublicKey) {
+  const res = await fetch(
+    \`\${HORIZON}/accounts?asset=\${assetCode}:\${issuerPublicKey}&limit=200\`
+  );
+  const data = await res.json();
+
+  return data._embedded.records.map(account => {
+    const trustline = account.balances.find(
+      b => b.asset_code === assetCode && b.asset_issuer === issuerPublicKey
+    );
+
+    return {
+      accountId: account.id,
+      balance: trustline?.balance,
+      authorized: trustline?.is_authorized,
+      frozen: !trustline?.is_authorized &&
+              trustline?.is_authorized_to_maintain_liabilities,
+    };
+  }).filter(h => h.balance);
+}
+\`\`\`
+
+### Monitor Authorization Changes
+
+Track when the issuer approves, freezes, or claws back assets:
+
+\`\`\`javascript
+async function monitorAuthorizationChanges(issuerPublicKey) {
+  const res = await fetch(
+    \`\${HORIZON}/accounts/\${issuerPublicKey}/operations?limit=200&order=desc\`
+  );
+  const data = await res.json();
+
+  return data._embedded.records
+    .filter(op =>
+      op.type === 'set_trust_line_flags' ||
+      op.type === 'allow_trust' ||
+      op.type === 'clawback'
+    )
+    .map(op => ({
+      type: op.type,
+      trustor: op.trustor,
+      asset: op.asset_code,
+      timestamp: op.created_at,
+      transactionHash: op.transaction_hash,
+    }));
+}
+\`\`\`
+
+## Real-World Asset Categories on Stellar
+
+The $2B+ RWA milestone includes multiple asset categories:
+
+| Category | Examples | Compliance Level |
+|----------|----------|-----------------|
+| Government bonds | U.S. Treasuries, EU bonds | High (accredited investors) |
+| Corporate bonds | Investment-grade debt | High |
+| Real estate | Tokenized property shares | Medium-High |
+| Fund shares | ETF tokens, money market funds | High |
+| Carbon credits | Verified emission reductions | Medium |
+
+Each category has different compliance requirements, but the Stellar infrastructure (auth flags + Soroban contracts) supports all of them.
+
+## How LumenQuery Helps
+
+LumenQuery provides the API infrastructure to build and monitor compliant security tokens:
+
+- **Horizon API**: Query trustline authorization status, track payments, and monitor issuer operations via [api.lumenquery.io](https://api.lumenquery.io)
+- **Soroban RPC**: Interact with compliance contracts via [rpc.lumenquery.io](https://rpc.lumenquery.io)
+- **Analytics Dashboard**: Track security token issuance volume on [/analytics/tokens](/analytics/tokens)
+- **Smart Contract Explorer**: Inspect compliance contract state on [/contracts](/contracts)
+- **Portfolio Intelligence**: Monitor security token positions on [/portfolio](/portfolio)
+
+---
+
+*Build compliant security tokens on reliable infrastructure. [LumenQuery](/auth/signup) provides managed Horizon API and Soroban RPC with compliance monitoring tools built in. Start free.*
+    `,
+  },
+  'stellar-2b-rwa-tokenized-asset-analytics-dashboard': {
+    title: 'Tracking Stellar\'s $2B RWA Milestone On-Chain: Build a Tokenized-Asset Analytics Dashboard with LumenQuery APIs',
+    date: '2026-07-03',
+    readTime: '16 min read',
+    category: 'Developer Guide',
+    content: `
+Stellar crossed the $2 billion mark in tokenized real-world assets in 2026, with payment volume up 72% year-over-year and developer participation increasing 86%. These are not speculative DeFi tokens. They are government bonds, fund shares, and institutional stablecoins issued by regulated entities like Franklin Templeton, WisdomTree, and Circle.
+
+This guide walks you through building a live RWA analytics dashboard that tracks tokenized asset issuance, holder distribution, and transfer activity on Stellar using the Horizon API and LumenQuery endpoints.
+
+## Understanding the RWA Landscape on Stellar
+
+### Major Tokenized Assets
+
+| Asset | Issuer | Category | Approx. Value |
+|-------|--------|----------|---------------|
+| USDC | Circle | Stablecoin | $1B+ |
+| BENJI (FOBXX) | Franklin Templeton | Money market fund | $400M+ |
+| WisdomTree Prime tokens | WisdomTree | Fund shares | $100M+ |
+| SHX | Stronghold | Tokenized USD | $50M+ |
+
+### Why Stellar for RWAs
+
+| Requirement | How Stellar Delivers |
+|-------------|---------------------|
+| Regulatory compliance | Native auth flags (required, revocable, clawback) |
+| Low transaction costs | ~0.00001 XLM per transaction |
+| Fast settlement | 5-7 second finality |
+| Programmable logic | Soroban smart contracts |
+| Institutional adoption | SDF partnerships with Franklin Templeton, DTCC, Visa |
+
+## Project Architecture
+
+We will build a dashboard with four sections:
+
+1. **RWA Overview**: Total value, asset count, holder count
+2. **Asset Breakdown**: Per-asset metrics (supply, holders, compliance flags)
+3. **Holder Distribution**: How assets are distributed across accounts
+4. **Transfer Activity**: Recent transfers charted over time
+
+## Step 1: Define Your RWA Asset Registry
+
+\`\`\`typescript
+// lib/rwa-registry.ts
+interface RWAAsset {
+  code: string;
+  issuer: string;
+  name: string;
+  category: 'stablecoin' | 'fund' | 'bond' | 'commodity' | 'other';
+}
+
+const RWA_ASSETS: RWAAsset[] = [
+  {
+    code: 'USDC',
+    issuer: 'GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN',
+    name: 'USD Coin',
+    category: 'stablecoin',
+  },
+  {
+    code: 'BENJI',
+    issuer: 'GBHNGLLIE3KWGKCHIKMHJ5HVZHYFF32DLXTUENE3AFMUQT2SGHSPSA2A',
+    name: 'Franklin OnChain US Govt Money Fund',
+    category: 'fund',
+  },
+  // Add additional RWA assets as they launch
+];
+\`\`\`
+
+## Step 2: Fetch Asset Metrics from Horizon
+
+\`\`\`typescript
+// lib/rwa-fetcher.ts
+const HORIZON = 'https://horizon.stellar.org';
+
+async function fetchAssetMetrics(asset: RWAAsset) {
+  const res = await fetch(
+    \`\${HORIZON}/assets?asset_code=\${asset.code}&asset_issuer=\${asset.issuer}\`
+  );
+  const data = await res.json();
+
+  if (!data._embedded?.records?.length) {
+    return { ...asset, totalSupply: 0, authorizedAccounts: 0 };
+  }
+
+  const record = data._embedded.records[0];
+
+  return {
+    code: asset.code,
+    issuer: asset.issuer,
+    name: asset.name,
+    category: asset.category,
+    totalSupply: parseFloat(record.amount),
+    authorizedAccounts: record.accounts.authorized,
+    pendingAccounts: record.accounts.authorized_to_maintain_liabilities,
+    authRequired: record.flags.auth_required,
+    authRevocable: record.flags.auth_revocable,
+    clawbackEnabled: record.flags.auth_clawback_enabled,
+  };
+}
+
+async function fetchAllAssetMetrics() {
+  const results = await Promise.all(
+    RWA_ASSETS.map(asset => fetchAssetMetrics(asset))
+  );
+  return results.filter(r => r.totalSupply > 0);
+}
+\`\`\`
+
+## Step 3: Track Holder Distribution
+
+\`\`\`typescript
+async function getTopHolders(assetCode: string, issuer: string, limit = 10) {
+  const res = await fetch(
+    \`\${HORIZON}/accounts?asset=\${assetCode}:\${issuer}&limit=200&order=desc\`
+  );
+  const data = await res.json();
+
+  // Get total supply for percentage calculation
+  const assetRes = await fetch(
+    \`\${HORIZON}/assets?asset_code=\${assetCode}&asset_issuer=\${issuer}\`
+  );
+  const assetData = await assetRes.json();
+  const totalSupply = parseFloat(assetData._embedded.records[0]?.amount || '0');
+
+  return data._embedded.records
+    .map((account: any) => {
+      const trustline = account.balances.find(
+        (b: any) => b.asset_code === assetCode && b.asset_issuer === issuer
+      );
+      if (!trustline) return null;
+
+      const balance = parseFloat(trustline.balance);
+      return {
+        accountId: account.id,
+        balance,
+        percentOfSupply: totalSupply > 0 ? (balance / totalSupply) * 100 : 0,
+        authorized: trustline.is_authorized,
+      };
+    })
+    .filter(Boolean)
+    .sort((a: any, b: any) => b.balance - a.balance)
+    .slice(0, limit);
+}
+\`\`\`
+
+## Step 4: Track Transfer Activity
+
+\`\`\`typescript
+async function getTransferActivity(assetCode: string, issuer: string, hours = 24) {
+  let url = \`\${HORIZON}/payments?limit=200&order=desc\`;
+  const cutoff = new Date(Date.now() - hours * 60 * 60 * 1000);
+  const transfers: { timestamp: Date; amount: number }[] = [];
+
+  let pages = 0;
+  while (url && pages < 10) {
+    const res = await fetch(url);
+    const data = await res.json();
+    let done = false;
+
+    for (const record of data._embedded.records) {
+      if (new Date(record.created_at) < cutoff) { done = true; break; }
+
+      if (record.type === 'payment' &&
+          record.asset_code === assetCode &&
+          record.asset_issuer === issuer) {
+        transfers.push({
+          timestamp: new Date(record.created_at),
+          amount: parseFloat(record.amount),
+        });
+      }
+    }
+
+    if (done || data._embedded.records.length < 200) break;
+    url = data._links?.next?.href;
+    pages++;
+  }
+
+  // Bucket into hourly intervals
+  const buckets = new Map();
+  for (const transfer of transfers) {
+    const hour = new Date(transfer.timestamp);
+    hour.setMinutes(0, 0, 0);
+    const key = hour.toISOString();
+
+    if (!buckets.has(key)) {
+      buckets.set(key, { timestamp: key, volume: 0, count: 0 });
+    }
+    const bucket = buckets.get(key);
+    bucket.volume += transfer.amount;
+    bucket.count++;
+  }
+
+  return Array.from(buckets.values()).sort(
+    (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+  );
+}
+\`\`\`
+
+## Step 5: Build the API Route
+
+\`\`\`typescript
+// app/api/rwa/route.ts
+import { NextResponse } from 'next/server';
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const section = searchParams.get('section') || 'overview';
+
+  try {
+    switch (section) {
+      case 'overview': {
+        const metrics = await fetchAllAssetMetrics();
+        const totalValue = metrics.reduce((sum, m) => sum + m.totalSupply, 0);
+        const totalHolders = metrics.reduce(
+          (sum, m) => sum + m.authorizedAccounts, 0
+        );
+
+        return NextResponse.json({
+          totalValue,
+          totalHolders,
+          assetCount: metrics.length,
+          assets: metrics,
+        });
+      }
+
+      case 'holders': {
+        const assetCode = searchParams.get('asset') || 'USDC';
+        const issuer = RWA_ASSETS.find(a => a.code === assetCode)?.issuer;
+        if (!issuer) return NextResponse.json({ error: 'Unknown asset' }, { status: 400 });
+
+        const holders = await getTopHolders(assetCode, issuer);
+        return NextResponse.json({ holders });
+      }
+
+      default:
+        return NextResponse.json({ error: 'Invalid section' }, { status: 400 });
+    }
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to fetch RWA data' }, { status: 500 });
+  }
+}
+\`\`\`
+
+## Step 6: Add Caching for Performance
+
+RWA data does not change every second. Cache aggressively:
+
+\`\`\`typescript
+import Redis from 'ioredis';
+
+const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
+
+async function getCachedOrFetch<T>(
+  key: string,
+  ttlSeconds: number,
+  fetcher: () => Promise<T>
+): Promise<T> {
+  const cached = await redis.get(key);
+  if (cached) return JSON.parse(cached);
+
+  const data = await fetcher();
+  await redis.setex(key, ttlSeconds, JSON.stringify(data));
+  return data;
+}
+
+// Usage:
+const overview = await getCachedOrFetch(
+  'rwa:overview',
+  300, // 5-minute cache
+  () => fetchAllAssetMetrics()
+);
+\`\`\`
+
+### Recommended Cache TTLs
+
+| Data Type | TTL | Reason |
+|-----------|-----|--------|
+| Asset supply | 5 minutes | Changes infrequently |
+| Holder counts | 10 minutes | Relatively stable |
+| Transfer activity | 1 minute | More dynamic |
+| Top holders | 15 minutes | Changes slowly |
+
+## Step 7: Add Real-Time Updates with SSE
+
+For live transfer monitoring, use LumenQuery's SSE endpoint:
+
+\`\`\`typescript
+'use client';
+import { useEffect, useState } from 'react';
+
+export function useRWAStream(assetCode: string) {
+  const [transfers, setTransfers] = useState([]);
+
+  useEffect(() => {
+    const es = new EventSource('/api/transactions/stream');
+
+    es.onmessage = (event) => {
+      try {
+        const tx = JSON.parse(event.data);
+
+        const rwaOps = tx.operations?.filter(
+          (op: any) => op.type === 'payment' && op.asset_code === assetCode
+        );
+
+        if (rwaOps?.length) {
+          for (const op of rwaOps) {
+            setTransfers(prev => [{
+              hash: tx.hash,
+              asset: assetCode,
+              amount: op.amount,
+              from: op.from,
+              to: op.to,
+              timestamp: tx.created_at,
+            }, ...prev].slice(0, 50));
+          }
+        }
+      } catch (err) { /* skip malformed events */ }
+    };
+
+    return () => es.close();
+  }, [assetCode]);
+
+  return transfers;
+}
+\`\`\`
+
+## Key Metrics to Track
+
+| Category | Metric | What It Tells You |
+|----------|--------|-------------------|
+| Supply | Total supply | Market size of the tokenized asset |
+| Supply | Supply change (24h) | Issuance/redemption activity |
+| Holders | Unique holders | Adoption breadth |
+| Holders | Top 10 concentration | Risk concentration |
+| Transfers | Volume (24h) | Capital movement |
+| Transfers | Average transfer size | Retail vs institutional split |
+| Compliance | Pending authorizations | KYC pipeline |
+| Compliance | Frozen accounts | Regulatory activity |
+
+## Using LumenQuery's Existing Endpoints
+
+You do not need to build everything from scratch. LumenQuery already provides endpoints that support RWA analytics:
+
+\`\`\`javascript
+// Network-level metrics
+const network = await fetch('https://lumenquery.io/api/analytics/network');
+
+// Token-level metrics
+const tokens = await fetch('https://lumenquery.io/api/analytics/tokens');
+
+// Live transaction stream (filter for RWA assets client-side)
+const stream = new EventSource('https://lumenquery.io/api/transactions/stream');
+
+// Natural language queries
+const query = await fetch('https://lumenquery.io/api/query', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ query: 'recent USDC payments larger than 100000' }),
+});
+\`\`\`
+
+## How LumenQuery Helps
+
+LumenQuery provides the complete infrastructure stack for RWA analytics:
+
+- **Horizon API**: Query asset metadata, holder lists, and transfer history via [api.lumenquery.io](https://api.lumenquery.io)
+- **Analytics Dashboard**: View network-wide metrics including RWA volumes on [/analytics](/analytics)
+- **Live Transactions**: Monitor RWA transfers in real time on [/dashboard/transactions](/dashboard/transactions)
+- **Smart Contract Explorer**: Inspect compliance contracts governing RWA assets on [/contracts](/contracts)
+- **Portfolio Intelligence**: Track RWA positions across multiple accounts on [/portfolio](/portfolio)
+- **Natural Language Query**: Ask "USDC transfers over 1 million in the last 24 hours" on [/query](/query)
+- **Redis Caching**: Built-in caching layer reduces Horizon API load for high-frequency dashboards
+
+---
+
+*Build real-world asset analytics on reliable infrastructure. [LumenQuery](/auth/signup) provides managed Horizon API and Soroban RPC with caching, analytics, and real-time streaming. Start free.*
+    `,
+  },
   'stellar-protocol-27-zipper-developer-guide': {
     title: 'Stellar Protocol 27 \"Zipper\": What Developers Need to Prepare Before the July Mainnet Vote',
     date: '2026-06-09',
