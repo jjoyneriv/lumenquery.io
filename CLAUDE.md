@@ -13,7 +13,8 @@
 - Compliance & AML: REMOVED (code, schema, and database tables all cleaned up)
 - Transaction Intelligence: Documentation complete
 - Stellar Network Analytics: Documentation complete
-- SEO: Sitemap updated (80 URLs), submitted to Google + Bing, 84 URLs submitted for indexing
+- SEO: 8 keyword landing pages created, sitemap 84 URLs, submitted to Google + Bing
+- SEO Landing Pages: /stellar-horizon-api, /stellar-rpc-provider, /soroban-rpc-api, /stellar-blockchain-analytics-api, /stellar-transaction-monitoring, /xlm-whale-alerts, /stellar-api-rate-limits, /stellar-api-provider-comparison
 - Google Index Status: 1 indexed, 16 crawled-not-indexed, 67 unknown (as of 2026-07-03)
 - Performance: Gzip compression enabled, Core Web Vitals optimized
 - Disk: Freed 115GB by removing /opt/stellar/ directory
@@ -964,13 +965,68 @@ docker compose up -d
     - 67 unknown to Google (not yet crawled)
 18. Requested Google indexing for all 84 URLs:
     - All 84 submitted successfully, 0 failures
+19. Removed 404 pages from sitemap:
+    - Removed /analytics/contracts (page removed previously)
+    - Removed /guides listing (individual guide pages still work)
+    - Sitemap reduced from 80 to 76 URLs, all returning HTTP 200
+20. Created 8 SEO keyword landing pages:
+    - /stellar-horizon-api — Horizon API for developers (use cases, code example, comparison table, FAQ)
+    - /stellar-rpc-provider — Managed Stellar RPC infrastructure (user segments, comparison, onboarding)
+    - /soroban-rpc-api — Soroban smart contract RPC (methods, monitoring, simulation, code examples)
+    - /stellar-blockchain-analytics-api — Analytics API (tx volume, whale tracking, token velocity, NL query)
+    - /stellar-transaction-monitoring — Transaction monitoring (alert types, SSE streaming, compliance)
+    - /xlm-whale-alerts — Large XLM transaction tracking (threshold rules, exchange flows)
+    - /stellar-api-rate-limits — Rate limit scaling guide (strategies, comparison table, backoff code)
+    - /stellar-api-provider-comparison — Provider comparison (15-row feature matrix, decision guide)
+    - All pages include: SEO metadata, H1, JSON-LD (WebPage, FAQPage, BreadcrumbList), FAQ sections, CTAs
+21. Added internal links from 17 blog posts to new landing pages:
+    - 51 contextual links added across rate limit, Horizon, Soroban, analytics, monitoring, and comparison posts
+    - Each post got a "Related Resources" section with 3 relevant links
+22. Updated footer with Solutions section:
+    - Added new column with all 8 landing page links
+    - Reorganized Resources and Support into single column
+23. Updated sitemap with 8 new URLs (76 → 84 total)
+24. Submitted all new pages to Google Search Console and Bing IndexNow
+25. Fixed duplicate "| LumenQuery" in page titles (root layout template was appending it)
+
+## SEO Landing Pages
+
+### Overview
+8 keyword-focused landing pages targeting high-intent Stellar developer searches. Each page is a server component with full SEO metadata, JSON-LD structured data, FAQ sections, and CTAs.
+
+### Pages
+| Route | Target Keyword | Title |
+|-------|---------------|-------|
+| /stellar-horizon-api | Stellar Horizon API | Stellar Horizon API for Developers |
+| /stellar-rpc-provider | Stellar RPC provider | Stellar RPC Provider for Production Apps |
+| /soroban-rpc-api | Soroban RPC API | Soroban RPC API for Smart Contract Developers |
+| /stellar-blockchain-analytics-api | Stellar blockchain analytics API | Stellar Blockchain Analytics API |
+| /stellar-transaction-monitoring | Stellar transaction monitoring | Stellar Transaction Monitoring API |
+| /xlm-whale-alerts | XLM whale alerts | XLM Whale Alerts and Large Transaction Monitoring |
+| /stellar-api-rate-limits | Stellar API rate limits | Stellar API Rate Limits and Scaling Guide |
+| /stellar-api-provider-comparison | Stellar API provider comparison | Stellar API Provider Comparison |
+
+### Files
+```
+portal/app/(cuba)/stellar-horizon-api/page.tsx
+portal/app/(cuba)/stellar-rpc-provider/page.tsx
+portal/app/(cuba)/soroban-rpc-api/page.tsx
+portal/app/(cuba)/stellar-blockchain-analytics-api/page.tsx
+portal/app/(cuba)/stellar-transaction-monitoring/page.tsx
+portal/app/(cuba)/xlm-whale-alerts/page.tsx
+portal/app/(cuba)/stellar-api-rate-limits/page.tsx
+portal/app/(cuba)/stellar-api-provider-comparison/page.tsx
+```
+
+### Internal Linking
+17 blog posts updated with contextual "Related Resources" sections linking to relevant landing pages (51 links total).
 
 ## SEO & Performance Optimization
 
 ### Sitemap Configuration
-All public pages included in `/sitemap.xml` (80 URLs total):
+All public pages included in `/sitemap.xml` (84 URLs total):
 
-**Core Pages (3):**
+**Core Pages (4):**
 - / (home) - priority 1.0
 - /stellar - priority 0.9
 - /query - priority 0.9
@@ -978,19 +1034,19 @@ All public pages included in `/sitemap.xml` (80 URLs total):
 
 **Documentation (5):**
 - /docs (main) - priority 0.9
-- /docs/analytics - priority 0.8
-- /docs/intelligence - priority 0.8
-- /docs/contracts - priority 0.8
-- /docs/portfolio - priority 0.8
+- /docs/analytics, /docs/intelligence, /docs/contracts, /docs/portfolio - priority 0.8
 
-**Analytics (4):**
+**Analytics (3):**
 - /analytics - priority 0.8
-- /analytics/network - priority 0.7
-- /analytics/tokens - priority 0.7
-- /analytics/contracts - priority 0.7
+- /analytics/network, /analytics/tokens - priority 0.7
 
 **Services (1):**
 - /contracts - priority 0.8
+
+**SEO Landing Pages (8):**
+- /stellar-horizon-api, /stellar-rpc-provider, /soroban-rpc-api - priority 0.9
+- /stellar-blockchain-analytics-api, /stellar-transaction-monitoring - priority 0.9
+- /xlm-whale-alerts, /stellar-api-rate-limits, /stellar-api-provider-comparison - priority 0.9
 
 **Blog (64):**
 - /blog (listing) - priority 0.8
