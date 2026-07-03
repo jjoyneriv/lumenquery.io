@@ -13,8 +13,11 @@
 - Compliance & AML: REMOVED (code, schema, and database tables all cleaned up)
 - Transaction Intelligence: Documentation complete
 - Stellar Network Analytics: Documentation complete
-- SEO: 8 keyword landing pages created, sitemap 84 URLs, submitted to Google + Bing
+- SEO: 8 keyword landing pages + 6 trust/enterprise pages, sitemap 90 URLs, submitted to Google + Bing
 - SEO Landing Pages: /stellar-horizon-api, /stellar-rpc-provider, /soroban-rpc-api, /stellar-blockchain-analytics-api, /stellar-transaction-monitoring, /xlm-whale-alerts, /stellar-api-rate-limits, /stellar-api-provider-comparison
+- Trust Pages: /status, /sla, /security, /changelog, /contact, /enterprise
+- Structured Data: Organization, WebSite, SearchAction (global), SoftwareApplication (landing pages), Article+BreadcrumbList (blog), FAQPage (landing+trust pages)
+- IndexNow: Automated Bing submission script at scripts/indexnow-submit.mjs
 - Google Index Status: 1 indexed, 16 crawled-not-indexed, 67 unknown (as of 2026-07-03)
 - Performance: Gzip compression enabled, Core Web Vitals optimized
 - Disk: Freed 115GB by removing /opt/stellar/ directory
@@ -988,6 +991,23 @@ docker compose up -d
 23. Updated sitemap with 8 new URLs (76 → 84 total)
 24. Submitted all new pages to Google Search Console and Bing IndexNow
 25. Fixed duplicate "| LumenQuery" in page titles (root layout template was appending it)
+26. Added structured data (JSON-LD) improvements:
+    - Organization schema added to root layout (site-wide)
+    - SoftwareApplication schema added to all 8 SEO landing pages
+    - BreadcrumbList JSON-LD added to blog post pages
+    - IndexNow automation script created (scripts/indexnow-submit.mjs)
+    - npm scripts added: indexnow:submit, indexnow:sitemap
+    - Documentation at scripts/README.md
+27. Created 6 trust/enterprise pages:
+    - /status — Platform status with 7 service categories, all operational
+    - /sla — Service level agreement with availability/support/rate-limit tiers
+    - /security — Security overview (API keys, auth, data handling, infrastructure, disclosure)
+    - /changelog — 19 real product entries from codebase history
+    - /contact — Sales/support/security/partnership cards with mailto form
+    - /enterprise — Enterprise landing with comparison table, use cases, onboarding flow
+28. Updated footer with Company section (Status, Security, SLA, Changelog, Enterprise, Contact)
+29. Updated sitemap (84 → 90 URLs)
+30. Submitted 6 new pages to Google Search Console and Bing IndexNow
 
 ## SEO Landing Pages
 
@@ -1021,10 +1041,59 @@ portal/app/(cuba)/stellar-api-provider-comparison/page.tsx
 ### Internal Linking
 17 blog posts updated with contextual "Related Resources" sections linking to relevant landing pages (51 links total).
 
+## Trust & Enterprise Pages
+
+### Overview
+6 pages for trust, enterprise readiness, and conversion confidence. Each is a server component with SEO metadata and JSON-LD.
+
+### Pages
+| Route | Title | JSON-LD |
+|-------|-------|---------|
+| /status | LumenQuery Status | WebPage, BreadcrumbList |
+| /sla | Service Level Agreement | WebPage, FAQPage, BreadcrumbList |
+| /security | Security at LumenQuery | WebPage, FAQPage, BreadcrumbList |
+| /changelog | Changelog | WebPage, BreadcrumbList |
+| /contact | Contact LumenQuery | WebPage, ContactPoint, BreadcrumbList |
+| /enterprise | Enterprise Stellar API Infrastructure | WebPage, FAQPage, SoftwareApplication, BreadcrumbList |
+
+### Files
+```
+portal/app/(cuba)/status/page.tsx
+portal/app/(cuba)/sla/page.tsx
+portal/app/(cuba)/security/page.tsx
+portal/app/(cuba)/changelog/page.tsx
+portal/app/(cuba)/contact/page.tsx
+portal/app/(cuba)/enterprise/page.tsx
+```
+
+### Structured Data (JSON-LD)
+| Schema Type | Where Applied |
+|-------------|--------------|
+| Organization | Root layout (all pages) |
+| WebSite + SearchAction | Root layout (all pages) |
+| Article | Blog posts |
+| BreadcrumbList | Blog posts, landing pages, trust pages |
+| FAQPage | Landing pages (/sla, /security, /enterprise + 8 SEO pages) |
+| SoftwareApplication | 8 SEO landing pages + /enterprise |
+| WebPage | All landing and trust pages |
+| ContactPoint | /contact page |
+
+### IndexNow Automation
+```bash
+# Submit single URL
+node scripts/indexnow-submit.mjs https://lumenquery.io/stellar-horizon-api
+
+# Submit multiple URLs
+node scripts/indexnow-submit.mjs /status /sla /security
+
+# Submit all sitemap URLs
+node scripts/indexnow-submit.mjs --sitemap
+```
+
 ## SEO & Performance Optimization
 
 ### Sitemap Configuration
-All public pages included in `/sitemap.xml` (84 URLs total):
+All public pages included in `/sitemap.xml` (90 URLs total):
 
 **Core Pages (4):**
 - / (home) - priority 1.0
@@ -1047,6 +1116,11 @@ All public pages included in `/sitemap.xml` (84 URLs total):
 - /stellar-horizon-api, /stellar-rpc-provider, /soroban-rpc-api - priority 0.9
 - /stellar-blockchain-analytics-api, /stellar-transaction-monitoring - priority 0.9
 - /xlm-whale-alerts, /stellar-api-rate-limits, /stellar-api-provider-comparison - priority 0.9
+
+**Company/Trust Pages (6):**
+- /status, /sla, /security, /changelog - priority 0.7
+- /contact - priority 0.8
+- /enterprise - priority 0.9
 
 **Blog (64):**
 - /blog (listing) - priority 0.8
