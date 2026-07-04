@@ -1015,6 +1015,13 @@ docker compose up -d
     - /query layout: Added FAQ section (6 questions) and related resources
     - All content server-rendered for crawlability; client-side dashboards preserved
 32. Submitted 4 updated pages to Google and Bing IndexNow
+33. Enhanced server-rendered SEO content on 4 product pages (second pass):
+    - /analytics: 8 H2s, metrics preview table (6 rows), JSON API example, whale tracking section, stablecoin analytics
+    - /contracts: 10 H2s, contract activity table (5 rows), Soroban API example, AI coming-soon section, 7 use cases
+    - /dashboard/transactions: 8 H2s, transaction feed table (5 rows), filter cards (8 types), JSON API example
+    - /query: 13 H2s, example questions cards, result preview table, JSON API example, 7 use case cards
+    - All content server-rendered via layout files; client-side dashboards preserved
+34. Submitted to Bing IndexNow (4 URLs accepted). Google quota exhausted for the day.
 
 ## SEO Landing Pages
 
