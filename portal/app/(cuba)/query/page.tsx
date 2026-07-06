@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 interface QueryResult {
   success: boolean;
@@ -121,6 +121,7 @@ export default function QueryPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<QueryResult | null>(null);
   const [showResults, setShowResults] = useState(false);
+  const [initialQueryRan, setInitialQueryRan] = useState(false);
 
   const executeQuery = useCallback(async (queryText?: string) => {
     const query = queryText || queryInput;
@@ -148,6 +149,18 @@ export default function QueryPage() {
       setIsLoading(false);
     }
   }, [queryInput]);
+
+  // Auto-execute query from URL parameter (e.g., /query?q=top+10+xlm+holders)
+  useEffect(() => {
+    if (initialQueryRan) return;
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('q');
+    if (q) {
+      setQueryInput(q);
+      setInitialQueryRan(true);
+      executeQuery(q);
+    }
+  }, [initialQueryRan, executeQuery]);
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {

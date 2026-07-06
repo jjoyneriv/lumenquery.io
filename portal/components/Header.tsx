@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
+import NetworkTicker from './NetworkTicker';
 
 interface HeaderProps {
   activePage?: 'home' | 'docs' | 'blog' | 'dashboard' | 'analytics' | 'contracts' | 'pricing' | 'intelligence' | 'portfolio' | 'admin' | 'query' | 'stellar';
@@ -20,6 +21,8 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
       : 'text-gray-400 hover:text-white font-medium';
 
   return (
+    <>
+    <NetworkTicker />
     <header className="border-b border-white/10 bg-[#1D1E26]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
@@ -165,5 +168,6 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
         </div>
       )}
     </header>
+    </>
   );
 }

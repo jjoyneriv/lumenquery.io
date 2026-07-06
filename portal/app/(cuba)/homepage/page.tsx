@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Metadata } from 'next';
+import TryQueryWidget from '@/components/TryQueryWidget';
 
 export const metadata: Metadata = {
   title: 'LumenQuery - Enterprise Stellar Horizon API & Soroban RPC Infrastructure',
@@ -79,7 +80,8 @@ export default function LandingPage() {
               Live Analytics
             </Link>
           </div>
-          <p className="text-sm text-white/50">10,000 requests/month free &middot; No credit card required</p>
+          <p className="text-sm text-white/50 mb-2">10,000 requests/month free &middot; No credit card required</p>
+          <TryQueryWidget />
         </div>
         {/* Decorations */}
         <div className="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-white/5" />
