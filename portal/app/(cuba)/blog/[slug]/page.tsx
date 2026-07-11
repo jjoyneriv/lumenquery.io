@@ -9,6 +9,846 @@ const posts: Record<string, {
   category: string;
   content: string;
 }> = {
+  'dtcc-stellar-tokenized-securities': {
+    title: 'DTCC and Stellar: What Tokenized Securities on a Public Blockchain Could Mean',
+    date: '2026-07-11',
+    readTime: '15 min read',
+    category: 'Industry Insights',
+    content: `
+The Depository Trust & Clearing Corporation (DTCC) announced in May 2026 that its subsidiary, the Depository Trust Company (DTC), expects to make DTC-tokenized assets available on the Stellar network in the first half of 2027. The announcement named Russell 1000 stocks, ETFs, and U.S. Treasuries as potential asset classes. If this moves forward as described, it would represent the largest connection between traditional post-trade infrastructure and a public blockchain to date.
+
+This article examines what the announcement means, what DTCC and DTC actually do, how tokenized securities might work on Stellar, and what risks and unknowns remain.
+
+## Key Takeaways
+
+- DTCC processes virtually all U.S. securities transactions. Its subsidiary DTC holds over $100 trillion in assets under custody.
+- DTC-tokenized assets are expected to become available on Stellar in the first half of 2027, covering Russell 1000 stocks, ETFs, and U.S. Treasuries.
+- This is an announced plan with a stated timeline, not yet a production deployment. The distinction matters.
+- Stellar's compliance-native architecture, deterministic finality, and low fees make it suitable for regulated asset settlement.
+- Increased Stellar network usage from tokenized securities does not automatically translate into a specific XLM price.
+
+## What DTCC and DTC Do
+
+If you work outside traditional finance, the scale of DTCC may not be obvious.
+
+DTCC is the holding company for several subsidiaries that form the backbone of U.S. capital markets:
+
+| Entity | Role | Scale |
+|--------|------|-------|
+| DTC (Depository Trust Company) | Central securities depository | Holds custody of nearly all U.S. equities and bonds |
+| NSCC (National Securities Clearing Corp.) | Clearing for equities | Clears virtually all U.S. stock trades |
+| FICC (Fixed Income Clearing Corp.) | Clearing for fixed income | Clears U.S. government securities |
+| DTCC (parent) | Post-trade services | Processed $4.7 quadrillion in securities transactions in 2025 |
+
+When a stock trade executes on the NYSE or NASDAQ, DTCC's subsidiaries handle what happens next: confirming the trade, netting obligations, transferring ownership, and settling the transaction. DTC specifically acts as the central depository, holding securities in "street name" on behalf of brokers and institutions.
+
+## What Was Announced vs. What Exists Today
+
+The distinction between an announced plan and a production deployment is important.
+
+**Confirmed (May 2026 announcement):**
+- DTC-tokenized assets are expected to be available on Stellar in 1H 2027
+- Potential asset classes include Russell 1000 stocks, ETFs, and U.S. Treasuries
+- DTC will issue tokens representing custody positions it already holds
+- Stellar was named as the settlement layer
+
+**Not yet confirmed:**
+- Specific regulatory approvals for on-chain settlement
+- Which broker-dealers or institutions will participate at launch
+- Exact asset classes available at launch vs. those added later
+- Whether trading will occur on-chain or only settlement
+- Fee structure for tokenized asset operations
+
+**DTCC's blockchain history:**
+- DTCC has explored blockchain technology since at least 2016
+- Project Ion (2022): Bilateral equity settlement on R3 Corda, processing 100,000+ transactions per day in parallel production
+- October 2023: DTCC acquired Securrency, a Stellar ecosystem company, for approximately $50 million. The Securrency team had co-authored CAP-35 (clawback functionality) with SDF developers.
+- December 2025: SEC issued a no-action letter granting DTC a 3-year tokenization pilot authorization
+- May 2026: DTCC convened 50+ firms including JPMorgan, Goldman Sachs, BlackRock, and Kraken for the tokenization service
+- The Stellar announcement represents DTCC's first use of a public blockchain, moving beyond private and permissioned ledgers
+
+## How Tokenized Securities Could Work on Stellar
+
+Tokenized securities on Stellar would likely use the network's native asset model rather than Soroban smart contracts for core functionality. Stellar's asset system has built-in features that regulated securities require:
+
+### Authorization Controls
+
+\`\`\`
+AUTH_REQUIRED     - Only approved accounts can hold the asset
+AUTH_REVOCABLE    - Issuer can freeze an account's holdings
+AUTH_CLAWBACK     - Issuer can recover tokens (for court orders or errors)
+\`\`\`
+
+These are protocol-level controls enforced by every Stellar validator, not smart contract logic that could contain bugs or be circumvented.
+
+### Representation
+
+A DTC-tokenized security on Stellar would likely be a Stellar asset where:
+
+- The **asset code** identifies the security (e.g., a ticker or proprietary identifier)
+- The **issuing account** is controlled by DTC or an authorized entity
+- **Authorization flags** restrict who can hold and trade the asset
+- The **home domain** of the issuing account links to DTC's verifiable identity
+
+### Settlement
+
+Stellar's consensus mechanism produces final, irreversible transactions within 5 seconds. Unlike proof-of-work or proof-of-stake chains with probabilistic finality, there are no chain reorganizations. A settled trade is settled.
+
+For securities, this enables T+0 settlement, where ownership transfers happen on the same day as the trade rather than the current T+1 standard that took effect in 2024.
+
+### Corporate Actions
+
+Dividends, stock splits, and other corporate actions can be executed through Stellar operations:
+
+- **Dividends**: Payment operations distributed to all token holders
+- **Stock splits**: Issuer creates additional tokens proportionally
+- **Proxy voting**: Could use Stellar data operations or Soroban contracts
+
+## Why Stellar for Securities Settlement
+
+Several Stellar properties align with what institutional securities infrastructure requires:
+
+**1. Deterministic finality.** Securities settlement requires certainty. Stellar transactions are final within 5 seconds with no possibility of reversal through chain reorganization.
+
+**2. Low, predictable fees.** The base fee is 100 stroops (0.00001 XLM). At current prices, settling a million transactions costs approximately $1.60. High-volume settlement needs predictable economics.
+
+**3. Compliance architecture.** Authorization flags, clawback capabilities, and issuer controls are built into the protocol, not bolted on through smart contracts.
+
+**4. Regulatory positioning.** XLM has been treated as a commodity, not a security, by U.S. regulators. Using a network whose native token might be classified as a security would create legal complications for institutional participants.
+
+**5. Existing institutional presence.** Stellar already hosts regulated financial products:
+
+- Franklin Templeton's BENJI fund (on Stellar since 2021)
+- USDC with over 2 million holders
+- $2B+ in tokenized real-world assets as of Q1 2026
+
+## The Role of Different Participants
+
+Tokenized securities involve more participants than typical token issuance:
+
+| Participant | Role |
+|-------------|------|
+| DTC | Issues tokens representing custody positions |
+| Transfer agents | Manage shareholder records |
+| Broker-dealers | Execute trades on behalf of clients |
+| Custodians | Hold assets for institutional investors |
+| Exchanges | Provide trading venues |
+| Regulators | SEC, FINRA oversight |
+
+Each participant needs to interact with the Stellar network through compliant interfaces. This is not a permissionless DeFi scenario. Every account holding a tokenized security would need authorization from the issuer.
+
+## What This Could Mean for Stellar Network Adoption
+
+If DTCC brings even a fraction of its activity to Stellar, the network effects would be significant:
+
+**Transaction volume**: U.S. equity markets execute billions of dollars in trades daily. Even a small percentage settling on Stellar would increase network transaction volume substantially.
+
+**Account growth**: Each institution, broker, and authorized investor holding tokenized securities would need a Stellar account with XLM reserves and trustlines.
+
+**Ecosystem development**: Demand for infrastructure, including API providers, analytics tools, and compliance monitoring, would grow proportionally.
+
+**XLM utility**: Every transaction requires XLM for fees. Every account requires XLM for base reserves. Every trustline requires additional reserves. This creates organic demand for the native asset tied to actual network usage.
+
+However, network usage does not automatically translate into a specific XLM price. The relationship between utility demand and market price is influenced by many factors including supply dynamics, market sentiment, macroeconomic conditions, and speculative activity.
+
+## Risks and Remaining Unknowns
+
+### Regulatory Uncertainty
+
+Securities settlement on a public blockchain raises questions that regulators have not fully addressed:
+
+- How do existing SEC rules apply to on-chain settlement?
+- What happens if a validator goes offline during a high-volume settlement period?
+- How are cross-border securities transactions handled when different jurisdictions have different rules?
+- What reporting obligations apply to on-chain settlement vs. traditional settlement?
+
+### Technical Challenges
+
+- **Throughput**: Stellar currently processes approximately 200 transactions per second. Institutional settlement volumes may require the planned 5,000 TPS upgrade.
+- **Key management**: Institutional custody of blockchain private keys requires different security infrastructure than traditional securities custody.
+- **Interoperability**: Tokenized securities on Stellar need to interact with existing market infrastructure that does not use blockchain.
+
+### Execution Risk
+
+Announced plans do not always become production deployments. DTCC has explored blockchain technology for a decade. Previous projects like Project Ion operated on permissioned infrastructure. The shift to a public blockchain is a larger step, and timelines could shift.
+
+## What Developers Should Watch
+
+If you are building applications that interact with the Stellar network, the DTCC integration creates new use cases:
+
+- **Asset discovery**: Monitoring new DTC-issued assets on the network
+- **Compliance tooling**: Applications that verify authorization status before transactions
+- **Analytics**: Tracking settlement volumes, holder distribution, and trading patterns
+- **Portfolio management**: Aggregating traditional securities alongside crypto-native assets
+
+LumenQuery's [Analytics Dashboard](/analytics) and [Transaction Monitoring](/stellar-transaction-monitoring) are designed for tracking exactly these types of on-chain activities.
+
+## Timeline of Confirmed Milestones
+
+| Date | Event |
+|------|-------|
+| 2016+ | DTCC begins exploring distributed ledger technology |
+| 2022 | Project Ion tests bilateral settlement on DLT |
+| May 2026 | DTCC announces DTC-tokenized assets expected on Stellar in 1H 2027 |
+| Q3-Q4 2026 | Expected testnet integration and developer previews |
+| 1H 2027 | Targeted general availability of DTC-tokenized assets on Stellar |
+
+## Sources and Further Reading
+
+- DTCC official announcements on digital securities management
+- Stellar Development Foundation ecosystem updates
+- SEC guidance on digital asset securities
+- DTCC Project Ion documentation
+
+---
+
+*Track institutional asset activity on Stellar as it develops. [LumenQuery](/auth/signup) provides managed Horizon API and Soroban RPC with analytics, monitoring, and compliance tools built for institutional-grade blockchain data. Start free.*
+
+## Related Resources
+
+- [Stellar Blockchain Analytics API](/stellar-blockchain-analytics-api) — Track tokenized asset issuance, holder distribution, and transfer volume
+- [Stellar Transaction Monitoring](/stellar-transaction-monitoring) — Monitor settlement activity and compliance events in real time
+- [Stellar API Provider Comparison](/stellar-api-provider-comparison) — Compare infrastructure options for institutional Stellar applications
+    `,
+  },
+  'stellar-rwa-stablecoin-growth': {
+    title: "Stellar's Real-World Asset and Stablecoin Growth: The Metrics That Matter",
+    date: '2026-07-11',
+    readTime: '14 min read',
+    category: 'Industry Insights',
+    content: `
+Stellar surpassed $3.3 billion in tokenized real-world assets (RWAs) as of July 2026, up from $290 million just 18 months earlier. Stablecoin payment volume hit an all-time quarterly high of $5.5 billion in Q1 2026, up 72% year over year. MoneyGram launched its own stablecoin on Stellar. These numbers are often cited in headlines, but what do they actually represent, and how should they be interpreted?
+
+This article examines the current state of real-world assets and stablecoins on Stellar, explains what the key metrics mean, identifies the important ecosystem participants, and describes what to monitor over the next 12 to 24 months.
+
+## Key Takeaways
+
+- Stellar hosts over $3.3 billion in tokenized real-world assets as of July 2026, up from $290 million in December 2024.
+- USDC is the dominant stablecoin on Stellar. MoneyGram launched its own stablecoin (MGUSD) on Stellar in June 2026.
+- Stablecoin payment volume hit $5.5 billion in Q1 2026, an all-time quarterly record, up 72% year over year.
+- The difference between asset value, transfer volume, transaction count, and active users matters. Each tells a different part of the story.
+- Soroban smart contracts are expanding Stellar's asset capabilities, with DeFi TVL crossing $200 million for the first time in 2026.
+
+## What Real-World Asset Tokenization Means
+
+Real-world asset tokenization is the process of creating blockchain-based tokens that represent ownership or rights in assets that exist outside the blockchain. On Stellar, this includes:
+
+- **Government securities**: Franklin Templeton's OnChain U.S. Government Money Fund (FOBXX/BENJI), which has been live on Stellar since 2021
+- **Stablecoins**: USDC (Circle), EURC (Circle), and other fiat-pegged tokens
+- **Tokenized funds**: Institutional investment products represented as Stellar assets
+- **Payment instruments**: Anchored fiat currencies used for cross-border transfers
+
+The $3.3 billion figure includes the aggregate value of all tokenized assets on the Stellar network. The largest contributors are Spiko's tokenized sovereign debt products (over $1 billion), Franklin Templeton's BENJI fund ($654 million on Stellar), Ondo Finance's USDY yield token ($529 million on Stellar), and VuMe Bond 2030 corporate credit ($500 million).
+
+## Current Verified Metrics
+
+The following metrics are based on publicly verifiable on-chain data and official announcements:
+
+| Metric | Value | As Of |
+|--------|-------|-------|
+| Tokenized RWAs on Stellar | $3.3B | July 2026 |
+| Stablecoin payment volume (quarterly) | $5.5B (all-time high) | Q1 2026 |
+| Year-over-year stablecoin volume growth | 72% | Q1 2026 vs. Q1 2025 |
+| Total payment volume (2025) | $55.6B | 2025 full year |
+| Monthly active addresses | 632,000 | Year-end 2025 |
+| Franklin Templeton BENJI on Stellar | $654M AUM | April 2026 |
+| Average transaction finality | ~5 seconds | Current |
+| Base transaction fee | 0.00001 XLM | Current |
+
+### Understanding These Numbers
+
+**$3.3B in tokenized RWAs** includes the total value of all RWA tokens issued on Stellar. This is not the same as daily trading volume or money flowing through the network. It represents the face value of assets that have been tokenized and are recorded on the Stellar ledger. Notably, approximately 98% of this value consists of Treasury and money market fund products.
+
+**$5.5B quarterly stablecoin volume** measures the total value of stablecoin payment operations in Q1 2026. The median USDC transaction size on Stellar is $1.57, indicating genuine remittance and micro-payment usage rather than institutional arbitrage or DeFi trading.
+
+**72% stablecoin volume growth** compares Q1 2026 stablecoin payment volume to Q1 2025. The $55.6 billion total payment volume for 2025 (up 52% year over year) captures broader money movement across all asset types.
+
+## Key Ecosystem Participants
+
+### Franklin Templeton
+
+Franklin Templeton launched the OnChain U.S. Government Money Fund (FOBXX) using the Stellar network in April 2021, making it the first U.S.-registered fund to use a public blockchain for transaction processing and share ownership recording. The fund is marketed under the BENJI brand.
+
+Key facts as of the fund's 5-year anniversary in April 2026:
+
+- Total AUM: $1.98 billion across 8 blockchains, with $654 million on Stellar
+- Investor base grew over 140% from April 2024 to March 2026
+- Cumulative peer-to-peer transfer volume surpassed $211 million
+- Distributes dividends daily (365 days per year) with intraday yield accrual
+
+### Circle (USDC)
+
+Circle's USDC is the primary stablecoin on Stellar. Key facts:
+
+- USDC on Stellar is a native Stellar asset issued by Circle
+- Circle's Cross-Chain Transfer Protocol (CCTP) went live on Stellar in May 2026, enabling native USDC movement between Stellar and other supported chains
+- MoneyGram uses USDC on Stellar as a settlement layer for remittances
+- USDC serves as the primary trading pair and settlement asset for many Stellar-based applications
+
+### MoneyGram
+
+MoneyGram integrated with Stellar through the MoneyGram Access platform and extended its multi-year partnership in April 2026. In June 2026, MoneyGram launched MGUSD, its own USD-backed stablecoin issued on Stellar. MGUSD is backed by Bridge (acquired by Stripe for $1.1 billion) and uses smart contracts from M0 with Fireblocks wallet infrastructure. MoneyGram's network covers over 500,000 retail locations and 60 million customers globally.
+
+### WisdomTree
+
+WisdomTree offers 13 tokenized digital funds on Stellar through the WisdomTree Connect platform, including money market, equity (S&P 500 tracking), fixed income (Treasuries), and private credit (CRDT) funds. In February 2026, WisdomTree became the first to offer 24/7 trading for a registered tokenized mutual fund.
+
+### Other Participants
+
+| Participant | Role | Status |
+|-------------|------|--------|
+| Ondo Finance | USDY yield token on Stellar | $529M+ on Stellar |
+| Spiko/Amundi | Tokenized sovereign debt | $1B+ on Stellar |
+| PayPal | PYUSD stablecoin | Live on Stellar since Q3 2025 |
+| Arf Financial | USDC settlement for remittances | $1.6B+ cumulative volume |
+| Flutterwave | Europe-Africa payment corridors | Active via Stellar USDC |
+| U.S. Bank | Custom stablecoin pilot | Testing since November 2025 |
+
+## Cross-Border Payments and Remittances
+
+Cross-border payments represent one of Stellar's strongest real-world use cases. The traditional correspondent banking system involves multiple intermediaries, each adding fees and delays. A cross-border payment can take 2 to 5 business days and cost 5% to 10% in fees.
+
+On Stellar, the same transfer settles in approximately 5 seconds with fees of fractions of a cent. The process typically works like this:
+
+1. Sender deposits local currency with a local anchor (on-ramp)
+2. Anchor issues a tokenized version of the local currency on Stellar, or converts to USDC
+3. The token is transferred to the recipient's anchor account on Stellar
+4. The receiving anchor converts the token to local currency for the recipient (off-ramp)
+
+The Stellar Development Foundation has invested in building anchor networks in corridors where remittance fees are highest, particularly in Africa, Southeast Asia, and Latin America.
+
+## How Stellar Compares in the RWA Market
+
+Stellar is not the only blockchain pursuing real-world asset tokenization. Here is how it compares:
+
+| Network | RWA Focus | Key Advantage |
+|---------|-----------|---------------|
+| Stellar | Payments, funds, stablecoins | Compliance-native architecture, 5-second finality, institutional track record |
+| Ethereum | Broad tokenization | Largest DeFi ecosystem, composability |
+| Polygon | Enterprise tokenization | Ethereum compatibility with lower fees |
+| Avalanche | Institutional subnets | Customizable subnets for regulatory compliance |
+| Solana | Speed-focused | High throughput for trading |
+
+Stellar's differentiation is not in smart contract complexity or DeFi composability. It is in the combination of compliance-native features (authorization flags, clawback), institutional adoption (Franklin Templeton, DTCC announcement), and cost efficiency (sub-cent fees).
+
+## The Role of Soroban Smart Contracts
+
+Stellar's smart contract platform, Soroban, went live on mainnet in early 2024. While most current RWA activity on Stellar uses the native asset model rather than smart contracts, Soroban opens new possibilities:
+
+- **Programmable compliance**: Smart contracts that enforce transfer restrictions, investor limits, and holding periods
+- **Automated corporate actions**: Dividend distributions, fund rebalancing, and yield calculations
+- **Complex financial products**: Structured products, derivatives, and conditional payments
+- **Interoperability protocols**: Cross-chain bridges and multi-asset settlement logic
+
+Soroban is still in its early adoption phase. Most RWA issuers currently rely on Stellar's built-in asset controls because they are simpler, more battle-tested, and do not require smart contract auditing.
+
+## Interpreting On-Chain Metrics
+
+When evaluating Stellar's RWA growth, it is important to understand what different metrics represent:
+
+**Asset value** (e.g., "$2B in tokenized RWAs") represents the face value of tokens on the ledger. It does not indicate liquidity, trading volume, or active usage. A $1 billion fund tokenized on Stellar means $1 billion in assets are recorded on the blockchain, but daily on-chain activity might be a fraction of that.
+
+**Transfer volume** (e.g., "72% payment volume growth") represents the total value of payment operations over a period. This is a stronger signal of actual network usage than asset value alone.
+
+**Transaction count** includes all operations on the network, not just payments. Account creation, trustline changes, offer management, and data operations all count as transactions. High transaction counts can reflect genuine activity or automated processes.
+
+**Active accounts** counts accounts that have submitted at least one transaction in a given period. This is the best proxy for actual user engagement but does not distinguish between individual users and automated services.
+
+## Limitations of On-Chain Metrics
+
+On-chain data has real limitations:
+
+- **No identity layer**: You cannot determine whether 1,000 accounts represent 1,000 users or 10 users with 100 accounts each
+- **Automated activity**: Bots, market makers, and automated systems generate transactions that inflate counts
+- **Cross-chain flows**: USDC bridged to another chain via CCTP may appear as a burn on Stellar, reducing apparent holdings
+- **Anchor opacity**: Some payment corridors settle off-chain within anchor systems, with only periodic on-chain settlements
+
+## What to Monitor Over the Next 12 to 24 Months
+
+### Adoption Indicators
+
+1. **DTCC integration progress**: Whether the 1H 2027 timeline for DTC-tokenized assets on Stellar holds, and which asset classes launch first
+2. **USDC holder growth**: Whether holder count continues to grow, indicating expanding real usage
+3. **New institutional issuers**: Whether additional asset managers tokenize funds on Stellar
+4. **Anchor network expansion**: Growth in the number of on/off-ramp providers in new corridors
+5. **Soroban RWA contracts**: Whether complex financial products begin using Soroban for programmable compliance
+
+### Technical Milestones
+
+1. **Throughput upgrades**: Progress toward the planned 5,000 TPS capacity for institutional settlement volumes
+2. **State archival**: Stellar's state archival system for managing the growing ledger
+3. **Protocol upgrades**: Protocol 27 and beyond, with features that support institutional requirements
+
+### Market Signals
+
+1. **Regulatory clarity**: SEC guidance on tokenized securities settlement
+2. **Competing networks**: Whether institutional issuers choose Stellar or alternatives
+3. **Fee dynamics**: How base fees and surge pricing behave under increased load
+
+## How LumenQuery Helps
+
+LumenQuery provides the API infrastructure to query and monitor these metrics:
+
+- [Analytics Dashboard](/analytics) for real-time network metrics and historical trends
+- [Transaction Monitoring](/stellar-transaction-monitoring) for tracking payment flows and asset transfers
+- [XLM Whale Alerts](/xlm-whale-alerts) for monitoring large value movements
+- [Portfolio Intelligence](/portfolio) for aggregating positions across multiple accounts
+
+## Sources and Further Reading
+
+- Stellar Development Foundation annual reports and ecosystem updates
+- Circle USDC transparency reports
+- Franklin Templeton BENJI fund documentation
+- DTCC Digital Securities Management announcements
+- Stellar Horizon API on-chain data
+
+---
+
+*Monitor Stellar's RWA and stablecoin ecosystem in real time. [LumenQuery](/auth/signup) provides managed Horizon API and Soroban RPC with analytics dashboards, payment tracking, and asset monitoring. Start free.*
+
+## Related Resources
+
+- [Stellar Blockchain Analytics API](/stellar-blockchain-analytics-api) — Query tokenized asset metrics, payment volumes, and network trends
+- [Stellar Horizon API](/stellar-horizon-api) — Access account balances, asset details, and transaction history
+- [XLM Whale Alerts](/xlm-whale-alerts) — Track large-value transfers and institutional settlement activity
+    `,
+  },
+  'stellar-confidential-tokens': {
+    title: 'Confidential Tokens on Stellar: Privacy, Compliance, and Public Blockchain Payments',
+    date: '2026-07-11',
+    readTime: '13 min read',
+    category: 'Protocol Update',
+    content: `
+Financial transactions on public blockchains are transparent by default. Every payment amount, sender, and recipient is visible to anyone who queries the ledger. For many business and institutional use cases, this level of transparency is a barrier to adoption. Payroll, vendor payments, intercompany transfers, and competitive trade execution all require some degree of confidentiality.
+
+The Stellar Development Foundation has been developing confidential token capabilities that would allow transaction amounts to be hidden from public view while remaining verifiable and auditable. This article examines what confidential tokens are, how they differ from privacy coins, what the current development status is, and what developers should understand before building with them.
+
+## Key Takeaways
+
+- Confidential tokens on Stellar hide transaction amounts while keeping sender and recipient addresses visible on the public ledger.
+- The approach uses cryptographic methods including Pedersen commitments and range proofs to ensure hidden amounts are valid without revealing them.
+- This is not anonymity. It is selective confidentiality designed to coexist with regulatory compliance.
+- Confidential asset capabilities are under active development. Developers should monitor official Stellar channels for production-readiness announcements before building production applications.
+- The use case is primarily institutional: banks, payment companies, and enterprises that need public blockchain efficiency without exposing competitive or private financial data.
+
+## What Confidential Tokens Are
+
+On a standard Stellar transaction, the following information is publicly visible:
+
+| Field | Visibility |
+|-------|-----------|
+| Sender account | Public |
+| Recipient account | Public |
+| Asset type | Public |
+| Amount | Public |
+| Memo | Public |
+| Transaction hash | Public |
+
+With confidential tokens, the goal is to change one element:
+
+| Field | Visibility |
+|-------|-----------|
+| Sender account | Public |
+| Recipient account | Public |
+| Asset type | Public (or optionally confidential) |
+| **Amount** | **Hidden (cryptographically committed)** |
+| Memo | Public |
+| Transaction hash | Public |
+
+The sender and recipient remain visible. The asset type may remain visible. But the amount is replaced with a cryptographic commitment that proves the transaction is valid (positive amount, no inflation, sender had sufficient balance) without revealing the actual value.
+
+## How It Works: Cryptographic Foundations
+
+### Pedersen Commitments
+
+A Pedersen commitment allows someone to commit to a value without revealing it. The commitment has two properties:
+
+- **Hiding**: No one can determine the committed value from the commitment alone
+- **Binding**: The committer cannot change the value after committing
+
+In simplified terms, a commitment to amount \`v\` looks like:
+
+\`\`\`
+C = v * G + r * H
+\`\`\`
+
+Where \`G\` and \`H\` are generator points on an elliptic curve, \`v\` is the amount, and \`r\` is a random blinding factor. Without knowing \`r\`, an observer cannot determine \`v\` from \`C\`.
+
+### Range Proofs
+
+A Pedersen commitment alone does not prevent an attacker from committing to a negative number (which would effectively create money). Range proofs solve this by proving that the committed value falls within a valid range (e.g., 0 to 2^64) without revealing the value itself.
+
+Bulletproofs are a compact form of range proof that is particularly efficient for blockchain use. They produce small proofs (around 700 bytes) and can be verified quickly, making them practical for inclusion in blockchain transactions.
+
+### Verifying Balance
+
+The key property of Pedersen commitments for payments is that they are homomorphic: you can add commitments together and the result is a commitment to the sum of the original values. This means validators can verify that:
+
+\`\`\`
+Sum of input commitments = Sum of output commitments + commitment to fee
+\`\`\`
+
+This proves that no value was created or destroyed in the transaction, without anyone learning the individual amounts.
+
+## Privacy vs. Anonymity
+
+This distinction is critical for understanding Stellar's approach:
+
+**Privacy coins** (Monero, Zcash) aim to hide the identities of senders and recipients, making transactions difficult or impossible to trace. This creates challenges for regulatory compliance, anti-money laundering (AML), and know-your-customer (KYC) requirements.
+
+**Confidential tokens on Stellar** take a different approach:
+
+| Property | Privacy Coins | Stellar Confidential Tokens |
+|----------|--------------|----------------------------|
+| Sender identity | Hidden | Visible |
+| Recipient identity | Hidden | Visible |
+| Transaction amount | Hidden | Hidden |
+| Transaction graph | Obfuscated | Visible |
+| Regulatory compliance | Difficult | Compatible |
+| AML/KYC | Challenging | Supported |
+
+Stellar's approach preserves the ability to trace who transacted with whom, which regulators and compliance officers require. What it hides is how much was transferred, which is often the sensitive business information that institutions want to protect.
+
+SDF CEO Denelle Dixon has framed the design philosophy: "The base layer is always going to be open. Then the institution gets to decide how compliance and privacy come into play." The practical problem SDF identifies is "self-doxxing": when transacting parties reveal public addresses to each other, both can view all past and future transactions and asset balances linked to that address.
+
+## Why Institutions Need Transaction Confidentiality
+
+### Payroll
+
+When a company pays employees using a public blockchain, every employee's salary is visible to anyone who identifies the sending and receiving accounts. Confidential amounts solve this by hiding the payment values while the payroll transaction itself remains auditable.
+
+### Business-to-Business Payments
+
+Vendor payments reveal pricing, contract terms, and business relationships. A retailer paying a supplier on a public blockchain effectively publishes its cost structure. Confidential amounts keep the transaction relationship visible (for compliance) while hiding the competitive intelligence.
+
+### Institutional Settlement
+
+When financial institutions settle large positions, the amounts involved can move markets if visible in real time. Settlement needs to be verifiable and auditable after the fact, but broadcasting the amount to the entire network during settlement creates front-running and information leakage risks.
+
+### Tokenized Assets
+
+As more real-world assets are tokenized on Stellar (including the [expected DTCC integration](/blog/dtcc-stellar-tokenized-securities)), institutional holders may not want their position sizes visible on a public ledger. Confidential amounts allow holding and transferring tokenized securities without revealing portfolio details.
+
+## Coexistence with Compliance
+
+A common concern with any privacy feature on a blockchain is whether it undermines regulatory compliance. Stellar's approach is designed to maintain compliance:
+
+**Auditor view keys**: The confidential token contracts support a designated auditor role that can decrypt and view transaction amounts and account balances within the confidential wrapper. A regulated stablecoin issuer like Circle could see USDC transaction amounts while the public cannot.
+
+**Selective disclosure**: Account holders can prove specific transactions to chosen parties (auditors, regulators, compliance officers) without revealing their full activity history. This uses the blinding factors from Pedersen commitments.
+
+**Account-level controls**: Stellar's existing authorization and clawback controls (CAP-0035, CAP-0018) cascade into the confidential layer. The issuer retains the ability to freeze or recover assets.
+
+**Configurable compliance policy**: The contracts support pluggable policy contracts that function as allow-list or block-list identity registries. Asset issuers decide whether transfers require KYC checks.
+
+**FATF Travel Rule compatibility**: Because sender and recipient addresses remain public, Stellar's confidential tokens are architecturally compatible with FATF Recommendation 16. Regulated entities can still collect and share originator and beneficiary information as required.
+
+## Current Development Status
+
+Confidential token capabilities on Stellar are implemented as Soroban smart contracts, not as protocol-level changes. The cryptographic foundations are live on mainnet, but the confidential token contracts themselves are in developer preview.
+
+| Component | Status | Where |
+|-----------|--------|-------|
+| BLS12-381 host functions (CAP-0059) | Live | Mainnet (Protocol 22) |
+| BN254 host functions (CAP-0074) | Live | Mainnet (Protocol 25, Jan 2026) |
+| Poseidon hash functions (CAP-0075) | Live | Mainnet (Protocol 25) |
+| Extended ZK functions (CAP-0080) | Live | Mainnet (Protocol 26, May 2026) |
+| Confidential Token contracts | Developer Preview | Testnet only |
+| Privacy Pools prototype | Research prototype | Testnet only |
+
+SDF announced the confidential tokens developer preview in late June 2026, built by OpenZeppelin (contract suite) with Nethermind (UltraHonk verifier). Proofs are written in Noir (Aztec's ZK language) and generated client-side via WebAssembly, so private data never leaves the user's device. On-chain verification uses the BN254 host functions added in Protocol 25.
+
+The contracts wrap any existing SEP-41 token. Depositing USDC into the confidential wrapper converts the balance to a Pedersen commitment. Transfers operate on committed values. Withdrawing converts back to a standard transparent balance.
+
+Mainnet availability is targeted for late summer 2026, pending completion of security audits.
+
+**Important**: Do not build production applications that depend on confidential token features until audits are complete and SDF announces production readiness. The contracts and verifiers are explicitly labeled as unaudited and not intended for real assets.
+
+## Technical Considerations
+
+### Transaction Size
+
+Confidential transactions are larger than standard transactions due to the inclusion of commitments and range proofs:
+
+| Component | Standard Transaction | Confidential Transaction (Estimated) |
+|-----------|---------------------|--------------------------------------|
+| Amount field | 8 bytes (int64) | ~33 bytes (Pedersen commitment) |
+| Range proof | None | ~700 bytes (Bulletproof) |
+| Total overhead | 0 | ~725 bytes per output |
+
+This increase affects network throughput and storage costs. A Stellar network processing 200 transactions per second would need to handle significantly more data per transaction with confidential amounts.
+
+### Verification Performance
+
+Range proof verification is more computationally expensive than standard amount verification. Validators need to perform elliptic curve operations for each confidential transaction, which increases the CPU cost of consensus.
+
+Bulletproofs support batch verification, where verifying N proofs together is faster than verifying them individually. This partially mitigates the performance impact for validators processing blocks of transactions.
+
+### Compatibility
+
+Confidential tokens need to interact with the existing Stellar ecosystem:
+
+- **DEX integration**: The Stellar decentralized exchange currently displays order prices and amounts. Confidential tokens would need a compatible trading mechanism.
+- **Path payments**: Stellar's path payment feature routes payments through intermediate assets. Confidential amounts add complexity to pathfinding.
+- **Anchors**: On/off-ramp providers need to see amounts to process fiat conversions. Selective disclosure to anchors would be required.
+
+## Risks and Limitations
+
+### Regulatory Risk
+
+Regulators in some jurisdictions may view any privacy enhancement on a blockchain negatively, even if the implementation is compliance-friendly. The Travel Rule (requiring sender/recipient information for transfers above certain thresholds) applies to amounts as well as identities in most interpretations.
+
+### Implementation Complexity
+
+Cryptographic systems are difficult to implement correctly. Bugs in commitment schemes or range proofs could allow inflation (creating tokens from nothing) or other exploits. The implementation will need extensive auditing and testing.
+
+### User Experience
+
+Confidential transactions are more complex for users. Wallet applications need to manage blinding factors, and recovering from lost blinding factors may be impossible. The user experience needs to be designed so that confidentiality does not come at the cost of usability.
+
+### Performance Trade-offs
+
+The additional data and computation required for confidential transactions reduces the network's effective throughput. This trade-off needs to be weighed against the privacy benefits, especially as Stellar prepares for higher-volume use cases like institutional settlement.
+
+## What Developers Should Monitor
+
+1. **Official SDF announcements**: Watch the Stellar Development Foundation blog and GitHub for CAP proposals and implementation updates related to confidential assets
+2. **Soroban SDK updates**: Confidential token primitives may appear as Soroban host functions or SDK features
+3. **Testnet availability**: When confidential token features become available on testnet, that signals approaching production readiness
+4. **Stellar Core releases**: Protocol upgrades that include confidential transaction support will be announced in Stellar Core release notes
+
+## How This Connects to Stellar's Broader Strategy
+
+Confidential tokens fit into Stellar's positioning as a compliance-friendly network for institutional use:
+
+- **DTCC integration**: Tokenized securities holders may want confidential positions
+- **Stablecoin payments**: Business payments in USDC benefit from amount privacy
+- **Cross-border settlement**: Institutional settlement amounts are commercially sensitive
+- **Regulatory alignment**: The approach preserves compliance capabilities while adding privacy
+
+The goal is not to compete with privacy-focused blockchains. It is to give regulated institutions a reason to use a public blockchain by solving the "everyone can see our transaction amounts" problem.
+
+## Sources and Further Reading
+
+- Stellar Development Foundation research publications
+- Stellar Core Advancement Proposals (CAPs) repository on GitHub
+- Bulletproofs: Short Proofs for Confidential Transactions (Bunz et al., 2018)
+- Pedersen commitment schemes in cryptographic literature
+
+---
+
+*Prepare for confidential assets on Stellar. [LumenQuery](/auth/signup) provides managed Horizon API and Soroban RPC with monitoring and analytics tools that will support confidential token queries as they become available. Start free.*
+
+## Related Resources
+
+- [Stellar Transaction Monitoring](/stellar-transaction-monitoring) — Monitor payment flows and compliance events on the Stellar network
+- [Stellar Horizon API](/stellar-horizon-api) — Query accounts, assets, and transactions with managed API infrastructure
+- [Soroban RPC API](/soroban-rpc-api) — Interact with Soroban smart contracts for programmable asset logic
+    `,
+  },
+  'stellar-quantum-preparedness': {
+    title: "Is Stellar Preparing for Quantum Computing? Understanding Its Post-Quantum Roadmap",
+    date: '2026-07-11',
+    readTime: '14 min read',
+    category: 'Protocol Update',
+    content: `
+Quantum computing is advancing, and with it comes a long-term threat to the cryptographic systems that secure blockchain networks. Stellar, like most blockchains, currently relies on Ed25519 digital signatures, which could be vulnerable to a sufficiently powerful quantum computer. The Stellar Development Foundation published its Quantum Preparedness Plan (QPP) in June 2026, outlining a three-stage approach to address this risk before it becomes urgent.
+
+This article explains the quantum computing threat in practical terms, describes what the Stellar Development Foundation has announced, and outlines what users and developers should understand about the transition to post-quantum cryptography.
+
+## Key Takeaways
+
+- Quantum computers capable of breaking Ed25519 signatures do not exist today. The threat is years or decades away, but preparation needs to start now.
+- The Stellar Development Foundation published a formal Quantum Preparedness Plan in June 2026 with three stages, beginning with Soroban smart contract primitives.
+- NIST finalized post-quantum cryptographic standards in 2024, providing the algorithms that Stellar and other networks will adopt.
+- Post-quantum signatures are significantly larger than Ed25519 signatures (thousands of bytes vs. 64 bytes), which has real implications for network throughput and costs.
+- Users do not need to take immediate action, but developers should begin planning for crypto-agility in their applications.
+
+## The Quantum Threat: What It Actually Means
+
+### For Nontechnical Readers
+
+Digital signatures on blockchains work like a lock and key. Your private key signs transactions (proves you authorized them), and your public key lets anyone verify the signature is genuine. The security depends on the mathematical difficulty of deriving the private key from the public key.
+
+Today's computers cannot solve this mathematical problem in any reasonable timeframe. A quantum computer with enough stable qubits could, using an algorithm called Shor's algorithm. If someone could derive your private key from your public key, they could authorize transactions from your account.
+
+**The important context**: No quantum computer today has anywhere near enough qubits to threaten blockchain cryptography. Current quantum computers have a few thousand noisy qubits. Breaking Ed25519 would require millions of stable, error-corrected qubits. Most estimates place this capability 10 to 30 years in the future, though estimates vary widely.
+
+### For Developers
+
+Stellar uses Ed25519 for transaction signatures. Ed25519 is based on elliptic curve cryptography, which is vulnerable to Shor's algorithm on a sufficiently large quantum computer. The specific concerns are:
+
+**1. Key derivation attack**: Given a public key, a quantum computer could derive the corresponding private key. Every Stellar account publishes its public key, so every account is potentially vulnerable once quantum computers reach sufficient capability.
+
+**2. Harvest now, decrypt later**: An adversary could record signed transactions and public keys today, then derive private keys once quantum hardware matures. Long-lived accounts with significant assets are the highest-value targets.
+
+**3. Signature forgery**: With a derived private key, an attacker could sign arbitrary transactions, transferring all assets from the compromised account.
+
+## Current State of Quantum Computing
+
+It is important to be precise about where quantum computing actually stands:
+
+| Milestone | Status |
+|-----------|--------|
+| Quantum computers exist | Yes, but with limited qubits and high error rates |
+| Quantum advantage demonstrated | Yes, for narrow, specialized problems |
+| Cryptographically relevant quantum computer | No. Not expected for 10-30+ years |
+| NIST post-quantum standards finalized | Yes, in 2024 (ML-DSA, ML-KEM, SLH-DSA) |
+| Blockchain networks broken by quantum | No. Not a current threat |
+
+**Do not believe claims** that quantum computers can break blockchain cryptography today. They cannot. The threat is real but distant, and the purpose of quantum preparedness is to complete the migration before it becomes urgent, not to respond to an imminent attack.
+
+## What the Stellar Development Foundation Has Announced
+
+The SDF published its quantum preparedness plan in early 2026, describing a phased approach to introducing post-quantum cryptographic support into the Stellar protocol. The plan acknowledges that the transition will take years and needs to begin well before quantum computers pose an actual threat.
+
+### Phase Structure
+
+The plan follows a staged approach:
+
+**Stage 1: Soroban cryptographic primitives.** Post-quantum signature verification functions are introduced as Soroban host functions. Smart contracts can verify quantum-safe signatures, but the network's consensus layer continues using Ed25519. This allows developers to start experimenting with post-quantum cryptography in contract logic without changing the core protocol.
+
+**Stage 2: Account-level support.** The Stellar protocol is updated to support post-quantum signature types for account authentication. Users can optionally migrate their accounts to use quantum-safe keys while Ed25519 remains supported for backward compatibility.
+
+**Stage 3: Network-wide transition.** The protocol moves toward requiring quantum-safe signatures for all new accounts and eventually all transactions. Legacy Ed25519 accounts would need to migrate.
+
+### Algorithm Selection
+
+The NIST post-quantum cryptographic standards finalized in 2024 provide the foundation:
+
+| Algorithm | NIST Standard | Type | Signature Size | Public Key Size |
+|-----------|---------------|------|---------------|-----------------|
+| ML-DSA (Dilithium) | FIPS 204 | Lattice-based | 2,420-4,627 bytes | 1,312-2,592 bytes |
+| SLH-DSA (SPHINCS+) | FIPS 205 | Hash-based | 7,856-49,856 bytes | 32-64 bytes |
+| FN-DSA (Falcon) | FIPS 206 | Lattice-based | 666-1,280 bytes | 897-1,793 bytes |
+
+For comparison, Ed25519 (Stellar's current algorithm) uses 64-byte signatures and 32-byte public keys.
+
+## The Size Problem
+
+The most immediate technical challenge is that post-quantum signatures are dramatically larger than Ed25519:
+
+| Algorithm | Signature | Public Key | Combined |
+|-----------|-----------|------------|----------|
+| Ed25519 (current) | 64 bytes | 32 bytes | 96 bytes |
+| ML-DSA-65 (likely first candidate) | 3,309 bytes | 1,952 bytes | 5,261 bytes |
+| SLH-DSA-128s (conservative) | 7,856 bytes | 32 bytes | 7,888 bytes |
+
+A standard Stellar transaction envelope that currently fits in a few hundred bytes could grow to several kilobytes with post-quantum signatures. This affects:
+
+- **Network throughput**: Larger transactions mean fewer transactions per ledger at current capacity
+- **Storage costs**: The ledger grows faster, accelerating state archival needs
+- **Transaction fees**: If fees are partially based on transaction size, costs increase
+- **Bandwidth**: Validators need to propagate larger transactions across the network
+
+This is why the 5,000 TPS roadmap is not just about scaling for institutional settlement. It may also be necessary to maintain current effective throughput when transactions become larger.
+
+## Migration Challenges
+
+### For Users
+
+Most users interact with Stellar through wallets, exchanges, or applications. The migration to post-quantum keys would ideally be transparent:
+
+1. Wallet software updates to support new key types
+2. Users generate new quantum-safe key pairs
+3. Users authorize the key migration using their existing Ed25519 keys
+4. New transactions use quantum-safe signatures
+
+The risk is that users who do not migrate remain vulnerable once quantum computers become capable. Abandoned or inactive accounts with significant balances are a particular concern because no one is available to perform the migration.
+
+### For Exchanges and Custodians
+
+Exchanges and custodians manage keys for millions of users. The migration involves:
+
+- Generating and securely storing new key material (which is larger)
+- Updating signing infrastructure to handle new algorithms
+- Coordinating key rotation across potentially millions of accounts
+- Maintaining backward compatibility during the transition period
+
+### For Anchors and Institutions
+
+Anchors (on/off-ramp providers) and institutional participants need to update their:
+
+- Transaction signing infrastructure
+- Key management systems
+- Hardware security modules (HSMs) to support new algorithms
+- Compliance and audit systems to handle new key formats
+
+## Why Crypto-Agility Matters
+
+Crypto-agility is the ability of a system to switch between cryptographic algorithms without requiring a complete redesign. It is important for two reasons:
+
+**1. Algorithm uncertainty**: While NIST has standardized ML-DSA, SLH-DSA, and FN-DSA, future research could reveal weaknesses in any of these algorithms. A crypto-agile system can switch to a different algorithm without a crisis-level migration.
+
+**2. Gradual transition**: A network that supports multiple signature types simultaneously allows users and applications to migrate at their own pace, rather than requiring a hard cutover date.
+
+Stellar's multi-phase approach reflects crypto-agility: adding new algorithms alongside Ed25519 rather than replacing it immediately.
+
+## Risks of Abandoned Accounts
+
+One of the harder problems in quantum preparedness is handling accounts whose owners are unable or unwilling to migrate:
+
+- **Lost keys**: If a user has lost access to their account but it still holds value, no one can perform the migration
+- **Deceased users**: Accounts belonging to deceased individuals with no estate planning for crypto assets
+- **Inactive organizations**: Companies that created Stellar accounts but no longer exist
+- **Long-term holders**: Users who purchased XLM, stored it, and have not interacted with the network in years
+
+These accounts will remain on Ed25519 keys and become vulnerable once quantum computers mature. The Stellar community will need to decide how to handle this, and the options (forced migration, account freezing, accepting the risk) all have trade-offs.
+
+## What Stellar Users Should Do Now
+
+### For Individual Users
+
+1. **Do not panic**. Quantum computers cannot break your keys today.
+2. **Stay informed**. Follow Stellar Development Foundation announcements about quantum preparedness milestones.
+3. **Keep your wallet software updated**. When post-quantum support is available, your wallet will need to be updated to use it.
+4. **Consider key rotation practices**. Getting comfortable with generating new keys and migrating accounts is good practice regardless of quantum concerns.
+
+### For Developers
+
+1. **Design for crypto-agility**. Do not hard-code Ed25519 assumptions into your application logic. Abstract signature verification so the algorithm can be swapped.
+2. **Monitor Soroban SDK updates**. Post-quantum verification primitives will appear in the Soroban SDK before they reach the core protocol.
+3. **Test on testnet**. When post-quantum features become available on Stellar's testnet, start testing your applications with the new signature types.
+4. **Plan for larger transactions**. If your application logic depends on transaction size limits, plan for the increase that post-quantum signatures will bring.
+
+### For Institutions
+
+1. **Assess your exposure**. How many accounts do you manage? What is their total value? How long will migration take?
+2. **Evaluate your HSM capabilities**. Do your hardware security modules support the NIST post-quantum algorithms?
+3. **Include quantum preparedness in your roadmap**. Budget time and resources for the migration before it becomes urgent.
+
+## How Other Blockchains Are Approaching This
+
+Stellar is not alone in addressing quantum preparedness:
+
+| Network | Approach |
+|---------|----------|
+| Stellar | Phased plan starting with Soroban primitives, then account-level support |
+| Ethereum | Research-phase; Ethereum Foundation has funded PQ research |
+| Bitcoin | No formal plan; community discussion ongoing |
+| Algorand | State proofs use Falcon signatures (PQ-resistant) |
+| QRL (Quantum Resistant Ledger) | Built from scratch with hash-based signatures |
+
+Most major blockchain networks are in the research or early planning phase. Stellar's published multi-phase plan puts it ahead of many peers, though actual implementation timelines remain to be confirmed.
+
+## Sources and Further Reading
+
+- Stellar Development Foundation Quantum Preparedness Plan
+- NIST Post-Quantum Cryptography Standardization (FIPS 203, 204, 205, 206)
+- Shor's Algorithm and its implications for elliptic curve cryptography
+- Stellar Core Advancement Proposals (CAPs) repository
+
+---
+
+*Stay ahead of protocol changes on Stellar. [LumenQuery](/auth/signup) provides managed Horizon API and Soroban RPC with real-time network monitoring and protocol upgrade tracking. Start free.*
+
+## Related Resources
+
+- [Stellar Horizon API](/stellar-horizon-api) — Access account and transaction data with managed API infrastructure
+- [Soroban RPC API](/soroban-rpc-api) — Build and test smart contracts using the latest Soroban SDK features
+- [Stellar API Provider Comparison](/stellar-api-provider-comparison) — Compare infrastructure options for production Stellar applications
+    `,
+  },
   'stellar-quantum-preparedness-post-quantum-soroban': {
     title: 'Stellar\'s Quantum Preparedness Plan: How Developers Should Audit Signatures Before Post-Quantum Soroban',
     date: '2026-07-03',

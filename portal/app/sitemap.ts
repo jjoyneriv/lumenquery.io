@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://lumenquery.io';
-  const today = new Date('2026-07-03');
+  const today = new Date('2026-07-11');
 
   // Core pages
   const corePages: MetadataRoute.Sitemap = [
@@ -202,6 +202,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Blog posts with their actual publication dates
   const blogPosts: MetadataRoute.Sitemap = [
+    // 2026-07-11 posts (DTCC deep dive, RWA/stablecoin growth, confidential tokens, quantum roadmap)
+    {
+      url: `${baseUrl}/blog/dtcc-stellar-tokenized-securities`,
+      lastModified: new Date('2026-07-11'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/stellar-rwa-stablecoin-growth`,
+      lastModified: new Date('2026-07-11'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/stellar-confidential-tokens`,
+      lastModified: new Date('2026-07-11'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/stellar-quantum-preparedness`,
+      lastModified: new Date('2026-07-11'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
     // 2026-07-03 posts (quantum, Open USD, ERC-3643, RWA dashboard)
     {
       url: `${baseUrl}/blog/stellar-quantum-preparedness-post-quantum-soroban`,

@@ -2,6 +2,38 @@ import Link from 'next/link';
 
 const posts = [
   {
+    slug: 'dtcc-stellar-tokenized-securities',
+    title: 'DTCC and Stellar: What Tokenized Securities on a Public Blockchain Could Mean',
+    excerpt: 'DTCC announced DTC-tokenized assets on Stellar for 1H 2027 with 50+ participating firms including JPMorgan and BlackRock. What the plan involves, why Stellar was selected, and what risks remain.',
+    date: '2026-07-11',
+    readTime: '15 min read',
+    category: 'Industry Insights',
+  },
+  {
+    slug: 'stellar-rwa-stablecoin-growth',
+    title: "Stellar's Real-World Asset and Stablecoin Growth: The Metrics That Matter",
+    excerpt: 'Stellar surpassed $3.3B in tokenized RWAs and $5.5B in quarterly stablecoin volume. A data-driven analysis of who is building, what the numbers actually represent, and what to monitor next.',
+    date: '2026-07-11',
+    readTime: '14 min read',
+    category: 'Industry Insights',
+  },
+  {
+    slug: 'stellar-confidential-tokens',
+    title: 'Confidential Tokens on Stellar: Privacy, Compliance, and Public Blockchain Payments',
+    excerpt: 'Stellar is developing confidential token capabilities that hide transaction amounts while preserving compliance. How it works, why institutions need it, and what the current development status is.',
+    date: '2026-07-11',
+    readTime: '13 min read',
+    category: 'Protocol Update',
+  },
+  {
+    slug: 'stellar-quantum-preparedness',
+    title: "Is Stellar Preparing for Quantum Computing? Understanding Its Post-Quantum Roadmap",
+    excerpt: "SDF published a three-stage Quantum Preparedness Plan targeting ML-DSA algorithms. What the quantum threat actually means, what changes for users and developers, and what to do now.",
+    date: '2026-07-11',
+    readTime: '14 min read',
+    category: 'Protocol Update',
+  },
+  {
     slug: 'stellar-quantum-preparedness-post-quantum-soroban',
     title: 'Stellar\'s Quantum Preparedness Plan: How Developers Should Audit Signatures Before Post-Quantum Soroban',
     excerpt: 'SDF\'s Quantum Preparedness Plan entered stage one in 2026, adding NIST-approved quantum-safe signature algorithms to the Soroban layer. Here is what changes for key management, signing, and contract design.',
