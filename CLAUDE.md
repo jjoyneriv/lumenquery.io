@@ -1,9 +1,9 @@
 # Project Context
 
 ## Current Status
-- Working on: Infrastructure cleanup, blog content, SEO
-- Last session: 2026-07-03
-- Last validated: 2026-07-03
+- Working on: User engagement, SEO, content
+- Last session: 2026-07-11
+- Last validated: 2026-07-06
 - All services: 11 containers running (stellar-horizon removed)
 - Stellar Horizon: Removed (not needed, all services use public Horizon API)
 - Database: PostgreSQL 33 tables (10 orphaned compliance tables removed)
@@ -1022,6 +1022,16 @@ docker compose up -d
     - /query: 13 H2s, example questions cards, result preview table, JSON API example, 7 use case cards
     - All content server-rendered via layout files; client-side dashboards preserved
 34. Submitted to Bing IndexNow (4 URLs accepted). Google quota exhausted for the day.
+35. Added interactive "Try It Now" query widget to homepage:
+    - TryQueryWidget component with search input + 5 suggestion buttons
+    - Placed in hero section, redirects to /query?q=... with pre-filled query
+    - /query page reads ?q URL parameter and auto-executes on load
+36. Added live network stats ticker to header:
+    - NetworkTicker component showing ledger, TPS, XLM price, 24h txns
+    - Displayed above header navigation on every page
+    - Fetches /api/analytics/network with 60s refresh
+    - Each metric links to relevant product page
+    - Green pulse indicator, "Start Free" CTA on desktop
 
 ## SEO Landing Pages
 
