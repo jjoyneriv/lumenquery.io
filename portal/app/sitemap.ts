@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://lumenquery.io';
-  const today = new Date('2026-07-11');
+  const today = new Date('2026-07-12');
 
   // Core pages
   const corePages: MetadataRoute.Sitemap = [
@@ -208,6 +208,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Blog posts with their actual publication dates
   const blogPosts: MetadataRoute.Sitemap = [
+    // 2026-07-12 posts (Protocol 27 Zipper, Circle CCTP, UNDP humanitarian, new stablecoins)
+    {
+      url: `${baseUrl}/blog/stellar-protocol-27-zipper-authentication-delegation`,
+      lastModified: new Date('2026-07-12'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/circle-cctp-stellar-burn-mint-developer-guide`,
+      lastModified: new Date('2026-07-12'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/undp-stellar-humanitarian-payments-scaling`,
+      lastModified: new Date('2026-07-12'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog/stellar-new-stablecoins-ylds-usst-2026`,
+      lastModified: new Date('2026-07-12'),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
     // 2026-07-11 posts (DTCC deep dive, RWA/stablecoin growth, confidential tokens, quantum roadmap)
     {
       url: `${baseUrl}/blog/dtcc-stellar-tokenized-securities`,

@@ -9,6 +9,622 @@ const posts: Record<string, {
   category: string;
   content: string;
 }> = {
+  'stellar-protocol-27-zipper-authentication-delegation': {
+    title: "Stellar Protocol 27 'Zipper' Is Live: What Authentication Delegation Means for Developers",
+    date: '2026-07-12',
+    readTime: '13 min read',
+    category: 'Protocol Update',
+    content: `
+On July 9, 2026, Stellar validators activated Protocol 27, codenamed "Zipper," on mainnet. The upgrade introduces native authentication delegation at the protocol level, a change that simplifies how wallets, multisig setups, and smart contract accounts interact with the network.
+
+This article covers what changed, why it matters, and how developers should adapt.
+
+## Key Takeaways
+
+- Protocol 27 "Zipper" went live on Stellar mainnet on July 9, 2026, after a validator vote on July 8.
+- The primary feature is native authentication delegation: one Stellar account can authorize another to act on its behalf at the protocol level.
+- A security fix binds signer addresses into credential payloads, preventing replay attacks between accounts that share private keys.
+- Protocol 27 lays the foundation for Protocol 28, which will introduce contract-based authentication for standard Stellar accounts.
+- Wallet developers and payment applications should review their transaction signing flows for compatibility.
+
+## What Changed in Protocol 27
+
+Protocol 27 introduces two changes to how Stellar handles authentication:
+
+### 1. Native Authentication Delegation
+
+Before Protocol 27, if Account A wanted Account B to submit transactions on its behalf, the typical approach was to add Account B as a signer on Account A. This worked but had limitations: it required modifying Account A's signer list, managing weight thresholds, and handling cleanup when delegation was no longer needed.
+
+Protocol 27 adds a delegation primitive directly into the transaction envelope. Account A can now create a delegation credential that grants Account B specific transaction-signing authority without modifying signer lists.
+
+| Before Protocol 27 | After Protocol 27 |
+|---------------------|-------------------|
+| Add signer to account | Create delegation credential |
+| Manage weight thresholds | Specify delegation scope |
+| Remove signer to revoke | Credential expires or is revoked |
+| Permanent until removed | Time-bounded by design |
+
+### 2. Credential Payload Security Fix
+
+Protocol 27 also fixes a subtle security issue. In previous versions, authentication payloads did not bind the signer's address into the credential. This meant that if two accounts happened to share the same private key (an unusual but possible scenario), a signed payload from one account could theoretically be replayed against the other.
+
+The fix ensures that every credential payload now includes the signer's address, making cross-account replay impossible.
+
+## What Authentication Delegation Enables
+
+### Social Recovery Wallets
+
+Users can designate trusted contacts as recovery delegates. If a user loses access to their primary key, the recovery delegate can authorize a key rotation transaction. The delegate never gains unrestricted access to funds; their authority is scoped to specific operations.
+
+### Simplified Multisig
+
+Traditional multisig on Stellar requires all signers to be added to an account upfront. With delegation, a primary account holder can grant time-limited signing authority to a second party for a specific transaction. This is useful for:
+
+- Corporate accounts where different team members need temporary signing authority
+- Escrow arrangements where a third party needs to release funds under specific conditions
+- Automated systems that need to act on behalf of a user account
+
+### Account Abstraction
+
+Protocol 27 is the first step toward full account abstraction on Stellar. Account abstraction means an account's authentication logic can be defined by a smart contract rather than a fixed set of cryptographic keys. Protocol 28 is expected to complete this by allowing standard Stellar accounts to use contract-based authentication.
+
+\`\`\`
+Protocol 27: Delegation credentials (foundation)
+Protocol 28: Contract-based auth for standard accounts (planned)
+\`\`\`
+
+## Developer Impact
+
+### Transaction Envelope Changes
+
+Developers building on the [Stellar SDK](/docs) should be aware that Protocol 27 introduces new fields in the transaction envelope. If you are constructing or parsing raw XDR, your code needs to handle the updated envelope format.
+
+The JS SDK v16 includes support for Protocol 27 transaction formats. If you are using an older SDK version, upgrade before constructing transactions that use delegation.
+
+### Wallet Applications
+
+If your application manages Stellar accounts on behalf of users, review how you handle:
+
+- **Key management**: Delegation credentials can reduce the number of scenarios where users need to expose their primary key
+- **Transaction signing flows**: Your UI may need to display delegation permissions before users approve
+- **Session management**: Time-bounded delegation credentials can replace long-lived API key patterns
+
+### Smart Contract Developers
+
+Soroban contract developers do not need to make immediate changes. However, Protocol 28's contract-based authentication will likely require contracts that interact with user accounts to support new authentication flows. Reviewing the Protocol 27 delegation model now will prepare your contracts for the next upgrade.
+
+## The Upgrade Process
+
+The Stellar network uses a validator voting mechanism for protocol upgrades. The process for Protocol 27 was:
+
+1. **Development and testing**: Protocol 27 was tested on Stellar's testnet for several weeks prior to the mainnet vote
+2. **Validator vote**: On July 8, 2026, validators voted to adopt Protocol 27
+3. **Activation**: The upgrade went live on mainnet on July 9, 2026
+4. **Compatibility**: All nodes running Core v21+ support Protocol 27
+
+No action is required from users or token holders. The upgrade is backward-compatible with existing accounts and transactions that do not use delegation features.
+
+## What Comes Next: Protocol 28
+
+Protocol 28 is expected to build on Protocol 27's delegation infrastructure by introducing contract-based authentication for standard Stellar accounts. This would allow:
+
+- Custom authentication logic defined in Soroban contracts
+- Multi-factor authentication at the protocol level
+- Programmable spending policies (daily limits, approved recipients)
+- Hardware wallet integration without specialized transaction types
+
+Protocol 28 does not yet have a confirmed timeline. The Stellar Development Foundation (SDF) has indicated it is in active development.
+
+## Risks and Considerations
+
+- **SDK compatibility**: Applications using older Stellar SDKs should test against Protocol 27 testnet before relying on delegation features in production
+- **Delegation scope**: Developers must carefully define the scope of delegation credentials. Overly broad delegations could expose accounts to unintended operations
+- **Key hygiene**: The security fix for shared private keys is important but edge-case. Most applications will not encounter this scenario in practice
+
+## How to Test
+
+Developers can test Protocol 27 features on Stellar's testnet:
+
+\`\`\`
+# Stellar testnet already runs Protocol 27
+# Use the testnet Horizon API to test delegation
+curl https://horizon-testnet.stellar.org/
+\`\`\`
+
+The [Stellar Laboratory](https://laboratory.stellar.org) has been updated to support Protocol 27 transaction construction.
+
+---
+
+**Sources:** [Stellar Foundation blog: Protocol 27 Upgrade Guide](https://stellar.org/blog/foundation-news/stellar-zipper-protocol-27-upgrade-guide), [CryptoWisser: Zipper Protocol 27 Is Now Live on Stellar Mainnet](https://www.cryptowisser.com/news/zipper-protocol-27-is-now-live-on-stellar-mainnet), Stellar Developer Documentation
+
+---
+
+**Related Resources**
+
+- [Stellar Horizon API for Developers](/stellar-horizon-api) for endpoint documentation
+- [Soroban RPC API](/soroban-rpc-api) for smart contract interaction
+- [Stellar API Provider Comparison](/stellar-api-provider-comparison) to evaluate infrastructure options
+    `,
+  },
+  'circle-cctp-stellar-burn-mint-developer-guide': {
+    title: 'Circle CCTP Goes Live on Stellar: Native Cross-Chain USDC Without Bridges',
+    date: '2026-07-12',
+    readTime: '12 min read',
+    category: 'Developer Guide',
+    content: `
+On May 19, 2026, Circle activated its Cross-Chain Transfer Protocol (CCTP) on Stellar. CCTP allows USDC to move between blockchains natively, without wrapped tokens, bridge custodians, or liquidity pools. Stellar became the 24th chain to support CCTP, joining Ethereum, Solana, Base, Arbitrum, and others.
+
+For developers building payment applications on Stellar, CCTP opens a direct path to USDC liquidity across 23 other networks.
+
+## Key Takeaways
+
+- Circle's CCTP went live on Stellar on May 19, 2026, enabling native cross-chain USDC transfers
+- CCTP uses burn-and-mint: USDC is burned on the source chain and minted fresh on the destination chain
+- No wrapped tokens, no bridge custodians, no liquidity pool risk
+- Approximately $180.7M USDC circulates on Stellar as of July 2026
+- Developers can build cross-chain payment flows that connect Stellar's fast finality to MoneyGram off-ramps and other corridors
+
+## How CCTP Works
+
+Traditional cross-chain bridges use a lock-and-mint model: tokens are locked in a smart contract on Chain A, and a wrapped equivalent is minted on Chain B. This creates custodial risk. If the bridge is hacked or the locked tokens are stolen, the wrapped tokens on Chain B become worthless. Bridge exploits have resulted in billions of dollars in losses across the crypto ecosystem.
+
+CCTP eliminates this model entirely:
+
+| Step | What Happens |
+|------|-------------|
+| 1. Burn | User initiates a transfer. USDC is burned on the source chain. |
+| 2. Attest | Circle's attestation service observes the burn and signs a message confirming it. |
+| 3. Mint | On the destination chain, the signed attestation is submitted. Circle mints fresh, native USDC. |
+
+The USDC on the destination chain is not a derivative or wrapped token. It is the same native USDC that Circle issues directly. The total supply across all chains remains constant because every mint is preceded by an equal burn.
+
+### Why This Matters
+
+- **No bridge risk**: There is no pool of locked tokens that can be exploited
+- **No wrapped tokens**: Receiving applications get real USDC, not wUSDC or bridged-USDC
+- **No liquidity fragmentation**: USDC on Stellar is fungible with USDC on every other CCTP-supported chain
+- **Circle as the trust anchor**: The only trust assumption is Circle itself, which USDC holders already accept
+
+## CCTP on Stellar: Architecture
+
+Stellar's CCTP integration uses Soroban smart contracts to handle the burn and mint operations. The flow for transferring USDC from Ethereum to Stellar:
+
+\`\`\`
+1. User calls depositForBurn() on Ethereum CCTP contract
+   - Specifies amount, destination chain (Stellar), recipient address
+   - USDC is burned on Ethereum
+
+2. Circle attestation service detects the burn event
+   - Signs an attestation message confirming the burn
+   - Attestation becomes available via Circle's API
+
+3. On Stellar, user (or relayer) submits the attestation
+   - Soroban CCTP contract verifies Circle's signature
+   - Fresh USDC is minted to the recipient's Stellar account
+\`\`\`
+
+The reverse flow (Stellar to Ethereum or any other chain) works identically: burn on Stellar, attest, mint on destination.
+
+## Supported Chains
+
+CCTP connects Stellar to 23 other networks:
+
+| Category | Chains |
+|----------|--------|
+| Layer 1 | Ethereum, Solana, Avalanche, Sui, Stellar |
+| Ethereum L2 | Arbitrum, Base, Optimism, Polygon PoS, zkSync |
+| Others | Noble (Cosmos), Linea, Scroll, Blast, and more |
+
+This means a Stellar-based payment application can receive USDC from any of these networks without the user needing to manually bridge or swap tokens.
+
+## Developer Integration
+
+### Sending USDC to Stellar
+
+To send USDC from another chain to Stellar, your application needs to:
+
+1. Call the CCTP contract on the source chain with the burn parameters
+2. Poll Circle's attestation API for the signed message
+3. Submit the attestation to the Stellar CCTP Soroban contract
+
+### Receiving USDC from Stellar
+
+If your application is on another chain and needs to receive USDC from Stellar:
+
+1. The Stellar-side application calls the burn function on the Stellar CCTP contract
+2. Your application polls for the attestation
+3. Submit the attestation to the CCTP contract on your chain
+
+### Off-Ramp Integration
+
+CCTP on Stellar creates a natural integration point with [MoneyGram's off-ramp network](/blog/moneygram-stellar-partnership-stablecoin-utility). A user could:
+
+1. Hold USDC on Ethereum
+2. Transfer to Stellar via CCTP (fast, low cost)
+3. Convert USDC to cash at a MoneyGram location using Stellar's existing off-ramp infrastructure
+
+This pattern is particularly relevant for remittance corridors where recipients need cash, not crypto.
+
+## USDC on Stellar: Current State
+
+| Metric | Value |
+|--------|-------|
+| USDC circulating on Stellar | ~$180.7M |
+| USDC issuer on Stellar | Circle (via authorized trustline) |
+| Transfer finality | 5-7 seconds |
+| Transfer cost | ~0.00001 XLM (fraction of a cent) |
+| CCTP chains connected | 23 |
+
+Stellar's combination of fast finality (5-7 seconds) and near-zero transaction costs makes it one of the cheapest networks for USDC transfers. A cross-chain transfer from Ethereum to Stellar via CCTP avoids Ethereum's gas fees on the destination side entirely.
+
+## Comparison with Traditional Bridges
+
+| Feature | CCTP | Traditional Bridge |
+|---------|------|--------------------|
+| Token type received | Native USDC | Wrapped/bridged token |
+| Custodial risk | Circle only | Bridge operator + locked funds |
+| Liquidity requirement | None | Requires funded pools on both chains |
+| Speed | Minutes (attestation time) | Varies (minutes to hours) |
+| Supported asset | USDC only | Multiple tokens |
+| Trust model | Circle attestation | Bridge operator multisig |
+
+CCTP's limitation is that it only supports USDC. For other assets, traditional bridges or DEX swaps are still necessary. But for dollar-denominated payment flows, CCTP provides a strictly better path.
+
+## Implications for Stellar
+
+CCTP positions Stellar as a settlement layer for cross-chain dollar flows. Combined with the [MGUSD stablecoin](/blog/stellar-new-stablecoins-ylds-usst-2026), MoneyGram's off-ramp network, and Stellar's existing compliance infrastructure (AUTH_REQUIRED, AUTH_REVOCABLE, AUTH_CLAWBACK), the network now offers a complete stack for regulated dollar payments:
+
+- **Inbound**: USDC from any of 23 chains via CCTP
+- **On-chain**: Fast, cheap transfers with compliance controls
+- **Outbound**: Cash pickup via MoneyGram at 475,000+ locations
+
+This is a specific and measurable infrastructure advantage. Whether it translates into significant transaction volume depends on developer adoption and end-user demand.
+
+## Risks and Limitations
+
+- **Attestation latency**: CCTP transfers are not instant. The attestation step adds minutes of latency while Circle confirms the burn. For time-sensitive trades, this delay matters.
+- **Circle dependency**: CCTP centralizes cross-chain USDC transfers through Circle's attestation service. If Circle's attestation service goes down, cross-chain transfers pause.
+- **USDC only**: CCTP does not support other stablecoins or tokens. For cross-chain XLM or other asset transfers, different solutions are needed.
+- **Soroban maturity**: CCTP on Stellar relies on Soroban smart contracts. While Soroban is production-ready, the ecosystem of tooling and audited libraries is still younger than Ethereum's.
+
+---
+
+**Sources:** [Stellar Foundation: Circle CCTP Is Live on Stellar](https://stellar.org/blog/foundation-news/circle-cctp-is-live-on-stellar), [BanklessTimes](https://www.banklesstimes.com/articles/2026/05/20/circle-deploys-cctp-on-stellar-to-power-seamless-native-usdc-transfers/), [Blockonomi](https://blockonomi.com/circle-cctp-goes-live-on-stellar-unlocking-usdc-access-across-23-blockchains/)
+
+---
+
+**Related Resources**
+
+- [Stellar Transaction Monitoring](/stellar-transaction-monitoring) for tracking cross-chain flows
+- [XLM Whale Alerts](/xlm-whale-alerts) for monitoring large USDC movements on Stellar
+- [Stellar Blockchain Analytics API](/stellar-blockchain-analytics-api) for querying USDC transfer data
+    `,
+  },
+  'undp-stellar-humanitarian-payments-scaling': {
+    title: 'How the UNDP Is Scaling Blockchain Payments on Stellar Across 5 Countries',
+    date: '2026-07-12',
+    readTime: '12 min read',
+    category: 'Industry Insights',
+    content: `
+On July 6, 2026, the United Nations Development Programme (UNDP) announced it is extending its Stellar-based payment program through 2027. The extension follows 16 months of pilots across five countries that demonstrated measurable improvements in payment delivery: fees dropped from 10% to 2%, and delivery reliability reached 100%, including in offline environments.
+
+This is one of the largest real-world deployments of blockchain payment infrastructure by a multilateral organization.
+
+## Key Takeaways
+
+- The UNDP has piloted Stellar-based payments across Haiti, Kenya, Syria, Guatemala, and The Gambia since early 2025
+- Payment delivery fees dropped from approximately 10% to 2% compared to traditional methods
+- Delivery reliability reached 100%, including in areas with limited connectivity
+- The program is transitioning from pilot status to a standard tool available to UNDP country offices worldwide
+- Extension runs through 2027 with plans for additional country deployments
+
+## The Problem UNDP Was Trying to Solve
+
+Humanitarian aid payments face a specific set of challenges that differ from commercial payment systems:
+
+| Challenge | Traditional Approach | Impact |
+|-----------|---------------------|--------|
+| High fees | Multiple intermediaries per transfer | 8-15% of aid budget lost to fees |
+| Slow delivery | Days to weeks for cross-border transfers | Delayed assistance in crisis situations |
+| Limited reach | Bank-dependent infrastructure | Excludes unbanked populations |
+| Offline areas | Cash-only distribution | Security risks, logistical costs |
+| Accountability | Manual tracking and reconciliation | Difficulty verifying delivery |
+
+The UNDP processes billions of dollars in annual program spending across 170+ countries. Even small efficiency gains at this scale translate into meaningful increases in aid reaching beneficiaries.
+
+## What the Pilots Demonstrated
+
+### Five Country Deployments
+
+The UNDP ran pilots across five countries with different economic, infrastructure, and connectivity conditions:
+
+**Haiti**: Disaster recovery payments in areas with severely limited banking infrastructure. The Stellar-based system operated through mobile devices with intermittent connectivity, using transaction queuing that synced when connections became available.
+
+**Kenya**: Cash transfer programs leveraging Kenya's existing mobile money ecosystem. Stellar served as the settlement layer, with last-mile delivery through M-Pesa and similar mobile money platforms.
+
+**Syria**: Cross-border humanitarian transfers in a conflict zone where traditional banking channels are restricted or unavailable. Stellar's compliance features (authorization controls, clawback) enabled transfers that met regulatory requirements despite the complex sanctions environment.
+
+**Guatemala**: Rural community development payments where recipients often live hours from the nearest bank branch. The program used local agents who could process Stellar-based payments and provide cash conversion.
+
+**The Gambia**: Social protection payments to vulnerable populations, testing the system's ability to handle recurring scheduled disbursements at scale.
+
+### Measured Results
+
+| Metric | Before (Traditional) | After (Stellar) |
+|--------|---------------------|-----------------|
+| Transfer fees | ~10% average | ~2% average |
+| Delivery reliability | Variable (70-90%) | 100% |
+| Settlement time | Days to weeks | Minutes |
+| Offline capability | None (cash only) | Transaction queuing + sync |
+| Audit trail | Manual reconciliation | On-chain verification |
+
+The 80% reduction in fees means that for every $1 million in aid payments, approximately $80,000 more reaches beneficiaries instead of being absorbed by intermediaries.
+
+## How the System Works
+
+The UNDP's Stellar implementation uses a specific architecture designed for humanitarian contexts:
+
+### Payment Flow
+
+\`\`\`
+1. UNDP country office initiates payment batch
+2. Funds converted to Stellar-based stablecoin (USDC)
+3. Payments distributed to recipient wallets
+4. Recipients redeem via local agents or mobile money
+5. All transactions recorded on Stellar for audit
+\`\`\`
+
+### Compliance Architecture
+
+Humanitarian payments in sanctioned or high-risk jurisdictions require careful compliance. The system uses Stellar's native asset controls:
+
+- **AUTH_REQUIRED**: Only verified recipients can receive payments
+- **AUTH_REVOCABLE**: Payments to incorrect addresses can be frozen
+- **AUTH_CLAWBACK**: Erroneously sent funds can be recovered (court orders, identity errors)
+
+These are the same features that make Stellar suitable for [regulated securities](/blog/dtcc-stellar-tokenized-securities) and [compliance-sensitive financial products](/stellar-transaction-monitoring).
+
+### Offline Capability
+
+One of the most significant achievements was reliable payment delivery in areas with limited internet connectivity. The system uses:
+
+- Local transaction queuing on mobile devices
+- Automatic synchronization when connectivity becomes available
+- Cryptographic verification that prevents double-spending during offline periods
+- SMS-based fallback for payment confirmation
+
+## Why Stellar
+
+The UNDP evaluated multiple blockchain networks before selecting Stellar for these pilots. The selection criteria and how Stellar met them:
+
+| Requirement | Why Stellar |
+|-------------|-------------|
+| Low cost | Transactions cost fractions of a cent |
+| Fast settlement | 5-7 second finality |
+| Compliance features | Native authorization, freeze, and clawback |
+| Stablecoin support | USDC, MGUSD available on-network |
+| Energy efficiency | Stellar Consensus Protocol uses minimal energy |
+| Institutional trust | SDF is a nonprofit with established UN relationships |
+| Off-ramp network | MoneyGram integration for cash conversion |
+
+The cost factor is particularly relevant at UNDP scale. Processing millions of individual payments at Ethereum gas prices would consume a significant portion of the efficiency gains. Stellar's near-zero transaction costs preserve the fee savings.
+
+## Transition from Pilot to Standard Operations
+
+The July 2026 announcement marks a shift from experimental pilot to operational tool. Key changes:
+
+- **Country office availability**: Any UNDP country office can now request deployment of the Stellar payment system
+- **Integration with existing UNDP systems**: The blockchain layer connects to UNDP's existing financial management and reporting infrastructure
+- **Training and support**: SDF is providing technical support for country office deployments
+- **Scalability planning**: Infrastructure designed to handle payment volumes across multiple countries simultaneously
+
+This transition is significant because it moves blockchain payments from a proof-of-concept within the UN system to a standard operational option.
+
+## What This Means for the Stellar Ecosystem
+
+The UNDP deployment validates Stellar's value proposition for institutional payment use cases:
+
+1. **Real-world evidence**: These are not testnet demonstrations. Real funds reached real beneficiaries in real crisis conditions.
+2. **Scale precedent**: The UNDP's operational scale (170+ countries) provides a growth path that most blockchain projects cannot access through commercial channels alone.
+3. **Compliance validation**: The successful use in sanctioned jurisdictions (Syria) demonstrates that Stellar's compliance features work in the most demanding regulatory environments.
+4. **Network effects**: As more UNDP country offices adopt the system, cross-border payment corridors between those countries become more efficient.
+
+## Risks and Open Questions
+
+- **Dependency on connectivity**: While the offline queuing system works, extended offline periods could create reconciliation challenges at scale
+- **Local agent networks**: Cash conversion depends on local agent availability, which varies significantly by country
+- **Stablecoin availability**: The system depends on USDC and other stablecoin liquidity on Stellar. Disruptions to stablecoin issuance would affect operations
+- **Regulatory evolution**: Cryptocurrency regulations in some UNDP operating countries are still developing and could create compliance friction
+- **Scaling unknowns**: Transitioning from five pilot countries to potentially dozens of simultaneous deployments introduces operational complexity that the pilot phase did not test
+
+---
+
+**Sources:** [UNDP-Stellar Partnership Extension Announcement (July 6, 2026)](https://stellar.org/press), [Stellar Foundation Blog](https://stellar.org/blog), UNDP Programme Reports
+
+---
+
+**Related Resources**
+
+- [Stellar Horizon API for Developers](/stellar-horizon-api) for building payment applications
+- [Enterprise Stellar API Infrastructure](/enterprise) for institutional deployment support
+- [Stellar Transaction Monitoring](/stellar-transaction-monitoring) for compliance and audit capabilities
+    `,
+  },
+  'stellar-new-stablecoins-ylds-usst-2026': {
+    title: 'Beyond USDC: The New Stablecoins Launching on Stellar in 2026',
+    date: '2026-07-12',
+    readTime: '13 min read',
+    category: 'Industry Insights',
+    content: `
+Stellar's stablecoin ecosystem expanded significantly in the first half of 2026. Three new dollar-denominated stablecoins launched on the network, each with a different design, regulatory status, and target market. Combined with the existing USDC presence, Stellar now offers four distinct approaches to dollar-denominated digital assets.
+
+This article examines what each new stablecoin offers, how they differ, and what the expanding stablecoin stack means for developers building on Stellar.
+
+## Key Takeaways
+
+- Three new stablecoins launched on Stellar in 2026: YLDS (yield-bearing), USST (treasury-backed), and MGUSD (payments-native)
+- YLDS is the first SEC-registered yield-bearing dollar product on Stellar, paying SOFR minus 0.50%
+- USST is backed by tokenized U.S. Treasury collateral and was created by Tether co-founder Reeve Collins
+- MGUSD is MoneyGram's own stablecoin, backed by Bridge (a Stripe company), with access to 475,000+ cash locations
+- Each stablecoin serves a different use case: savings/yield, institutional settlement, and retail payments
+
+## The Four Stablecoins
+
+| Stablecoin | Issuer | Backing | Yield | Regulatory Status | Launch Date |
+|------------|--------|---------|-------|-------------------|-------------|
+| USDC | Circle | Cash + T-bills | No | State-regulated | Live since 2021 |
+| YLDS | Figure | SOFR-linked | Yes (SOFR - 0.50%) | SEC-registered | May 5, 2026 |
+| USST | STBL | Tokenized treasuries (USDY) | Planned | Institutional-grade | July 1, 2026 |
+| MGUSD | MoneyGram / Bridge | Dollar reserves | No | GENIUS Act-ready | June 2, 2026 |
+
+## YLDS: Yield-Bearing Dollar on Stellar
+
+YLDS, issued by Figure, launched on Stellar on May 5, 2026. It is the first SEC-registered yield-bearing dollar product available on the network.
+
+### How It Works
+
+YLDS pays holders a yield tied to the Secured Overnight Financing Rate (SOFR) minus 0.50%. As of mid-2026, SOFR sits at approximately 4.3%, making the YLDS yield roughly 3.8%. Yield accrues daily and is distributed to holders automatically.
+
+The SEC registration means YLDS is classified as a security, not a payment token. This distinction matters:
+
+- **Who can hold it**: Accredited investors and qualified purchasers (depending on jurisdiction)
+- **Compliance requirements**: KYC/AML verification required for all holders
+- **Transfer restrictions**: Transfers must comply with securities regulations
+- **Tax treatment**: Yield is treated as investment income
+
+### Why It Matters
+
+Traditional stablecoins like USDC pay no yield to holders. The interest earned on reserves goes entirely to the issuer. YLDS changes this by passing reserve yield through to token holders.
+
+For institutional treasuries holding dollar-denominated assets on-chain, YLDS offers a way to earn yield without leaving the Stellar network. Instead of moving funds off-chain to a money market fund and back, an institution can hold YLDS and earn a competitive rate while maintaining on-chain liquidity.
+
+### Stellar Context
+
+YLDS is available on Stellar, Provenance, and Solana. Stellar's selection reflects the network's growing institutional presence, particularly after the DTCC tokenization announcement and the [RWA market crossing $3.3B](/blog/stellar-rwa-stablecoin-growth).
+
+## USST: Treasury-Backed Institutional Stablecoin
+
+USST launched on Stellar on July 1, 2026, issued by STBL, a company co-founded by Reeve Collins (who also co-founded Tether). Over $3 million flowed onto the network shortly after launch.
+
+### How It Works
+
+USST is backed by tokenized U.S. Treasury collateral. The initial backing asset is USDY (Ondo Finance's tokenized treasury product). STBL has announced plans to add additional collateral sources, including Franklin Templeton's BENJI fund.
+
+The treasury-backed model differs from USDC's cash-plus-T-bills approach:
+
+| Feature | USDC | USST |
+|---------|------|------|
+| Backing | Cash + short-term T-bills | Tokenized treasury collateral |
+| Transparency | Monthly attestations | On-chain collateral verification |
+| Yield to holders | No | Planned (details pending) |
+| Target market | Broad consumer/developer | Institutional settlement |
+| Collateral visibility | Reserve reports | On-chain verifiable |
+
+### Why It Matters
+
+USST's use of tokenized treasuries as collateral means the backing assets are themselves on-chain and verifiable. This is a step beyond traditional stablecoin attestations, where holders rely on periodic third-party reports about off-chain reserves.
+
+For institutional users who need dollar liquidity on Stellar but want more transparency into reserve composition, USST offers a middle ground between USDC's simplicity and the full complexity of directly holding tokenized treasuries.
+
+## MGUSD: MoneyGram's Payments-Native Stablecoin
+
+MoneyGram launched MGUSD on Stellar on June 2, 2026. Bridge (a Stripe company) serves as the GENIUS Act-ready issuer, M0 provides smart contract minting and burning infrastructure, and Fireblocks supplies custody.
+
+### How It Works
+
+MGUSD is designed specifically for MoneyGram's payments network. It gives MoneyGram users a dollar-denominated digital balance accessible 24/7, convertible to local currency at MoneyGram's 475,000+ agent locations worldwide.
+
+The infrastructure stack:
+
+\`\`\`
+MGUSD Architecture:
+Bridge (Stripe) -> Issuer (GENIUS Act compliance)
+M0             -> Minting/burning smart contracts
+Fireblocks     -> Institutional custody
+MoneyGram      -> Distribution (475K+ locations)
+Stellar        -> Settlement layer
+\`\`\`
+
+### Why It Matters
+
+MGUSD transforms MoneyGram from a Stellar ecosystem partner into a Stellar-native stablecoin issuer. Previously, MoneyGram used USDC on Stellar for its digital wallet services. With MGUSD, MoneyGram controls its own dollar token, enabling:
+
+- **Direct integration**: No dependency on Circle for core payment flows
+- **Custom compliance**: GENIUS Act readiness built into the issuance model
+- **Network effects**: MoneyGram's existing user base provides immediate distribution
+- **Cash conversion**: Seamless conversion between MGUSD and local currency at agent locations
+
+Initially available in the United States, with international expansion planned. The international rollout is significant because MoneyGram's primary use case is cross-border remittances.
+
+## What the Expanding Stack Means
+
+### For Developers
+
+Having multiple stablecoins on Stellar means developers can choose the right dollar asset for their use case:
+
+| Use Case | Best Fit |
+|----------|----------|
+| General payments | USDC (widest acceptance, CCTP cross-chain) |
+| Yield-bearing treasury | YLDS (SEC-registered, passive yield) |
+| Institutional settlement | USST (transparent collateral, institutional-grade) |
+| Cash-in/cash-out payments | MGUSD (MoneyGram network, 475K+ locations) |
+| Cross-chain transfers | USDC via [CCTP](/blog/circle-cctp-stellar-burn-mint-developer-guide) |
+
+### For the Stellar Network
+
+Multiple stablecoins increase the total dollar liquidity available on Stellar. More liquidity means:
+
+- Better exchange rates for XLM/USD trading pairs
+- More efficient path payments through the Stellar DEX
+- Reduced slippage for large transfers
+- Greater resilience (no single-issuer dependency)
+
+### Regulatory Positioning
+
+Each stablecoin has a different regulatory approach:
+
+- **USDC**: State money transmitter licenses
+- **YLDS**: SEC-registered security
+- **USST**: Institutional-grade compliance framework
+- **MGUSD**: GENIUS Act-ready through Bridge/Stripe
+
+This diversity means Stellar can serve users across different regulatory jurisdictions and compliance requirements. A European institution might prefer USST's transparency, while a U.S. consumer application might use MGUSD for MoneyGram integration.
+
+## The GENIUS Act Context
+
+The GENIUS Act (Guiding and Establishing National Innovation for U.S. Stablecoins) is the U.S. federal regulatory framework for stablecoin issuance that advanced through Congress in 2025-2026. MGUSD's "GENIUS Act-ready" designation through Bridge means it is designed to comply with this framework from launch.
+
+Key GENIUS Act requirements relevant to Stellar stablecoins:
+
+- 1:1 reserve backing with approved asset types
+- Regular reserve attestations
+- Consumer protection standards
+- Interoperability requirements
+- Issuer licensing and supervision
+
+As the regulatory framework solidifies, having GENIUS Act-compliant stablecoins on Stellar positions the network for regulated payment use cases in the U.S. market.
+
+## Risks and Considerations
+
+- **Fragmentation**: Multiple stablecoins can fragment liquidity. If $200M in dollar value is split across four tokens instead of concentrated in one, each individual pool is smaller.
+- **Issuer risk**: Each stablecoin introduces a different counterparty risk. YLDS depends on Figure, USST on STBL, MGUSD on Bridge/MoneyGram.
+- **Regulatory uncertainty**: The GENIUS Act is not yet final law. Regulatory changes could affect any of these stablecoins' compliance status.
+- **Adoption uncertainty**: Having stablecoins available does not guarantee transaction volume. Developer adoption and end-user demand will determine whether the expanded stack translates into meaningful network activity.
+- **Yield competition**: YLDS competes with off-chain money market funds and other yield products. Its attractiveness depends on the spread between SOFR and the fee charged.
+
+---
+
+**Sources:** [MoneyGram MGUSD Launch (PR Newswire)](https://www.prnewswire.com/news-releases/moneygram-launches-mgusd-a-stablecoin-to-power-its-own-global-network-302787799.html), [Stellar Foundation: Circle CCTP on Stellar](https://stellar.org/blog/foundation-news/circle-cctp-is-live-on-stellar), [crypto-economy.com (USST launch)](https://crypto-economy.com), [SDF Press (YLDS announcement)](https://stellar.org/press)
+
+---
+
+**Related Resources**
+
+- [Stellar Blockchain Analytics API](/stellar-blockchain-analytics-api) for tracking stablecoin volumes
+- [XLM Whale Alerts](/xlm-whale-alerts) for monitoring large stablecoin movements
+- [Stellar API Provider Comparison](/stellar-api-provider-comparison) for evaluating infrastructure options
+    `,
+  },
   'dtcc-stellar-tokenized-securities': {
     title: 'DTCC and Stellar: What Tokenized Securities on a Public Blockchain Could Mean',
     date: '2026-07-11',

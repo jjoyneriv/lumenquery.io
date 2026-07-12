@@ -2,6 +2,38 @@ import Link from 'next/link';
 
 const posts = [
   {
+    slug: 'stellar-protocol-27-zipper-authentication-delegation',
+    title: "Stellar Protocol 27 'Zipper' Is Live: What Authentication Delegation Means for Developers",
+    excerpt: 'Protocol 27 activated on Stellar mainnet July 9, 2026, introducing native authentication delegation. What changed, how it works, and what it enables for wallets, multisig, and account abstraction.',
+    date: '2026-07-12',
+    readTime: '13 min read',
+    category: 'Protocol Update',
+  },
+  {
+    slug: 'circle-cctp-stellar-burn-mint-developer-guide',
+    title: 'Circle CCTP Goes Live on Stellar: Native Cross-Chain USDC Without Bridges',
+    excerpt: 'Circle activated its Cross-Chain Transfer Protocol on Stellar on May 19, 2026. How burn-and-mint works, why it eliminates bridge risk, and how developers can build cross-chain payment flows.',
+    date: '2026-07-12',
+    readTime: '12 min read',
+    category: 'Developer Guide',
+  },
+  {
+    slug: 'undp-stellar-humanitarian-payments-scaling',
+    title: 'How the UNDP Is Scaling Blockchain Payments on Stellar Across 5 Countries',
+    excerpt: 'After 16-month pilots across Haiti, Kenya, Syria, Guatemala, and The Gambia, the UNDP extended its Stellar payment program through 2027. Fees dropped from 10% to 2% with 100% delivery reliability.',
+    date: '2026-07-12',
+    readTime: '12 min read',
+    category: 'Industry Insights',
+  },
+  {
+    slug: 'stellar-new-stablecoins-ylds-usst-2026',
+    title: 'Beyond USDC: The New Stablecoins Launching on Stellar in 2026',
+    excerpt: 'YLDS, USST, and MGUSD represent three different stablecoin models now live on Stellar: yield-bearing, treasury-backed, and payments-native. What each offers and why it matters for the ecosystem.',
+    date: '2026-07-12',
+    readTime: '13 min read',
+    category: 'Industry Insights',
+  },
+  {
     slug: 'dtcc-stellar-tokenized-securities',
     title: 'DTCC and Stellar: What Tokenized Securities on a Public Blockchain Could Mean',
     excerpt: 'DTCC announced DTC-tokenized assets on Stellar for 1H 2027 with 50+ participating firms including JPMorgan and BlackRock. What the plan involves, why Stellar was selected, and what risks remain.',
