@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     description: 'Enterprise-grade Stellar Horizon API infrastructure. Fast, reliable, and scalable.',
     images: [
       {
-        url: '/og-image.png',
+        url: '/api/og',
         width: 1200,
         height: 630,
         alt: 'LumenQuery - Enterprise Stellar Horizon API',
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'LumenQuery - Enterprise Stellar Horizon API',
     description: 'Enterprise-grade Stellar Horizon API infrastructure. Fast, reliable, and scalable.',
-    images: ['/og-image.png'],
+    images: ['/api/og'],
   },
   robots: {
     index: true,

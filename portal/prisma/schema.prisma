@@ -982,6 +982,18 @@ model CryptoPayment {
 }
 
 // ===========================================
+// Newsletter Subscribers
+// ===========================================
+
+model NewsletterSubscriber {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  subscribedAt DateTime @default(now())
+
+  @@index([email])
+}
+
+// ===========================================
 // Page View Tracking
 // ===========================================
 

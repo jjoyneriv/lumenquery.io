@@ -30,6 +30,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.9,
     },
+    {
+      url: `${baseUrl}/playground`,
+      lastModified: today,
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
   ];
 
   // Documentation pages (all public)

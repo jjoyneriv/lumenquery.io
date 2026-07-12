@@ -3,22 +3,24 @@ import Image from 'next/image';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'LumenQuery - Enterprise Stellar Horizon API & Soroban RPC Infrastructure',
+  title: 'Enterprise Stellar Horizon API & Soroban RPC Infrastructure',
   description: 'Build blockchain applications on the Stellar network with reliable, scalable infrastructure. Enterprise-grade Horizon API and Soroban RPC with sub-100ms response times. Free tier available.',
   keywords: ['Stellar', 'Horizon API', 'Soroban RPC', 'blockchain', 'XLM', 'cryptocurrency', 'smart contracts', 'Web3'],
   alternates: {
     canonical: 'https://lumenquery.io',
   },
   openGraph: {
-    title: 'LumenQuery - Enterprise Stellar Horizon API & Soroban RPC',
+    title: 'Enterprise Stellar Horizon API & Soroban RPC',
     description: 'Build blockchain applications on the Stellar network with reliable, scalable infrastructure.',
     type: 'website',
     url: 'https://lumenquery.io',
+    images: [{ url: '/api/og', width: 1200, height: 630, alt: 'LumenQuery - Enterprise Stellar Infrastructure' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'LumenQuery - Enterprise Stellar Infrastructure',
+    title: 'Enterprise Stellar Infrastructure',
     description: 'Build on Stellar with reliable Horizon API and Soroban RPC. Start free.',
+    images: ['/api/og'],
   },
   robots: {
     index: true,
@@ -311,6 +313,41 @@ export default function Home() {
           </div>
         </div>
 
+        {/* ── Row 2.5: Social Proof ── */}
+        <div className="col-span-12">
+          <div className="bg-[#262932] rounded-2xl border border-white/5 p-6 sm:p-8">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-8 sm:gap-12">
+                <div className="text-center">
+                  <div className="text-2xl sm:text-3xl font-bold text-white">67+</div>
+                  <div className="text-xs text-[#A8A9AD] mt-1">Technical Articles</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl sm:text-3xl font-bold text-white">99.9%</div>
+                  <div className="text-xs text-[#A8A9AD] mt-1">API Uptime</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl sm:text-3xl font-bold text-white">&lt;100ms</div>
+                  <div className="text-xs text-[#A8A9AD] mt-1">Avg Response</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl sm:text-3xl font-bold text-white">94</div>
+                  <div className="text-xs text-[#A8A9AD] mt-1">API Endpoints</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Link href="/status" className="px-4 py-2 rounded-lg border border-white/10 text-xs text-[#A8A9AD] hover:border-green-500/30 hover:text-green-400 transition-colors">
+                  <span className="inline-block w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+                  All Systems Operational
+                </Link>
+                <Link href="/sla" className="px-4 py-2 rounded-lg border border-white/10 text-xs text-[#A8A9AD] hover:border-[#7366FF]/30 hover:text-[#7366FF] transition-colors">
+                  View SLA
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* ── Row 3: Blog + Guides ── */}
 
         {/* Latest Blog Posts */}
@@ -432,6 +469,52 @@ export default function Home() {
           </div>
         </div>
 
+        {/* ── Row 3.5: Popular Resources ── */}
+        <div className="col-span-12">
+          <div className="bg-[#262932] rounded-2xl border border-white/5">
+            <div className="px-5 pt-5 pb-3 border-b border-white/5">
+              <div className="flex items-center justify-between">
+                <h5 className="font-semibold text-sm">Popular Resources</h5>
+                <Link href="/stellar" className="text-[11px] text-[#7366FF] hover:underline">View All</Link>
+              </div>
+            </div>
+            <div className="p-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+              <Link href="/stellar-horizon-api" className="p-3 rounded-xl bg-[#1D1E26] border border-white/5 hover:border-[#7366FF]/30 transition-colors">
+                <span className="text-sm font-medium block mb-1">Horizon API</span>
+                <span className="text-[11px] text-[#A8A9AD]">REST endpoints for Stellar</span>
+              </Link>
+              <Link href="/soroban-rpc-api" className="p-3 rounded-xl bg-[#1D1E26] border border-white/5 hover:border-[#7366FF]/30 transition-colors">
+                <span className="text-sm font-medium block mb-1">Soroban RPC</span>
+                <span className="text-[11px] text-[#A8A9AD]">Smart contract queries</span>
+              </Link>
+              <Link href="/stellar-transaction-monitoring" className="p-3 rounded-xl bg-[#1D1E26] border border-white/5 hover:border-[#7366FF]/30 transition-colors">
+                <span className="text-sm font-medium block mb-1">Transaction Monitoring</span>
+                <span className="text-[11px] text-[#A8A9AD]">Real-time alerts</span>
+              </Link>
+              <Link href="/xlm-whale-alerts" className="p-3 rounded-xl bg-[#1D1E26] border border-white/5 hover:border-[#7366FF]/30 transition-colors">
+                <span className="text-sm font-medium block mb-1">Whale Alerts</span>
+                <span className="text-[11px] text-[#A8A9AD]">Large XLM movements</span>
+              </Link>
+              <Link href="/stellar-blockchain-analytics-api" className="p-3 rounded-xl bg-[#1D1E26] border border-white/5 hover:border-[#7366FF]/30 transition-colors">
+                <span className="text-sm font-medium block mb-1">Analytics API</span>
+                <span className="text-[11px] text-[#A8A9AD]">Network metrics & data</span>
+              </Link>
+              <Link href="/stellar-rpc-provider" className="p-3 rounded-xl bg-[#1D1E26] border border-white/5 hover:border-[#7366FF]/30 transition-colors">
+                <span className="text-sm font-medium block mb-1">RPC Provider</span>
+                <span className="text-[11px] text-[#A8A9AD]">Managed infrastructure</span>
+              </Link>
+              <Link href="/enterprise" className="p-3 rounded-xl bg-[#1D1E26] border border-white/5 hover:border-[#7366FF]/30 transition-colors">
+                <span className="text-sm font-medium block mb-1">Enterprise</span>
+                <span className="text-[11px] text-[#A8A9AD]">Custom solutions</span>
+              </Link>
+              <Link href="/stellar-api-provider-comparison" className="p-3 rounded-xl bg-[#1D1E26] border border-white/5 hover:border-[#7366FF]/30 transition-colors">
+                <span className="text-sm font-medium block mb-1">Provider Comparison</span>
+                <span className="text-[11px] text-[#A8A9AD]">Side-by-side analysis</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+
         {/* ── Row 4: CTA Banner ── */}
         <div className="col-span-12">
           <div className="bg-gradient-to-r from-[#7366FF] to-[#a26cf8] rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -453,14 +536,51 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="mt-8 pt-6 border-t border-white/5">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#A8A9AD]">
+      <footer className="mt-8 pt-8 border-t border-white/5">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-8">
+          <div>
+            <h6 className="text-sm font-semibold text-white mb-3">Product</h6>
+            <div className="space-y-2">
+              <Link href="/analytics" className="block text-xs text-[#A8A9AD] hover:text-white transition-colors">Analytics</Link>
+              <Link href="/contracts" className="block text-xs text-[#A8A9AD] hover:text-white transition-colors">Contracts Explorer</Link>
+              <Link href="/query" className="block text-xs text-[#A8A9AD] hover:text-white transition-colors">Query Builder</Link>
+              <Link href="/pricing" className="block text-xs text-[#A8A9AD] hover:text-white transition-colors">Pricing</Link>
+            </div>
+          </div>
+          <div>
+            <h6 className="text-sm font-semibold text-white mb-3">Resources</h6>
+            <div className="space-y-2">
+              <Link href="/docs" className="block text-xs text-[#A8A9AD] hover:text-white transition-colors">Documentation</Link>
+              <Link href="/blog" className="block text-xs text-[#A8A9AD] hover:text-white transition-colors">Blog</Link>
+              <Link href="/stellar-horizon-api" className="block text-xs text-[#A8A9AD] hover:text-white transition-colors">Horizon API</Link>
+              <Link href="/soroban-rpc-api" className="block text-xs text-[#A8A9AD] hover:text-white transition-colors">Soroban RPC</Link>
+            </div>
+          </div>
+          <div>
+            <h6 className="text-sm font-semibold text-white mb-3">Company</h6>
+            <div className="space-y-2">
+              <Link href="/enterprise" className="block text-xs text-[#A8A9AD] hover:text-white transition-colors">Enterprise</Link>
+              <Link href="/security" className="block text-xs text-[#A8A9AD] hover:text-white transition-colors">Security</Link>
+              <Link href="/contact" className="block text-xs text-[#A8A9AD] hover:text-white transition-colors">Contact</Link>
+              <Link href="/changelog" className="block text-xs text-[#A8A9AD] hover:text-white transition-colors">Changelog</Link>
+            </div>
+          </div>
+          <div>
+            <h6 className="text-sm font-semibold text-white mb-3">Trust</h6>
+            <div className="space-y-2">
+              <Link href="/status" className="block text-xs text-[#A8A9AD] hover:text-white transition-colors">Status</Link>
+              <Link href="/sla" className="block text-xs text-[#A8A9AD] hover:text-white transition-colors">SLA</Link>
+              <Link href="/stellar-api-rate-limits" className="block text-xs text-[#A8A9AD] hover:text-white transition-colors">Rate Limits</Link>
+              <Link href="/stellar-api-provider-comparison" className="block text-xs text-[#A8A9AD] hover:text-white transition-colors">Comparison</Link>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#A8A9AD] pt-6 border-t border-white/5">
           <p>&copy; {new Date().getFullYear()} LumenQuery. All rights reserved.</p>
           <div className="flex items-center gap-4">
-            <Link href="/docs" className="hover:text-white transition-colors">Docs</Link>
-            <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
-            <Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link>
-            <Link href="/analytics" className="hover:text-white transition-colors">Analytics</Link>
+            <Link href="/security" className="hover:text-white transition-colors">Privacy</Link>
+            <Link href="/sla" className="hover:text-white transition-colors">Terms</Link>
+            <Link href="/status" className="hover:text-white transition-colors">Status</Link>
           </div>
         </div>
       </footer>

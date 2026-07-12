@@ -14432,11 +14432,13 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       publishedTime: post.date,
       authors: ['LumenQuery Team'],
       siteName: 'LumenQuery',
+      images: [{ url: `/api/og?title=${encodeURIComponent(post.title)}&subtitle=${encodeURIComponent(post.category + ' • ' + post.readTime)}`, width: 1200, height: 630 }],
     },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
       description,
+      images: [`/api/og?title=${encodeURIComponent(post.title)}&subtitle=${encodeURIComponent(post.category + ' • ' + post.readTime)}`],
     },
     robots: {
       index: true,
@@ -14677,16 +14679,96 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
             </h1>
           </header>
 
+          {/* Author & Share */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-white/10">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-[#7366FF]/20 flex items-center justify-center">
+                <span className="text-sm font-bold text-[#7366FF]">LQ</span>
+              </div>
+              <div>
+                <div className="text-sm font-medium">LumenQuery Team</div>
+                <div className="text-xs text-[#A8A9AD]">Stellar Infrastructure Engineers</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-[#A8A9AD] mr-2">Share:</span>
+              <a
+                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(`https://lumenquery.io/blog/${params.slug}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-[#1DA1F2]/10 hover:border-[#1DA1F2]/30 transition-colors"
+                aria-label="Share on Twitter"
+              >
+                <svg className="w-3.5 h-3.5 text-[#A8A9AD]" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              </a>
+              <a
+                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://lumenquery.io/blog/${params.slug}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-[#0A66C2]/10 hover:border-[#0A66C2]/30 transition-colors"
+                aria-label="Share on LinkedIn"
+              >
+                <svg className="w-3.5 h-3.5 text-[#A8A9AD]" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              </a>
+              <a
+                href={`mailto:?subject=${encodeURIComponent(post.title)}&body=${encodeURIComponent(`https://lumenquery.io/blog/${params.slug}`)}`}
+                className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-white/20 transition-colors"
+                aria-label="Share via email"
+              >
+                <svg className="w-3.5 h-3.5 text-[#A8A9AD]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              </a>
+            </div>
+          </div>
+
           <section className="prose prose-gray max-w-none" aria-label="Article content">
             {renderContent(post.content)}
           </section>
 
-          <aside className="mt-10 sm:mt-16 p-5 sm:p-8 rounded-xl sm:rounded-2xl bg-[#7366FF] text-white text-center">
+          {/* Newsletter CTA */}
+          <aside className="mt-10 sm:mt-16 p-5 sm:p-8 rounded-xl sm:rounded-2xl bg-[#262932] border border-white/5">
+            <div className="text-center">
+              <h2 className="text-lg sm:text-xl font-bold mb-2">Get Stellar Developer Insights</h2>
+              <p className="text-[#A8A9AD] text-sm mb-4">Weekly updates on Stellar infrastructure, Soroban development, and network analytics.</p>
+              <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" action="/api/newsletter" method="POST">
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="developer@company.com"
+                  required
+                  className="flex-1 px-4 py-2.5 rounded-lg bg-[#1D1E26] border border-white/10 text-sm text-white placeholder:text-[#A8A9AD] focus:outline-none focus:border-[#7366FF]/50"
+                />
+                <button type="submit" className="px-5 py-2.5 rounded-lg bg-[#7366FF] text-white text-sm font-medium hover:bg-[#5A4FCF] transition-colors whitespace-nowrap">
+                  Subscribe
+                </button>
+              </form>
+              <p className="text-[10px] text-[#A8A9AD] mt-3">No spam. Unsubscribe anytime.</p>
+            </div>
+          </aside>
+
+          {/* Related Posts */}
+          <aside className="mt-8 sm:mt-12">
+            <h2 className="text-lg font-bold mb-4">Related Articles</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {Object.entries(posts)
+                .filter(([slug, p]) => slug !== params.slug && p.category === post.category)
+                .slice(0, 3)
+                .map(([slug, p]) => (
+                  <Link key={slug} href={`/blog/${slug}`} className="p-4 rounded-xl bg-[#262932] border border-white/5 hover:border-[#7366FF]/30 transition-colors group">
+                    <span className="text-[10px] text-[#7366FF] font-medium">{p.category}</span>
+                    <h3 className="text-sm font-medium mt-1 mb-2 line-clamp-2 group-hover:text-[#7366FF] transition-colors">{p.title}</h3>
+                    <span className="text-[11px] text-[#A8A9AD]">{p.readTime}</span>
+                  </Link>
+                ))}
+            </div>
+          </aside>
+
+          {/* Bottom CTA */}
+          <aside className="mt-8 p-5 sm:p-8 rounded-xl sm:rounded-2xl bg-[#7366FF] text-white text-center">
             <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3">Ready to Get Started?</h2>
             <p className="text-white/80 mb-4 sm:mb-6 text-sm sm:text-base">
               Sign up for free and start building on Stellar with LumenQuery today.
             </p>
-            <Link href="/auth/signup" className="inline-block px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg bg-white text-[#7366FF] font-medium hover:bg-white/10 transition-colors text-sm sm:text-base">
+            <Link href="/auth/signup" className="inline-block px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg bg-white text-[#7366FF] font-medium hover:bg-white/90 transition-colors text-sm sm:text-base">
               Create Free Account
             </Link>
           </aside>
